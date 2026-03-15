@@ -39,6 +39,7 @@ class MyErrorHandler implements IHandleErrors {
   async handleErrors(error: any): Promise<boolean> {
     if (error.message?.includes('Bad or expired token')) {
       await clearSpotifyTokens();
+      cachedSharedSdk = null;
     }
     return false;
   }

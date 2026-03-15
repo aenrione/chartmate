@@ -42,13 +42,8 @@ export async function initiateSpotifyLogin(): Promise<void> {
     scope: SCOPES,
   });
 
-  // Try opener plugin first, fall back to window.open
-  try {
-    const { openUrl } = await import('@tauri-apps/plugin-opener');
-    await openUrl(`https://accounts.spotify.com/authorize?${params}`);
-  } catch {
-    window.open(`https://accounts.spotify.com/authorize?${params}`, '_blank');
-  }
+  const { openUrl } = await import('@tauri-apps/plugin-opener');
+  await openUrl(`https://accounts.spotify.com/authorize?${params}`);
 }
 
 export async function handleSpotifyCallback(callbackUrl: string): Promise<void> {

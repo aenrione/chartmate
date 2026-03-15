@@ -16,7 +16,6 @@ export type ChorusChartProgress = {
   status:
     | 'idle'
     | 'fetching'
-    | 'fetching-dump'
     | 'updating-db'
     | 'complete'
     | 'error';
@@ -24,7 +23,7 @@ export type ChorusChartProgress = {
   numTotal: number;
 };
 
-const DEBUG = true;
+const DEBUG = import.meta.env.DEV;
 
 function debugLog(message: string) {
   if (DEBUG) {
