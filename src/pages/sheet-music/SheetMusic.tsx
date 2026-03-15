@@ -33,9 +33,9 @@ export default function SheetMusic({
   zoom,
   onSelectMeasure,
   triggerRerender,
-  practiceModeConfig,
-  onPracticeMeasureSelect,
-  selectionIndex,
+  practiceModeConfig = null,
+  onPracticeMeasureSelect = () => {},
+  selectionIndex = null,
   audioManagerRef,
 }: {
   chart: ParsedChart;
@@ -47,9 +47,9 @@ export default function SheetMusic({
   zoom: number;
   onSelectMeasure: (time: number) => void;
   triggerRerender: string;
-  practiceModeConfig: PracticeModeConfig | null;
-  onPracticeMeasureSelect: (measureIndex: number) => void;
-  selectionIndex: number | null;
+  practiceModeConfig?: PracticeModeConfig | null;
+  onPracticeMeasureSelect?: (measureIndex: number) => void;
+  selectionIndex?: number | null;
   audioManagerRef: RefObject<any>;
 }) {
   const vexflowContainerRef = useRef<HTMLDivElement>(null!);

@@ -25,7 +25,6 @@ import {
   Menu,
   X,
   Settings2,
-  Target,
   Plus,
   Minus,
   Maximize2,
@@ -46,13 +45,12 @@ import {getBasename} from '@/lib/src-shared/utils';
 import {cn} from '@/lib/utils';
 import SheetMusic from './SheetMusic';
 import {Files, ParsedChart} from '@/lib/preview/chorus-chart-processing';
-import {AudioManager, PracticeModeConfig} from '@/lib/preview/audioManager';
+import {AudioManager} from '@/lib/preview/audioManager';
 import CloneHeroRenderer from './CloneHeroRenderer';
 import {generateClickTrackFromMeasures} from './generateClickTrack';
 import type {ClickVolumes} from './generateClickTrack';
 import convertToVexFlow from './convertToVexflow';
 import debounce from 'debounce';
-import {toast} from '@/components/ui/toast';
 
 function getDrumDifficulties(chart: ParsedChart): Difficulty[] {
   return chart.trackData
@@ -76,11 +74,6 @@ function formatSeconds(seconds: number): string {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
   return `${String(mins)}:${String(secs).padStart(2, '0')}`;
-}
-
-function formatTimeMs(ms: number): string {
-  const seconds = Math.floor(ms / 1000);
-  return formatSeconds(seconds);
 }
 
 export default function Renderer({
@@ -133,15 +126,6 @@ export default function Renderer({
 
   // Zoom control state
   const [zoom, setZoom] = useState(1.0);
-
-  // Practice mode state
-  const [practiceMode, setPracticeMode] = useState<PracticeModeConfig | null>(
-    null,
-  );
-
-  const practiceModeEnabled =
-    practiceMode != null && practiceMode.endTimeMs > 0;
-  const [selectionIndex, setSelectionIndex] = useState<number | null>(null);
 
   const availableDifficulties = getDrumDifficulties(chart);
   const [selectedDifficulty, setSelectedDifficulty] = useState(
@@ -398,11 +382,6 @@ export default function Renderer({
         audioManagerRef.current = audioManager;
         (window as any).am = audioManager;
 
-        // Restore practice mode configuration if it exists
-        if (practiceMode && practiceMode.endMeasureMs > 0) {
-          audioManager.setPracticeMode(practiceMode);
-        }
-
         // Apply initial per-track volumes loaded from storage
         try {
           initialVolumeControls.forEach(control => {
@@ -440,26 +419,9 @@ export default function Renderer({
     settingsLoaded,
   ]);
 
-  // Apply practice mode changes to the existing audio manager without recreating it
-  useEffect(() => {
-    if (!audioManagerRef.current) return;
-    if (
-      selectionIndex == null &&
-      practiceMode?.endTimeMs != null &&
-      practiceMode?.endTimeMs > 0
-    ) {
-      audioManagerRef.current.setPracticeMode(practiceMode);
-    }
-  }, [practiceMode]);
-
   useInterval(
     () => {
       setCurrentPlayback(audioManagerRef.current?.currentTime ?? 0);
-
-      // Check for practice mode looping
-      if (audioManagerRef.current && isPlaying) {
-        audioManagerRef.current.checkPracticeModeLoop();
-      }
     },
     isPlaying ? 100 : null,
   );
@@ -499,7 +461,6 @@ export default function Renderer({
   }, [metadata]);
 
 
-  // Modify the play function to handle practice mode
   const handlePlay = useCallback(() => {
     if (!audioManagerRef.current) {
       return;
@@ -509,77 +470,13 @@ export default function Renderer({
       audioManagerRef.current.pause();
       setIsPlaying(false);
     } else if (!audioManagerRef.current.isInitialized) {
-      // If in practice mode, start from practice start time
-      if (practiceModeEnabled) {
-        audioManagerRef.current.play({time: practiceMode.startTimeMs / 1000});
-      } else {
-        audioManagerRef.current.play({time: 0});
-      }
+      audioManagerRef.current.play({time: 0});
       setIsPlaying(true);
     } else {
       audioManagerRef.current.resume();
       setIsPlaying(true);
     }
-  }, [isPlaying, practiceMode, practiceModeEnabled]);
-
-  // Practice mode functions
-  const startPracticeMode = useCallback(() => {
-    setSelectionIndex(-1);
-    toast.info('Choose the starting measure');
-  }, []);
-
-  const endPracticeMode = useCallback(() => {
-    setPracticeMode(null);
-    setSelectionIndex(null);
-
-    // Update audio manager
-    if (audioManagerRef.current) {
-      audioManagerRef.current.setPracticeMode(null);
-    }
-
-    toast.info('Practice mode ended');
-  }, []);
-
-  const handlePracticeMeasureSelect = useCallback(
-    (measureIndex: number) => {
-      if (selectionIndex === null) return;
-      if (selectionIndex === -1) {
-        // Start index chosen
-        setSelectionIndex(measureIndex);
-        const startMs = measures[measureIndex].startMs;
-        const endMs = measures[measureIndex].endMs;
-        setPracticeMode({
-          startMeasureMs: startMs,
-          endMeasureMs: endMs,
-          startTimeMs: startMs,
-          endTimeMs: endMs,
-        });
-        toast.info('Choose the ending measure');
-        return;
-      }
-
-      // End index chosen
-      const startIndex = Math.min(selectionIndex, measureIndex);
-      const endIndex = Math.max(selectionIndex, measureIndex);
-      const startMs = measures[startIndex].startMs;
-      const endMs = measures[endIndex].endMs;
-
-      const updated: PracticeModeConfig = {
-        startMeasureMs: startMs,
-        startTimeMs: Math.max(0, startMs - 500),
-        endMeasureMs: endMs,
-        endTimeMs: endMs + 500,
-      };
-
-      setPracticeMode(updated);
-      setSelectionIndex(null);
-      audioManagerRef.current?.setPracticeMode(updated);
-      toast.success(
-        'Practice mode configured! Click play to start practicing.',
-      );
-    },
-    [selectionIndex, measures],
-  );
+  }, [isPlaying]);
 
   const songDuration =
     metadata.song_length == null ? 5 * 60 : metadata.song_length / 1000;
@@ -744,37 +641,6 @@ export default function Renderer({
       onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
       {isSidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
     </Button>
-  );
-
-  // Add practice mode button to the sidebar
-  const practiceModeButton = (
-    <div className="space-y-2 pt-4 border-t">
-      <Button
-        variant={
-          practiceModeEnabled || selectionIndex !== null
-            ? 'destructive'
-            : 'default'
-        }
-        className="w-full"
-        onClick={
-          practiceModeEnabled || selectionIndex !== null
-            ? endPracticeMode
-            : startPracticeMode
-        }>
-        <Target className="h-4 w-4 mr-2" />
-        {practiceModeEnabled || selectionIndex !== null
-          ? 'End Practice'
-          : 'Practice'}
-      </Button>
-      {practiceModeEnabled && practiceMode && (
-        <>
-          <div className="text-xs text-muted-foreground text-center">
-            Practice Range: {formatTimeMs(practiceMode.startTimeMs)} -{' '}
-            {formatTimeMs(practiceMode.endTimeMs)}
-          </div>
-        </>
-      )}
-    </div>
   );
 
   return (
@@ -983,8 +849,6 @@ export default function Renderer({
               </div>
             </div>
 
-            {/* Practice Mode Button */}
-            {practiceModeButton}
           </div>
           <p className="text-xs text-muted-foreground text-center mt-auto">
             Special thanks to{' '}
@@ -1083,9 +947,6 @@ export default function Renderer({
                   triggerRerender={
                     String(viewCloneHero) + String(isMobileMode) + String(zoom)
                   }
-                  practiceModeConfig={practiceMode}
-                  onPracticeMeasureSelect={handlePracticeMeasureSelect}
-                  selectionIndex={selectionIndex}
                   audioManagerRef={audioManagerRef}
                 />
               </div>
