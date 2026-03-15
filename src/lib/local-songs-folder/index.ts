@@ -1,5 +1,5 @@
 import { appCacheDir, join } from '@tauri-apps/api/path';
-import { writeFile, readFile, readDir, remove, mkdir, exists } from '@tauri-apps/plugin-fs';
+import { writeFile, remove, mkdir, exists } from '@tauri-apps/plugin-fs';
 import filenamify from 'filenamify/browser';
 import { SngStream } from 'parse-sng';
 import { upsertLocalCharts } from '@/lib/local-db/local-charts';

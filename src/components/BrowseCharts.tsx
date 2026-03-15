@@ -47,7 +47,7 @@ export default function BrowseCharts() {
         chart.name,
         chart.charter,
         `https://files.enchor.us/${chart.md5}.sng`,
-        { asSng: false },
+        { asSng: true },
       );
       toast.success(`Downloaded: ${chart.name}`);
     } catch (err: any) {
