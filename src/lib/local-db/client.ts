@@ -35,6 +35,7 @@ async function initializeDatabase(): Promise<Kysely<DB>> {
     console.log('Migrations completed:', results);
 
     localDb = db;
+    dbInitializationPromise = null;
     return localDb;
   } catch (error) {
     dbInitializationPromise = null;

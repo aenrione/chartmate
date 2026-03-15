@@ -13,6 +13,7 @@ export type Generated<T> =
 export interface ChorusCharts {
   album_art_md5: string | null;
   artist: string;
+  artist_bucket: string | null;
   artist_normalized: string | null;
   charter: string;
   charter_normalized: string | null;
@@ -47,6 +48,7 @@ export interface ChorusScanSessions {
 
 export interface LocalCharts {
   artist: string;
+  artist_bucket: string | null;
   artist_normalized: string | null;
   charter: string;
   charter_normalized: string | null;
@@ -90,6 +92,7 @@ export interface SpotifyPlaylistTracks {
 
 export interface SpotifyTracks {
   artist: string;
+  artist_bucket: string | null;
   artist_normalized: string | null;
   id: string;
   name: string;
