@@ -1,8 +1,9 @@
-import { appCacheDir } from '@tauri-apps/api/path';
+import { appCacheDir, join } from '@tauri-apps/api/path';
 import { writeFile, readFile, readDir, remove, mkdir, exists } from '@tauri-apps/plugin-fs';
 import filenamify from 'filenamify/browser';
 import { SngStream } from 'parse-sng';
 import { upsertLocalCharts } from '@/lib/local-db/local-charts';
+import { storeSet, STORE_KEYS } from '@/lib/store';
 import { getOrPromptSongsFolder } from '@/lib/songs-folder';
 import scanLocalCharts, { type SongAccumulator } from './scanLocalCharts';
 
@@ -19,6 +20,7 @@ export async function scanForInstalledCharts(
   await scanLocalCharts(folderPath, installedCharts, callbackPerSong);
   await upsertLocalCharts(installedCharts);
   const lastScanned = new Date();
+  await storeSet(STORE_KEYS.SONGS_FOLDER_PATH, folderPath); // persist last-scanned context
   return { lastScanned, installedCharts };
 }
 
@@ -48,7 +50,7 @@ export async function downloadSong(
   if (!response.body) return null;
 
   if (options?.asSng) {
-    const destPath = `${destFolder}/${filename}.sng`;
+    const destPath = await join(destFolder, `${filename}.sng`);
     if (options.replaceExisting && await exists(destPath)) {
       await remove(destPath);
     }
@@ -56,7 +58,7 @@ export async function downloadSong(
     await writeFile(destPath, bytes);
     return { destPath, fileName: `${filename}.sng` };
   } else {
-    const songDir = `${destFolder}/${filename}`;
+    const songDir = await join(destFolder, filename);
     if (options?.replaceExisting && await exists(songDir)) {
       await remove(songDir, { recursive: true });
     }
@@ -70,29 +72,31 @@ async function extractSngToFolder(stream: ReadableStream, destDir: string): Prom
   return new Promise((resolve, reject) => {
     const sngStream = new SngStream(stream, { generateSongIni: true });
     sngStream.on('file', async (fileName: string, fileStream: ReadableStream, nextFile: (() => void) | null) => {
-      const reader = fileStream.getReader();
-      const chunks: Uint8Array[] = [];
-      let done = false;
-      while (!done) {
-        const { value, done: d } = await reader.read();
-        if (value) chunks.push(value);
-        done = d;
+      try {
+        const reader = fileStream.getReader();
+        const chunks: Uint8Array[] = [];
+        let done = false;
+        while (!done) {
+          const { value, done: d } = await reader.read();
+          if (value) chunks.push(value);
+          done = d;
+        }
+        const totalLength = chunks.reduce((acc, c) => acc + c.length, 0);
+        const combined = new Uint8Array(totalLength);
+        let offset = 0;
+        for (const chunk of chunks) {
+          combined.set(chunk, offset);
+          offset += chunk.length;
+        }
+        const destPath = await join(destDir, fileName);
+        await writeFile(destPath, combined);
+        if (nextFile) nextFile();
+        else resolve();
+      } catch (err) {
+        reject(err);
       }
-      const totalLength = chunks.reduce((acc, c) => acc + c.length, 0);
-      const combined = new Uint8Array(totalLength);
-      let offset = 0;
-      for (const chunk of chunks) {
-        combined.set(chunk, offset);
-        offset += chunk.length;
-      }
-      await writeFile(`${destDir}/${fileName}`, combined);
-      if (nextFile) nextFile();
-      else resolve();
     });
     sngStream.on('error', reject);
     sngStream.start();
   });
 }
-
-// Re-export readFile and readDir for consumers that need them
-export { readFile, readDir };
