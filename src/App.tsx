@@ -1,51 +1,30 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
-import "./App.css";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { SpotifyAuthProvider } from '@/contexts/SpotifyAuthContext';
+import { Toaster } from 'sonner';
+import Layout from '@/components/Layout';
+import Home from '@/pages/Home';
+import SheetMusicPage from '@/pages/SheetMusicPage';
+import SheetMusicSongPage from '@/pages/SheetMusicSongPage';
+import SpotifyPage from '@/pages/SpotifyPage';
+import UpdatesPage from '@/pages/UpdatesPage';
+import BrowsePage from '@/pages/BrowsePage';
 
-function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
-
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
-
+export default function App() {
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
-
-      <div className="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+    <BrowserRouter>
+      <SpotifyAuthProvider>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/sheet-music" element={<SheetMusicPage />} />
+            <Route path="/sheet-music/:slug" element={<SheetMusicSongPage />} />
+            <Route path="/spotify" element={<SpotifyPage />} />
+            <Route path="/updates" element={<UpdatesPage />} />
+            <Route path="/browse" element={<BrowsePage />} />
+          </Routes>
+        </Layout>
+        <Toaster />
+      </SpotifyAuthProvider>
+    </BrowserRouter>
   );
 }
-
-export default App;

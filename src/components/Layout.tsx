@@ -1,0 +1,29 @@
+import { Link } from 'react-router-dom';
+import { useSpotifyAuth } from '@/contexts/SpotifyAuthContext';
+import { Badge } from '@/components/ui/badge';
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  const { isConnected } = useSpotifyAuth();
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <header className="border-b px-6 py-3 flex items-center gap-6">
+        <Link to="/" className="font-bold text-lg">Chartmate</Link>
+        <nav className="flex gap-4 text-sm">
+          <Link to="/sheet-music">Sheet Music</Link>
+          <Link to="/spotify">Spotify</Link>
+          <Link to="/updates">Updates</Link>
+          <Link to="/browse">Browse</Link>
+        </nav>
+        <div className="ml-auto">
+          {isConnected
+            ? <Badge variant="default">Spotify Connected</Badge>
+            : <Badge variant="secondary">Spotify Disconnected</Badge>}
+        </div>
+      </header>
+      <main className="flex-1 p-6">
+        {children}
+      </main>
+    </div>
+  );
+}
