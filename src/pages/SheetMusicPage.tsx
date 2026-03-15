@@ -1,3 +1,9 @@
+import Search from './sheet-music/Search';
+
 export default function SheetMusicPage() {
-  return <div>Sheet Music — coming soon</div>;
+  return (
+    <div>
+      <Search />
+    </div>
+  );
 }
