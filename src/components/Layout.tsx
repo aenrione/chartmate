@@ -1,8 +1,9 @@
+import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { useSpotifyAuth } from '@/contexts/SpotifyAuthContext';
 import { Badge } from '@/components/ui/badge';
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: { children: ReactNode }) {
   const { isConnected } = useSpotifyAuth();
 
   return (
