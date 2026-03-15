@@ -380,7 +380,7 @@ export default function Renderer({
         }
         audioManager.setVolume('click', playClickTrack ? masterClickVolume : 0);
         audioManagerRef.current = audioManager;
-        (window as any).am = audioManager;
+        if (import.meta.env.DEV) (window as any).am = audioManager;
 
         // Apply initial per-track volumes loaded from storage
         try {
