@@ -60,15 +60,18 @@
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
     "tailwindcss-animate": "^1.0.7",
+    "three": "^0.183.2",
     "use-interval": "^1.4.0",
     "vexflow": "^4.2.5"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.1",
     "@tauri-apps/cli": "^2",
     "@types/lodash": "^4.17.24",
     "@types/node": "^25.5.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
+    "@types/three": "^0.183.1",
     "@vitejs/plugin-react": "^4.6.0",
     "autoprefixer": "^10.4.27",
     "postcss": "^8.5.8",
