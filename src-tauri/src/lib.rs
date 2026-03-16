@@ -1,3 +1,5 @@
+use tauri::Emitter;
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -9,7 +11,7 @@ pub fn run() {
         .plugin(tauri_plugin_single_instance::init(|app, argv, _cwd| {
             // Forward deep-link URIs from second instance to first
             if let Some(url) = argv.get(1) {
-                let _ = app.emit("deep-link://new-url", url.clone());
+                let _ = app.emit("deep-link://new-url", vec![url.clone()]);
             }
         }))
         .plugin(tauri_plugin_http::init())
