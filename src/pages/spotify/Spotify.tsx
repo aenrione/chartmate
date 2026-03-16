@@ -200,6 +200,11 @@ function LoggedIn() {
 
     await Promise.all([chorusChartsPromise, updateSpotifyLibraryPromise]);
 
+    // Ensure chart matches are recalculated after both spotify tracks
+    // and chorus charts are fully synced to the database
+    const {recalculateTrackChartMatches} = await import('@/lib/local-db/queries');
+    await recalculateTrackChartMatches();
+
     invalidateData(SPOTIFY_DATA_KEY);
     setHasCached(true);
     setStatus(prevStatus => ({

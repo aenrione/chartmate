@@ -8,6 +8,18 @@ import {
 } from '@spotify/web-api-ts-sdk';
 import pMap from 'p-map';
 import {storeGet, storeSet} from '@/lib/store';
+import {
+  upsertPlaylists,
+  upsertAlbums,
+  replacePlaylistTracks,
+  replaceAlbumTracks,
+  deleteMissingPlaylistsBySnapshot,
+  deleteMissingAlbums,
+  deleteOrphanedTracks,
+  type PlaylistLike,
+  type AlbumLike,
+  type TrackLike,
+} from '@/lib/local-db/spotify';
 
 // Configurable threshold for maximum playlist size to fetch in detail
 export const MAX_PLAYLIST_TRACKS_TO_FETCH = 5000;
@@ -460,6 +472,31 @@ export function useSpotifyLibraryUpdate(): [
         const {playlistMetadata, albumMetadata} =
           await getSpotifyLibraryMetadata(sdk);
 
+        // Sync playlist & album metadata to SQLite
+        const dbPlaylists: PlaylistLike[] = Object.entries(playlistMetadata).map(
+          ([snapshot, p]) => ({
+            id: p.id,
+            snapshot_id: snapshot,
+            name: p.name,
+            collaborative: p.collaborative,
+            owner_display_name: p.owner.displayName,
+            owner_external_url: p.owner.externalUrl,
+            total_tracks: p.total,
+          }),
+        );
+        const dbAlbums: AlbumLike[] = Object.entries(albumMetadata).map(
+          ([albumId, a]) => ({
+            id: albumId,
+            name: a.name,
+            artist_name: a.artistName ?? '',
+            total_tracks: a.totalTracks ?? 0,
+          }),
+        );
+        await Promise.all([
+          upsertPlaylists(dbPlaylists),
+          upsertAlbums(dbAlbums),
+        ]);
+
         setProgress(prev => ({
           ...prev,
           playlists: Object.entries(playlistMetadata).reduce(
@@ -836,6 +873,34 @@ export function useSpotifyLibraryUpdate(): [
           {},
         );
         await setCachedAlbumTracks(newAlbumCache);
+
+        // Sync all tracks to SQLite for chart matching
+        function toTrackLike(t: TrackResult): TrackLike {
+          return {id: t.id, name: t.name, artists: t.artists};
+        }
+
+        // Sync playlist tracks to DB
+        for (const snapshot of foundSnapshots) {
+          const playlistId = playlistMetadata[snapshot]?.id;
+          const tracks = newPlaylistCache[snapshot];
+          if (playlistId && tracks?.length) {
+            await replacePlaylistTracks(playlistId, tracks.map(toTrackLike));
+          }
+        }
+
+        // Sync album tracks to DB
+        for (const albumId of foundAlbums) {
+          const tracks = newAlbumCache[albumId];
+          if (tracks?.length) {
+            await replaceAlbumTracks(albumId, tracks.map(toTrackLike));
+          }
+        }
+
+        // Clean up removed playlists/albums and orphaned tracks
+        await deleteMissingPlaylistsBySnapshot(foundSnapshots);
+        await deleteMissingAlbums(foundAlbums);
+        await deleteOrphanedTracks();
+
         setProgress(prev => ({
           ...prev,
           updateStatus: 'complete',
