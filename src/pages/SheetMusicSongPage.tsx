@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { Loader2 } from 'lucide-react';
 import { isChartCached, fetchAndCacheChart, listCachedFiles, readCachedFile } from '@/lib/sheet-music-cache';
 import { parseChartFile } from '@eliwhite/scan-chart';
 import { searchAdvanced } from '@/lib/search-encore';
@@ -21,6 +22,9 @@ type LoadedData = {
   chart: ParsedChart;
   audioFiles: Files;
 };
+
+// In-memory cache so navigating back doesn't re-fetch
+const chartCache = new Map<string, LoadedData>();
 
 async function readCachedFilesAsFiles(md5: string): Promise<{ fileName: string; data: Uint8Array }[]> {
   const fileNames = await listCachedFiles(md5);
@@ -81,12 +85,20 @@ function getIniContents(files: { fileName: string; data: Uint8Array }[]): string
 
 export default function SheetMusicSongPage() {
   const { slug } = useParams<{ slug: string }>();
-  const [data, setData] = useState<LoadedData | null>(null);
+  const [data, setData] = useState<LoadedData | null>(() =>
+    slug ? chartCache.get(slug) ?? null : null
+  );
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string>('Loading chart...');
 
   useEffect(() => {
     if (!slug) return;
+    // Already have cached data for this slug
+    if (chartCache.has(slug)) {
+      setData(chartCache.get(slug)!);
+      return;
+    }
+
     let cancelled = false;
 
     async function loadChart() {
@@ -146,10 +158,13 @@ export default function SheetMusicSongPage() {
         const audioFiles = findAudioFiles(files);
 
         if (!cancelled) {
-          setData({ metadata, chart: parsedChart, audioFiles });
+          const loaded = { metadata, chart: parsedChart, audioFiles };
+          chartCache.set(slug!, loaded);
+          setData(loaded);
         }
       } catch (err: any) {
-        if (!cancelled) setError(err.message ?? 'Failed to load chart');
+        console.error('Failed to load chart:', err);
+        if (!cancelled) setError(err instanceof Error ? err.message : String(err) || 'Failed to load chart');
       }
     }
 
@@ -158,8 +173,13 @@ export default function SheetMusicSongPage() {
   }, [slug]);
 
   if (!slug) return null;
-  if (error) return <div className="text-destructive p-4">Error: {error}</div>;
-  if (!data) return <div className="p-4 text-muted-foreground">{status}</div>;
+  if (error) return <div className="flex-1 flex items-center justify-center"><span className="text-destructive">Error: {error}</span></div>;
+  if (!data) return (
+    <div className="flex-1 flex flex-col items-center justify-center gap-3">
+      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <span className="text-sm text-muted-foreground">{status}</span>
+    </div>
+  );
 
   return (
     <SongView

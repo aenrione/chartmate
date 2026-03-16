@@ -1,5 +1,6 @@
 import { appCacheDir, join } from '@tauri-apps/api/path';
 import { readFile, writeFile, mkdir, exists, readDir } from '@tauri-apps/plugin-fs';
+import { fetch as tauriFetch } from '@tauri-apps/plugin-http';
 import { SngStream } from 'parse-sng';
 
 const MIME_MAP: Record<string, string> = {
@@ -38,8 +39,9 @@ export async function fetchAndCacheChart(md5: string): Promise<void> {
   await mkdir(dir, { recursive: true });
 
   const url = `https://files.enchor.us/${md5}.sng`;
-  const response = await fetch(url);
-  if (!response.body) throw new Error(`Failed to fetch chart ${md5}`);
+  const response = await tauriFetch(url);
+  if (!response.ok) throw new Error(`Failed to fetch chart ${md5}: ${response.status} ${response.statusText}`);
+  if (!response.body) throw new Error(`Failed to fetch chart ${md5}: no response body`);
 
   await new Promise<void>((resolve, reject) => {
     const sngStream = new SngStream(response.body!, { generateSongIni: true });

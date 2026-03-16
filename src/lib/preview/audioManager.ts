@@ -41,8 +41,16 @@ export class AudioManager {
 
   constructor(audioFiles: Files, onSongEnded: () => void) {
     this.#onSongEnded = onSongEnded;
-    this.#context = new (window.AudioContext || window.webkitAudioContext)();
-    window.ctx = this.#context;
+    const AudioContextConstructor =
+      window.AudioContext ||
+      (window as Window & {webkitAudioContext?: typeof AudioContext})
+        .webkitAudioContext;
+
+    if (AudioContextConstructor == null) {
+      throw new Error('Web Audio API is not supported in this browser');
+    }
+
+    this.#context = new AudioContextConstructor();
     this.#trackOffset = 0;
 
     this.#context.suspend();
@@ -87,9 +95,9 @@ export class AudioManager {
             } catch {
               try {
                 const decode = await import('audio-decode');
-                decodedAudioBuffer = await decode.default(
+                decodedAudioBuffer = (await decode.default(
                   bufferCopy as ArrayBuffer,
-                );
+                )) as unknown as AudioBuffer;
               } catch {
                 console.error('Could not decode audio');
                 return;
@@ -113,46 +121,10 @@ export class AudioManager {
   }
 
   async #initializeSoundTouchWorklet() {
-    try {
-      // Load the SoundTouch worklet
-      await this.#context.audioWorklet.addModule('/soundtouch-worklet.js');
-
-      // Create the worklet node
-      this.#soundTouchWorklet = new AudioWorkletNode(
-        this.#context,
-        'soundtouch-processor',
-        {
-          numberOfInputs: 1,
-          numberOfOutputs: 1,
-          outputChannelCount: [2], // Stereo output
-          processorOptions: {},
-        },
-      );
-
-      // Option B: Drive speed at the source; worklet performs pitch correction only.
-      // Configure SoundTouch so its combined time scaling is 1 (no additional time change),
-      // and pitch shift equals 1/tempo: set rate = 1/tempo, tempo = tempo, pitch = 1.0
-      const tempoParam = this.#soundTouchWorklet.parameters.get('tempo');
-      const rateParam = this.#soundTouchWorklet.parameters.get('rate');
-      const pitchParam = this.#soundTouchWorklet.parameters.get('pitch');
-      if (tempoParam)
-        tempoParam.setValueAtTime(
-          this.#tempoConfig.tempo,
-          this.#context.currentTime,
-        );
-      if (rateParam)
-        rateParam.setValueAtTime(
-          1.0 / this.#tempoConfig.tempo,
-          this.#context.currentTime,
-        );
-      if (pitchParam) pitchParam.setValueAtTime(1.0, this.#context.currentTime);
-
-      // Connect the worklet to destination so audio can flow through
-      this.#soundTouchWorklet.connect(this.#context.destination);
-    } catch (error) {
-      console.error('Failed to initialize SoundTouch worklet:', error);
-      this.#soundTouchWorklet = null;
-    }
+    // SoundTouch worklet is not yet available — skip initialization.
+    // Tempo changes will still work via playbackRate on AudioBufferSourceNode,
+    // but without pitch correction.
+    this.#soundTouchWorklet = null;
   }
 
   // Tempo control methods
@@ -245,7 +217,6 @@ export class AudioManager {
     const currentTime = this.#context.currentTime;
     const songLength = this.#duration;
     const offset: number = time ?? songLength * percent!;
-    const percentCalculated: number = percent ?? time! / songLength;
     this.#trackOffset = offset;
     this.#startedAt = currentTime;
 

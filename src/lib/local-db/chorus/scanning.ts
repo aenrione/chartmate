@@ -1,6 +1,6 @@
 import {getLocalDb} from '../client';
 import {ChorusScanSessions, DB} from '../types';
-import {Selectable, Transaction} from 'kysely';
+import {Kysely, Selectable} from 'kysely';
 
 // Helper function to get current timestamp
 function nowIso(): string {
@@ -9,11 +9,11 @@ function nowIso(): string {
 
 // Scan session operations
 export async function createScanSession(
-  trx: Transaction<DB>,
+  db: Kysely<DB>,
   scanSinceTime: Date,
   lastChartId: number,
 ): Promise<number> {
-  const result = await trx
+  const result = await db
     .insertInto('chorus_scan_sessions')
     .values({
       status: 'in_progress',
@@ -32,11 +32,11 @@ export async function createScanSession(
 }
 
 export async function updateScanProgress(
-  trx: Transaction<DB>,
+  db: Kysely<DB>,
   id: number,
   lastChartId: number,
 ): Promise<void> {
-  await trx
+  await db
     .updateTable('chorus_scan_sessions')
     .set({
       last_chart_id: lastChartId,
@@ -46,12 +46,12 @@ export async function updateScanProgress(
 }
 
 export async function completeScanSession(
-  trx: Transaction<DB>,
+  db: Kysely<DB>,
   id: number,
   completedAt: string = nowIso(),
 ): Promise<void> {
   // Mark session as completed
-  await trx
+  await db
     .updateTable('chorus_scan_sessions')
     .set({
       status: 'completed',
@@ -61,7 +61,7 @@ export async function completeScanSession(
     .execute();
 
   // Update metadata
-  await trx
+  await db
     .insertInto('chorus_metadata')
     .values({
       key: 'last_successful_scan',

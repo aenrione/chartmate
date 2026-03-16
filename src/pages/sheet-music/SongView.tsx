@@ -17,6 +17,12 @@ import {
 import {Slider} from '@/components/ui/slider';
 import {Switch} from '@/components/ui/switch';
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
   ArrowLeft,
   Play,
   Pause,
@@ -29,6 +35,10 @@ import {
   Minus,
   Maximize2,
   Minimize2,
+  Repeat,
+  List,
+  ChevronRight,
+  Timer,
 } from 'lucide-react';
 import {
   useCallback,
@@ -45,7 +55,7 @@ import {getBasename} from '@/lib/src-shared/utils';
 import {cn} from '@/lib/utils';
 import SheetMusic from './SheetMusic';
 import {Files, ParsedChart} from '@/lib/preview/chorus-chart-processing';
-import {AudioManager} from '@/lib/preview/audioManager';
+import {AudioManager, PracticeModeConfig} from '@/lib/preview/audioManager';
 import CloneHeroRenderer from './CloneHeroRenderer';
 import {generateClickTrackFromMeasures} from './generateClickTrack';
 import type {ClickVolumes} from './generateClickTrack';
@@ -74,6 +84,27 @@ function formatSeconds(seconds: number): string {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
   return `${String(mins)}:${String(secs).padStart(2, '0')}`;
+}
+
+function parseTimeInput(value: string): number | null {
+  // Accept "M:SS" or just seconds
+  const parts = value.split(':');
+  if (parts.length === 2) {
+    const mins = parseInt(parts[0], 10);
+    const secs = parseInt(parts[1], 10);
+    if (!isNaN(mins) && !isNaN(secs)) return mins * 60 + secs;
+  }
+  const num = parseFloat(value);
+  return isNaN(num) ? null : num;
+}
+
+function Tip({children, label}: {children: React.ReactNode; label: string}) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
+  );
 }
 
 export default function Renderer({
@@ -120,6 +151,17 @@ export default function Renderer({
   const [volumeControls, setVolumeControls] = useState<VolumeControl[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobileMode, setIsMobileMode] = useState(false);
+
+  // Practice mode state
+  const [practiceMode, setPracticeMode] = useState<PracticeModeConfig | null>(null);
+  const [practiceStartMs, setPracticeStartMs] = useState<number | null>(null);
+  const [practiceEndMs, setPracticeEndMs] = useState<number | null>(null);
+  const [showSections, setShowSections] = useState(true);
+  const [customTimeOpen, setCustomTimeOpen] = useState(false);
+  const [customStartInput, setCustomStartInput] = useState('');
+  const [customEndInput, setCustomEndInput] = useState('');
+  // Multi-section selection: first click sets anchor, second click sets range
+  const [sectionAnchor, setSectionAnchor] = useState<number | null>(null);
 
   // Tempo control state
   const [tempo, setTempo] = useState(1.0);
@@ -176,6 +218,106 @@ export default function Renderer({
     const newZoom = Math.max(zoom - 0.1, 0.3);
     handleZoomChange(newZoom);
   };
+
+  // Build enriched sections with end times from chart.sections
+  const sections = useMemo(() => {
+    const raw = (chart as any).sections as
+      | {tick: number; name: string; msTime: number; msLength: number}[]
+      | undefined;
+    if (!raw || raw.length === 0) return [];
+    return raw.map((section, i) => {
+      const nextSection = raw[i + 1];
+      const endMs = nextSection ? nextSection.msTime : section.msTime + section.msLength;
+      return {
+        name: section.name,
+        startMs: section.msTime,
+        endMs,
+      };
+    });
+  }, [chart]);
+
+  // Practice mode handlers
+  const startPracticeSection = useCallback(
+    (startMs: number, endMs: number) => {
+      const BUFFER_MS = 500;
+      const config: PracticeModeConfig = {
+        startMeasureMs: startMs,
+        endMeasureMs: endMs,
+        startTimeMs: Math.max(0, startMs - BUFFER_MS),
+        endTimeMs: endMs + BUFFER_MS,
+      };
+      setPracticeMode(config);
+      setPracticeStartMs(startMs);
+      setPracticeEndMs(endMs);
+      audioManagerRef.current?.setPracticeMode(config);
+      audioManagerRef.current?.play({time: config.startTimeMs / 1000});
+      setIsPlaying(true);
+    },
+    [],
+  );
+
+  const stopPracticeMode = useCallback(() => {
+    setPracticeMode(null);
+    setPracticeStartMs(null);
+    setPracticeEndMs(null);
+    setSectionAnchor(null);
+    audioManagerRef.current?.setPracticeMode(null);
+  }, []);
+
+  const practiceSection = useCallback(
+    (sectionIndex: number) => {
+      const section = sections[sectionIndex];
+      if (!section) return;
+      setSectionAnchor(null);
+      startPracticeSection(section.startMs, section.endMs);
+    },
+    [sections, startPracticeSection],
+  );
+
+  const practiceSectionRange = useCallback(
+    (startIndex: number, endIndex: number) => {
+      const lo = Math.min(startIndex, endIndex);
+      const hi = Math.max(startIndex, endIndex);
+      const startSection = sections[lo];
+      const endSection = sections[hi];
+      if (!startSection || !endSection) return;
+      setSectionAnchor(null);
+      startPracticeSection(startSection.startMs, endSection.endMs);
+    },
+    [sections, startPracticeSection],
+  );
+
+  const handleSectionPracticeClick = useCallback(
+    (index: number, shiftKey: boolean) => {
+      if (shiftKey && sectionAnchor != null) {
+        // Range selection
+        practiceSectionRange(sectionAnchor, index);
+      } else {
+        // Set anchor for potential range, or single practice
+        setSectionAnchor(index);
+        practiceSection(index);
+      }
+    },
+    [sectionAnchor, practiceSection, practiceSectionRange],
+  );
+
+  const handleCustomTimePractice = useCallback(() => {
+    const startSec = parseTimeInput(customStartInput);
+    const endSec = parseTimeInput(customEndInput);
+    if (startSec == null || endSec == null || endSec <= startSec) return;
+    startPracticeSection(startSec * 1000, endSec * 1000);
+    setCustomTimeOpen(false);
+  }, [customStartInput, customEndInput, startPracticeSection]);
+
+  // Find which section is currently playing
+  const currentSectionIndex = useMemo(() => {
+    if (sections.length === 0) return -1;
+    const currentMs = currentPlayback * 1000;
+    for (let i = sections.length - 1; i >= 0; i--) {
+      if (currentMs >= sections[i].startMs) return i;
+    }
+    return 0;
+  }, [sections, currentPlayback]);
 
   const instrument = 'drums';
 
@@ -421,6 +563,7 @@ export default function Renderer({
 
   useInterval(
     () => {
+      audioManagerRef.current?.checkPracticeModeLoop();
       setCurrentPlayback(audioManagerRef.current?.currentTime ?? 0);
     },
     isPlaying ? 100 : null,
@@ -598,60 +741,69 @@ export default function Renderer({
 
   // Define reusable control elements
   const backButton = (
-    <Link to="/sheet-music">
-      <Button variant="ghost" size="icon" className="rounded-full">
-        <ArrowLeft className="h-6 w-6" />
-      </Button>
-    </Link>
+    <Tip label="Back to search">
+      <Link to="/sheet-music">
+        <Button variant="ghost" size="icon" className="rounded-full">
+          <ArrowLeft className="h-6 w-6" />
+        </Button>
+      </Link>
+    </Tip>
   );
 
   const playPauseButton = (
-    <Button
-      size="icon"
-      variant="secondary"
-      className="rounded-full"
-      onClick={handlePlay}>
-      {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
-    </Button>
+    <Tip label={isPlaying ? 'Pause' : 'Play'}>
+      <Button
+        size="icon"
+        variant="secondary"
+        className="rounded-full"
+        onClick={handlePlay}>
+        {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+      </Button>
+    </Tip>
   );
 
   const maximizeButton = (
-    <Button
-      size="icon"
-      variant="secondary"
-      className={cn(
-        'rounded-full',
-        isMobileMode && 'inline-flex',
-        !isMobileMode && 'md:inline-flex hidden',
-      )}
-      onClick={() => setIsMobileMode(!isMobileMode)}>
-      {isMobileMode ? (
-        <Minimize2 className="h-6 w-6" />
-      ) : (
-        <Maximize2 className="h-6 w-6" />
-      )}
-    </Button>
+    <Tip label={isMobileMode ? 'Exit compact mode' : 'Compact mode'}>
+      <Button
+        size="icon"
+        variant="secondary"
+        className={cn(
+          'rounded-full',
+          isMobileMode && 'inline-flex',
+          !isMobileMode && 'md:inline-flex hidden',
+        )}
+        onClick={() => setIsMobileMode(!isMobileMode)}>
+        {isMobileMode ? (
+          <Minimize2 className="h-6 w-6" />
+        ) : (
+          <Maximize2 className="h-6 w-6" />
+        )}
+      </Button>
+    </Tip>
   );
 
   const menuToggleButton = (
-    <Button
-      variant="ghost"
-      size="icon"
-      className="rounded-full"
-      onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-      {isSidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-    </Button>
+    <Tip label={isSidebarOpen ? 'Close menu' : 'Open menu'}>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="rounded-full"
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+        {isSidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+      </Button>
+    </Tip>
   );
 
   return (
+    <TooltipProvider delayDuration={300}>
     <div
       className={cn(
-        'flex flex-col w-full flex-1',
+        'flex flex-col w-full flex-1 min-h-0',
         !isMobileMode && 'md:overflow-hidden',
       )}>
       <div
         className={cn(
-          'flex flex-col flex-1 bg-background relative',
+          'flex flex-col flex-1 min-h-0 bg-background relative',
           // Normal desktop behavior
           'md:flex-row md:overflow-hidden',
           // Mobile mode on desktop - allow scrolling
@@ -721,13 +873,15 @@ export default function Renderer({
                 <label htmlFor="clicktrack" className="text-sm font-medium">
                   Enable click track
                 </label>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-6 w-6"
-                  onClick={() => setClickTrackConfigurationOpen(true)}>
-                  <Settings2 className="h-3 w-3" />
-                </Button>
+                <Tip label="Configure click track">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-6 w-6"
+                    onClick={() => setClickTrackConfigurationOpen(true)}>
+                    <Settings2 className="h-3 w-3" />
+                  </Button>
+                </Tip>
                 <ClickDialog
                   open={clickTrackConfigurationOpen}
                   setOpen={setClickTrackConfigurationOpen}
@@ -790,32 +944,37 @@ export default function Renderer({
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">Speed</span>
                 <div className="flex items-center space-x-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                      const newTempo = Math.max(tempo - 0.1, 0.25);
-                      handleTempoChange(newTempo);
-                    }}
-                    className="h-6 w-6">
-                    <Minus className="h-3 w-3" />
-                  </Button>
-                  <span
-                    className="text-sm font-mono bg-muted px-2 py-1 rounded min-w-[3rem] text-center cursor-pointer hover:bg-muted/80 transition-colors"
-                    onClick={() => handleTempoChange(1.0)}
-                    title="Click to reset to 100%">
-                    {Math.round(tempo * 100)}%
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                      const newTempo = Math.min(tempo + 0.1, 4.0);
-                      handleTempoChange(newTempo);
-                    }}
-                    className="h-6 w-6">
-                    <Plus className="h-3 w-3" />
-                  </Button>
+                  <Tip label="Slow down">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => {
+                        const newTempo = Math.max(tempo - 0.1, 0.25);
+                        handleTempoChange(newTempo);
+                      }}
+                      className="h-6 w-6">
+                      <Minus className="h-3 w-3" />
+                    </Button>
+                  </Tip>
+                  <Tip label="Click to reset to 100%">
+                    <span
+                      className="text-sm font-mono bg-muted px-2 py-1 rounded min-w-[3rem] text-center cursor-pointer hover:bg-muted/80 transition-colors"
+                      onClick={() => handleTempoChange(1.0)}>
+                      {Math.round(tempo * 100)}%
+                    </span>
+                  </Tip>
+                  <Tip label="Speed up">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => {
+                        const newTempo = Math.min(tempo + 0.1, 4.0);
+                        handleTempoChange(newTempo);
+                      }}
+                      className="h-6 w-6">
+                      <Plus className="h-3 w-3" />
+                    </Button>
+                  </Tip>
                 </div>
               </div>
             </div>
@@ -825,43 +984,204 @@ export default function Renderer({
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">Zoom</span>
                 <div className="flex items-center space-x-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={handleZoomOut}
-                    className="h-6 w-6">
-                    <Minus className="h-3 w-3" />
-                  </Button>
-                  <span
-                    className="text-sm font-mono bg-muted px-2 py-1 rounded min-w-[3rem] text-center cursor-pointer hover:bg-muted/80 transition-colors"
-                    onClick={() => handleZoomChange(1.0)}
-                    title="Click to reset to 100%">
-                    {Math.round(zoom * 100)}%
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={handleZoomIn}
-                    className="h-6 w-6">
-                    <Plus className="h-3 w-3" />
-                  </Button>
+                  <Tip label="Zoom out">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={handleZoomOut}
+                      className="h-6 w-6">
+                      <Minus className="h-3 w-3" />
+                    </Button>
+                  </Tip>
+                  <Tip label="Click to reset to 100%">
+                    <span
+                      className="text-sm font-mono bg-muted px-2 py-1 rounded min-w-[3rem] text-center cursor-pointer hover:bg-muted/80 transition-colors"
+                      onClick={() => handleZoomChange(1.0)}>
+                      {Math.round(zoom * 100)}%
+                    </span>
+                  </Tip>
+                  <Tip label="Zoom in">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={handleZoomIn}
+                      className="h-6 w-6">
+                      <Plus className="h-3 w-3" />
+                    </Button>
+                  </Tip>
                 </div>
               </div>
             </div>
 
+            {/* Practice Mode */}
+            <div className="space-y-2 pt-4 border-t">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium flex items-center gap-1">
+                  <Repeat className="h-3.5 w-3.5" />
+                  Practice
+                </span>
+                <div className="flex items-center gap-1">
+                  <Tip label="Practice a custom time range">
+                    <Button
+                      variant={customTimeOpen ? 'secondary' : 'ghost'}
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={() => setCustomTimeOpen(!customTimeOpen)}>
+                      <Timer className="h-3 w-3" />
+                    </Button>
+                  </Tip>
+                  {practiceMode && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 text-xs"
+                      onClick={stopPracticeMode}>
+                      Stop
+                    </Button>
+                  )}
+                </div>
+              </div>
+              {practiceMode && (
+                <PracticeTimeEditor
+                  practiceStartMs={practiceStartMs ?? 0}
+                  practiceEndMs={practiceEndMs ?? 0}
+                  onApply={startPracticeSection}
+                />
+              )}
+              {/* Custom time range practice */}
+              {customTimeOpen && (
+                <div className="space-y-2 p-2 rounded-md bg-muted/50">
+                  <p className="text-xs text-muted-foreground">Enter times as M:SS or seconds</p>
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="text"
+                      placeholder="0:00"
+                      value={customStartInput}
+                      onChange={e => setCustomStartInput(e.target.value)}
+                      className="w-16 text-xs px-2 py-1 rounded border bg-background"
+                    />
+                    <span className="text-xs text-muted-foreground">to</span>
+                    <input
+                      type="text"
+                      placeholder="0:30"
+                      value={customEndInput}
+                      onChange={e => setCustomEndInput(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') handleCustomTimePractice();
+                      }}
+                      className="w-16 text-xs px-2 py-1 rounded border bg-background"
+                    />
+                    <Tip label="Start practice loop">
+                      <Button
+                        variant="default"
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={handleCustomTimePractice}>
+                        <Play className="h-3 w-3" />
+                      </Button>
+                    </Tip>
+                  </div>
+                  {/* Quick-fill from current playback position */}
+                  <div className="flex gap-2">
+                    <button
+                      className="text-xs text-primary hover:underline"
+                      onClick={() => setCustomStartInput(formatSeconds(currentPlayback))}>
+                      Set start to now
+                    </button>
+                    <button
+                      className="text-xs text-primary hover:underline"
+                      onClick={() => setCustomEndInput(formatSeconds(currentPlayback))}>
+                      Set end to now
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Sections Index */}
+            {sections.length > 0 && (
+              <div className="pt-4 border-t flex flex-col min-h-0">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium flex items-center gap-1">
+                    <List className="h-3.5 w-3.5" />
+                    Sections
+                  </span>
+                  <Tip label={showSections ? 'Collapse sections' : 'Expand sections'}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-5 w-5"
+                      onClick={() => setShowSections(!showSections)}>
+                      <ChevronRight className={cn('h-3 w-3 transition-transform', showSections && 'rotate-90')} />
+                    </Button>
+                  </Tip>
+                </div>
+                {sectionAnchor != null && (
+                  <p className="text-xs text-muted-foreground mb-1">
+                    Hold Shift + click another section to practice a range
+                  </p>
+                )}
+                {showSections && (
+                  <div className="space-y-0.5 overflow-y-auto max-h-48">
+                    {sections.map((section, i) => {
+                      const isInPracticeRange =
+                        practiceMode &&
+                        practiceStartMs != null &&
+                        practiceEndMs != null &&
+                        section.startMs >= practiceStartMs &&
+                        section.startMs < practiceEndMs;
+                      const isAnchor = sectionAnchor === i;
+                      return (
+                        <div
+                          key={i}
+                          className={cn(
+                            'flex items-center gap-1 text-xs rounded px-1.5 py-1 cursor-pointer hover:bg-accent transition-colors group',
+                            currentSectionIndex === i && 'bg-accent/50 font-medium',
+                            isInPracticeRange && 'ring-1 ring-primary/40',
+                            isAnchor && !practiceMode && 'ring-1 ring-primary/60 bg-primary/5',
+                          )}>
+                          <button
+                            className="flex-1 text-left truncate"
+                            onClick={() => {
+                              const timeSec = section.startMs / 1000;
+                              setCurrentPlayback(timeSec);
+                              if (audioManagerRef.current) {
+                                audioManagerRef.current.play({time: timeSec});
+                                setIsPlaying(true);
+                              }
+                            }}>
+                            {section.name}
+                          </button>
+                          <span className="text-muted-foreground shrink-0">
+                            {formatSeconds(section.startMs / 1000)}
+                          </span>
+                          <Tip label="Practice on loop (Shift+click for range)">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-5 w-5 opacity-0 group-hover:opacity-100 shrink-0"
+                              onClick={e => {
+                                e.stopPropagation();
+                                handleSectionPracticeClick(i, e.shiftKey);
+                              }}>
+                              <Repeat className="h-3 w-3" />
+                            </Button>
+                          </Tip>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
           </div>
-          <p className="text-xs text-muted-foreground text-center mt-auto">
-            Special thanks to{' '}
-            <a href="https://github.com/tonygoldcrest">@tonygoldcrest</a>&apos;s{' '}
-            <a href="https://github.com/tonygoldcrest/drum-hero">drum-hero</a>{' '}
-            for providing much of this tool.
-          </p>
         </div>
 
         {/* Main Content */}
         <div
           className={cn(
-            'flex-1 flex flex-col',
+            'flex-1 flex flex-col min-h-0',
             // Normal desktop behavior - hide overflow
             'md:overflow-hidden',
             // Mobile mode on desktop - allow scrolling
@@ -889,28 +1209,51 @@ export default function Renderer({
               // If not in mobile mode, then it's just static, otherwise it's sticky
               !isMobileMode && 'md:static',
             )}>
-            <Slider
-              value={[currentPlayback]}
-              max={songDuration || 100}
-              min={0}
-              onValueChange={values => {
-                const newTime = values[0];
-                setCurrentPlayback(newTime);
-                if (audioManagerRef.current) {
-                  audioManagerRef.current.play({
-                    time: newTime,
-                  });
-                  setIsPlaying(true);
-                }
-              }}
-            />
+            <div className="flex-1 relative">
+              {practiceMode && songDuration > 0 && (
+                <div
+                  className="absolute top-1/2 -translate-y-1/2 h-2 bg-primary/20 rounded-full pointer-events-none z-0"
+                  style={{
+                    left: `${((practiceMode.startMeasureMs / 1000) / songDuration) * 100}%`,
+                    width: `${(((practiceMode.endMeasureMs - practiceMode.startMeasureMs) / 1000) / songDuration) * 100}%`,
+                  }}
+                />
+              )}
+              <Slider
+                value={[currentPlayback]}
+                max={songDuration || 100}
+                min={0}
+                className="relative z-10"
+                onValueChange={values => {
+                  const newTime = values[0];
+                  setCurrentPlayback(newTime);
+                  if (audioManagerRef.current) {
+                    audioManagerRef.current.play({
+                      time: newTime,
+                    });
+                    setIsPlaying(true);
+                  }
+                }}
+              />
+            </div>
             <span className="text-sm text-muted-foreground whitespace-nowrap">
               {formatSeconds(currentPlayback)} /{' '}
               {formatSeconds((metadata.song_length || 0) / 1000)}
             </span>
+            {practiceMode && (
+              <Tip label="Stop practice mode">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 shrink-0"
+                  onClick={stopPracticeMode}>
+                  <Repeat className="h-4 w-4 text-primary" />
+                </Button>
+              </Tip>
+            )}
           </div>
 
-          <div className="md:pt-4 md:px-4 pt-2 flex-1 flex flex-col overflow-hidden">
+          <div className="md:pt-4 md:px-4 pt-2 flex-1 flex flex-col min-h-0 overflow-hidden">
             <div className="flex items-center justify-between mb-2 md:mb-4">
               <h1 className="text-3xl md:text-3xl font-bold">
                 {metadata.name}{' '}
@@ -963,6 +1306,7 @@ export default function Renderer({
         </div>
       </div>
     </div>
+    </TooltipProvider>
   );
 }
 
@@ -996,24 +1340,28 @@ export function AudioVolume({
           onValueChange={values => onChange(values[0])}
         />
         <div className="flex gap-1">
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-6 w-6"
-            onClick={onMuteClick}>
-            {isMuted ? (
-              <VolumeX className="h-3 w-3" />
-            ) : (
-              <Volume2 className="h-3 w-3" />
-            )}
-          </Button>
-          <Button
-            variant={isSoloed ? 'secondary' : 'outline'}
-            size="icon"
-            className="h-6 w-6"
-            onClick={onSoloClick}>
-            S
-          </Button>
+          <Tip label={isMuted ? 'Unmute' : 'Mute'}>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-6 w-6"
+              onClick={onMuteClick}>
+              {isMuted ? (
+                <VolumeX className="h-3 w-3" />
+              ) : (
+                <Volume2 className="h-3 w-3" />
+              )}
+            </Button>
+          </Tip>
+          <Tip label={isSoloed ? 'Unsolo' : 'Solo'}>
+            <Button
+              variant={isSoloed ? 'secondary' : 'outline'}
+              size="icon"
+              className="h-6 w-6"
+              onClick={onSoloClick}>
+              S
+            </Button>
+          </Tip>
         </div>
       </div>
     </div>
@@ -1122,6 +1470,58 @@ export function ClickVolume({
           onValueChange={values => onChange(values[0])}
         />
       </div>
+    </div>
+  );
+}
+
+function PracticeTimeEditor({
+  practiceStartMs,
+  practiceEndMs,
+  onApply,
+}: {
+  practiceStartMs: number;
+  practiceEndMs: number;
+  onApply: (startMs: number, endMs: number) => void;
+}) {
+  const [editStart, setEditStart] = useState(formatSeconds(practiceStartMs / 1000));
+  const [editEnd, setEditEnd] = useState(formatSeconds(practiceEndMs / 1000));
+
+  // Sync when external values change (e.g. section clicked)
+  useEffect(() => {
+    setEditStart(formatSeconds(practiceStartMs / 1000));
+  }, [practiceStartMs]);
+  useEffect(() => {
+    setEditEnd(formatSeconds(practiceEndMs / 1000));
+  }, [practiceEndMs]);
+
+  const apply = () => {
+    const startSec = parseTimeInput(editStart);
+    const endSec = parseTimeInput(editEnd);
+    if (startSec != null && endSec != null && endSec > startSec) {
+      onApply(startSec * 1000, endSec * 1000);
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+      <span>Looping</span>
+      <input
+        type="text"
+        value={editStart}
+        onChange={e => setEditStart(e.target.value)}
+        onBlur={apply}
+        onKeyDown={e => { if (e.key === 'Enter') apply(); }}
+        className="w-12 text-xs px-1 py-0.5 rounded border bg-background text-center"
+      />
+      <span>-</span>
+      <input
+        type="text"
+        value={editEnd}
+        onChange={e => setEditEnd(e.target.value)}
+        onBlur={apply}
+        onKeyDown={e => { if (e.key === 'Enter') apply(); }}
+        className="w-12 text-xs px-1 py-0.5 rounded border bg-background text-center"
+      />
     </div>
   );
 }

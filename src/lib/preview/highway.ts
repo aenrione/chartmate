@@ -24,6 +24,19 @@ export type Song = {};
 const SCALE = 0.105;
 const NOTE_SPAN_WIDTH = 0.99;
 
+function getSpriteAspectRatio(sprite: THREE.Sprite) {
+  const material = sprite.material as THREE.SpriteMaterial;
+  const image = material.map?.image as
+    | {width: number; height: number}
+    | undefined;
+
+  if (image == null || image.height === 0) {
+    return 1;
+  }
+
+  return image.width / image.height;
+}
+
 const NOTE_COLORS = {
   green: '#01B11A',
   red: '#DD2214',
@@ -656,9 +669,7 @@ async function generateNoteHighway(
             getTextureForNote(note, {inStarPower}),
           );
           sprite.center = new THREE.Vector2(0.5, -0.5);
-          const aspectRatio =
-            sprite.material.map!.image.width /
-            sprite.material.map!.image.height;
+          const aspectRatio = getSpriteAspectRatio(sprite);
           sprite.scale.set(kickScale * aspectRatio, kickScale, kickScale);
           sprite.position.z = 0;
           sprite.material.clippingPlanes = clippingPlanes;
@@ -689,9 +700,7 @@ async function generateNoteHighway(
             sprite.position.x = noteXPosition;
 
             sprite.center = new THREE.Vector2(0.5, 0);
-            const aspectRatio =
-              sprite.material.map!.image.width /
-              sprite.material.map!.image.height;
+            const aspectRatio = getSpriteAspectRatio(sprite);
             sprite.scale.set(SCALE * aspectRatio, SCALE, SCALE);
             sprite.position.z = 0;
             sprite.material.clippingPlanes = clippingPlanes;
@@ -710,9 +719,7 @@ async function generateNoteHighway(
             getTextureForNote(note, {inStarPower}),
           );
           sprite.center = new THREE.Vector2(0.5, 0);
-          const aspectRatio =
-            sprite.material.map!.image.width /
-            sprite.material.map!.image.height;
+          const aspectRatio = getSpriteAspectRatio(sprite);
           sprite.scale.set(openScale * aspectRatio, openScale, openScale);
           // sprite.position.x = -0.9;
           sprite.position.z = 0;
@@ -750,9 +757,7 @@ async function generateNoteHighway(
             );
 
             sprite.center = new THREE.Vector2(0.5, 0);
-            const aspectRatio =
-              sprite.material.map!.image.width /
-              sprite.material.map!.image.height;
+            const aspectRatio = getSpriteAspectRatio(sprite);
             sprite.scale.set(SCALE * aspectRatio, SCALE, SCALE);
             sprite.position.z = 0;
             sprite.material.clippingPlanes = clippingPlanes;

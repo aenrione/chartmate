@@ -1,5 +1,5 @@
 import { open } from '@tauri-apps/plugin-dialog';
-import { storeGet, storeSet, STORE_KEYS } from '@/lib/store';
+import { storeGet, storeSet, storeDelete, STORE_KEYS } from '@/lib/store';
 
 export async function getSongsFolderPath(): Promise<string | null> {
   return storeGet<string>(STORE_KEYS.SONGS_FOLDER_PATH);
@@ -21,5 +21,14 @@ export async function promptForSongsFolder(): Promise<string> {
 export async function getOrPromptSongsFolder(): Promise<string> {
   const existing = await getSongsFolderPath();
   if (existing) return existing;
+  return promptForSongsFolder();
+}
+
+export async function clearSongsFolderPath(): Promise<void> {
+  await storeDelete(STORE_KEYS.SONGS_FOLDER_PATH);
+}
+
+export async function changeSongsFolder(): Promise<string> {
+  await storeDelete(STORE_KEYS.SONGS_FOLDER_PATH);
   return promptForSongsFolder();
 }

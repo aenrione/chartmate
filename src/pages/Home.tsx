@@ -1,11 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { buttonVariants } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 
 export default function Home() {
   return (
-    <div className="max-w-4xl">
+    <div className="max-w-4xl p-6 overflow-y-auto flex-1">
       <section className="mb-10">
         <p className="text-lg mt-2">
           A desktop companion app to help you find and manage Clone Hero / YARG charts.
@@ -25,11 +24,11 @@ export default function Home() {
         </Card>
         <Card className="flex flex-col justify-between">
           <CardHeader>
-            <CardTitle>Spotify Library Scanner <Badge className="ml-2">Beta</Badge></CardTitle>
+            <CardTitle>Spotify Library Scanner</CardTitle>
             <CardDescription>Find charts on Encore that match songs in your Spotify playlists.</CardDescription>
           </CardHeader>
           <CardFooter>
-            <Link to="/spotify" className={buttonVariants({ variant: 'default' })}>Try the Beta</Link>
+            <Link to="/spotify" className={buttonVariants({ variant: 'default' })}>Go to Tool</Link>
           </CardFooter>
         </Card>
         <Card className="flex flex-col justify-between">

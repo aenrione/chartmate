@@ -3,7 +3,7 @@ import {DB} from '../types';
 // ChartResponseEncore will be provided by @/lib/chartSelection (Task 4)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ChartResponseEncore = any;
-import {Kysely, Transaction, sql} from 'kysely';
+import {Kysely, sql} from 'kysely';
 import {normalizeStrForMatching} from '../normalize';
 import {
   createScanSession,
@@ -21,7 +21,7 @@ function nowIso(): string {
 
 // Chart operations
 export async function upsertCharts(
-  trx: Transaction<DB>,
+  db: Kysely<DB>,
   charts: ChartResponseEncore[],
 ): Promise<void> {
   if (charts.length === 0) return;
@@ -59,88 +59,90 @@ export async function upsertCharts(
       group_id: chart.groupId ?? 0,
     }));
 
-  const tempTable = '_temp_chorus_charts';
+  await db.transaction().execute(async trx => {
+    const tempTable = '_temp_chorus_charts';
 
-  await trx.schema
-    .createTable(tempTable)
-    .temporary()
-    .as(
-      trx
-        .selectFrom('chorus_charts')
-        .selectAll()
-        .where(sql<boolean>`0`),
-    )
-    .execute();
+    await trx.schema
+      .createTable(tempTable)
+      .temporary()
+      .as(
+        trx
+          .selectFrom('chorus_charts')
+          .selectAll()
+          .where(sql<boolean>`0`),
+      )
+      .execute();
 
-  console.log('inserting batches');
-  // Bulk load into the temp table first (respecting SQLite variable limits)
-  for (let i = 0; i < chartRows.length; i += BATCH_SIZE) {
-    console.log('inserting batch #', i / BATCH_SIZE + 1);
-    const batch = chartRows.slice(i, i + BATCH_SIZE);
-    try {
-      await trx
-        .insertInto(tempTable as any)
-        .values(batch)
-        .execute();
-    } catch (error) {
-      console.error('Error staging charts into temp table:', error);
-      throw error;
+    console.log('inserting batches');
+    // Bulk load into the temp table first (respecting SQLite variable limits)
+    for (let i = 0; i < chartRows.length; i += BATCH_SIZE) {
+      console.log('inserting batch #', i / BATCH_SIZE + 1);
+      const batch = chartRows.slice(i, i + BATCH_SIZE);
+      try {
+        await trx
+          .insertInto(tempTable as any)
+          .values(batch)
+          .execute();
+      } catch (error) {
+        console.error('Error staging charts into temp table:', error);
+        throw error;
+      }
     }
-  }
 
-  // Insert only rows that don't already exist in chorus_charts by md5
-  await trx
-    .insertInto('chorus_charts')
-    .ignore()
-    .columns([
-      'md5',
-      'name',
-      'artist',
-      'charter',
-      'artist_normalized',
-      'charter_normalized',
-      'name_normalized',
-      'diff_drums',
-      'diff_guitar',
-      'diff_bass',
-      'diff_keys',
-      'diff_drums_real',
-      'modified_time',
-      'song_length',
-      'has_video_background',
-      'album_art_md5',
-      'group_id',
-    ])
-    .expression(eb =>
-      eb
-        .selectFrom(`${tempTable} as t` as any)
-        .select([
-          'md5',
-          'name',
-          'artist',
-          'charter',
-          'artist_normalized',
-          'charter_normalized',
-          'name_normalized',
-          'diff_drums',
-          'diff_guitar',
-          'diff_bass',
-          'diff_keys',
-          'diff_drums_real',
-          'modified_time',
-          'song_length',
-          'has_video_background',
-          'album_art_md5',
-          'group_id',
-        ])
-        .orderBy('md5'),
-    )
-    .execute();
+    // Insert only rows that don't already exist in chorus_charts by md5
+    await trx
+      .insertInto('chorus_charts')
+      .ignore()
+      .columns([
+        'md5',
+        'name',
+        'artist',
+        'charter',
+        'artist_normalized',
+        'charter_normalized',
+        'name_normalized',
+        'diff_drums',
+        'diff_guitar',
+        'diff_bass',
+        'diff_keys',
+        'diff_drums_real',
+        'modified_time',
+        'song_length',
+        'has_video_background',
+        'album_art_md5',
+        'group_id',
+      ])
+      .expression(eb =>
+        eb
+          .selectFrom(`${tempTable} as t` as any)
+          .select([
+            'md5',
+            'name',
+            'artist',
+            'charter',
+            'artist_normalized',
+            'charter_normalized',
+            'name_normalized',
+            'diff_drums',
+            'diff_guitar',
+            'diff_bass',
+            'diff_keys',
+            'diff_drums_real',
+            'modified_time',
+            'song_length',
+            'has_video_background',
+            'album_art_md5',
+            'group_id',
+          ])
+          .orderBy('md5'),
+      )
+      .execute();
 
-  // Drop the temp table
-  await trx.schema.dropTable(tempTable).execute();
+    // Drop the temp table
+    await trx.schema.dropTable(tempTable).execute();
 
-  await recalculateTrackChartMatches(trx);
+    await recalculateTrackChartMatches(trx);
+  });
 
   const after = performance.now();
   console.log('Upserted charts in', (after - before) / 1000, 'seconds');

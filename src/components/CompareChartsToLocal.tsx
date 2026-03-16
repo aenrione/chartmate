@@ -1,4 +1,4 @@
-import {useCallback, useReducer} from 'react';
+import {useCallback, useEffect, useReducer, useState} from 'react';
 import SongsTable from './SongsTable';
 
 import {SongAccumulator} from '@/lib/local-songs-folder/scanLocalCharts';
@@ -8,6 +8,7 @@ import {
   findMatchingChartsExact,
 } from '@/lib/chorusChartDb';
 import {scanForInstalledCharts} from '@/lib/local-songs-folder';
+import {getSongsFolderPath, clearSongsFolderPath, changeSongsFolder} from '@/lib/songs-folder';
 import {Button} from '@/components/ui/button';
 import {
   ChartInfo,
@@ -78,13 +79,14 @@ export default function CompareChartsToLocal({
     songsCounted: 0,
     chorusCharts: null,
   });
+  const [error, setError] = useState<string | null>(null);
+  const [hasFolder, setHasFolder] = useState<boolean | null>(null);
 
   const [, fetchChorusCharts] = useChorusChartDb();
 
-  const handler = useCallback(async () => {
-    songsDispatch({
-      type: 'reset',
-    });
+  const scan = useCallback(async () => {
+    songsDispatch({type: 'reset'});
+    setError(null);
 
     const abortController = new AbortController();
     const chorusChartsPromise = fetchChorusCharts(abortController);
@@ -93,13 +95,21 @@ export default function CompareChartsToLocal({
 
     try {
       const scanResult = await scanForInstalledCharts(() => {
-        songsDispatch({
-          type: 'increment-counter',
-        });
+        songsDispatch({type: 'increment-counter'});
       });
       songs = scanResult.installedCharts;
+      setHasFolder(true);
     } catch (e) {
-      console.log('User canceled picker', e);
+      const message = e instanceof Error ? e.message : String(e);
+      if (message.includes('forbidden path')) {
+        await clearSongsFolderPath();
+        setHasFolder(false);
+        setError(
+          'The previously selected folder is no longer accessible. Please select your Songs folder again.',
+        );
+      } else {
+        console.log('User canceled picker', e);
+      }
       return;
     }
 
@@ -170,19 +180,94 @@ export default function CompareChartsToLocal({
     });
   }, [exact, rankingGroups]);
 
+  const handleChangeFolder = useCallback(async () => {
+    try {
+      await changeSongsFolder();
+    } catch {
+      // User canceled the picker
+      return;
+    }
+    scan();
+  }, [scan]);
+
+  // Auto-scan on mount if a folder is already saved
+  useEffect(() => {
+    getSongsFolderPath().then(path => {
+      if (path) {
+        setHasFolder(true);
+        scan();
+      } else {
+        setHasFolder(false);
+      }
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const isScanning = songsState.songs == null && songsState.songsCounted > 0;
+
+  // Loading state while checking for saved folder
+  if (hasFolder === null) {
+    return null;
+  }
+
+  if (songsState.songs) {
+    return (
+      <>
+        <div className="flex gap-2 mb-2">
+          <Button onClick={scan}>Rescan</Button>
+          <Button variant="outline" onClick={handleChangeFolder}>
+            Change Folder
+          </Button>
+        </div>
+        <SongsTable songs={songsState.songs} />
+      </>
+    );
+  }
+
+  // Show scanning progress if a folder is selected and scan is in progress
+  if (hasFolder && isScanning) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 py-24 text-center">
+        <p className="text-sm text-muted-foreground">
+          {songsState.songsCounted} songs scanned...
+        </p>
+      </div>
+    );
+  }
+
+  // Empty state: no folder selected yet
   return (
-    <>
-      <Button
-        disabled={songsState.songs == null && songsState.songsCounted > 0}
-        onClick={handler}>
-        {songsState.songs == null && songsState.songsCounted == 0
-          ? 'Select Clone Hero Songs Folder'
-          : 'Rescan'}
-      </Button>
-      {songsState.songs == null && (
-        <h1>{songsState.songsCounted} songs scanned</h1>
+    <div className="flex flex-col items-center justify-center gap-6 py-24 text-center">
+      <div className="rounded-full bg-muted p-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="text-muted-foreground">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="17 8 12 3 7 8" />
+          <line x1="12" y1="3" x2="12" y2="15" />
+        </svg>
+      </div>
+      <div className="max-w-md space-y-2">
+        <h2 className="text-lg font-semibold">Check for Chart Updates</h2>
+        <p className="text-sm text-muted-foreground">
+          Scans your installed charts and finds newer versions from the same
+          charter. This tool is currently in beta &mdash; back up your Songs
+          folder before using it.
+        </p>
+      </div>
+      {error && (
+        <p className="text-sm text-destructive max-w-md">{error}</p>
       )}
-      {songsState.songs && <SongsTable songs={songsState.songs} />}
-    </>
+      <Button disabled={isScanning} onClick={scan}>
+        {isScanning ? 'Scanning...' : 'Select Clone Hero Songs Folder'}
+      </Button>
+    </div>
   );
 }

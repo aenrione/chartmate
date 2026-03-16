@@ -1,4 +1,4 @@
-import {Kysely, Migrator, ParseJSONResultsPlugin} from 'kysely';
+import {Kysely, Migrator, ParseJSONResultsPlugin, sql} from 'kysely';
 import type {DB} from './types';
 import {TauriSqliteDialect} from './tauri-sql-dialect';
 
@@ -19,6 +19,11 @@ async function initializeDatabase(): Promise<Kysely<DB>> {
       dialect,
       plugins: [new ParseJSONResultsPlugin()],
     });
+
+    // Enable WAL mode for better concurrency (allows reads during writes)
+    await sql`PRAGMA journal_mode=WAL`.execute(db);
+    // Wait up to 5s for locks to clear instead of failing immediately
+    await sql`PRAGMA busy_timeout=5000`.execute(db);
 
     const migrator = new Migrator({
       db,

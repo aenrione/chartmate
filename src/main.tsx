@@ -2,14 +2,35 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { onOpenUrl } from '@tauri-apps/plugin-deep-link';
+import { getCurrent, onOpenUrl } from '@tauri-apps/plugin-deep-link';
 
-// Register deep-link handler at startup
-onOpenUrl((urls) => {
-  const url = urls[0];
-  if (url?.startsWith('chartmate://auth/callback')) {
+function dispatchSpotifyCallback(url: string) {
+  if (url.startsWith('chartmate://auth/callback')) {
+    console.log('[deep-link] dispatching spotify-callback', url);
     window.dispatchEvent(new CustomEvent('spotify-callback', { detail: url }));
   }
+}
+
+// Check if the app was started via a deep link
+getCurrent().then((urls) => {
+  if (urls && urls.length > 0) {
+    console.log('[deep-link] app started with URLs:', urls);
+    for (const url of urls) {
+      dispatchSpotifyCallback(url);
+    }
+  }
+}).catch((err) => {
+  console.error('[deep-link] getCurrent failed:', err);
+});
+
+// Listen for deep links while the app is running
+onOpenUrl((urls) => {
+  console.log('[deep-link] onOpenUrl fired:', urls);
+  for (const url of urls) {
+    dispatchSpotifyCallback(url);
+  }
+}).catch((err) => {
+  console.error('[deep-link] onOpenUrl registration failed:', err);
 });
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

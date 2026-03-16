@@ -1,4 +1,4 @@
-import {Suspense, useCallback, useState} from 'react';
+import {Suspense, useCallback, useEffect, useState} from 'react';
 import SpotifyTableDownloader, {
   SpotifyChartData,
   SpotifyPlaysRecommendations,
@@ -6,9 +6,10 @@ import SpotifyTableDownloader, {
 import {Button} from '@/components/ui/button';
 import {getLocalDb} from '@/lib/local-db/client';
 import {sql} from 'kysely';
-import {useData} from '@/lib/suspense-data';
+import {useData, invalidateData} from '@/lib/suspense-data';
 import {useChorusChartDb} from '@/lib/chorusChartDb';
 import {scanForInstalledCharts} from '@/lib/local-songs-folder';
+import {getSongsFolderPath, clearSongsFolderPath, changeSongsFolder} from '@/lib/songs-folder';
 import {useSpotifyLibraryUpdate} from '@/lib/spotify-sdk/SpotifyFetching';
 import {toast} from 'sonner';
 import {
@@ -34,12 +35,31 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty';
-import {FileMusic} from 'lucide-react';
+import {FileMusic, RefreshCw} from 'lucide-react';
 import {useSpotifyAuth} from '@/contexts/SpotifyAuthContext';
-import {initiateSpotifyLogin} from '@/lib/spotify-auth';
+import {initiateSpotifyLogin, handleSpotifyCallback} from '@/lib/spotify-auth';
+import {invalidateSpotifySdkCache} from '@/lib/spotify-sdk/ClientInstance';
 
 
 function ConnectSpotifyCard() {
+  const [callbackUrl, setCallbackUrl] = useState('');
+  const [error, setError] = useState('');
+  const {refresh} = useSpotifyAuth();
+
+  const handleManualCallback = async () => {
+    if (!callbackUrl.startsWith('chartmate://auth/callback')) {
+      setError('URL must start with chartmate://auth/callback');
+      return;
+    }
+    try {
+      await handleSpotifyCallback(callbackUrl);
+      invalidateSpotifySdkCache();
+      await refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Callback failed');
+    }
+  };
+
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
@@ -48,10 +68,28 @@ function ConnectSpotifyCard() {
           Sign in with Spotify to scan your library for charts.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         <Button onClick={() => initiateSpotifyLogin()}>
           Connect with Spotify
         </Button>
+        {import.meta.env.DEV && (
+          <div className="space-y-2 pt-4 border-t">
+            <p className="text-xs text-muted-foreground">
+              Dev mode: paste the <code>chartmate://auth/callback?code=...</code> URL from the browser address bar after authorizing.
+            </p>
+            <input
+              type="text"
+              value={callbackUrl}
+              onChange={e => { setCallbackUrl(e.target.value); setError(''); }}
+              placeholder="chartmate://auth/callback?code=..."
+              className="w-full px-3 py-2 text-sm border rounded-md"
+            />
+            {error && <p className="text-xs text-red-500">{error}</p>}
+            <Button variant="outline" size="sm" onClick={handleManualCallback} disabled={!callbackUrl}>
+              Submit Callback
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
@@ -83,6 +121,18 @@ type Status = {
   songsCounted: number;
 };
 
+async function hasCachedSpotifyData(): Promise<boolean> {
+  const db = await getLocalDb();
+  const row = await db
+    .selectFrom('spotify_track_chart_matches')
+    .select(sql<number>`1`.as('exists'))
+    .limit(1)
+    .executeTakeFirst();
+  return row != null;
+}
+
+const SPOTIFY_DATA_KEY = 'spotify-history-tracks-data';
+
 function LoggedIn() {
   const [status, setStatus] = useState<Status>({
     status: 'not-started',
@@ -94,6 +144,17 @@ function LoggedIn() {
   const [chorusChartProgress, fetchChorusCharts] = useChorusChartDb();
 
   const [started, setStarted] = useState(false);
+  const [hasCached, setHasCached] = useState<boolean | null>(null);
+  const [hasFolder, setHasFolder] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    Promise.all([hasCachedSpotifyData(), getSongsFolderPath()]).then(
+      ([cached, folder]) => {
+        setHasCached(cached);
+        setHasFolder(!!folder);
+      },
+    );
+  }, []);
 
   const calculate = useCallback(async () => {
     const abortController = new AbortController();
@@ -115,58 +176,88 @@ function LoggedIn() {
           songsCounted: prevStatus.songsCounted + 1,
         }));
       });
+      setHasFolder(true);
       setStatus(prevStatus => ({...prevStatus, status: 'done-scanning'}));
       await pause();
     } catch (err) {
-      if (err instanceof Error && err.message == 'User canceled picker') {
+      const message = err instanceof Error ? err.message : String(err);
+      if (message === 'User canceled picker') {
         toast.info('Directory picker canceled');
-        setStatus({
-          status: 'not-started',
-          songsCounted: 0,
-        });
-        return;
+      } else if (message.includes('forbidden path')) {
+        await clearSongsFolderPath();
+        setHasFolder(false);
+        toast.error(
+          'The previously selected folder is no longer accessible. Please select your Songs folder again.',
+          {duration: 8000},
+        );
       } else {
         toast.error('Error scanning local charts', {duration: 8000});
-        setStatus({
-          status: 'not-started',
-          songsCounted: 0,
-        });
-        throw err;
       }
+      setStatus({status: 'not-started', songsCounted: 0});
+      setStarted(false);
+      return;
     }
 
     await Promise.all([chorusChartsPromise, updateSpotifyLibraryPromise]);
 
+    invalidateData(SPOTIFY_DATA_KEY);
+    setHasCached(true);
     setStatus(prevStatus => ({
       ...prevStatus,
       status: 'done',
     }));
   }, []);
 
+  const handleChangeFolder = useCallback(async () => {
+    try {
+      await changeSongsFolder();
+    } catch {
+      // User canceled the picker
+      return;
+    }
+    calculate();
+  }, [calculate]);
+
+  // Auto-trigger scan when folder is saved but no cached results
+  useEffect(() => {
+    if (hasFolder && !hasCached && !started) {
+      calculate();
+    }
+  }, [hasFolder, hasCached]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const showCachedResults = hasCached && !started;
+  const showScanProgress =
+    started &&
+    !(
+      spotifyLibraryProgress.updateStatus === 'complete' &&
+      status.status === 'done'
+    );
+  const showResultsAfterScan = status.status === 'done';
+
+  if (hasCached === null || hasFolder === null) {
+    return null;
+  }
+
   return (
     <>
-      {!started && <ScanLocalFoldersCTACard onClick={calculate} />}
+      {!started && !hasCached && !hasFolder && <ScanLocalFoldersCTACard onClick={calculate} />}
 
-      {started &&
-        !(
-          spotifyLibraryProgress.updateStatus === 'complete' &&
-          status.status === 'done'
-        ) && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <SpotifyLoaderCard progress={spotifyLibraryProgress} />
-            <div className="space-y-4">
-              <LocalScanLoaderCard
-                count={status.songsCounted}
-                isScanning={status.status === 'scanning'}
-              />
-              <UpdateChorusLoaderCard progress={chorusChartProgress} />
-            </div>
+      {showScanProgress && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <SpotifyLoaderCard progress={spotifyLibraryProgress} />
+          <div className="space-y-4">
+            <LocalScanLoaderCard
+              count={status.songsCounted}
+              isScanning={status.status === 'scanning'}
+            />
+            <UpdateChorusLoaderCard progress={chorusChartProgress} />
           </div>
-        )}
+        </div>
+      )}
 
-      {status.status === 'done' && (
+      {(showCachedResults || showResultsAfterScan) && (
         <Suspense fallback={<div>Loading...</div>}>
-          <SpotifyHistory />
+          <SpotifyHistory onRescan={calculate} onChangeFolder={handleChangeFolder} />
         </Suspense>
       )}
     </>
@@ -414,9 +505,9 @@ async function getData() {
   return result;
 }
 
-function SpotifyHistory() {
+function SpotifyHistory({onRescan, onChangeFolder}: {onRescan: () => void; onChangeFolder: () => void}) {
   const {data} = useData({
-    key: 'spotify-history-tracks-data',
+    key: SPOTIFY_DATA_KEY,
     fn: getData,
   });
 
@@ -443,6 +534,15 @@ function SpotifyHistory() {
 
   return (
     <>
+      <div className="flex justify-end gap-2 mb-2 px-1">
+        <Button variant="outline" size="sm" onClick={onChangeFolder}>
+          Change Folder
+        </Button>
+        <Button variant="outline" size="sm" onClick={onRescan}>
+          <RefreshCw className="h-4 w-4 mr-1.5" />
+          Rescan Library
+        </Button>
+      </div>
       {songs.length === 0 ? (
         <NoMatches />
       ) : (
@@ -460,21 +560,20 @@ async function pause() {
 
 function ScanLocalFoldersCTACard({onClick}: {onClick: () => void}) {
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader className="text-center">
-        <CardTitle>Select Local Songs Folder</CardTitle>
-        <CardDescription>
-          We scan your local songs folder to find installed charts, enabling you
-          to avoid downloading duplicate charts. Downloading a chart installs it
-          into this folder, no need to copy from Downloads!
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <Button onClick={onClick} className="w-full">
-          Select Songs Folder
-        </Button>
-      </CardContent>
-    </Card>
+    <div className="flex flex-col items-center justify-center gap-6 py-24 text-center">
+      <div className="rounded-full bg-muted p-4">
+        <FileMusic className="h-8 w-8 text-muted-foreground" strokeWidth={1.5} />
+      </div>
+      <div className="max-w-md space-y-2">
+        <h2 className="text-lg font-semibold">Select Local Songs Folder</h2>
+        <p className="text-sm text-muted-foreground">
+          Scan your local songs folder to find installed charts, enabling you to
+          avoid downloading duplicates. Downloading a chart installs it into
+          this folder &mdash; no need to copy from Downloads!
+        </p>
+      </div>
+      <Button onClick={onClick}>Select Songs Folder</Button>
+    </div>
   );
 }
 

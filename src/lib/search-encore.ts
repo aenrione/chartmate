@@ -1,4 +1,5 @@
 import {ChartResponseEncore} from './chartSelection';
+import {fetch as tauriFetch} from '@tauri-apps/plugin-http';
 
 const PROD_URL = 'https://api.enchor.us/search/advanced';
 
@@ -13,7 +14,7 @@ export async function searchEncore(
   instrument: undefined | null | string,
   page: number = 1,
 ): Promise<EncoreResponse> {
-  const response = await fetch('https://api.enchor.us/search', {
+  const response = await tauriFetch('https://api.enchor.us/search', {
     headers: {
       accept: 'application/json, text/plain, */*',
       'accept-language': 'en-US,en;q=0.9',
@@ -57,7 +58,7 @@ export async function searchAdvanced(options: Object): Promise<EncoreResponse> {
 }
 
 export async function fetchAdvanced(options: Object) {
-  return await fetch(PROD_URL, {
+  return await tauriFetch(PROD_URL, {
     headers: {
       accept: 'application/json, text/plain, */*',
       'accept-language': 'en-US,en;q=0.9',

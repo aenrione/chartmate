@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {fetch as tauriFetch} from '@tauri-apps/plugin-http';
 import {SngHeader, SngStream} from 'parse-sng';
 import {parseChartFile} from '@eliwhite/scan-chart';
 
@@ -49,7 +50,7 @@ async function getChartFiles(chartData: ChartResponseEncore) {
     chartData.md5 + (chartData.hasVideoBackground ? '_novideo' : '')
   }.sng`;
 
-  const sngResponse = await fetch(chartUrl, {
+  const sngResponse = await tauriFetch(chartUrl, {
     headers: {
       accept: '*/*',
       'accept-language': 'en-US,en;q=0.9',

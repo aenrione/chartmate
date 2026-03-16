@@ -42,14 +42,8 @@ export default function CloneHeroRenderer({
   }, [metadata, audioManager, chart, track]);
 
   return (
-    <div className="flex-1 flex-col justify-center bg-white rounded-lg border overflow-y-auto">
-      {/* <InstrumentDifficultyPicker
-        chart={chart}
-        selectedTrack={selectedTrack}
-        onTrackSelected={setSelectedTrack}
-      /> */}
-
-      <div className="relative h-full" ref={sizingRef}>
+    <div className="flex-1 flex flex-col justify-center bg-background rounded-lg border overflow-hidden">
+      <div className="relative flex-1" ref={sizingRef}>
         <div ref={ref} className="h-full" />
       </div>
     </div>

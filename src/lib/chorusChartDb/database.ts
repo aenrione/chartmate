@@ -95,33 +95,32 @@ async function getUpdatedCharts(
   }
   // else: lastScanSession == null → scan_since_time = new Date(0), last_chart_id = 1
 
-  // Start a new scan session
+  // Use short-lived transactions per operation instead of one long transaction,
+  // so the DB isn't locked during network requests.
   const db = await getLocalDb();
-  await db.transaction().execute(async trx => {
-    const id = await createScanSession(trx, scan_since_time, last_chart_id);
+  const id = await createScanSession(db, scan_since_time, last_chart_id);
 
-    let updatePromises = Promise.resolve();
+  let updatePromises = Promise.resolve();
 
-    const {charts: _charts, metadata: _metadata} = await fetchNewCharts(
-      scan_since_time,
-      last_chart_id,
-      (json, stats) => {
-        // Store charts and update scan progress
-        updatePromises = updatePromises.then(async () => {
-          await upsertCharts(trx, json as unknown as ChartResponseEncore[]);
-          last_chart_id = stats.lastChartId;
-          await updateScanProgress(trx, id, stats.lastChartId);
-        });
+  const {charts: _charts, metadata: _metadata} = await fetchNewCharts(
+    scan_since_time,
+    last_chart_id,
+    (json, stats) => {
+      // Store charts and update scan progress
+      updatePromises = updatePromises.then(async () => {
+        await upsertCharts(db, json as unknown as ChartResponseEncore[]);
+        last_chart_id = stats.lastChartId;
+        await updateScanProgress(db, id, stats.lastChartId);
+      });
 
-        onEachResponse(json, stats);
-      },
-    );
+      onEachResponse(json, stats);
+    },
+  );
 
-    await updatePromises;
+  await updatePromises;
 
-    // Mark the scan session as completed
-    await completeScanSession(trx, id);
-  });
+  // Mark the scan session as completed
+  await completeScanSession(db, id);
 }
 
 export function findMatchingChartsExact(

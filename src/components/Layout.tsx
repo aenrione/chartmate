@@ -7,8 +7,8 @@ export default function Layout({ children }: { children: ReactNode }) {
   const { isConnected } = useSpotifyAuth();
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="border-b px-6 py-3 flex items-center gap-6">
+    <div className="h-screen flex flex-col overflow-hidden">
+      <header className="border-b px-6 py-3 flex items-center gap-6 flex-shrink-0">
         <Link to="/" className="font-bold text-lg">Chartmate</Link>
         <nav className="flex gap-4 text-sm">
           <Link to="/sheet-music">Sheet Music</Link>
@@ -22,7 +22,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             : <Badge variant="secondary">Spotify Disconnected</Badge>}
         </div>
       </header>
-      <main className="flex-1 p-6">
+      <main className="flex-1 min-h-0 flex flex-col">
         {children}
       </main>
     </div>

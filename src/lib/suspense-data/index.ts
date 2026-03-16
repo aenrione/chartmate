@@ -23,3 +23,8 @@ export function useData<T>({
   const data = use(promise);
   return {data: data};
 }
+
+export function invalidateData(key: string | string[]) {
+  const keyStr = Array.isArray(key) ? key.join('-') : key;
+  dataCache.delete(keyStr);
+}

@@ -1,5 +1,6 @@
 import { appCacheDir, join } from '@tauri-apps/api/path';
 import { writeFile, remove, mkdir, exists } from '@tauri-apps/plugin-fs';
+import { fetch as tauriFetch } from '@tauri-apps/plugin-http';
 import filenamify from 'filenamify/browser';
 import { SngStream } from 'parse-sng';
 import { upsertLocalCharts } from '@/lib/local-db/local-charts';
@@ -46,7 +47,7 @@ export async function downloadSong(
   const artistSongTitle = `${artist} - ${song} (${charter})`;
   const filename = filenamify(artistSongTitle, { replacement: '' });
 
-  const response = await fetch(url, { method: 'GET', credentials: 'omit', cache: 'no-store' });
+  const response = await tauriFetch(url, { method: 'GET' });
   if (!response.body) return null;
 
   if (options?.asSng) {

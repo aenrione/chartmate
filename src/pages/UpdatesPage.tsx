@@ -5,17 +5,8 @@ const RANKING_GROUPS = [[testSameCharter]];
 
 export default function UpdatesPage() {
   return (
-    <>
-      <p className="mb-4 text-center">
-        This tool checks your installed charts for updates;
-        <br />
-        newer versions of the chart from the same charter.
-        <br />
-        This tool is currently in beta, it is recommended that you
-        <br />
-        backup your Songs folder before using this tool.
-      </p>
+    <div className="flex-1 overflow-y-auto p-6">
       <CompareChartsToLocal rankingGroups={RANKING_GROUPS} exact={true} />
-    </>
+    </div>
   );
 }

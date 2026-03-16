@@ -24,12 +24,14 @@ export function SpotifyAuthProvider({ children }: { children: React.ReactNode })
 
     const handler = async (e: Event) => {
       const url = (e as CustomEvent<string>).detail;
+      console.log('[spotify-auth] callback event received:', url);
       try {
         await handleSpotifyCallback(url);
+        console.log('[spotify-auth] token exchange succeeded');
         invalidateSpotifySdkCache();
         await refresh();
       } catch (err) {
-        console.error('Spotify callback failed:', err);
+        console.error('[spotify-auth] callback failed:', err);
       }
     };
 

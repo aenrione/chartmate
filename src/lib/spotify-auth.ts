@@ -1,4 +1,5 @@
 import { storeGet, storeSet, storeDelete, STORE_KEYS } from '@/lib/store';
+import { fetch as tauriFetch } from '@tauri-apps/plugin-http';
 
 const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID as string;
 const REDIRECT_URI = 'chartmate://auth/callback';
@@ -54,7 +55,7 @@ export async function handleSpotifyCallback(callbackUrl: string): Promise<void> 
   const verifier = pendingVerifier;
   pendingVerifier = null;
 
-  const resp = await fetch('https://accounts.spotify.com/api/token', {
+  const resp = await tauriFetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
@@ -94,7 +95,7 @@ export async function getSpotifyAccessToken(): Promise<ProtectedAccessToken> {
     return { access_token: accessToken, expires_at: expiresAt };
   }
 
-  const resp = await fetch('https://accounts.spotify.com/api/token', {
+  const resp = await tauriFetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({

@@ -2,8 +2,7 @@ import Search from './sheet-music/Search';
 
 export default function SheetMusicPage() {
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Drum Sheet Music Viewer</h1>
+    <div className="flex-1 overflow-y-auto p-6">
       <Search />
     </div>
   );

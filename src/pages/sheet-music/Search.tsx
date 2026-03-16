@@ -1,7 +1,7 @@
 import {useMemo, useEffect, useState, useCallback} from 'react';
 import {useInView} from 'react-intersection-observer';
 import {Link} from 'react-router-dom';
-import {Search as SearchIcon} from 'lucide-react';
+import {Search as SearchIcon, Loader2} from 'lucide-react';
 import {Input} from '@/components/ui/input';
 import {Button} from '@/components/ui/button';
 import debounce from 'debounce';
@@ -11,12 +11,19 @@ import {
 } from '@/components/ChartInstruments';
 import {EncoreResponse, searchEncore} from '@/lib/search-encore';
 
+// In-memory cache so navigating back preserves the search results
+let cachedSearchState: {
+  query: string;
+  results: EncoreResponse;
+  page: number;
+} | null = null;
+
 export default function Search() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(cachedSearchState?.query ?? '');
   const instrumentFilter = 'drums';
 
-  const [filteredSongs, setFilteredSongs] = useState<EncoreResponse | null>(null);
-  const [page, setPage] = useState<number>(1);
+  const [filteredSongs, setFilteredSongs] = useState<EncoreResponse | null>(cachedSearchState?.results ?? null);
+  const [page, setPage] = useState<number>(cachedSearchState?.page ?? 1);
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const {ref: sentinelRef, inView} = useInView({
     root: null,
@@ -30,6 +37,7 @@ export default function Search() {
         const results = await searchEncore(query, instrument, 1);
         setFilteredSongs(results);
         setPage(1);
+        cachedSearchState = { query, results, page: 1 };
       }, 500),
     [],
   );
@@ -48,6 +56,8 @@ export default function Search() {
   };
 
   useEffect(() => {
+    // Skip initial fetch if we already have cached results
+    if (cachedSearchState) return;
     searchSongs(searchQuery);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -68,12 +78,14 @@ export default function Search() {
         const deduped = Array.from(
           new Map(combined.map(chart => [chart.md5, chart])).values(),
         );
-        return {
+        const updated = {
           ...results,
           data: deduped,
           found: results.found,
           out_of: results.out_of,
         };
+        cachedSearchState = { query: searchQuery, results: updated, page: nextPage };
+        return updated;
       });
       setPage(nextPage);
     } finally {
@@ -123,7 +135,12 @@ export default function Search() {
             {filteredSongs != null ? `(${filteredSongs?.found} charts)` : ''}
           </h2>
 
-          {filteredSongs?.data.length === 0 ? (
+          {filteredSongs == null ? (
+            <div className="flex flex-col items-center justify-center py-12 gap-3">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">Loading charts...</p>
+            </div>
+          ) : filteredSongs.data.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground">
                 No songs found matching your search.
