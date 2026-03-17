@@ -80,8 +80,10 @@ export class AudioManager {
       [{fileName: 'drums', datas: []} as GroupedFile[0]],
     );
 
+    const nonEmptyGroups = groupedFiles.filter(g => g.datas.length > 0);
+
     await Promise.all(
-      groupedFiles.map(async group => {
+      nonEmptyGroups.map(async group => {
         const trackName = getBasename(group.fileName);
         const arrayBuffers = group.datas;
         const decodedAudioBuffers = await Promise.all(
