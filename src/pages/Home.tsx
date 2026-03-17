@@ -49,6 +49,17 @@ export default function Home() {
             <Link to="/browse" className={buttonVariants({ variant: 'default' })}>Browse Charts</Link>
           </CardContent>
         </Card>
+        <Card className="flex flex-col justify-between">
+          <CardHeader>
+            <CardTitle>Drum Rudiments</CardTitle>
+            <CardDescription>
+              Practice the 40 PAS International Drum Rudiments with sheet music and metronome.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Link to="/rudiments" className={buttonVariants({ variant: 'default' })}>Practice</Link>
+          </CardContent>
+        </Card>
       </section>
     </div>
   );

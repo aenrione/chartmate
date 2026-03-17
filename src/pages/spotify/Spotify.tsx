@@ -1,8 +1,13 @@
-import {Suspense, useCallback, useEffect, useState} from 'react';
+import {Suspense, useCallback, useEffect, useMemo, useState} from 'react';
 import SpotifyTableDownloader, {
   SpotifyChartData,
   SpotifyPlaysRecommendations,
 } from '@/components/SpotifyTableDownloader';
+import SpotifyLibrarySidebar, {
+  SidebarPlaylist,
+  SidebarAlbum,
+} from '@/components/SpotifyLibrarySidebar';
+import {useLocalStorage} from '@/lib/useLocalStorage';
 import {Button} from '@/components/ui/button';
 import {getLocalDb} from '@/lib/local-db/client';
 import {sql} from 'kysely';
@@ -123,8 +128,10 @@ type Status = {
 
 async function hasCachedSpotifyData(): Promise<boolean> {
   const db = await getLocalDb();
+  // Check for synced Spotify data (tracks in DB), not just chart matches.
+  // This ensures results view shows even when there are zero chart matches.
   const row = await db
-    .selectFrom('spotify_track_chart_matches')
+    .selectFrom('spotify_tracks')
     .select(sql<number>`1`.as('exists'))
     .limit(1)
     .executeTakeFirst();
@@ -206,6 +213,7 @@ function LoggedIn() {
     await recalculateTrackChartMatches();
 
     invalidateData(SPOTIFY_DATA_KEY);
+    invalidateData(SIDEBAR_DATA_KEY);
     setHasCached(true);
     setStatus(prevStatus => ({
       ...prevStatus,
@@ -305,6 +313,50 @@ type PickedSpotifyAlbums = Pick<
   SpotifyAlbums,
   'id' | 'name' | 'artist_name' | 'total_tracks' | 'updated_at'
 >;
+
+async function getSidebarData() {
+  const db = await getLocalDb();
+
+  const [playlists, albums] = await Promise.all([
+    db
+      .selectFrom('spotify_playlists as p')
+      .leftJoin('spotify_playlist_tracks as pt', 'pt.playlist_id', 'p.id')
+      .leftJoin(
+        'spotify_track_chart_matches as m',
+        'm.spotify_id',
+        'pt.track_id',
+      )
+      .select([
+        'p.id',
+        'p.name',
+        'p.total_tracks',
+        sql<number>`COUNT(DISTINCT m.spotify_id)`.as('match_count'),
+      ])
+      .groupBy('p.id')
+      .execute(),
+    db
+      .selectFrom('spotify_albums as a')
+      .leftJoin('spotify_album_tracks as at', 'at.album_id', 'a.id')
+      .leftJoin(
+        'spotify_track_chart_matches as m',
+        'm.spotify_id',
+        'at.track_id',
+      )
+      .select([
+        'a.id',
+        'a.name',
+        'a.artist_name',
+        'a.total_tracks',
+        sql<number>`COUNT(DISTINCT m.spotify_id)`.as('match_count'),
+      ])
+      .groupBy('a.id')
+      .execute(),
+  ]);
+
+  return {playlists, albums};
+}
+
+const SIDEBAR_DATA_KEY = 'spotify-sidebar-data';
 
 async function getData() {
   const db = await getLocalDb();
@@ -516,44 +568,121 @@ function SpotifyHistory({onRescan, onChangeFolder}: {onRescan: () => void; onCha
     fn: getData,
   });
 
-  const songs: SpotifyPlaysRecommendations[] = data.map(item => {
-    return {
-      spotifyTrackId: item.spotify_track_id,
-      artist: item.spotify_artist_name,
-      song: item.spotify_track_name,
-      isAnyInstalled: item.is_any_local_chart_installed === 1,
-      matchingCharts: item.matching_charts.map((chart): SpotifyChartData => {
-        return {
-          ...chart,
-          albumArtMd5: chart.album_art_md5 ?? '',
-          hasVideoBackground: chart.has_video_background === 1,
-          isInstalled: chart.isInstalled === 1,
-          modifiedTime: chart.modified_time,
-          file: `https://files.enchor.us/${chart.md5}.sng`,
-        };
-      }),
-      playlistMemberships: item.playlist_memberships,
-      albumMemberships: item.album_memberships,
-    };
+  const {data: sidebarData} = useData({
+    key: SIDEBAR_DATA_KEY,
+    fn: getSidebarData,
   });
 
+  // Memoize songs to avoid recreating the array on every render,
+  // which would invalidate all downstream useMemo dependencies.
+  const songs: SpotifyPlaysRecommendations[] = useMemo(() =>
+    data.map(item => {
+      return {
+        spotifyTrackId: item.spotify_track_id,
+        artist: item.spotify_artist_name,
+        song: item.spotify_track_name,
+        isAnyInstalled: item.is_any_local_chart_installed === 1,
+        matchingCharts: item.matching_charts.map((chart): SpotifyChartData => {
+          return {
+            ...chart,
+            // JSON keys from json_object use camelCase for these fields
+            albumArtMd5: (chart as any).albumArtMd5 ?? chart.album_art_md5 ?? '',
+            hasVideoBackground: (chart as any).hasVideoBackground === 1 || chart.has_video_background === 1,
+            isInstalled: chart.isInstalled === 1,
+            modifiedTime: chart.modified_time,
+            file: `https://files.enchor.us/${chart.md5}.sng`,
+          };
+        }),
+        playlistMemberships: item.playlist_memberships,
+        albumMemberships: item.album_memberships,
+      };
+    }),
+  [data]);
+
+  // Build sidebar data from database query (shows all playlists/albums,
+  // not just those with chart matches)
+  const sidebarPlaylists: SidebarPlaylist[] = useMemo(() =>
+    sidebarData.playlists.map(p => ({
+      id: p.id,
+      name: p.name,
+      matchCount: Number(p.match_count),
+      totalTracks: Number(p.total_tracks),
+    })),
+  [sidebarData.playlists]);
+
+  const sidebarAlbums: SidebarAlbum[] = useMemo(() =>
+    sidebarData.albums.map(a => ({
+      id: a.id,
+      name: a.name,
+      artistName: a.artist_name,
+      matchCount: Number(a.match_count),
+      totalTracks: Number(a.total_tracks),
+    })),
+  [sidebarData.albums]);
+
+  // Selection state: empty Set means "All Library"
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [sidebarCollapsed, setSidebarCollapsed] = useLocalStorage(
+    'chartmate:sidebar-collapsed',
+    false,
+  );
+
+  // Filter songs based on selection
+  const filteredSongs = useMemo(() => {
+    if (selectedIds.size === 0) return songs;
+    return songs.filter(song => {
+      const playlistIds = (song.playlistMemberships ?? []).map(p => p.id);
+      const albumIds = (song.albumMemberships ?? []).map(a => a.id);
+      return [...playlistIds, ...albumIds].some(id => selectedIds.has(id));
+    });
+  }, [songs, selectedIds]);
+
+  // Build context string for empty state
+  const emptyContext = useMemo(() => {
+    if (selectedIds.size === 0) return undefined;
+    if (selectedIds.size > 2) return 'the selected playlists and albums';
+    const names: string[] = [];
+    for (const id of selectedIds) {
+      const playlist = sidebarPlaylists.find(p => p.id === id);
+      if (playlist) {
+        names.push(`"${playlist.name}"`);
+        continue;
+      }
+      const album = sidebarAlbums.find(a => a.id === id);
+      if (album) {
+        names.push(`"${album.name}"`);
+      }
+    }
+    return names.join(' and ');
+  }, [selectedIds, sidebarPlaylists, sidebarAlbums]);
+
   return (
-    <>
-      <div className="flex justify-end gap-2 mb-2 px-1">
-        <Button variant="outline" size="sm" onClick={onChangeFolder}>
-          Change Folder
-        </Button>
-        <Button variant="outline" size="sm" onClick={onRescan}>
-          <RefreshCw className="h-4 w-4 mr-1.5" />
-          Rescan Library
-        </Button>
+    <div className="flex flex-1 overflow-hidden">
+      <SpotifyLibrarySidebar
+        playlists={sidebarPlaylists}
+        albums={sidebarAlbums}
+        selectedIds={selectedIds}
+        onSelectionChange={setSelectedIds}
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed(prev => !prev)}
+      />
+      <div className="flex flex-col flex-1 min-w-0 overflow-y-auto">
+        <div className="flex justify-end gap-2 mb-2 px-1">
+          <Button variant="outline" size="sm" onClick={onChangeFolder}>
+            Change Folder
+          </Button>
+          <Button variant="outline" size="sm" onClick={onRescan}>
+            <RefreshCw className="h-4 w-4 mr-1.5" />
+            Rescan Library
+          </Button>
+        </div>
+        {filteredSongs.length === 0 ? (
+          <NoMatches context={emptyContext} />
+        ) : (
+          <SpotifyTableDownloader tracks={filteredSongs} showPreview={true} />
+        )}
       </div>
-      {songs.length === 0 ? (
-        <NoMatches />
-      ) : (
-        <SpotifyTableDownloader tracks={songs} showPreview={true} />
-      )}
-    </>
+    </div>
   );
 }
 
@@ -582,7 +711,7 @@ function ScanLocalFoldersCTACard({onClick}: {onClick: () => void}) {
   );
 }
 
-export function NoMatches() {
+export function NoMatches({context}: {context?: string}) {
   return (
     <div className="flex justify-center">
       <Empty>
@@ -592,7 +721,9 @@ export function NoMatches() {
           </EmptyMedia>
           <EmptyTitle>No Matching Charts</EmptyTitle>
           <EmptyDescription>
-            We couldn&apos;t find any matching charts for your Spotify library.
+            {context
+              ? `No matching charts found in ${context}.`
+              : "We couldn't find any matching charts for your Spotify library."}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>

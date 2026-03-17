@@ -17,10 +17,7 @@ import {
 import {Slider} from '@/components/ui/slider';
 import {Switch} from '@/components/ui/switch';
 import {
-  Tooltip,
-  TooltipContent,
   TooltipProvider,
-  TooltipTrigger,
 } from '@/components/ui/tooltip';
 import {
   ArrowLeft,
@@ -31,8 +28,6 @@ import {
   Menu,
   X,
   Settings2,
-  Plus,
-  Minus,
   Maximize2,
   Minimize2,
   Repeat,
@@ -72,6 +67,9 @@ import debounce from 'debounce';
 import {saveChart, unsaveChart, isChartSaved} from '@/lib/local-db/saved-charts';
 import {isChartCached, fetchAndCacheChart, deleteCachedChart} from '@/lib/sheet-music-cache';
 import {toast} from 'sonner';
+import Tip from '@/components/shared/Tip';
+import TempoControl from '@/components/shared/TempoControl';
+import ZoomControl from '@/components/shared/ZoomControl';
 
 function getDrumDifficulties(chart: ParsedChart): Difficulty[] {
   return chart.trackData
@@ -107,15 +105,6 @@ function parseTimeInput(value: string): number | null {
   }
   const num = parseFloat(value);
   return isNaN(num) ? null : num;
-}
-
-function Tip({children, label}: {children: React.ReactNode; label: string}) {
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>{children}</TooltipTrigger>
-      <TooltipContent>{label}</TooltipContent>
-    </Tooltip>
-  );
 }
 
 export default function Renderer({
@@ -312,16 +301,6 @@ export default function Renderer({
   // Zoom control handlers
   const handleZoomChange = (newZoom: number) => {
     setZoom(newZoom);
-  };
-
-  const handleZoomIn = () => {
-    const newZoom = Math.min(zoom + 0.1, 3.0);
-    handleZoomChange(newZoom);
-  };
-
-  const handleZoomOut = () => {
-    const newZoom = Math.max(zoom - 0.1, 0.25);
-    handleZoomChange(newZoom);
   };
 
   // Build enriched sections with end times from chart.sections
@@ -1178,78 +1157,16 @@ export default function Renderer({
             </div>
 
             {/* Tempo Control */}
-            <div className="space-y-4 pt-4 border-t">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Speed</span>
-                <div className="flex items-center space-x-2">
-                  <Tip label="Slow down">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => {
-                        const newTempo = Math.max(tempo - 0.1, 0.25);
-                        handleTempoChange(newTempo);
-                      }}
-                      className="h-6 w-6">
-                      <Minus className="h-3 w-3" />
-                    </Button>
-                  </Tip>
-                  <Tip label="Click to reset to 100%">
-                    <span
-                      className="text-sm font-mono bg-muted px-2 py-1 rounded min-w-[3rem] text-center cursor-pointer hover:bg-muted/80 transition-colors"
-                      onClick={() => handleTempoChange(1.0)}>
-                      {Math.round(tempo * 100)}%
-                    </span>
-                  </Tip>
-                  <Tip label="Speed up">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => {
-                        const newTempo = Math.min(tempo + 0.1, 4.0);
-                        handleTempoChange(newTempo);
-                      }}
-                      className="h-6 w-6">
-                      <Plus className="h-3 w-3" />
-                    </Button>
-                  </Tip>
-                </div>
-              </div>
-            </div>
+            <TempoControl
+              tempo={tempo}
+              onTempoChange={handleTempoChange}
+              min={0.25}
+              max={4.0}
+              step={0.1}
+            />
 
             {/* Zoom Control */}
-            <div className="space-y-4 pt-4 border-t">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Zoom</span>
-                <div className="flex items-center space-x-2">
-                  <Tip label="Zoom out">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={handleZoomOut}
-                      className="h-6 w-6">
-                      <Minus className="h-3 w-3" />
-                    </Button>
-                  </Tip>
-                  <Tip label="Click to reset to 100%">
-                    <span
-                      className="text-sm font-mono bg-muted px-2 py-1 rounded min-w-[3rem] text-center cursor-pointer hover:bg-muted/80 transition-colors"
-                      onClick={() => handleZoomChange(1.0)}>
-                      {Math.round(zoom * 100)}%
-                    </span>
-                  </Tip>
-                  <Tip label="Zoom in">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={handleZoomIn}
-                      className="h-6 w-6">
-                      <Plus className="h-3 w-3" />
-                    </Button>
-                  </Tip>
-                </div>
-              </div>
-            </div>
+            <ZoomControl zoom={zoom} onZoomChange={handleZoomChange} />
 
             {/* Practice Mode */}
             <div className="space-y-2 pt-4 border-t">

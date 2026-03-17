@@ -355,34 +355,49 @@ export default function SongsTable({songs}: {songs: SongWithRecommendation[]}) {
           </Dialog>
         )}
 
-      <div className="space-y-4 sm:space-y-0 sm:space-x-4 w-full text-start sm:text-end">
-        <div>
-          {songsWithUpdates.length} updates for {songs.length} songs found
-        </div>
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          {songsWithUpdates.length} {songsWithUpdates.length === 1 ? 'update' : 'updates'} found across {songs.length} {songs.length === 1 ? 'song' : 'songs'}
+        </p>
 
         {updateStatus == 'started' ? (
-          <>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>
-              Updating, {numUpdated} of {updatesWithSameCharter.length}
+              Updating {numUpdated} of {updatesWithSameCharter.length}...
             </span>
-            <div>
-              <span>{updateTimeRemaining}</span>
-            </div>
-          </>
+            {updateTimeRemaining && (
+              <span className="text-xs">({updateTimeRemaining})</span>
+            )}
+          </div>
         ) : updateStatus == 'done' ? (
-          <span>
+          <p className="text-sm text-muted-foreground">
             Updated {numUpdated} of {updatesWithSameCharter.length}
-          </span>
-        ) : (
+          </p>
+        ) : updatesWithSameCharter.length > 0 ? (
           <Button
+            size="sm"
             onClick={updateChartsWithSameCharter}
             title="The recommended chart for these songs is a newer chart from the same charter you currently have installed. These updates likely don't need review.">
-            Update {updatesWithSameCharter.length} songs from same charter
+            Update {updatesWithSameCharter.length} from same charter
           </Button>
-        )}
+        ) : null}
       </div>
+
+      {songsWithUpdates.length === 0 ? (
+        <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+          <div className="rounded-full bg-muted p-3">
+            <AiOutlineCheck className="h-6 w-6 text-muted-foreground" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-sm font-medium">All charts are up to date</h3>
+            <p className="text-sm text-muted-foreground">
+              None of your {songs.length} installed charts have newer versions available.
+            </p>
+          </div>
+        </div>
+      ) : (
       <div
-        className="bg-card text-card-foreground rounded-lg ring-1 ring-slate-900/5 shadow-xl overflow-y-auto ph-8"
+        className="bg-card text-card-foreground rounded-lg ring-1 ring-slate-900/5 shadow-xl overflow-y-auto"
         ref={tableContainerRef}>
         <Table>
           <TableHeader className="sticky top-0">
@@ -443,6 +458,7 @@ export default function SongsTable({songs}: {songs: SongWithRecommendation[]}) {
           </TableBody>
         </Table>
       </div>
+      )}
     </>
   );
 }

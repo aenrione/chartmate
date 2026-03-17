@@ -37,6 +37,10 @@ export default function SheetMusic({
   onPracticeMeasureSelect = () => {},
   selectionIndex = null,
   audioManagerRef,
+  patternMap,
+  noteAnnotations,
+  playheadTimeScale,
+  maxStavesPerRow,
 }: {
   chart: ParsedChart;
   track: ParsedChart['trackData'][0];
@@ -51,6 +55,10 @@ export default function SheetMusic({
   onPracticeMeasureSelect?: (measureIndex: number) => void;
   selectionIndex?: number | null;
   audioManagerRef: RefObject<any>;
+  patternMap?: Map<number, {color: string; label: string}>;
+  noteAnnotations?: string[];
+  playheadTimeScale?: number;
+  maxStavesPerRow?: number;
 }) {
   const vexflowContainerRef = useRef<HTMLDivElement>(null!);
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
@@ -120,6 +128,8 @@ export default function SheetMusic({
       showBarNumbers,
       enableColors,
       practiceModeConfig,
+      noteAnnotations,
+      maxStavesPerRow,
     );
     setRenderData(data);
 
@@ -137,6 +147,8 @@ export default function SheetMusic({
     chart.sections,
     practiceModeConfig,
     zoom,
+    noteAnnotations,
+    maxStavesPerRow,
   ]);
 
   // Remove automatic highlighting of the currently playing measure and auto-scroll
@@ -159,6 +171,8 @@ export default function SheetMusic({
         Math.abs(measure.endMs - practiceModeConfig.endMeasureMs) < 100; // Within 100ms
     }
 
+    const patternInfo = patternMap?.get(index);
+
     return (
       <MeasureHighlight
         key={index}
@@ -175,6 +189,8 @@ export default function SheetMusic({
         isPracticeModeActive={
           practiceModeConfig !== null && practiceModeConfig.endMeasureMs > 0
         }
+        patternColor={patternInfo?.color}
+        patternLabel={patternInfo?.label}
         onClick={() => {
           if (selectionIndex !== null) {
             onPracticeMeasureSelect(index);
@@ -197,6 +213,7 @@ export default function SheetMusic({
             timePositionMap={consolidatedTimeMap}
             audioManagerRef={audioManagerRef}
             zoom={zoom}
+            playheadTimeScale={playheadTimeScale}
           />
         )}
         {measureHighlights}
@@ -211,6 +228,8 @@ interface MeasureHighlightProps {
   isPracticeStart?: boolean;
   isPracticeEnd?: boolean;
   isPracticeModeActive?: boolean;
+  patternColor?: string;
+  patternLabel?: string;
   onClick?: () => void;
 }
 
@@ -222,10 +241,19 @@ const MeasureHighlight = forwardRef<HTMLButtonElement, MeasureHighlightProps>(
       isPracticeStart,
       isPracticeEnd,
       isPracticeModeActive: _isPracticeModeActive,
+      patternColor,
+      patternLabel,
       onClick,
     },
     ref,
   ) => {
+    const patternStyle: React.CSSProperties = patternColor
+      ? {
+          backgroundColor: patternColor + '20',
+          borderLeft: `3px solid ${patternColor}`,
+        }
+      : {};
+
     return (
       <button
         ref={ref}
@@ -235,9 +263,16 @@ const MeasureHighlight = forwardRef<HTMLButtonElement, MeasureHighlightProps>(
           isPracticeStart && 'border-l-4 border-green-500',
           isPracticeEnd && 'border-r-4 border-green-500',
         )}
-        style={style}
-        onClick={onClick}
-      />
+        style={{...style, ...patternStyle}}
+        onClick={onClick}>
+        {patternLabel && patternLabel !== '-' && (
+          <span
+            className="absolute top-0.5 left-1 text-[10px] font-bold leading-none pointer-events-none"
+            style={{color: patternColor}}>
+            {patternLabel}
+          </span>
+        )}
+      </button>
     );
   },
 );

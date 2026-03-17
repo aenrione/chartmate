@@ -1,11 +1,12 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { alphaTab } from '@coderline/alphatab-vite';
 import path from 'path';
 
 const host = process.env.TAURI_DEV_HOST;
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), alphaTab()],
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') },
   },

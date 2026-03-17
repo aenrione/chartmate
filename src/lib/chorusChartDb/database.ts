@@ -9,6 +9,7 @@ import {
 } from '@/lib/local-db/chorus';
 import {getLastScanSession} from '@/lib/local-db/chorus/scanning';
 import {getLocalDb} from '@/lib/local-db/client';
+import {sql} from 'kysely';
 import {search, Searcher} from 'fast-fuzzy';
 import {ChartInfo} from '../chartSelection';
 
@@ -94,6 +95,22 @@ async function getUpdatedCharts(
     last_chart_id = lastScanSession.last_chart_id ?? 1;
   }
   // else: lastScanSession == null → scan_since_time = new Date(0), last_chart_id = 1
+
+  // Safety check: if chorus_charts is empty but we have a completed scan session,
+  // the data was lost (e.g. DB recreated). Force a full rescan from epoch.
+  if (scan_since_time.getTime() > 0) {
+    const db = await getLocalDb();
+    const row = await db
+      .selectFrom('chorus_charts')
+      .select(sql<number>`1`.as('exists'))
+      .limit(1)
+      .executeTakeFirst();
+    if (!row) {
+      console.log('[chorus] chorus_charts is empty despite completed scan session, forcing full rescan');
+      scan_since_time = new Date(0);
+      last_chart_id = 1;
+    }
+  }
 
   // Use short-lived transactions per operation instead of one long transaction,
   // so the DB isn't locked during network requests.

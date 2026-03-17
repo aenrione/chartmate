@@ -33,7 +33,7 @@ type InstrumentMapping = {
   [key in DrumNoteInstrument]: string;
 };
 
-const mapping: InstrumentMapping = {
+export const mapping: InstrumentMapping = {
   kick: 'e/4',
   snare: 'c/5',
   hihat: 'g/5/x2',

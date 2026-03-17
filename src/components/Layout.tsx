@@ -12,6 +12,8 @@ export default function Layout({ children }: { children: ReactNode }) {
         <Link to="/" className="font-bold text-lg">Chartmate</Link>
         <nav className="flex gap-4 text-sm">
           <Link to="/sheet-music">Sheet Music</Link>
+          <Link to="/guitar">Guitar</Link>
+          <Link to="/rudiments">Rudiments</Link>
           <Link to="/spotify">Spotify</Link>
           <Link to="/updates">Updates</Link>
           <Link to="/browse">Browse</Link>

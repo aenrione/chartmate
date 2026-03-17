@@ -34,7 +34,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {AiFillCaretDown} from 'react-icons/ai';
 import {
   AllowedInstrument,
   ChartInstruments,
@@ -42,10 +41,10 @@ import {
   RENDERED_INSTRUMENTS,
   preFilterInstruments,
 } from '@/components/ChartInstruments';
-import {RxExternalLink} from 'react-icons/rx';
 import {NotesData} from '@eliwhite/scan-chart';
 import {SpotifyAlbums, SpotifyPlaylists} from '@/lib/local-db/types';
-import {Disc3, User} from 'lucide-react';
+import {ChevronDown, ChevronRight, ChevronUp, Disc3, ExternalLink, Search as SearchIcon, User} from 'lucide-react';
+import {Input} from '@/components/ui/input';
 import {cn} from '@/lib/utils';
 import {
   Tooltip,
@@ -53,6 +52,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
@@ -129,6 +135,12 @@ type ChartRow = {
 
 type RowType = Partial<SongRow> & Partial<ChartRow>;
 
+type GroupByField = 'none' | 'artist' | 'album' | 'playlist' | 'charter';
+
+type VirtualItemType =
+  | {type: 'group-header'; key: string; label: string; count: number}
+  | {type: 'data-row'; row: Row<RowType>};
+
 const ALWAYS_TRUE = () => true;
 
 const DEFAULT_SORTING = [
@@ -159,6 +171,32 @@ const instrumentFilter: FilterFn<RowType> = (
   return allInstrumentsIncluded;
 };
 
+const globalSearchFilter: FilterFn<RowType> = (
+  row,
+  _columnId,
+  value: string,
+) => {
+  if (!value) return true;
+  const search = value.toLowerCase();
+
+  const artist = row.original.artist?.toLowerCase() ?? '';
+  const song = row.original.song?.toLowerCase() ?? '';
+  const charter = row.original.charter?.toLowerCase() ?? '';
+
+  if (artist.includes(search) || song.includes(search) || charter.includes(search)) {
+    return true;
+  }
+
+  const source = row.original.source;
+  if (source) {
+    const albumMatch = source.albums?.some(a => a.name.toLowerCase().includes(search));
+    const playlistMatch = source.playlists?.some(p => p.name.toLowerCase().includes(search));
+    if (albumMatch || playlistMatch) return true;
+  }
+
+  return false;
+};
+
 const downloadedFilter: FilterFn<RowType> = (
   row,
   _columnId,
@@ -175,6 +213,33 @@ const downloadedFilter: FilterFn<RowType> = (
   return true;
 };
 
+function getGroupKeys(row: Row<RowType>, groupBy: GroupByField): string[] {
+  switch (groupBy) {
+    case 'artist':
+      return [row.original.artist ?? 'Unknown'];
+    case 'album': {
+      const albums = row.original.source?.albums;
+      if (!albums || albums.length === 0) return ['No Album'];
+      return albums.map(a => a.name);
+    }
+    case 'playlist': {
+      const playlists = row.original.source?.playlists;
+      if (!playlists || playlists.length === 0) return ['No Playlist'];
+      return playlists.map(p => p.name);
+    }
+    case 'charter': {
+      const subRows = row.original.subRows;
+      if (!subRows || subRows.length === 0) return ['Unknown'];
+      const latest = subRows.reduce((best, sub) =>
+        sub.modifiedTime > best.modifiedTime ? sub : best
+      );
+      return [latest.charter ?? 'Unknown'];
+    }
+    default:
+      return ['Unknown'];
+  }
+}
+
 const columnHelper = createColumnHelper<RowType>();
 
 const columns = [
@@ -185,11 +250,11 @@ const columns = [
     sortingFn: 'alphanumeric',
     cell: props => {
       const icon = props.row.getIsExpanded() ? (
-        <AiFillCaretDown className="inline" />
+        <ChevronDown className="inline h-3.5 w-3.5" />
       ) : (
-        <AiFillCaretDown
-          className={`inline opacity-0 ${
-            props.row.getParentRow() != null ? 'pr-10' : ''
+        <ChevronRight
+          className={`inline h-3.5 w-3.5 ${
+            props.row.getParentRow() != null ? 'opacity-0 pr-10' : 'opacity-0'
           }`}
         />
       );
@@ -396,7 +461,7 @@ function SpotifyLinkButton({spotifyUrl}: {spotifyUrl: string}) {
   return (
     <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">
       <Button variant="outline" size="sm">
-        <RxExternalLink className="inline" />
+        <ExternalLink className="inline h-3.5 w-3.5" />
         Spotify
       </Button>
     </a>
@@ -474,6 +539,35 @@ export default function SpotifyTableDownloader({
 
   const [hideDownloadedFilter, setHideDownloadedFilter] = useState(false);
 
+  const [groupBy, setGroupBy] = useState<GroupByField>('none');
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+
+  const toggleGroupCollapse = useCallback((key: string) => {
+    setCollapsedGroups(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+      return next;
+    });
+  }, []);
+
+  const handleGroupByChange = useCallback((value: string) => {
+    setGroupBy(value as GroupByField);
+    setCollapsedGroups(new Set());
+  }, []);
+
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 200);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   const columnFilters = useMemo(
     () => [
       {
@@ -498,11 +592,14 @@ export default function SpotifyTableDownloader({
         previewUrl: showPreview,
       },
       columnFilters,
+      globalFilter: debouncedSearch,
       expanded: true,
     },
     initialState: {
       sorting: DEFAULT_SORTING,
     },
+    globalFilterFn: globalSearchFilter,
+    enableGlobalFilter: true,
     meta: {
       setDownloadState(index: string, state: TableDownloadStates) {
         setDownloadState(prev => {
@@ -526,17 +623,76 @@ export default function SpotifyTableDownloader({
   const tableContainerRef = useRef<HTMLDivElement>(null);
 
   const {rows} = table.getRowModel();
+
+  const groupedItems: VirtualItemType[] = useMemo(() => {
+    if (groupBy === 'none') {
+      return rows.map(row => ({type: 'data-row' as const, row}));
+    }
+
+    const groups = new Map<string, Row<RowType>[]>();
+    const groupOrder: string[] = [];
+
+    for (const row of rows) {
+      if (row.getParentRow() != null) continue;
+
+      const keys = getGroupKeys(row, groupBy);
+      for (const key of keys) {
+        if (!groups.has(key)) {
+          groups.set(key, []);
+          groupOrder.push(key);
+        }
+        groups.get(key)!.push(row);
+      }
+    }
+
+    const items: VirtualItemType[] = [];
+    for (const key of groupOrder) {
+      const groupRows = groups.get(key)!;
+      items.push({
+        type: 'group-header',
+        key,
+        label: key,
+        count: groupRows.length,
+      });
+      if (!collapsedGroups.has(key)) {
+        for (const parentRow of groupRows) {
+          items.push({type: 'data-row', row: parentRow});
+          for (const subRow of parentRow.subRows) {
+            items.push({type: 'data-row', row: subRow as Row<RowType>});
+          }
+        }
+      }
+    }
+
+    return items;
+  }, [rows, groupBy, collapsedGroups]);
+
+  const allGroupKeys = useMemo(
+    () => groupedItems.filter(i => i.type === 'group-header').map(i => (i as {type: 'group-header'; key: string}).key),
+    [groupedItems],
+  );
+
+  const allCollapsed = groupBy !== 'none' && allGroupKeys.length > 0 && collapsedGroups.size === allGroupKeys.length;
+
+  const toggleAllGroups = useCallback(() => {
+    if (allCollapsed) {
+      setCollapsedGroups(new Set());
+    } else {
+      setCollapsedGroups(new Set(allGroupKeys));
+    }
+  }, [allCollapsed, allGroupKeys]);
+
   const rowVirtualizer = useVirtual({
     parentRef: tableContainerRef,
-    size: rows.length,
+    size: groupedItems.length,
     overscan: 10,
   });
-  const {virtualItems: virtualRows, totalSize} = rowVirtualizer;
 
-  const paddingTop = virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0;
+  const vRows = rowVirtualizer.virtualItems;
+  const paddingTop = vRows.length > 0 ? vRows[0]?.start || 0 : 0;
   const paddingBottom =
-    virtualRows.length > 0
-      ? totalSize - (virtualRows?.[virtualRows.length - 1]?.end || 0)
+    vRows.length > 0
+      ? rowVirtualizer.totalSize - (vRows[vRows.length - 1]?.end || 0)
       : 0;
 
   const filtersChangedCallback = useCallback((filters: AllowedInstrument[]) => {
@@ -564,21 +720,74 @@ export default function SpotifyTableDownloader({
 
   return (
     <>
-      <div className="space-y-4 sm:space-y-0 sm:space-x-4 w-full text-start sm:text-end">
-        <span>
-          {instrumentFilters.length !== RENDERED_INSTRUMENTS.length &&
-            `${numMatchingCharts} charts for `}
-          {tracks.length} songs found
-        </span>
+      <div className="rounded-lg bg-card ring-1 ring-slate-900/5 px-4 py-2 mb-2 space-y-2">
+        <div className="flex items-center gap-3">
+          <div className="relative flex-1 min-w-[180px] max-w-[320px]">
+            <SearchIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+            <Input
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search artist, song, album..."
+              className="h-8 pl-8 text-sm"
+            />
+          </div>
 
-        <div>
-          Filters
-          <div>
+          <div className="w-px h-6 bg-border" />
+
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs uppercase tracking-wide text-muted-foreground">Group</span>
+            <Select value={groupBy} onValueChange={handleGroupByChange}>
+              <SelectTrigger className="h-8 w-[120px] text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">None</SelectItem>
+                <SelectItem value="artist">Artist</SelectItem>
+                <SelectItem value="album">Album</SelectItem>
+                <SelectItem value="playlist">Playlist</SelectItem>
+                <SelectItem value="charter">Charter</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {groupBy !== 'none' && (
+            <>
+              <div className="w-px h-6 bg-border" />
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 text-xs text-muted-foreground"
+                onClick={toggleAllGroups}
+              >
+                {allCollapsed ? 'Expand all' : 'Collapse all'}
+              </Button>
+            </>
+          )}
+
+          <div className="flex-1" />
+
+          <span className="text-sm text-muted-foreground whitespace-nowrap">
+            {instrumentFilters.length !== RENDERED_INSTRUMENTS.length &&
+              `${numMatchingCharts} charts for `}
+            {tracks.length} songs
+          </span>
+        </div>
+
+        <div className="flex items-center gap-3 border-t border-border pt-2 justify-end">
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs uppercase tracking-wide text-muted-foreground">Instruments</span>
             <Filters filtersChanged={filtersChangedCallback} />
           </div>
-          <label>
-            <input onChange={downloadedFilterChangedCallback} type="checkbox" />
-            Hide songs with downloaded charts
+
+          <div className="w-px h-6 bg-border" />
+
+          <label className="flex items-center gap-1.5 text-sm text-muted-foreground cursor-pointer">
+            <input
+              onChange={downloadedFilterChangedCallback}
+              type="checkbox"
+              className="rounded border-border"
+            />
+            Hide downloaded
           </label>
         </div>
       </div>
@@ -611,8 +820,8 @@ export default function SpotifyTableDownloader({
                           header.getContext(),
                         )}
                         {{
-                          asc: ' 🔼',
-                          desc: ' 🔽',
+                          asc: <ChevronUp className="inline h-3.5 w-3.5 ml-1" />,
+                          desc: <ChevronDown className="inline h-3.5 w-3.5 ml-1" />,
                         }[header.column.getIsSorted() as string] ?? null}
                       </TableHead>
                     );
@@ -626,16 +835,42 @@ export default function SpotifyTableDownloader({
                   <TableCell style={{height: `${paddingTop}px`}}></TableCell>
                 </TableRow>
               )}
-              {virtualRows.map(virtualRow => {
-                const row = rows[virtualRow.index] as Row<RowType>;
+              {vRows.map(virtualRow => {
+                const item = groupedItems[virtualRow.index];
+
+                if (item.type === 'group-header') {
+                  return (
+                    <TableRow
+                      key={`group-${item.key}`}
+                      className="bg-secondary/50 cursor-pointer hover:bg-secondary/70"
+                      onClick={() => toggleGroupCollapse(item.key)}
+                    >
+                      <TableCell colSpan={columns.length} className="py-2 px-4">
+                        <div className="flex items-center gap-2">
+                          {collapsedGroups.has(item.key) ? (
+                            <ChevronRight className="h-4 w-4 text-primary" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4 text-primary" />
+                          )}
+                          <span className="font-semibold text-sm">{item.label}</span>
+                          <span className="text-xs text-muted-foreground">{item.count} songs</span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                }
+
+                const row = item.row;
                 return (
                   <TableRow key={row.id}>
                     {row.getVisibleCells().map(cell => {
                       return (
                         <TableCell
-                          className={[
-                            row.getIsExpanded() ? 'py-1 bg-secondary' : 'py-1',
-                          ].join(' ')}
+                          className={cn(
+                            'py-1',
+                            row.getIsExpanded() && 'bg-secondary',
+                            groupBy !== 'none' && row.getParentRow() == null && 'pl-8',
+                          )}
                           key={cell.id}
                           style={{
                             textAlign: (cell.column.columnDef.meta as any)
@@ -651,6 +886,13 @@ export default function SpotifyTableDownloader({
                   </TableRow>
                 );
               })}
+              {rows.length === 0 && debouncedSearch && (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="text-center py-8 text-muted-foreground">
+                    No results for &ldquo;{debouncedSearch}&rdquo;
+                  </TableCell>
+                </TableRow>
+              )}
               {paddingBottom > 0 && (
                 <TableRow>
                   <TableCell style={{height: `${paddingBottom}px`}} />

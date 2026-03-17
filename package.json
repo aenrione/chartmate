@@ -10,6 +10,7 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@coderline/alphatab": "^1.8.1",
     "@eliwhite/scan-chart": "^7.1.0",
     "@headlessui/react": "^2.2.9",
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -32,6 +33,7 @@
     "@tauri-apps/plugin-opener": "^2.5.3",
     "@tauri-apps/plugin-sql": "^2.3.2",
     "@tauri-apps/plugin-store": "^2.4.2",
+    "aes-js": "^3.1.2",
     "audio-decode": "^3.1.1",
     "bottleneck": "^2.19.5",
     "class-variance-authority": "^0.7.1",
@@ -65,6 +67,7 @@
     "vexflow": "^4.2.5"
   },
   "devDependencies": {
+    "@coderline/alphatab-vite": "^1.8.1",
     "@tailwindcss/postcss": "^4.2.1",
     "@tauri-apps/cli": "^2",
     "@types/lodash": "^4.17.24",

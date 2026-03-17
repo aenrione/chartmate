@@ -10,6 +10,7 @@ import {
 import {scanForInstalledCharts} from '@/lib/local-songs-folder';
 import {getSongsFolderPath, clearSongsFolderPath, changeSongsFolder} from '@/lib/songs-folder';
 import {Button} from '@/components/ui/button';
+import Loading from '@/components/ui/loading';
 import {
   ChartInfo,
   ChartResponseEncore,
@@ -81,12 +82,14 @@ export default function CompareChartsToLocal({
   });
   const [error, setError] = useState<string | null>(null);
   const [hasFolder, setHasFolder] = useState<boolean | null>(null);
+  const [scanning, setScanning] = useState(false);
 
   const [, fetchChorusCharts] = useChorusChartDb();
 
   const scan = useCallback(async () => {
     songsDispatch({type: 'reset'});
     setError(null);
+    setScanning(true);
 
     const abortController = new AbortController();
     const chorusChartsPromise = fetchChorusCharts(abortController);
@@ -110,6 +113,7 @@ export default function CompareChartsToLocal({
       } else {
         console.log('User canceled picker', e);
       }
+      setScanning(false);
       return;
     }
 
@@ -178,6 +182,7 @@ export default function CompareChartsToLocal({
       type: 'set-songs',
       songs: songsWithRecommendation,
     });
+    setScanning(false);
   }, [exact, rankingGroups]);
 
   const handleChangeFolder = useCallback(async () => {
@@ -202,36 +207,28 @@ export default function CompareChartsToLocal({
     });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const isScanning = songsState.songs == null && songsState.songsCounted > 0;
-
   // Loading state while checking for saved folder
   if (hasFolder === null) {
-    return null;
+    return <Loading message="Checking songs folder..." />;
   }
 
   if (songsState.songs) {
     return (
-      <>
-        <div className="flex gap-2 mb-2">
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
           <Button onClick={scan}>Rescan</Button>
           <Button variant="outline" onClick={handleChangeFolder}>
             Change Folder
           </Button>
         </div>
         <SongsTable songs={songsState.songs} />
-      </>
+      </div>
     );
   }
 
-  // Show scanning progress if a folder is selected and scan is in progress
-  if (hasFolder && isScanning) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-4 py-24 text-center">
-        <p className="text-sm text-muted-foreground">
-          {songsState.songsCounted} songs scanned...
-        </p>
-      </div>
-    );
+  // Show scanning progress
+  if (scanning) {
+    return <Loading message={`${songsState.songsCounted} songs scanned...`} />;
   }
 
   // Empty state: no folder selected yet
@@ -265,8 +262,8 @@ export default function CompareChartsToLocal({
       {error && (
         <p className="text-sm text-destructive max-w-md">{error}</p>
       )}
-      <Button disabled={isScanning} onClick={scan}>
-        {isScanning ? 'Scanning...' : 'Select Clone Hero Songs Folder'}
+      <Button onClick={scan}>
+        Select Clone Hero Songs Folder
       </Button>
     </div>
   );

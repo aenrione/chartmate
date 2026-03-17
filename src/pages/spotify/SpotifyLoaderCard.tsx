@@ -1,5 +1,4 @@
 import {useCallback, useEffect, useMemo, useRef, useState, memo} from 'react';
-import {useInView} from 'react-intersection-observer';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {User, Users, Clock, Check, Info, Disc3} from 'lucide-react';
 import {
@@ -96,8 +95,7 @@ export default function SpotifyLoaderCard({
   const [countdown, setCountdown] = useState(rateLimitCountdown);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<{[id: string]: HTMLDivElement | null}>({});
-  const prevFirstScanningId = useRef<string | null>(null);
-  const [inViewMap, setInViewMap] = useState<{[id: string]: boolean}>({});
+  const prevScrolledId = useRef<string | null>(null);
   const [etaTick, setEtaTick] = useState(0);
   const scanStartTimeRef = useRef<number | null>(null);
   const initialCachedCountsRef = useRef<{[id: string]: number}>({});
@@ -106,11 +104,6 @@ export default function SpotifyLoaderCard({
     itemRefs.current[id] = el;
   }, []);
 
-  const handleInViewChange = useCallback((id: string, inView: boolean) => {
-    setInViewMap(prev =>
-      prev[id] === inView ? prev : {...prev, [id]: inView},
-    );
-  }, []);
 
   useInterval(
     () => {
@@ -256,28 +249,23 @@ export default function SpotifyLoaderCard({
   })();
 
   useEffect(() => {
-    const firstScanning = allItems.find(p => p.isScanning) || null;
-    const currentId = firstScanning?.id ?? null;
+    if (!autoScroll) return;
 
-    if (!autoScroll) {
-      prevFirstScanningId.current = currentId;
-      return;
-    }
-
-    if (currentId === prevFirstScanningId.current) return;
-
-    prevFirstScanningId.current = currentId;
+    // Find the last scanning item (closest to the scanning frontier)
+    const lastScanning =
+      [...allItems].reverse().find(p => p.isScanning) || null;
+    const currentId = lastScanning?.id ?? null;
     if (!currentId) return;
 
-    const container = containerRef.current;
-    const target = itemRefs.current[currentId];
-    if (!container || !target) return;
+    // Only scroll when a different item becomes the active one
+    if (currentId === prevScrolledId.current) return;
+    prevScrolledId.current = currentId;
 
-    const isVisible = inViewMap[currentId];
-    if (!isVisible) {
-      target.scrollIntoView({behavior: 'smooth', block: 'center'});
-    }
-  }, [allItems]);
+    const target = itemRefs.current[currentId];
+    if (!target) return;
+
+    target.scrollIntoView({behavior: 'smooth', block: 'center'});
+  }, [allItems, autoScroll]);
 
   return (
     <div className="bg-background flex items-center justify-center p-4">
@@ -321,15 +309,13 @@ export default function SpotifyLoaderCard({
             </div>
           )}
 
-          <div ref={containerRef} className="h-96 overflow-y-auto px-6 pb-6">
+          <div ref={containerRef} className="h-[60vh] overflow-y-auto px-6 pb-6">
             <div className="border rounded-lg bg-card overflow-hidden">
               {allItems.map(playlist => (
                 <PlaylistRow
                   key={playlist.id}
                   playlist={playlist}
                   onRef={handleRowRef}
-                  onInViewChange={handleInViewChange}
-                  root={containerRef.current}
                 />
               ))}
             </div>
@@ -343,15 +329,10 @@ export default function SpotifyLoaderCard({
 const PlaylistRow = memo(function PlaylistRow({
   playlist,
   onRef,
-  onInViewChange,
-  root,
 }: {
   playlist: LoaderPlaylist;
   onRef: (id: string, el: HTMLDivElement | null) => void;
-  onInViewChange: (id: string, inView: boolean) => void;
-  root: Element | null;
 }) {
-  const {ref, inView} = useInView({root, threshold: 0});
   const getProgressPercentage = useCallback(
     (scanned: number, total: number) => {
       if (total === 0) return 100;
@@ -360,22 +341,17 @@ const PlaylistRow = memo(function PlaylistRow({
     [],
   );
 
-  useEffect(() => {
-    onInViewChange(playlist.id, inView);
-  }, [inView, onInViewChange, playlist.id]);
-
-  const setRefs = useCallback(
+  const setRef = useCallback(
     (el: HTMLDivElement | null) => {
       onRef(playlist.id, el);
-      (ref as (el: Element | null) => void)(el);
     },
-    [onRef, playlist.id, ref],
+    [onRef, playlist.id],
   );
 
   return (
     <div
-      ref={setRefs}
-      className="flex items-center gap-3 p-3 hover:bg-accent/5 transition-colors border-b">
+      ref={setRef}
+      className={`flex items-center gap-3 p-3 transition-colors border-b ${playlist.isScanning ? 'bg-primary/5' : 'hover:bg-accent/5'}`}>
       <div className="flex items-center gap-2 flex-1 min-w-0">
         <h3 className="font-medium text-sm truncate text-foreground">
           {playlist.name}

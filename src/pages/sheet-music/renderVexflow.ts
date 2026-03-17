@@ -15,6 +15,8 @@ import {
   Tuplet,
   Voice,
   RepeatNote,
+  Annotation,
+  AnnotationVerticalJustify,
 } from 'vexflow';
 import {Measure} from './convertToVexflow';
 import {PracticeModeConfig} from '@/lib/preview/audioManager';
@@ -78,6 +80,8 @@ export function renderMusic(
   showBarNumbers: boolean = true,
   enableColors: boolean = false,
   practiceModeConfig?: PracticeModeConfig | null,
+  noteAnnotations?: string[],
+  maxStavesPerRow?: number,
 ): RenderData[] {
   if (!elementRef.current) {
     return [];
@@ -94,8 +98,9 @@ export function renderMusic(
 
   const lineHeight = showBarNumbers ? 180 : 130;
 
+  const effectiveMaxStaves = maxStavesPerRow ?? MAX_STAVES_PER_ROW;
   const stavePerRow = Math.min(
-    MAX_STAVES_PER_ROW,
+    effectiveMaxStaves,
     Math.max(
       MIN_STAVES_PER_ROW,
       Math.floor((width / zoom - margin) / MIN_STAVE_WIDTH),
@@ -107,10 +112,10 @@ export function renderMusic(
   // when the window is resized smaller.
 
   // Calculate the actual stave width
-  const staveWidth = Math.min(
-    MAX_STAVE_WIDTH,
-    Math.floor(width / stavePerRow) - 1,
-  );
+  // When maxStavesPerRow is explicitly set, don't cap at MAX_STAVE_WIDTH so bars can stretch
+  const staveWidth = maxStavesPerRow
+    ? Math.floor(width / stavePerRow) - 1
+    : Math.min(MAX_STAVE_WIDTH, Math.floor(width / stavePerRow) - 1);
 
   renderer.resize(
     // This doesn't include zoom because the width is scaled already
@@ -274,7 +279,23 @@ export function renderMusic(
     flag: 'measure-start' | 'measure-end' | 'note';
   }> = [];
 
+  // Track annotation index across measures (annotations are sequential across all notes)
+  let annotationIndex = 0;
+
   return measures.map((measure, index) => {
+    // Compute annotations for this measure's non-rest notes
+    let measureAnnotations: string[] | undefined;
+    if (noteAnnotations && noteAnnotations.length > 0) {
+      measureAnnotations = [];
+      for (const note of measure.notes) {
+        if (!note.isRest) {
+          const ann = noteAnnotations[annotationIndex % noteAnnotations.length];
+          measureAnnotations.push(ann);
+          annotationIndex++;
+        }
+      }
+    }
+
     const stave = renderMeasure(
       context,
       measure,
@@ -291,6 +312,7 @@ export function renderMusic(
       processedLyricsMap.get(index), // Pass processed lyrics if this measure contains lyrics
       index > 0 ? measures[index - 1] : undefined, // Pass previous measure for repeat detection
       practiceModeConfig, // Pass practice mode configuration
+      measureAnnotations,
     );
 
     return {
@@ -415,6 +437,7 @@ function renderMeasure(
   lyrics?: {text: string; position: number}[],
   previousMeasure?: Measure,
   practiceModeConfig?: PracticeModeConfig | null,
+  measureAnnotations?: string[],
 ) {
   const stave = new Stave(xOffset, yOffset, staveWidth);
 
@@ -527,6 +550,7 @@ function renderMeasure(
   // Original note rendering logic
   const tuplets: StaveNote[][] = [];
   let currentTuplet: StaveNote[] | null = null;
+  let annotationNoteIndex = 0;
 
   const notes = measure.notes.map(note => {
     const staveNote = new StaveNote({
@@ -537,6 +561,16 @@ function renderMeasure(
 
     // @ts-ignore Store ms in the stave note for later use
     staveNote.ms = note.ms;
+
+    // Add sticking annotations (R/L) below notes
+    if (measureAnnotations && !note.isRest && annotationNoteIndex < measureAnnotations.length) {
+      const annText = measureAnnotations[annotationNoteIndex];
+      const annotation = new Annotation(annText)
+        .setVerticalJustification(AnnotationVerticalJustify.BOTTOM)
+        .setFont('Arial', 10, 'bold');
+      staveNote.addModifier(annotation);
+      annotationNoteIndex++;
+    }
 
     if (enableColors) {
       staveNote.keys.forEach((n, idx) => {

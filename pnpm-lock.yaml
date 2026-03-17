@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@coderline/alphatab':
+        specifier: ^1.8.1
+        version: 1.8.1
       '@eliwhite/scan-chart':
         specifier: ^7.1.0
         version: 7.1.0
@@ -74,6 +77,9 @@ importers:
       '@tauri-apps/plugin-store':
         specifier: ^2.4.2
         version: 2.4.2
+      aes-js:
+        specifier: ^3.1.2
+        version: 3.1.2
       audio-decode:
         specifier: ^3.1.1
         version: 3.1.2
@@ -168,6 +174,9 @@ importers:
         specifier: ^4.2.5
         version: 4.2.5
     devDependencies:
+      '@coderline/alphatab-vite':
+        specifier: ^1.8.1
+        version: 1.8.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.31.1)
       '@tailwindcss/postcss':
         specifier: ^4.2.1
         version: 4.2.1
@@ -324,6 +333,14 @@ packages:
   '@babel/types@7.29.0':
     resolution: {integrity: sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A==}
     engines: {node: '>=6.9.0'}
+
+  '@coderline/alphatab-vite@1.8.1':
+    resolution: {integrity: sha512-Cc7A8tSTb3EuRxVUUFw6B4Eean+Ft/ojpwsb/kDTr1hFg5Ow6XJ5TH3muCNifLzITK9dghelPA/UBfUSDAcc4w==}
+    engines: {node: '>=20.19.0'}
+
+  '@coderline/alphatab@1.8.1':
+    resolution: {integrity: sha512-sbhSUnuMew3k7I2ulNNunyaqOFIeELOtPAZCQkZo7tPaK/dnWzVk7XSx+nNlakbMqd5zpJZwUnOv5KexkEgz2Q==}
+    engines: {node: '>=6.0.0'}
 
   '@dimforge/rapier3d-compat@0.12.0':
     resolution: {integrity: sha512-uekIGetywIgopfD97oDL5PfeezkFpNhwlzlaEYNOA0N6ghdsOvh/HYjSMek5Q2O1PYvRSDFcqFVJl4r4ZBwOow==}
@@ -1409,6 +1426,9 @@ packages:
     resolution: {integrity: sha512-p96FSY54r+WJ50FIOsCOjyj/wavs8921hG5+kVMmZgKcvIKxMXHTrjNJvRgWa/zuX3B6t2lijLNFaOyuxUH+2A==}
     engines: {node: '>=14.6'}
 
+  aes-js@3.1.2:
+    resolution: {integrity: sha512-e5pEa2kBnBOgR4Y/p20pskXI74UEz7de8ZGVo58asOtvSVG5YAbJeELPZxOmt+Bnz3rX753YKhfIn4X4l1PPRQ==}
+
   aria-hidden@1.2.6:
     resolution: {integrity: sha512-ik3ZgC9dY/lYVVM++OISsaYDeg1tb0VtP5uL3ouh1koGOaUMDPpbFIei4JkFimWUFPn90sbMNMXQAIVOlnYKJA==}
     engines: {node: '>=10'}
@@ -2196,6 +2216,25 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
+
+  '@coderline/alphatab-vite@1.8.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.31.1)':
+    dependencies:
+      magic-string: 0.30.21
+      vite: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.31.1)
+    transitivePeerDependencies:
+      - '@types/node'
+      - jiti
+      - less
+      - lightningcss
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - terser
+      - tsx
+      - yaml
+
+  '@coderline/alphatab@1.8.1': {}
 
   '@dimforge/rapier3d-compat@0.12.0': {}
 
@@ -3151,6 +3190,8 @@ snapshots:
 
   '@xmldom/xmldom@0.9.8':
     optional: true
+
+  aes-js@3.1.2: {}
 
   aria-hidden@1.2.6:
     dependencies:

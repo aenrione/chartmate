@@ -10,12 +10,16 @@ interface PlayheadProps {
   }>;
   audioManagerRef: React.RefObject<any>;
   zoom: number;
+  /** Multiplier applied to AudioManager time before looking up position.
+   *  Use when playback speed differs from chart timing (e.g., rudiment BPM scaling). */
+  playheadTimeScale?: number;
 }
 
 export const Playhead = memo(function ({
   timePositionMap,
   audioManagerRef,
   zoom,
+  playheadTimeScale = 1,
 }: PlayheadProps) {
   const playheadRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number>(null);
@@ -33,7 +37,7 @@ export const Playhead = memo(function ({
     const animate = () => {
       if (audioManagerRef.current != null) {
         // Get current time directly from audio manager
-        const currentTimeMs = audioManagerRef.current.currentTime * 1000;
+        const currentTimeMs = audioManagerRef.current.currentTime * 1000 * playheadTimeScale;
         // Find position for current time
         const newPosition = findPositionForTime(timePositionMap, currentTimeMs);
         if (newPosition && playheadRef.current) {
@@ -59,7 +63,7 @@ export const Playhead = memo(function ({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [timePositionMap, audioManagerRef]);
+  }, [timePositionMap, audioManagerRef, playheadTimeScale]);
 
   return (
     <div
