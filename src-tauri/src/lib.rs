@@ -5,7 +5,7 @@ use tauri::Emitter;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![psarc::parse_psarc])
+        .invoke_handler(tauri::generate_handler![psarc::parse_psarc, psarc::extract_psarc_audio])
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_store::Builder::default().build())

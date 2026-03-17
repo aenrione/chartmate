@@ -357,8 +357,16 @@ function parseSngBinary(data: Uint8Array, manifest?: SngManifestInfo): Rocksmith
     const avgNotesCount = r.u32();
     r.skip(avgNotesCount * 4);
 
-    // Keep highest difficulty level's notes
-    if (difficulty > maxDiff) {
+    // Notes in iteration count (no ignored)
+    const niicNoIgn = r.u32();
+    r.skip(niicNoIgn * 4);
+
+    // Notes in iteration count
+    const niic = r.u32();
+    r.skip(niic * 4);
+
+    // Keep the level with the most notes (richest arrangement)
+    if (levelNotes.length > maxDiffNotes.length) {
       maxDiff = difficulty;
       maxDiffNotes = levelNotes;
     }

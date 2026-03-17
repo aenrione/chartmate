@@ -122,18 +122,23 @@ fn decrypt_sng(sng_data: &[u8]) -> Result<Vec<u8>, String> {
         return Err("SNG file too small".into());
     }
 
-    let iv = &sng_data[8..24];
+    let iv_bytes = &sng_data[8..24];
     let payload = &sng_data[24..sng_data.len() - 56];
 
     let key = hex_to_bytes(WIN_KEY);
     let mut decrypted = payload.to_vec();
 
-    // AES-256-CTR
-    let mut cipher = <Ctr128BE<Aes256> as KeyIvInit>::new_from_slices(&key, iv)
+    // AES-256-CTR: Rocksmith uses only first 4 bytes of IV as BE counter value,
+    // placed in the last 4 bytes of a 16-byte counter block (matching aes-js Counter behavior)
+    let ctr_val = u32::from_be_bytes([iv_bytes[0], iv_bytes[1], iv_bytes[2], iv_bytes[3]]);
+    let mut ctr_block = [0u8; 16];
+    ctr_block[12..16].copy_from_slice(&ctr_val.to_be_bytes());
+
+    let mut cipher = <Ctr128BE<Aes256> as KeyIvInit>::new_from_slices(&key, &ctr_block)
         .map_err(|e| e.to_string())?;
     cipher.apply_keystream(&mut decrypted);
 
-    // First 4 bytes = uncompressed length, then zlib data
+    // First 4 bytes = uncompressed length (LE), then zlib data
     if decrypted.len() < 4 {
         return Err("Decrypted SNG too small".into());
     }
@@ -144,6 +149,7 @@ fn decrypt_sng(sng_data: &[u8]) -> Result<Vec<u8>, String> {
 // ── SNG binary format → JSON structures ──
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SngArrangement {
     pub arrangement_type: String,
     pub title: String,
@@ -152,6 +158,7 @@ pub struct SngArrangement {
     pub tuning: Vec<i16>,
     pub capo_fret: i8,
     pub song_length: f32,
+    pub start_beat: f32,
     pub average_tempo: f32,
     pub beats: Vec<SngBeat>,
     pub notes: Vec<SngNote>,
@@ -163,12 +170,14 @@ pub struct SngArrangement {
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SngBeat {
     pub time: f32,
     pub measure: i32,
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SngNote {
     pub time: f32,
     pub string: i8,
@@ -192,13 +201,17 @@ pub struct SngNote {
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SngChord {
     pub time: f32,
     pub chord_id: i32,
+    pub strum: String,
+    pub high_density: bool,
     pub chord_notes: Vec<SngNote>,
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SngChordTemplate {
     pub chord_id: usize,
     pub chord_name: String,
@@ -208,6 +221,7 @@ pub struct SngChordTemplate {
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SngSection {
     pub name: String,
     pub number: u32,
@@ -216,12 +230,14 @@ pub struct SngSection {
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SngPhrase {
     pub name: String,
     pub max_difficulty: u32,
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SngPhraseIteration {
     pub phrase_id: u32,
     pub time: f32,
@@ -368,11 +384,10 @@ fn parse_sng_binary(data: &[u8], manifest: Option<&ManifestInfo>) -> Result<SngA
 
     // Levels — contains notes
     let levels_count = u32le!() as usize;
-    let mut max_diff: i32 = -1;
     let mut max_diff_notes: Vec<RawNote> = Vec::new();
 
     for _ in 0..levels_count {
-        let difficulty = u32le!() as i32;
+        let _difficulty = u32le!();
 
         // Anchors
         let anchors_count = u32le!() as usize;
@@ -415,7 +430,7 @@ fn parse_sng_binary(data: &[u8], manifest: Option<&ManifestInfo>) -> Result<SngA
             let sustain = f32le!();
             let max_bend = f32le!();
             let bend_count = u32le!() as usize;
-            skip!(bend_count * 12); // each bend: time(f32=4) + step(f32=4) + padding(3) + unk(i8=1) = 12
+            skip!(bend_count * 12); // each bend: time(f32) + step(f32) + padding(3) + unk(i8) = 12
 
             level_notes.push(RawNote {
                 mask, time, string, fret, chord_id, slide_to, slide_unpitch_to,
@@ -427,8 +442,16 @@ fn parse_sng_binary(data: &[u8], manifest: Option<&ManifestInfo>) -> Result<SngA
         let avg_count = u32le!() as usize;
         skip!(avg_count * 4);
 
-        if difficulty > max_diff {
-            max_diff = difficulty;
+        // Notes in iteration count (no ignored)
+        let niic_no_ign = u32le!() as usize;
+        skip!(niic_no_ign * 4);
+
+        // Notes in iteration count
+        let niic = u32le!() as usize;
+        skip!(niic * 4);
+
+        // Keep the level with the most notes (richest arrangement data)
+        if level_notes.len() > max_diff_notes.len() {
             max_diff_notes = level_notes;
         }
     }
@@ -470,7 +493,7 @@ fn parse_sng_binary(data: &[u8], manifest: Option<&ManifestInfo>) -> Result<SngA
                     tap: false, accent: false, link_next: false, ignore: false,
                 })
                 .collect();
-            chords.push(SngChord { time: raw.time, chord_id: raw.chord_id, chord_notes });
+            chords.push(SngChord { time: raw.time, chord_id: raw.chord_id, strum: "down".into(), high_density: false, chord_notes });
         } else if raw.mask & MASK_IGNORE == 0 {
             notes.push(SngNote {
                 time: raw.time, string: raw.string, fret: raw.fret,
@@ -494,6 +517,8 @@ fn parse_sng_binary(data: &[u8], manifest: Option<&ManifestInfo>) -> Result<SngA
 
     let arr_type = manifest.map(|m| m.arrangement_name.clone()).unwrap_or_else(|| "Lead".into());
 
+    let start_beat = beats.first().map(|b| b.time).unwrap_or(0.0);
+
     Ok(SngArrangement {
         arrangement_type: arr_type,
         title: manifest.map(|m| m.song_name.clone()).unwrap_or_default(),
@@ -502,6 +527,7 @@ fn parse_sng_binary(data: &[u8], manifest: Option<&ManifestInfo>) -> Result<SngA
         tuning: if tuning.len() >= 6 { tuning[..6].to_vec() } else { vec![0; 6] },
         capo_fret: capo,
         song_length,
+        start_beat,
         average_tempo,
         beats,
         notes,
@@ -549,7 +575,184 @@ fn parse_manifest(json_data: &[u8]) -> Option<ManifestInfo> {
     })
 }
 
-// ── Tauri command ──
+// ── PSARC archive helpers ──
+
+struct PsarcArchive {
+    data: Vec<u8>,
+    entries: Vec<BomEntry>,
+    zlengths: Vec<u16>,
+    block_size: u32,
+    file_paths: Vec<String>,
+}
+
+impl PsarcArchive {
+    fn open(path: &str) -> Result<Self, String> {
+        let data = std::fs::read(path).map_err(|e| format!("Failed to read file: {e}"))?;
+        if data.len() < 32 {
+            return Err("File too small".into());
+        }
+        let magic = std::str::from_utf8(&data[0..4]).unwrap_or("");
+        if magic != "PSAR" {
+            return Err(format!("Not a PSARC file (magic: {magic})"));
+        }
+
+        let header_size = read_u32_be(&data, 12) as usize;
+        let entry_count = read_u32_be(&data, 20) as usize;
+        let block_size = read_u32_be(&data, 24);
+
+        let bom_raw = &data[32..header_size];
+        let bom = decrypt_bom(bom_raw);
+
+        let mut entries = Vec::with_capacity(entry_count);
+        for i in 0..entry_count {
+            let off = i * 30;
+            entries.push(BomEntry {
+                zindex: read_u32_be(&bom, off + 16),
+                length: read_5byte_be(&bom, off + 20),
+                offset: read_5byte_be(&bom, off + 25),
+            });
+        }
+
+        let zl_start = entry_count * 30;
+        let mut zlengths = Vec::new();
+        let mut i = zl_start;
+        while i + 1 < bom.len() {
+            zlengths.push(read_u16_be(&bom, i));
+            i += 2;
+        }
+
+        let listing_data = read_psarc_entry(&data, &entries[0], &zlengths, block_size)?;
+        let listing = String::from_utf8_lossy(&listing_data);
+        let file_paths: Vec<String> = listing.split('\n').filter(|s| !s.is_empty()).map(|s| s.to_string()).collect();
+
+        Ok(Self { data, entries, zlengths, block_size, file_paths })
+    }
+
+    fn extract(&self, file_index: usize) -> Result<Vec<u8>, String> {
+        let entry_idx = file_index + 1;
+        if entry_idx >= self.entries.len() {
+            return Err("Entry index out of range".into());
+        }
+        read_psarc_entry(&self.data, &self.entries[entry_idx], &self.zlengths, self.block_size)
+    }
+
+    fn find_files(&self, suffix: &str, exclude: &str) -> Vec<(usize, &str)> {
+        self.file_paths.iter().enumerate()
+            .filter(|(_, p)| p.ends_with(suffix) && (exclude.is_empty() || !p.contains(exclude)))
+            .map(|(i, p)| (i, p.as_str()))
+            .collect()
+    }
+}
+
+// ── WEM → OGG conversion ──
+
+fn wem_to_wav(wem_data: &[u8], trim_start_secs: f64) -> Result<Vec<u8>, String> {
+    use std::io::{BufReader, Cursor};
+    use symphonia::core::audio::SampleBuffer;
+    use symphonia::core::codecs::DecoderOptions;
+    use symphonia::core::formats::FormatOptions;
+    use symphonia::core::io::MediaSourceStream;
+    use symphonia::core::meta::MetadataOptions;
+    use ww2ogg::{CodebookLibrary, WwiseRiffVorbis};
+
+    // Step 1: WEM → OGG (try default codebooks first, fall back to aoTuV)
+    let reader = BufReader::new(Cursor::new(wem_data));
+    let codebooks = CodebookLibrary::default_codebooks()
+        .map_err(|e| format!("Failed to load codebooks: {e}"))?;
+    let mut converter = WwiseRiffVorbis::new(reader, codebooks)
+        .map_err(|e| format!("Failed to parse WEM: {e}"))?;
+    let mut ogg_bytes = Vec::new();
+    converter.generate_ogg(&mut ogg_bytes)
+        .map_err(|e| format!("Failed to generate OGG: {e}"))?;
+
+    // Validate and retry with aoTuV codebooks if needed
+    if ww2ogg::validate(&ogg_bytes).is_err() {
+        eprintln!("[audio] Default codebooks failed validation, trying aoTuV");
+        let reader2 = BufReader::new(Cursor::new(wem_data));
+        let codebooks2 = CodebookLibrary::aotuv_codebooks()
+            .map_err(|e| format!("Failed to load aoTuV codebooks: {e}"))?;
+        let mut converter2 = WwiseRiffVorbis::new(reader2, codebooks2)
+            .map_err(|e| format!("Failed to parse WEM with aoTuV: {e}"))?;
+        ogg_bytes.clear();
+        converter2.generate_ogg(&mut ogg_bytes)
+            .map_err(|e| format!("Failed to generate OGG with aoTuV: {e}"))?;
+    }
+
+    // Step 2: OGG → PCM via symphonia
+    let cursor = Cursor::new(ogg_bytes);
+    let mss = MediaSourceStream::new(Box::new(cursor), Default::default());
+
+    let probed = symphonia::default::get_probe()
+        .format(&Default::default(), mss, &FormatOptions::default(), &MetadataOptions::default())
+        .map_err(|e| format!("Failed to probe OGG: {e}"))?;
+
+    let mut format_reader = probed.format;
+    let track = format_reader.default_track()
+        .ok_or("No audio track found")?;
+
+    let channels = track.codec_params.channels
+        .map(|c| c.count() as u16)
+        .unwrap_or(2);
+    let sample_rate = track.codec_params.sample_rate.unwrap_or(44100);
+    let track_id = track.id;
+
+    let mut decoder = symphonia::default::get_codecs()
+        .make(&track.codec_params, &DecoderOptions::default())
+        .map_err(|e| format!("Failed to create decoder: {e}"))?;
+
+    let bits_per_sample: u16 = 16;
+    let mut all_samples: Vec<i16> = Vec::new();
+
+    loop {
+        let packet = match format_reader.next_packet() {
+            Ok(p) => p,
+            Err(symphonia::core::errors::Error::IoError(ref e))
+                if e.kind() == std::io::ErrorKind::UnexpectedEof => break,
+            Err(_) => break,
+        };
+
+        if packet.track_id() != track_id { continue; }
+
+        if let Ok(decoded) = decoder.decode(&packet) {
+            let spec = *decoded.spec();
+            let duration = decoded.capacity() as u64;
+            let mut sample_buf = SampleBuffer::<i16>::new(duration, spec);
+            sample_buf.copy_interleaved_ref(decoded);
+            all_samples.extend_from_slice(sample_buf.samples());
+        }
+    }
+
+    if all_samples.is_empty() {
+        return Err("No audio samples decoded".into());
+    }
+
+    // Step 3: PCM → WAV
+    let data_size = (all_samples.len() * 2) as u32;
+    let byte_rate = sample_rate * channels as u32 * (bits_per_sample as u32 / 8);
+    let block_align = channels * (bits_per_sample / 8);
+
+    let mut wav = Vec::with_capacity(44 + data_size as usize);
+    wav.extend_from_slice(b"RIFF");
+    wav.extend_from_slice(&(36 + data_size).to_le_bytes());
+    wav.extend_from_slice(b"WAVE");
+    wav.extend_from_slice(b"fmt ");
+    wav.extend_from_slice(&16u32.to_le_bytes());
+    wav.extend_from_slice(&1u16.to_le_bytes()); // PCM format
+    wav.extend_from_slice(&channels.to_le_bytes());
+    wav.extend_from_slice(&sample_rate.to_le_bytes());
+    wav.extend_from_slice(&byte_rate.to_le_bytes());
+    wav.extend_from_slice(&block_align.to_le_bytes());
+    wav.extend_from_slice(&bits_per_sample.to_le_bytes());
+    wav.extend_from_slice(b"data");
+    wav.extend_from_slice(&data_size.to_le_bytes());
+    for sample in &all_samples {
+        wav.extend_from_slice(&sample.to_le_bytes());
+    }
+
+    Ok(wav)
+}
+
+// ── Tauri commands ──
 
 #[derive(Serialize)]
 pub struct PsarcResult {
@@ -558,90 +761,38 @@ pub struct PsarcResult {
 
 #[tauri::command]
 pub fn parse_psarc(path: String) -> Result<PsarcResult, String> {
-    let data = std::fs::read(&path).map_err(|e| format!("Failed to read file: {e}"))?;
+    let archive = PsarcArchive::open(&path)?;
 
-    if data.len() < 32 {
-        return Err("File too small".into());
-    }
-
-    let magic = std::str::from_utf8(&data[0..4]).unwrap_or("");
-    if magic != "PSAR" {
-        return Err(format!("Not a PSARC file (magic: {magic})"));
-    }
-
-    let header_size = read_u32_be(&data, 12) as usize;
-    let entry_count = read_u32_be(&data, 20) as usize;
-    let block_size = read_u32_be(&data, 24);
-
-    // Decrypt BOM
-    let bom_raw = &data[32..header_size];
-    let bom = decrypt_bom(bom_raw);
-
-    // Parse BOM entries
-    let mut entries = Vec::with_capacity(entry_count);
-    for i in 0..entry_count {
-        let off = i * 30;
-        entries.push(BomEntry {
-            zindex: read_u32_be(&bom, off + 16),
-            length: read_5byte_be(&bom, off + 20),
-            offset: read_5byte_be(&bom, off + 25),
-        });
-    }
-
-    // Zlength table
-    let zl_start = entry_count * 30;
-    let mut zlengths = Vec::new();
-    let mut i = zl_start;
-    while i + 1 < bom.len() {
-        zlengths.push(read_u16_be(&bom, i));
-        i += 2;
-    }
-
-    // Entry 0 = file listing
-    let listing_data = read_psarc_entry(&data, &entries[0], &zlengths, block_size)?;
-    let listing = String::from_utf8_lossy(&listing_data);
-    let file_paths: Vec<&str> = listing.split('\n').filter(|s| !s.is_empty()).collect();
-
-    // Extract SNG files and JSON manifests
-    let mut sng_files: Vec<(String, Vec<u8>)> = Vec::new();
-    let mut manifests: Vec<(String, Vec<u8>)> = Vec::new();
-
-    for (idx, path) in file_paths.iter().enumerate() {
-        let entry_idx = idx + 1;
-        if entry_idx >= entries.len() { break; }
-
-        if path.ends_with(".sng") && !path.contains("_vocals.sng") {
-            let file_data = read_psarc_entry(&data, &entries[entry_idx], &zlengths, block_size)?;
-            sng_files.push((path.to_string(), file_data));
-        } else if path.ends_with(".json") && path.contains("manifests/") && !path.contains("_vocals.") {
-            let file_data = read_psarc_entry(&data, &entries[entry_idx], &zlengths, block_size)?;
-            manifests.push((path.to_string(), file_data));
-        }
-    }
+    let sng_files = archive.find_files(".sng", "_vocals.sng");
+    let manifest_files = archive.find_files(".json", "_vocals.");
 
     // Parse manifests
     let mut manifest_map: std::collections::HashMap<String, ManifestInfo> = std::collections::HashMap::new();
-    for (path, data) in &manifests {
-        if let Some(info) = parse_manifest(data) {
-            let name = path.split('/').last().unwrap_or("").replace(".json", "");
-            manifest_map.insert(name, info);
+    for (idx, mp) in &manifest_files {
+        if !mp.contains("manifests/") { continue; }
+        if let Ok(data) = archive.extract(*idx) {
+            if let Some(info) = parse_manifest(&data) {
+                let name = mp.split('/').last().unwrap_or("").replace(".json", "");
+                manifest_map.insert(name, info);
+            }
         }
     }
 
     // Decrypt and parse SNG files
     let mut arrangements = Vec::new();
-    for (path, sng_data) in &sng_files {
-        let name = path.split('/').last().unwrap_or("").replace(".sng", "");
+    for (idx, sp) in &sng_files {
+        let sng_data = archive.extract(*idx)?;
+        let name = sp.split('/').last().unwrap_or("").replace(".sng", "");
         let manifest = manifest_map.get(&name);
 
-        match decrypt_sng(sng_data) {
+        match decrypt_sng(&sng_data) {
             Ok(decompressed) => {
                 match parse_sng_binary(&decompressed, manifest) {
                     Ok(arr) => arrangements.push(arr),
-                    Err(e) => eprintln!("Failed to parse SNG {path}: {e}"),
+                    Err(e) => eprintln!("Failed to parse SNG {sp}: {e}"),
                 }
             }
-            Err(e) => eprintln!("Failed to decrypt SNG {path}: {e}"),
+            Err(e) => eprintln!("Failed to decrypt SNG {sp}: {e}"),
         }
     }
 
@@ -652,9 +803,123 @@ pub fn parse_psarc(path: String) -> Result<PsarcResult, String> {
     Ok(PsarcResult { arrangements })
 }
 
+/// Extract the main song audio from a PSARC file, converted to WAV.
+/// Writes to a temp file and returns the file path.
+#[tauri::command]
+pub fn extract_psarc_audio(path: String) -> Result<String, String> {
+    let archive = PsarcArchive::open(&path)?;
+
+    // Find the largest .wem file (that's the full song, not the preview)
+    let wem_files = archive.find_files(".wem", "");
+    if wem_files.is_empty() {
+        return Err("No audio files found in PSARC".into());
+    }
+
+    // Pick the largest WEM (full song vs preview)
+    let (best_idx, best_path) = wem_files.iter()
+        .max_by_key(|(idx, _)| archive.entries.get(idx + 1).map(|e| e.length).unwrap_or(0))
+        .ok_or("No WEM files found")?;
+
+    eprintln!("Extracting audio: {best_path}");
+    let wem_data = archive.extract(*best_idx)?;
+    let wav_data = wem_to_wav(&wem_data)?;
+
+    // Write to cache dir under HOME (accessible via Tauri asset protocol)
+    let home = std::env::var("HOME").unwrap_or_else(|_| "/tmp".into());
+    let cache_dir = std::path::PathBuf::from(&home).join(".cache").join("chartmate");
+    let _ = std::fs::create_dir_all(&cache_dir);
+    let hash = {
+        use std::collections::hash_map::DefaultHasher;
+        use std::hash::{Hash, Hasher};
+        let mut h = DefaultHasher::new();
+        path.hash(&mut h);
+        h.finish()
+    };
+    let wav_path = cache_dir.join(format!("audio_{hash:x}.wav"));
+    std::fs::write(&wav_path, &wav_data)
+        .map_err(|e| format!("Failed to write WAV: {e}"))?;
+
+    Ok(wav_path.to_string_lossy().to_string())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_list_psarc_files() {
+        let home = std::env::var("HOME").unwrap();
+        let path = format!("{}/Downloads/Eric-Clapton_Knockin-On-Heavens-Door_v1_1_p.psarc", home);
+        if !std::path::Path::new(&path).exists() {
+            eprintln!("Test file not found, skipping");
+            return;
+        }
+        let data = std::fs::read(&path).unwrap();
+        let header_size = read_u32_be(&data, 12) as usize;
+        let entry_count = read_u32_be(&data, 20) as usize;
+        let block_size = read_u32_be(&data, 24);
+        let bom_raw = &data[32..header_size];
+        let bom = decrypt_bom(bom_raw);
+        let mut entries = Vec::with_capacity(entry_count);
+        for i in 0..entry_count {
+            let off = i * 30;
+            entries.push(BomEntry {
+                zindex: read_u32_be(&bom, off + 16),
+                length: read_5byte_be(&bom, off + 20),
+                offset: read_5byte_be(&bom, off + 25),
+            });
+        }
+        let zl_start = entry_count * 30;
+        let mut zlengths = Vec::new();
+        let mut i = zl_start;
+        while i + 1 < bom.len() {
+            zlengths.push(read_u16_be(&bom, i));
+            i += 2;
+        }
+        let listing_data = read_psarc_entry(&data, &entries[0], &zlengths, block_size).unwrap();
+        let listing = String::from_utf8_lossy(&listing_data);
+        for (i, path) in listing.split('\n').filter(|s| !s.is_empty()).enumerate() {
+            let entry = &entries[i + 1];
+            println!("[{:3}] {:>10} bytes  {}", i, entry.length, path);
+        }
+    }
+
+    #[test]
+    fn test_extract_audio() {
+        let home = std::env::var("HOME").unwrap();
+        let path = format!("{}/Downloads/Eric-Clapton_Knockin-On-Heavens-Door_v1_1_p.psarc", home);
+        if !std::path::Path::new(&path).exists() {
+            eprintln!("Test file not found, skipping");
+            return;
+        }
+        let wav_path = extract_psarc_audio(path).unwrap();
+        println!("WAV written to: {}", wav_path);
+
+        let wav_bytes = std::fs::read(&wav_path).unwrap();
+        println!("WAV size: {} bytes ({} KB)", wav_bytes.len(), wav_bytes.len() / 1024);
+        assert!(wav_bytes.len() > 1000, "WAV should be non-trivial");
+        assert_eq!(&wav_bytes[0..4], b"RIFF", "Should start with RIFF magic");
+        assert_eq!(&wav_bytes[8..12], b"WAVE", "Should have WAVE format");
+    }
+
+    #[test]
+    fn test_timing_details() {
+        let home = std::env::var("HOME").unwrap();
+        let path = format!("{}/Downloads/Eric-Clapton_Knockin-On-Heavens-Door_v1_1_p.psarc", home);
+        if !std::path::Path::new(&path).exists() { return; }
+        let result = parse_psarc(path).unwrap();
+        let arr = &result.arrangements[0];
+        println!("startBeat: {}", arr.start_beat);
+        println!("First 10 beats:");
+        for (i, b) in arr.beats.iter().take(10).enumerate() {
+            println!("  beat[{}] time={:.3}s measure={}", i, b.time, b.measure);
+        }
+        println!("First 5 notes:");
+        for (i, n) in arr.notes.iter().take(5).enumerate() {
+            println!("  note[{}] time={:.3}s string={} fret={}", i, n.time, n.string, n.fret);
+        }
+        println!("songLength: {}", arr.song_length);
+    }
 
     #[test]
     fn test_parse_psarc() {
@@ -674,5 +939,22 @@ mod tests {
         println!("Tuning: {:?}, Capo: {}", arr.tuning, arr.capo_fret);
         assert!(!arr.beats.is_empty());
         assert!(arr.notes.len() + arr.chords.len() > 0, "Should have notes or chords");
+    }
+
+    #[test]
+    fn test_parse_psarc_second_file() {
+        let home = std::env::var("HOME").unwrap();
+        let path = format!("{}/Downloads/Peso-Pluma-Tito-Double-P_intro_v1_p.psarc", home);
+        if !std::path::Path::new(&path).exists() {
+            eprintln!("Test file not found, skipping");
+            return;
+        }
+        let result = parse_psarc(path).unwrap();
+        assert!(!result.arrangements.is_empty(), "Should have arrangements");
+        for arr in &result.arrangements {
+            println!("  {} - {} by {} | Notes: {}, Chords: {}, Beats: {}",
+                arr.arrangement_type, arr.title, arr.artist_name,
+                arr.notes.len(), arr.chords.len(), arr.beats.len());
+        }
     }
 }

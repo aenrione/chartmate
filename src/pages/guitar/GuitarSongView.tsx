@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
+import {invoke, convertFileSrc} from '@tauri-apps/api/core';
 import {Button} from '@/components/ui/button';
 import {Slider} from '@/components/ui/slider';
 import {
@@ -21,6 +22,7 @@ import {
   Volume2,
   Repeat,
   Square,
+  Music,
 } from 'lucide-react';
 import {LayoutMode, StaveProfile, model} from '@coderline/alphatab';
 import AlphaTabWrapper from './AlphaTabWrapper';
@@ -42,6 +44,7 @@ interface LocationState {
   filePath: string;
   fileType: 'guitarpro' | 'rocksmith' | 'psarc';
   psarcArrangement?: RocksmithArrangement;
+  psarcArrangements?: RocksmithArrangement[];
 }
 
 interface GuitarSettings {
@@ -80,6 +83,8 @@ export default function GuitarSongView() {
 
   // Position state (batched to avoid render loops from rapid alphaTab events)
   const [position, setPosition] = useState({currentTime: 0, endTime: 0, currentTick: 0, endTick: 0});
+  const positionRef = useRef(position);
+  positionRef.current = position;
 
   // Settings
   const [settings, setSettings] = useLocalStorage<GuitarSettings>(
@@ -91,6 +96,15 @@ export default function GuitarSongView() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [masterVolume, setMasterVolume] = useState(1.0);
   const [showPracticeMode, setShowPracticeMode] = useState(false);
+
+  // Original audio state (PSARC only)
+  const [useOriginalAudio, setUseOriginalAudio] = useState(state?.fileType === 'psarc');
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [audioLoading, setAudioLoading] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const savedSynthVolume = useRef(1.0);
+  // Audio offset: Rocksmith beats start at startBeat seconds into the audio
+  const audioOffsetRef = useRef(0);
 
   // Dev mode: load from URL query param ?file=/path/to/file.gp5
   const [devFileData, setDevFileData] = useState<Uint8Array | null>(null);
@@ -123,6 +137,7 @@ export default function GuitarSongView() {
   const rocksmithScore = useMemo(() => {
     if (effectiveState?.fileType === 'psarc' && state?.psarcArrangement) {
       try {
+        audioOffsetRef.current = state.psarcArrangement.startBeat || 0;
         return convertToAlphaTab(state.psarcArrangement);
       } catch (err) {
         console.error('Failed to convert PSARC arrangement:', err);
@@ -146,16 +161,46 @@ export default function GuitarSongView() {
     setSelectedTrackIndex(0);
   }, []);
 
+  const lastSyncRef = useRef(0);
   const onPositionChanged = useCallback(
     (curTime: number, eTime: number, curTick: number, eTick: number) => {
       setPosition({currentTime: curTime, endTime: eTime, currentTick: curTick, endTick: eTick});
+
+      // Sync audio element position (throttled)
+      const audio = audioRef.current;
+      if (!audio || !useOriginalAudio || !audio.duration) return;
+
+      // alphaTab curTime is ms from score start; audio needs offset by startBeat
+      const expectedAudioTime = curTime / 1000 + audioOffsetRef.current;
+      const now = Date.now();
+      if (now - lastSyncRef.current < 1000) return;
+      const drift = Math.abs(audio.currentTime - expectedAudioTime);
+      if (drift > 0.15) {
+        audio.currentTime = expectedAudioTime;
+        lastSyncRef.current = now;
+      }
     },
-    [],
+    [useOriginalAudio],
   );
 
   const onPlayerStateChanged = useCallback((playerState: number) => {
-    setIsPlaying(playerState === 1);
-  }, []);
+    const playing = playerState === 1;
+    setIsPlaying(playing);
+
+    const audio = audioRef.current;
+    if (!audio || !useOriginalAudio) return;
+
+    if (playing) {
+      // Sync position before playing
+      const expectedTime = positionRef.current.currentTime / 1000 + audioOffsetRef.current;
+      audio.currentTime = Math.max(0, expectedTime);
+      audio.playbackRate = settings.playbackSpeed;
+      audio.play().catch(() => {});
+      lastSyncRef.current = Date.now();
+    } else {
+      audio.pause();
+    }
+  }, [useOriginalAudio, settings.playbackSpeed]);
 
   const onPlayerReady = useCallback(() => {
     setIsPlayerReady(true);
@@ -167,6 +212,71 @@ export default function GuitarSongView() {
       alphaTabRef.current.renderScore(rocksmithScore, [0]);
     }
   }, [rocksmithScore]);
+
+  // Extract original audio from PSARC (lazy - only when first toggled on)
+  useEffect(() => {
+    if (!useOriginalAudio || audioUrl || audioLoading) return;
+    if (effectiveState?.fileType !== 'psarc' || !effectiveState?.filePath) return;
+
+    setAudioLoading(true);
+    invoke<string>('extract_psarc_audio', {path: effectiveState.filePath})
+      .then(wavPath => {
+        // Convert local file path to a URL the webview can load
+        setAudioUrl(convertFileSrc(wavPath));
+      })
+      .catch(err => {
+        console.error('Failed to extract audio:', err);
+        setUseOriginalAudio(false);
+      })
+      .finally(() => setAudioLoading(false));
+  }, [useOriginalAudio, audioUrl, audioLoading, effectiveState?.fileType, effectiveState?.filePath]);
+
+  // Handle toggle: stop playback first to avoid _currentBeat crash, then mute/unmute
+  const handleAudioToggle = useCallback((enabled: boolean) => {
+    // Stop playback before toggling to avoid alphaTab internal state issues
+    const api = alphaTabRef.current?.api;
+    const audio = audioRef.current;
+    const wasPlaying = isPlaying;
+
+    if (wasPlaying) {
+      try { api?.stop(); } catch { /* ignore */ }
+      if (audio) { audio.pause(); audio.currentTime = 0; }
+    }
+
+    if (enabled) {
+      if (api) {
+        savedSynthVolume.current = api.masterVolume;
+        api.masterVolume = 0;
+      }
+    } else {
+      if (api) api.masterVolume = savedSynthVolume.current;
+      if (audio) audio.pause();
+    }
+
+    setUseOriginalAudio(enabled);
+  }, [isPlaying]);
+
+  // Mute/unmute synth based on audio mode + keep audio element in sync
+  useEffect(() => {
+    const api = alphaTabRef.current?.api;
+    if (useOriginalAudio) {
+      // Mute synth whenever original audio is active
+      if (api && api.masterVolume > 0) {
+        savedSynthVolume.current = api.masterVolume;
+        api.masterVolume = 0;
+      }
+    } else {
+      // Restore synth volume
+      if (api && savedSynthVolume.current > 0) {
+        api.masterVolume = savedSynthVolume.current;
+      }
+    }
+
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.playbackRate = settings.playbackSpeed;
+    audio.volume = useOriginalAudio ? masterVolume : 0;
+  }, [useOriginalAudio, audioUrl, isPlayerReady, settings.playbackSpeed, masterVolume]);
 
   // Track selection
   const handleTrackChange = useCallback(
@@ -331,6 +441,26 @@ export default function GuitarSongView() {
             </div>
           )}
 
+          {/* Audio source toggle (PSARC only) */}
+          {effectiveState?.fileType === 'psarc' && (
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                  <Music className="h-3.5 w-3.5" />
+                  Original Audio
+                </label>
+                <Switch
+                  checked={useOriginalAudio}
+                  disabled={audioLoading}
+                  onCheckedChange={handleAudioToggle}
+                />
+              </div>
+              {audioLoading && (
+                <p className="text-xs text-muted-foreground">Extracting audio...</p>
+              )}
+            </div>
+          )}
+
           {/* Volume */}
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
@@ -344,8 +474,12 @@ export default function GuitarSongView() {
               step={0.01}
               onValueChange={([v]) => {
                 setMasterVolume(v);
-                const api = alphaTabRef.current?.api;
-                if (api) api.masterVolume = v;
+                if (useOriginalAudio && audioRef.current) {
+                  audioRef.current.volume = v;
+                } else {
+                  const api = alphaTabRef.current?.api;
+                  if (api) api.masterVolume = v;
+                }
               }}
             />
           </div>
@@ -552,7 +686,13 @@ export default function GuitarSongView() {
             variant="ghost"
             size="icon"
             className="h-8 w-8"
-            onClick={() => alphaTabRef.current?.stop()}
+            onClick={() => {
+              try { alphaTabRef.current?.stop(); } catch { /* ignore */ }
+              if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current.currentTime = audioOffsetRef.current;
+              }
+            }}
             disabled={!isPlayerReady}
           >
             <Square className="h-4 w-4" />
@@ -600,6 +740,15 @@ export default function GuitarSongView() {
           className="flex-1"
         />
       </div>
+
+      {/* Hidden audio element for original PSARC audio */}
+      {audioUrl && (
+        <audio
+          ref={audioRef}
+          src={audioUrl}
+          preload="auto"
+        />
+      )}
     </div>
   );
 }

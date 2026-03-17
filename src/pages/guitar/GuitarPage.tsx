@@ -2,6 +2,7 @@ import {useState, useCallback} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {open} from '@tauri-apps/plugin-dialog';
 import {readFile} from '@tauri-apps/plugin-fs';
+import {invoke} from '@tauri-apps/api/core';
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {
@@ -13,15 +14,18 @@ import {
 } from 'lucide-react';
 import {useLocalStorage} from '@/lib/useLocalStorage';
 
-import {parsePsarc} from '@/lib/rocksmith/parsePsarc';
-import {parseSng} from '@/lib/rocksmith/parseSng';
-import type {SngManifestInfo} from '@/lib/rocksmith/parseSng';
+import type {RocksmithArrangement} from '@/lib/rocksmith/types';
 
 interface RecentFile {
   path: string;
   name: string;
   type: 'guitarpro' | 'rocksmith';
   openedAt: number;
+}
+
+/** Shape of the Rust PsarcResult returned by invoke('parse_psarc') */
+interface PsarcResult {
+  arrangements: RocksmithArrangement[];
 }
 
 const GP_EXTENSIONS = ['gp', 'gp3', 'gp4', 'gp5', 'gpx', 'gp7'];
@@ -35,6 +39,27 @@ export default function GuitarPage() {
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const navigateWithPsarc = useCallback(
+    async (filePath: string, fileName: string) => {
+      const result = await invoke<PsarcResult>('parse_psarc', {path: filePath});
+      if (result.arrangements.length === 0) {
+        throw new Error('No arrangements found in PSARC file');
+      }
+      // Use the first arrangement (typically Lead)
+      navigate('/guitar/song', {
+        state: {
+          fileData: null,
+          fileName,
+          filePath,
+          fileType: 'psarc' as const,
+          psarcArrangement: result.arrangements[0],
+          psarcArrangements: result.arrangements,
+        },
+      });
+    },
+    [navigate],
+  );
 
   const openFile = useCallback(
     async (fileType: 'guitarpro' | 'rocksmith') => {
@@ -54,64 +79,13 @@ export default function GuitarPage() {
 
       setLoading(true);
       try {
-        const data = await readFile(selected);
         const fileName = selected.split(/[\\/]/).pop() ?? selected;
         const isPsarc = selected.toLowerCase().endsWith('.psarc');
 
         if (isPsarc) {
-          const psarc = await parsePsarc(data);
-
-          // Parse manifest JSONs for metadata
-          const manifestMap = new Map<string, SngManifestInfo>();
-          for (const m of psarc.manifests) {
-            try {
-              const json = JSON.parse(new TextDecoder().decode(m.data));
-              const entry = Object.values(json.Entries)[0] as Record<string, unknown>;
-              const attrs = (entry as {Attributes: Record<string, unknown>}).Attributes as Record<string, string>;
-              // Match manifest to SNG by arrangement name in path
-              const arrName = m.path.split('/').pop()?.replace('.json', '') ?? '';
-              manifestMap.set(arrName, {
-                arrangementName: attrs.ArrangementName ?? arrName,
-                songName: attrs.SongName ?? '',
-                artistName: attrs.ArtistName ?? '',
-                albumName: attrs.AlbumName ?? '',
-              });
-            } catch { /* skip invalid manifests */ }
-          }
-
-          if (psarc.sngFiles.length > 0) {
-            // Parse SNG files → RocksmithArrangement → alphaTab Score
-            const sng = psarc.sngFiles[0];
-            const sngName = sng.path.split('/').pop()?.replace('.sng', '') ?? '';
-            const manifest = manifestMap.get(sngName);
-
-            const arrangement = await parseSng(sng.data, 'windows', manifest);
-
-            // Pass the parsed arrangement (serializable) — Score is built in GuitarSongView
-            navigate('/guitar/song', {
-              state: {
-                fileData: null,
-                fileName,
-                filePath: selected,
-                fileType: 'psarc' as const,
-                psarcArrangement: arrangement,
-              },
-            });
-          } else if (psarc.arrangements.length > 0) {
-            // Fall back to XML arrangements
-            navigate('/guitar/song', {
-              state: {
-                fileData: Array.from(psarc.arrangements[0].data),
-                fileName,
-                filePath: selected,
-                fileType: 'rocksmith' as const,
-              },
-            });
-          } else {
-            setError('No arrangements found in PSARC file');
-            return;
-          }
+          await navigateWithPsarc(selected, fileName);
         } else {
+          const data = await readFile(selected);
           navigate('/guitar/song', {
             state: {
               fileData: Array.from(data),
@@ -137,7 +111,7 @@ export default function GuitarPage() {
         setLoading(false);
       }
     },
-    [navigate, setRecentFiles],
+    [navigate, setRecentFiles, navigateWithPsarc],
   );
 
   const openRecentFile = useCallback(
@@ -145,59 +119,17 @@ export default function GuitarPage() {
       setError(null);
       setLoading(true);
       try {
-        const data = await readFile(recent.path);
-        const isPsarc = recent.path.toLowerCase().endsWith('.psarc');
-
         setRecentFiles(prev => {
           const filtered = prev.filter(f => f.path !== recent.path);
           return [{...recent, openedAt: Date.now()}, ...filtered].slice(0, 20);
         });
 
-        if (isPsarc) {
-          const psarc = await parsePsarc(data);
-          const manifestMap = new Map<string, SngManifestInfo>();
-          for (const m of psarc.manifests) {
-            try {
-              const json = JSON.parse(new TextDecoder().decode(m.data));
-              const entry = Object.values(json.Entries)[0] as Record<string, unknown>;
-              const attrs = (entry as {Attributes: Record<string, unknown>}).Attributes as Record<string, string>;
-              const arrName = m.path.split('/').pop()?.replace('.json', '') ?? '';
-              manifestMap.set(arrName, {
-                arrangementName: attrs.ArrangementName ?? arrName,
-                songName: attrs.SongName ?? '',
-                artistName: attrs.ArtistName ?? '',
-                albumName: attrs.AlbumName ?? '',
-              });
-            } catch { /* skip */ }
-          }
+        const isPsarc = recent.path.toLowerCase().endsWith('.psarc');
 
-          if (psarc.sngFiles.length > 0) {
-            const sng = psarc.sngFiles[0];
-            const sngName = sng.path.split('/').pop()?.replace('.sng', '') ?? '';
-            const arrangement = await parseSng(sng.data, 'windows', manifestMap.get(sngName));
-            navigate('/guitar/song', {
-              state: {
-                fileData: null,
-                fileName: recent.name,
-                filePath: recent.path,
-                fileType: 'psarc' as const,
-                psarcArrangement: arrangement,
-              },
-            });
-          } else if (psarc.arrangements.length > 0) {
-            navigate('/guitar/song', {
-              state: {
-                fileData: Array.from(psarc.arrangements[0].data),
-                fileName: recent.name,
-                filePath: recent.path,
-                fileType: 'rocksmith' as const,
-              },
-            });
-          } else {
-            setError('No arrangements found in PSARC file');
-            return;
-          }
+        if (isPsarc) {
+          await navigateWithPsarc(recent.path, recent.name);
         } else {
+          const data = await readFile(recent.path);
           navigate('/guitar/song', {
             state: {
               fileData: Array.from(data),
@@ -215,7 +147,7 @@ export default function GuitarPage() {
         setLoading(false);
       }
     },
-    [navigate, setRecentFiles],
+    [navigate, setRecentFiles, navigateWithPsarc],
   );
 
   const removeRecent = useCallback(
