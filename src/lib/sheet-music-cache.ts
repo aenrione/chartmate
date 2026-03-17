@@ -1,5 +1,5 @@
 import { appCacheDir, join } from '@tauri-apps/api/path';
-import { readFile, writeFile, mkdir, exists, readDir } from '@tauri-apps/plugin-fs';
+import { readFile, writeFile, mkdir, exists, readDir, remove } from '@tauri-apps/plugin-fs';
 import { fetch as tauriFetch } from '@tauri-apps/plugin-http';
 import { SngStream } from 'parse-sng';
 
@@ -84,4 +84,11 @@ export async function listCachedFiles(md5: string): Promise<string[]> {
   const dir = await getCachedChartDir(md5);
   const entries = await readDir(dir);
   return entries.map(e => e.name).filter(Boolean) as string[];
+}
+
+export async function deleteCachedChart(md5: string): Promise<void> {
+  const dir = await getCachedChartDir(md5);
+  if (await exists(dir)) {
+    await remove(dir, { recursive: true });
+  }
 }

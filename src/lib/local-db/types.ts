@@ -114,6 +114,23 @@ export interface SpotifyHistory {
   play_count: number;
 }
 
+export interface SavedCharts {
+  md5: string;
+  name: string;
+  artist: string;
+  charter: string;
+  album_art_md5: string | null;
+  diff_drums: number | null;
+  diff_drums_real: number | null;
+  diff_guitar: number | null;
+  diff_bass: number | null;
+  diff_keys: number | null;
+  song_length: number | null;
+  has_video_background: number;
+  modified_time: string;
+  saved_at: string;
+}
+
 export interface DB {
   chorus_charts: ChorusCharts;
   chorus_metadata: ChorusMetadata;
@@ -125,5 +142,6 @@ export interface DB {
   spotify_playlist_tracks: SpotifyPlaylistTracks;
   spotify_playlists: SpotifyPlaylists;
   spotify_track_chart_matches: SpotifyTrackChartMatches;
+  saved_charts: SavedCharts;
   spotify_tracks: SpotifyTracks;
 }

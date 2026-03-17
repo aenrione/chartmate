@@ -39,6 +39,9 @@ import {
   List,
   ChevronRight,
   Timer,
+  Grid3X3,
+  Bookmark,
+  Loader2,
 } from 'lucide-react';
 import {
   useCallback,
@@ -60,7 +63,15 @@ import CloneHeroRenderer from './CloneHeroRenderer';
 import {generateClickTrackFromMeasures} from './generateClickTrack';
 import type {ClickVolumes} from './generateClickTrack';
 import convertToVexFlow from './convertToVexflow';
+import type {DrumNoteInstrument} from './convertToVexflow';
+import {generateSyntheticDrumTrack, ALL_DRUM_INSTRUMENTS} from './generateSyntheticDrumTrack';
+import SyntheticDrumControls from './SyntheticDrumControls';
+import {buildPatternVocabulary} from '@/lib/patternVocabulary';
+import PatternVocabularyPanel from '@/components/PatternVocabularyPanel';
 import debounce from 'debounce';
+import {saveChart, unsaveChart, isChartSaved} from '@/lib/local-db/saved-charts';
+import {isChartCached, fetchAndCacheChart, deleteCachedChart} from '@/lib/sheet-music-cache';
+import {toast} from 'sonner';
 
 function getDrumDifficulties(chart: ParsedChart): Difficulty[] {
   return chart.trackData
@@ -130,7 +141,18 @@ export default function Renderer({
     viewCloneHero?: boolean;
     tempo?: number;
     zoom?: number;
+    masterVolume?: number;
+    playSyntheticTrack?: boolean;
+    syntheticVolume?: number;
+    enabledDrumInstruments?: DrumNoteInstrument[];
+    showPatterns?: boolean;
   };
+  const [masterVolume, setMasterVolume] = useState(1.0);
+  const [playSyntheticTrack, setPlaySyntheticTrack] = useState(false);
+  const [syntheticVolume, setSyntheticVolume] = useState(0.7);
+  const [enabledDrumInstruments, setEnabledDrumInstruments] = useState<
+    Set<DrumNoteInstrument>
+  >(new Set(ALL_DRUM_INSTRUMENTS));
   const [playClickTrack, setPlayClickTrack] = useState(true);
   const [clickTrackConfigurationOpen, setClickTrackConfigurationOpen] =
     useState(false);
@@ -152,11 +174,51 @@ export default function Renderer({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobileMode, setIsMobileMode] = useState(false);
 
+  // Saved chart state
+  const [isSaved, setIsSaved] = useState(false);
+  const [savingInProgress, setSavingInProgress] = useState(false);
+
+  useEffect(() => {
+    isChartSaved(metadata.md5).then(setIsSaved);
+  }, [metadata.md5]);
+
+  const handleToggleSave = useCallback(async () => {
+    if (savingInProgress) return;
+    setSavingInProgress(true);
+    try {
+      if (isSaved) {
+        await unsaveChart(metadata.md5);
+        await deleteCachedChart(metadata.md5);
+        setIsSaved(false);
+        toast.success('Chart removed');
+      } else {
+        const toastId = toast.loading(`Downloading "${metadata.name}"...`);
+        try {
+          if (!(await isChartCached(metadata.md5))) {
+            await fetchAndCacheChart(metadata.md5);
+          }
+          await saveChart(metadata);
+          setIsSaved(true);
+          toast.success(`"${metadata.name}" saved for offline use`, {id: toastId});
+        } catch (err) {
+          toast.error(`Failed to download "${metadata.name}"`, {id: toastId});
+          throw err;
+        }
+      }
+    } catch (err) {
+      console.error('Failed to toggle save:', err);
+    } finally {
+      setSavingInProgress(false);
+    }
+  }, [metadata, isSaved, savingInProgress]);
+
   // Practice mode state
   const [practiceMode, setPracticeMode] = useState<PracticeModeConfig | null>(null);
   const [practiceStartMs, setPracticeStartMs] = useState<number | null>(null);
   const [practiceEndMs, setPracticeEndMs] = useState<number | null>(null);
   const [showSections, setShowSections] = useState(true);
+  const [showPatterns, setShowPatterns] = useState(false);
+  const [highlightedPatternId, setHighlightedPatternId] = useState<string | null>(null);
   const [customTimeOpen, setCustomTimeOpen] = useState(false);
   const [customStartInput, setCustomStartInput] = useState('');
   const [customEndInput, setCustomEndInput] = useState('');
@@ -176,6 +238,10 @@ export default function Renderer({
 
   const audioManagerRef = useRef<AudioManager | null>(null);
 
+  // Songs with only a single audio file (e.g. "song.ogg") don't have individual
+  // instrument stems, so we offer synthetic drum playback for those.
+  const hasIndividualStems = audioFiles.length > 1;
+
   const handleMasterClickVolumeChange = (value: number) => {
     if (playClickTrack) {
       audioManagerRef.current?.setVolume('click', value);
@@ -188,6 +254,45 @@ export default function Renderer({
     setPlayClickTrack(value);
   };
 
+  const handleMasterVolumeChange = (value: number) => {
+    setMasterVolume(value);
+    volumeControls.forEach(control => {
+      audioManagerRef.current?.setVolume(
+        control.trackName,
+        control.volume * value,
+      );
+    });
+  };
+
+  const updatePlaySyntheticTrack = (value: boolean) => {
+    audioManagerRef.current?.setVolume('synthetic', value ? syntheticVolume : 0);
+    setPlaySyntheticTrack(value);
+    // Mute/unmute all recorded tracks when toggling synthetic
+    if (value) {
+      setVolumeControls(prev =>
+        prev.map(c =>
+          c.isMuted ? c : {...c, volume: 0, previousVolume: c.volume, isMuted: true},
+        ),
+      );
+    } else {
+      setVolumeControls(prev =>
+        prev.map(c => ({
+          ...c,
+          volume: c.previousVolume ?? 1,
+          previousVolume: undefined,
+          isMuted: false,
+        })),
+      );
+    }
+  };
+
+  const handleSyntheticVolumeChange = (value: number) => {
+    if (playSyntheticTrack) {
+      audioManagerRef.current?.setVolume('synthetic', value);
+    }
+    setSyntheticVolume(value);
+  };
+
   const handleClickVolumeChange = useMemo(
     () =>
       debounce((value: number, key: keyof typeof clickVolumes) => {
@@ -197,12 +302,12 @@ export default function Renderer({
   );
 
   // Tempo control handlers
-  const handleTempoChange = (newTempo: number) => {
+  const handleTempoChange = useCallback((newTempo: number) => {
     if (audioManagerRef.current) {
       audioManagerRef.current.setTempo(newTempo);
       setTempo(newTempo);
     }
-  };
+  }, []);
 
   // Zoom control handlers
   const handleZoomChange = (newZoom: number) => {
@@ -215,7 +320,7 @@ export default function Renderer({
   };
 
   const handleZoomOut = () => {
-    const newZoom = Math.max(zoom - 0.1, 0.3);
+    const newZoom = Math.max(zoom - 0.1, 0.25);
     handleZoomChange(newZoom);
   };
 
@@ -337,6 +442,22 @@ export default function Renderer({
     return convertToVexFlow(chart, track);
   }, [chart, track]);
 
+  const vocabulary = useMemo(
+    () => buildPatternVocabulary(measures),
+    [measures],
+  );
+
+  const patternMap = useMemo(() => {
+    if (!showPatterns || !vocabulary) return undefined;
+    const map = new Map<number, {color: string; label: string}>();
+    for (const pattern of vocabulary.patterns) {
+      for (const idx of pattern.measureIndices) {
+        map.set(idx, {color: pattern.color, label: pattern.label});
+      }
+    }
+    return map;
+  }, [vocabulary, showPatterns]);
+
   const lastAudioState = useRef({
     currentTime: 0,
     wasPlaying: false,
@@ -391,6 +512,22 @@ export default function Renderer({
         if (parsed.zoom) {
           setZoom(parsed.zoom);
         }
+
+        if (parsed.masterVolume !== undefined) {
+          setMasterVolume(parsed.masterVolume);
+        }
+        if (parsed.playSyntheticTrack !== undefined) {
+          setPlaySyntheticTrack(parsed.playSyntheticTrack);
+        }
+        if (parsed.syntheticVolume !== undefined) {
+          setSyntheticVolume(parsed.syntheticVolume);
+        }
+        if (parsed.enabledDrumInstruments) {
+          setEnabledDrumInstruments(new Set(parsed.enabledDrumInstruments));
+        }
+        if (parsed.showPatterns !== undefined) {
+          setShowPatterns(parsed.showPatterns);
+        }
       }
     } catch (e) {
       // noop on parse errors
@@ -413,6 +550,11 @@ export default function Renderer({
       viewCloneHero,
       tempo,
       zoom,
+      masterVolume,
+      playSyntheticTrack,
+      syntheticVolume,
+      enabledDrumInstruments: [...enabledDrumInstruments],
+      showPatterns,
     };
     try {
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(settingsToPersist));
@@ -430,6 +572,11 @@ export default function Renderer({
     viewCloneHero,
     tempo,
     zoom,
+    masterVolume,
+    playSyntheticTrack,
+    syntheticVolume,
+    enabledDrumInstruments,
+    showPatterns,
   ]);
 
   useEffect(() => {
@@ -437,17 +584,22 @@ export default function Renderer({
     if (!settingsLoaded) return;
 
     async function run() {
-      const clickTrack = await generateClickTrackFromMeasures(
-        measures,
-        clickVolumes,
-      );
-      const files = [
-        ...audioFiles,
+      const generatedTracks: {fileName: string; data: Uint8Array}[] = [
         {
           fileName: 'click.mp3',
-          data: clickTrack,
+          data: await generateClickTrackFromMeasures(measures, clickVolumes),
         },
       ];
+
+      // Generate synthetic drum track for songs without individual stems
+      if (!hasIndividualStems) {
+        generatedTracks.push({
+          fileName: 'synthetic.mp3',
+          data: await generateSyntheticDrumTrack(measures, enabledDrumInstruments),
+        });
+      }
+
+      const files = [...audioFiles, ...generatedTracks];
 
       const audioManager = new AudioManager(files, () => {
         setIsPlaying(false);
@@ -457,7 +609,10 @@ export default function Renderer({
       let initialVolumeControls: VolumeControl[] = [];
 
       files.forEach(audioFile => {
-        if (audioFile.fileName.includes('click')) {
+        if (
+          audioFile.fileName.includes('click') ||
+          audioFile.fileName.includes('synthetic')
+        ) {
           return;
         }
         const basename = getBasename(audioFile.fileName);
@@ -521,6 +676,9 @@ export default function Renderer({
           return;
         }
         audioManager.setVolume('click', playClickTrack ? masterClickVolume : 0);
+        if (!hasIndividualStems) {
+          audioManager.setVolume('synthetic', playSyntheticTrack ? syntheticVolume : 0);
+        }
         audioManagerRef.current = audioManager;
         if (import.meta.env.DEV) (window as any).am = audioManager;
 
@@ -559,6 +717,8 @@ export default function Renderer({
     playClickTrack,
     masterClickVolume,
     settingsLoaded,
+    hasIndividualStems,
+    enabledDrumInstruments,
   ]);
 
   useInterval(
@@ -575,9 +735,12 @@ export default function Renderer({
     }
 
     volumeControls.forEach(control => {
-      audioManagerRef.current?.setVolume(control.trackName, control.volume);
+      audioManagerRef.current?.setVolume(
+        control.trackName,
+        control.volume * masterVolume,
+      );
     });
-  }, [volumeControls, audioManagerRef]);
+  }, [volumeControls, audioManagerRef, masterVolume]);
 
   // Persist per-track volumes whenever they change
   useEffect(() => {
@@ -620,6 +783,31 @@ export default function Renderer({
       setIsPlaying(true);
     }
   }, [isPlaying]);
+
+  // Keyboard shortcuts: Space = play/pause, Left/Right = speed control
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't intercept when typing in inputs
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+      if (e.code === 'Space') {
+        e.preventDefault();
+        handlePlay();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const newTempo = Math.max(tempo - 0.1, 0.25);
+        handleTempoChange(Math.round(newTempo * 100) / 100);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        const newTempo = Math.min(tempo + 0.1, 4.0);
+        handleTempoChange(Math.round(newTempo * 100) / 100);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handlePlay, tempo, handleTempoChange]);
 
   const songDuration =
     metadata.song_length == null ? 5 * 60 : metadata.song_length / 1000;
@@ -750,6 +938,29 @@ export default function Renderer({
     </Tip>
   );
 
+  const saveButton = (
+    <Tip label={isSaved ? 'Remove from saved' : 'Save for offline'}>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="rounded-full"
+        onClick={handleToggleSave}
+        disabled={savingInProgress}
+      >
+        {savingInProgress ? (
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        ) : (
+          <Bookmark
+            className={cn(
+              'h-6 w-6 transition-colors',
+              isSaved ? 'fill-primary text-primary' : '',
+            )}
+          />
+        )}
+      </Button>
+    </Tip>
+  );
+
   const playPauseButton = (
     <Tip label={isPlaying ? 'Pause' : 'Play'}>
       <Button
@@ -840,6 +1051,7 @@ export default function Renderer({
             {backButton}
             {playPauseButton}
             {maximizeButton}
+            {saveButton}
           </div>
 
           <div className="space-y-4 overflow-y-auto">
@@ -859,6 +1071,22 @@ export default function Renderer({
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium">Master Volume</label>
+                <span className="text-xs text-muted-foreground font-mono">
+                  {Math.round(masterVolume * 100)}%
+                </span>
+              </div>
+              <Slider
+                value={[masterVolume]}
+                min={0}
+                max={1}
+                step={0.01}
+                onValueChange={([v]) => handleMasterVolumeChange(v)}
+              />
             </div>
 
             {volumeSliders}
@@ -891,6 +1119,16 @@ export default function Renderer({
                   setMasterClickVolume={handleMasterClickVolumeChange}
                 />
               </div>
+              {!hasIndividualStems && (
+                <SyntheticDrumControls
+                  enabled={playSyntheticTrack}
+                  onEnabledChange={updatePlaySyntheticTrack}
+                  volume={syntheticVolume}
+                  onVolumeChange={handleSyntheticVolumeChange}
+                  enabledInstruments={enabledDrumInstruments}
+                  onEnabledInstrumentsChange={setEnabledDrumInstruments}
+                />
+              )}
               <div className="flex items-center space-x-2">
                 <Switch
                   id="colors"
@@ -1175,6 +1413,44 @@ export default function Renderer({
               </div>
             )}
 
+            {/* Pattern Vocabulary */}
+            {vocabulary.uniqueCount > 0 && (
+              <div className="pt-4 border-t flex flex-col min-h-0">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium flex items-center gap-1">
+                    <Grid3X3 className="h-3.5 w-3.5" />
+                    Patterns
+                    <span className="text-xs text-muted-foreground font-normal ml-1">
+                      ({vocabulary.uniqueCount})
+                    </span>
+                  </span>
+                  <Tip label={showPatterns ? 'Hide patterns' : 'Show patterns'}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-5 w-5"
+                      onClick={() => setShowPatterns(!showPatterns)}>
+                      <ChevronRight className={cn('h-3 w-3 transition-transform', showPatterns && 'rotate-90')} />
+                    </Button>
+                  </Tip>
+                </div>
+                {showPatterns && (
+                  <PatternVocabularyPanel
+                    vocabulary={vocabulary}
+                    onPracticePattern={patternId => {
+                      const pattern = vocabulary.patterns.find(p => p.id === patternId);
+                      if (pattern) {
+                        startPracticeSection(pattern.startMs, pattern.endMs);
+                      }
+                    }}
+                    onHighlightPattern={setHighlightedPatternId}
+                    highlightedPatternId={highlightedPatternId}
+                    currentPlaybackMs={currentPlayback * 1000}
+                  />
+                )}
+              </div>
+            )}
+
           </div>
         </div>
 
@@ -1198,6 +1474,7 @@ export default function Renderer({
             {backButton}
             {playPauseButton}
             {maximizeButton}
+            {saveButton}
             <div className="ml-auto">{menuToggleButton}</div>
           </div>
 
@@ -1291,6 +1568,7 @@ export default function Renderer({
                     String(viewCloneHero) + String(isMobileMode) + String(zoom)
                   }
                   audioManagerRef={audioManagerRef}
+                  patternMap={patternMap}
                 />
               </div>
               {viewCloneHero && (
