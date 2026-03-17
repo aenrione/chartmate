@@ -382,12 +382,14 @@ fn parse_sng_binary(data: &[u8], manifest: Option<&ManifestInfo>) -> Result<SngA
         sections.push(SngSection { name, number, start_time, end_time });
     }
 
-    // Levels — contains notes
+    // Levels — contains notes (indexed by difficulty)
+    // Rocksmith stores notes per difficulty level. Higher levels only contain notes
+    // for phrases that differ from lower levels, so we must collect per-phrase.
     let levels_count = u32le!() as usize;
-    let mut max_diff_notes: Vec<RawNote> = Vec::new();
+    let mut levels: std::collections::HashMap<u32, Vec<RawNote>> = std::collections::HashMap::new();
 
     for _ in 0..levels_count {
-        let _difficulty = u32le!();
+        let difficulty = u32le!();
 
         // Anchors
         let anchors_count = u32le!() as usize;
@@ -450,9 +452,43 @@ fn parse_sng_binary(data: &[u8], manifest: Option<&ManifestInfo>) -> Result<SngA
         let niic = u32le!() as usize;
         skip!(niic * 4);
 
-        // Keep the level with the most notes (richest arrangement data)
-        if level_notes.len() > max_diff_notes.len() {
-            max_diff_notes = level_notes;
+        levels.insert(difficulty, level_notes);
+    }
+
+    // Collect notes phrase-by-phrase using each phrase's max difficulty
+    let mut all_raw_notes: Vec<RawNote> = Vec::new();
+    for (pit_idx, pi) in phrase_iterations.iter().enumerate() {
+        let phrase = &phrases[pi.phrase_id as usize];
+        let difficulty = phrase.max_difficulty;
+
+        let level_notes = match levels.get(&difficulty) {
+            Some(notes) => notes,
+            None => continue,
+        };
+
+        let start_time = pi.time;
+        let end_time = if pit_idx + 1 < phrase_iterations.len() {
+            phrase_iterations[pit_idx + 1].time
+        } else {
+            f32::MAX
+        };
+
+        for note in level_notes {
+            if note.time >= start_time && note.time < end_time {
+                all_raw_notes.push(RawNote {
+                    mask: note.mask,
+                    time: note.time,
+                    string: note.string,
+                    fret: note.fret,
+                    chord_id: note.chord_id,
+                    slide_to: note.slide_to,
+                    slide_unpitch_to: note.slide_unpitch_to,
+                    tap: note.tap,
+                    vibrato: note.vibrato,
+                    sustain: note.sustain,
+                    max_bend: note.max_bend,
+                });
+            }
         }
     }
 
@@ -480,7 +516,7 @@ fn parse_sng_binary(data: &[u8], manifest: Option<&ManifestInfo>) -> Result<SngA
     let mut notes = Vec::new();
     let mut chords = Vec::new();
 
-    for raw in &max_diff_notes {
+    for raw in &all_raw_notes {
         if raw.chord_id >= 0 && (raw.chord_id as usize) < chord_templates.len() {
             let tpl = &chord_templates[raw.chord_id as usize];
             let chord_notes: Vec<SngNote> = tpl.frets.iter().enumerate()
@@ -726,6 +762,14 @@ fn wem_to_wav(wem_data: &[u8], trim_start_secs: f64) -> Result<Vec<u8>, String> 
         return Err("No audio samples decoded".into());
     }
 
+    // Trim leading samples (startBeat offset)
+    if trim_start_secs > 0.0 {
+        let samples_to_skip = (trim_start_secs * sample_rate as f64 * channels as f64) as usize;
+        if samples_to_skip < all_samples.len() {
+            all_samples.drain(..samples_to_skip);
+        }
+    }
+
     // Step 3: PCM → WAV
     let data_size = (all_samples.len() * 2) as u32;
     let byte_rate = sample_rate * channels as u32 * (bits_per_sample as u32 / 8);
@@ -804,9 +848,10 @@ pub fn parse_psarc(path: String) -> Result<PsarcResult, String> {
 }
 
 /// Extract the main song audio from a PSARC file, converted to WAV.
-/// Writes to a temp file and returns the file path.
+/// Trims `trim_start` seconds from the beginning so audio aligns with tab time 0.
+/// Writes to a cache file and returns the file path.
 #[tauri::command]
-pub fn extract_psarc_audio(path: String) -> Result<String, String> {
+pub fn extract_psarc_audio(path: String, trim_start: f64) -> Result<String, String> {
     let archive = PsarcArchive::open(&path)?;
 
     // Find the largest .wem file (that's the full song, not the preview)
@@ -820,11 +865,7 @@ pub fn extract_psarc_audio(path: String) -> Result<String, String> {
         .max_by_key(|(idx, _)| archive.entries.get(idx + 1).map(|e| e.length).unwrap_or(0))
         .ok_or("No WEM files found")?;
 
-    eprintln!("Extracting audio: {best_path}");
-    let wem_data = archive.extract(*best_idx)?;
-    let wav_data = wem_to_wav(&wem_data)?;
-
-    // Write to cache dir under HOME (accessible via Tauri asset protocol)
+    // Cache dir under HOME (accessible via Tauri asset protocol)
     let home = std::env::var("HOME").unwrap_or_else(|_| "/tmp".into());
     let cache_dir = std::path::PathBuf::from(&home).join(".cache").join("chartmate");
     let _ = std::fs::create_dir_all(&cache_dir);
@@ -833,11 +874,23 @@ pub fn extract_psarc_audio(path: String) -> Result<String, String> {
         use std::hash::{Hash, Hasher};
         let mut h = DefaultHasher::new();
         path.hash(&mut h);
+        trim_start.to_bits().hash(&mut h);
         h.finish()
     };
     let wav_path = cache_dir.join(format!("audio_{hash:x}.wav"));
+
+    // Return cached file if it exists
+    if wav_path.exists() {
+        eprintln!("Using cached audio: {}", wav_path.display());
+        return Ok(wav_path.to_string_lossy().to_string());
+    }
+
+    eprintln!("Extracting audio: {best_path} (trim_start={trim_start}s)");
+    let wem_data = archive.extract(*best_idx)?;
+    let wav_data = wem_to_wav(&wem_data, trim_start)?;
     std::fs::write(&wav_path, &wav_data)
         .map_err(|e| format!("Failed to write WAV: {e}"))?;
+    eprintln!("Written {} bytes to {}", wav_data.len(), wav_path.display());
 
     Ok(wav_path.to_string_lossy().to_string())
 }
@@ -892,7 +945,7 @@ mod tests {
             eprintln!("Test file not found, skipping");
             return;
         }
-        let wav_path = extract_psarc_audio(path).unwrap();
+        let wav_path = extract_psarc_audio(path, 8.026).unwrap();
         println!("WAV written to: {}", wav_path);
 
         let wav_bytes = std::fs::read(&wav_path).unwrap();

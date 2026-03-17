@@ -26,6 +26,48 @@ const {
 // Standard guitar tuning MIDI values (E2 A2 D3 G3 B3 E4)
 const STANDARD_TUNING = [40, 45, 50, 55, 59, 64];
 
+// General MIDI program numbers (0-indexed)
+const GM_ACOUSTIC_NYLON = 24;
+const GM_ACOUSTIC_STEEL = 25;
+const GM_ELECTRIC_CLEAN = 27;
+const GM_OVERDRIVEN = 29;
+const GM_DISTORTION = 30;
+const GM_BASS_FINGER = 33;
+const GM_BASS_PICK = 34;
+
+/**
+ * Choose a MIDI program based on arrangement type and tuning offsets.
+ * Lower/drop tunings typically indicate heavier tones.
+ */
+function chooseMidiProgram(
+  arrangementType: 'Lead' | 'Rhythm' | 'Bass',
+  tuning: number[],
+): number {
+  if (arrangementType === 'Bass') {
+    const minOffset = Math.min(...tuning.slice(0, 4));
+    return minOffset <= -2 ? GM_BASS_PICK : GM_BASS_FINGER;
+  }
+
+  const minOffset = Math.min(...tuning.slice(0, 6));
+  const allEqual = tuning.slice(0, 6).every(v => v === tuning[0]);
+
+  // Drop tuning: lowest string is dropped more than others (e.g. Drop D: [-2,0,0,0,0,0])
+  const isDrop = !allEqual && tuning[0] <= -2 && tuning[1] > tuning[0];
+
+  if (minOffset <= -3 || isDrop) {
+    // Heavy drop or very low tuning → distortion
+    return arrangementType === 'Lead' ? GM_DISTORTION : GM_OVERDRIVEN;
+  }
+
+  if (minOffset <= -1) {
+    // Slightly lowered (Eb standard, D standard) → overdriven
+    return arrangementType === 'Lead' ? GM_OVERDRIVEN : GM_ELECTRIC_CLEAN;
+  }
+
+  // Standard tuning → clean electric
+  return arrangementType === 'Lead' ? GM_OVERDRIVEN : GM_ELECTRIC_CLEAN;
+}
+
 /**
  * Quantize a time-in-seconds value to the nearest beat duration.
  */
@@ -200,7 +242,7 @@ export function convertToAlphaTab(arrangement: RocksmithArrangement): InstanceTy
   playback.volume = 15;
   playback.balance = 8;
   playback.port = 0;
-  playback.program = arrangement.arrangementType === 'Bass' ? 33 : 25;
+  playback.program = chooseMidiProgram(arrangement.arrangementType, arrangement.tuning);
   playback.primaryChannel = 0;
   playback.secondaryChannel = 1;
   track.playbackInfo = playback;

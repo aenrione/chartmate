@@ -170,8 +170,8 @@ export default function GuitarSongView() {
       const audio = audioRef.current;
       if (!audio || !useOriginalAudio || !audio.duration) return;
 
-      // alphaTab curTime is ms from score start; audio needs offset by startBeat
-      const expectedAudioTime = curTime / 1000 + audioOffsetRef.current;
+      // Audio is pre-trimmed to start at beat 0, so no offset needed
+      const expectedAudioTime = curTime / 1000;
       const now = Date.now();
       if (now - lastSyncRef.current < 1000) return;
       const drift = Math.abs(audio.currentTime - expectedAudioTime);
@@ -191,9 +191,8 @@ export default function GuitarSongView() {
     if (!audio || !useOriginalAudio) return;
 
     if (playing) {
-      // Sync position before playing
-      const expectedTime = positionRef.current.currentTime / 1000 + audioOffsetRef.current;
-      audio.currentTime = Math.max(0, expectedTime);
+      // Sync position before playing (audio is pre-trimmed, no offset needed)
+      audio.currentTime = Math.max(0, positionRef.current.currentTime / 1000);
       audio.playbackRate = settings.playbackSpeed;
       audio.play().catch(() => {});
       lastSyncRef.current = Date.now();
@@ -219,7 +218,7 @@ export default function GuitarSongView() {
     if (effectiveState?.fileType !== 'psarc' || !effectiveState?.filePath) return;
 
     setAudioLoading(true);
-    invoke<string>('extract_psarc_audio', {path: effectiveState.filePath})
+    invoke<string>('extract_psarc_audio', {path: effectiveState.filePath, trimStart: audioOffsetRef.current})
       .then(wavPath => {
         // Convert local file path to a URL the webview can load
         setAudioUrl(convertFileSrc(wavPath));
@@ -690,7 +689,7 @@ export default function GuitarSongView() {
               try { alphaTabRef.current?.stop(); } catch { /* ignore */ }
               if (audioRef.current) {
                 audioRef.current.pause();
-                audioRef.current.currentTime = audioOffsetRef.current;
+                audioRef.current.currentTime = 0;
               }
             }}
             disabled={!isPlayerReady}
