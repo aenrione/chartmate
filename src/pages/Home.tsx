@@ -1,66 +1,86 @@
 import { Link } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { buttonVariants } from '@/components/ui/button';
+import { Drum, Guitar, ArrowRight } from 'lucide-react';
+
+const instruments = [
+  {
+    name: 'Drums',
+    icon: Drum,
+    tools: 4,
+    to: '/sheet-music',
+    accent: 'bg-tertiary-container',
+    accentText: 'text-tertiary',
+  },
+  {
+    name: 'Guitar',
+    icon: Guitar,
+    tools: 2,
+    to: '/guitar',
+    accent: 'bg-secondary-container',
+    accentText: 'text-secondary',
+  },
+] as const;
 
 export default function Home() {
   return (
-    <div className="max-w-4xl p-6 overflow-y-auto flex-1">
-      <section className="mb-10">
-        <p className="text-lg mt-2">
-          A desktop companion app to help you find and manage Clone Hero / YARG charts.
-        </p>
-      </section>
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <Card className="flex flex-col justify-between">
-          <CardHeader>
-            <CardTitle>Drum Sheet Music Viewer</CardTitle>
-            <CardDescription>
-              View drum charts as sheet music with synced click tracks and individual audio track control.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Link to="/sheet-music" className={buttonVariants({ variant: 'default' })}>Go to Tool</Link>
-          </CardContent>
-        </Card>
-        <Card className="flex flex-col justify-between">
-          <CardHeader>
-            <CardTitle>Spotify Library Scanner</CardTitle>
-            <CardDescription>Find charts on Encore that match songs in your Spotify playlists.</CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <Link to="/spotify" className={buttonVariants({ variant: 'default' })}>Go to Tool</Link>
-          </CardFooter>
-        </Card>
-        <Card className="flex flex-col justify-between">
-          <CardHeader>
-            <CardTitle>Chart Updater</CardTitle>
-            <CardDescription>Check Encore for newer versions of your installed charts.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Link to="/updates" className={buttonVariants({ variant: 'default' })}>Go to Tool</Link>
-          </CardContent>
-        </Card>
-        <Card className="flex flex-col justify-between">
-          <CardHeader>
-            <CardTitle>Browse & Download</CardTitle>
-            <CardDescription>Search and download charts from the Encore catalog directly to your songs folder.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Link to="/browse" className={buttonVariants({ variant: 'default' })}>Browse Charts</Link>
-          </CardContent>
-        </Card>
-        <Card className="flex flex-col justify-between">
-          <CardHeader>
-            <CardTitle>Drum Rudiments</CardTitle>
-            <CardDescription>
-              Practice the 40 PAS International Drum Rudiments with sheet music and metronome.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Link to="/rudiments" className={buttonVariants({ variant: 'default' })}>Practice</Link>
-          </CardContent>
-        </Card>
-      </section>
+    <div className="flex-1 overflow-y-auto bg-surface p-6 md:p-12">
+      {/* Status indicator */}
+      <div className="mb-8 flex items-center gap-2">
+        <span className="relative flex h-2.5 w-2.5">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-container opacity-75" />
+          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-primary-container" />
+        </span>
+        <span className="font-mono text-xs uppercase tracking-widest text-on-surface-variant">
+          Ready for session
+        </span>
+      </div>
+
+      {/* Headline */}
+      <h1 className="font-headline text-4xl md:text-5xl font-bold text-on-surface mb-3">
+        Pick your instrument
+      </h1>
+      <p className="text-on-surface-variant text-lg max-w-xl mb-12">
+        Choose an instrument to explore tools, practice routines, and charts
+        tailored to your workflow.
+      </p>
+
+      {/* Instrument cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
+        {instruments.map((inst) => (
+          <Link
+            key={inst.name}
+            to={inst.to}
+            className="group relative flex flex-col h-[320px] rounded-2xl bg-surface-container-low overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:bg-surface-container"
+          >
+            {/* Top accent stripe */}
+            <div className={`h-1 w-full ${inst.accent}`} />
+
+            {/* Large decorative background icon */}
+            <inst.icon
+              className={`pointer-events-none absolute -right-6 -bottom-6 h-52 w-52 ${inst.accentText} opacity-[0.06]`}
+              strokeWidth={1}
+            />
+
+            {/* Card content */}
+            <div className="relative flex flex-1 flex-col justify-between p-6">
+              <div>
+                <inst.icon className={`h-10 w-10 ${inst.accentText} mb-4`} strokeWidth={1.5} />
+                <h2 className="font-headline text-2xl font-semibold text-on-surface">
+                  {inst.name}
+                </h2>
+                <span className="font-mono text-sm text-on-surface-variant">
+                  {inst.tools} tools available
+                </span>
+              </div>
+
+              {/* CTA - revealed on hover */}
+              <div className="flex items-center gap-2 text-primary opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                <span className="font-mono text-sm">Start session</span>
+                <ArrowRight className="h-4 w-4" />
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

@@ -418,14 +418,14 @@ export default function BrowseCharts() {
           {!hasSearched && (
             <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
               <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mb-4 opacity-40"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-              <p className="text-lg font-medium">Explore the Encore catalog</p>
+              <p className="text-lg font-headline font-medium">Explore the Encore catalog</p>
               <p className="text-sm mt-1">Search for songs, artists, or charters to browse and download charts.</p>
             </div>
           )}
 
           {hasSearched && results.length === 0 && !loading && (
             <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
-              <p className="text-lg font-medium">No results found</p>
+              <p className="text-lg font-headline font-medium">No results found</p>
               <p className="text-sm mt-1">Try a different search term or adjust your filters.</p>
             </div>
           )}
@@ -729,7 +729,7 @@ function TextFilterRow({
       <div className="flex justify-center">
         <input
           type="checkbox"
-          className="h-3.5 w-3.5 accent-slate-900 rounded"
+          className="h-3.5 w-3.5 accent-primary-container rounded"
           checked={exact}
           disabled={!hasValue}
           onChange={e => onExactChange(e.target.checked)}
@@ -739,7 +739,7 @@ function TextFilterRow({
       <div className="flex justify-center">
         <input
           type="checkbox"
-          className="h-3.5 w-3.5 accent-slate-900 rounded"
+          className="h-3.5 w-3.5 accent-primary-container rounded"
           checked={exclude}
           disabled={!hasValue}
           onChange={e => onExcludeChange(e.target.checked)}
@@ -813,7 +813,7 @@ function TriStateToggle({
     value === false ? `No ${label}` : label;
 
   const stateIndicator =
-    value === null ? 'bg-slate-300' :
+    value === null ? 'bg-surface-container-highest' :
     value === true ? 'bg-green-500' :
     'bg-red-400';
 
@@ -858,7 +858,7 @@ function ChartSidebar({
   return (
     <div className="w-[340px] border-l flex flex-col overflow-y-auto bg-card">
       <div className="flex items-center justify-between p-4 border-b">
-        <h3 className="font-semibold text-sm truncate">Chart Details</h3>
+        <h3 className="font-headline font-semibold text-sm truncate">Chart Details</h3>
         <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
@@ -880,7 +880,7 @@ function ChartSidebar({
       </div>
 
       <div className="px-4 space-y-1">
-        <h2 className="font-bold text-lg leading-tight">{chart.name}</h2>
+        <h2 className="font-headline font-bold text-lg leading-tight">{chart.name}</h2>
         <p className="text-muted-foreground">{chart.artist}</p>
         <p className="text-sm text-muted-foreground">
           Charted by {removeStyleTags(chart.charter || 'Unknown')}

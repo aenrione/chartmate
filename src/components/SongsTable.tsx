@@ -397,7 +397,7 @@ export default function SongsTable({songs}: {songs: SongWithRecommendation[]}) {
         </div>
       ) : (
       <div
-        className="bg-card text-card-foreground rounded-lg ring-1 ring-slate-900/5 shadow-xl overflow-y-auto"
+        className="bg-card text-card-foreground rounded-lg ring-1 ring-white/5 shadow-xl overflow-y-auto"
         ref={tableContainerRef}>
         <Table>
           <TableHeader className="sticky top-0">

@@ -10,10 +10,13 @@ import {
   Plus,
   Moon,
   Sun,
+  PenTool,
 } from 'lucide-react';
+import {useSidebar} from '@/contexts/SidebarContext';
+import SettingsDialog from '@/components/SettingsDialog';
 
 const TOP_NAV_SECTIONS = [
-  {label: 'Practice', prefix: ['/sheet-music', '/guitar', '/rudiments', '/']},
+  {label: 'Practice', prefix: ['/sheet-music', '/guitar', '/rudiments', '/tab-editor', '/']},
   {label: 'Library', prefix: ['/library', '/library/setlists']},
   {label: 'Browse', prefix: ['/browse', '/spotify', '/updates']},
   {label: 'Learn', prefix: []},
@@ -22,6 +25,7 @@ const TOP_NAV_SECTIONS = [
 const INSTRUMENTS = [
   {label: 'Drums', icon: Drum, href: '/sheet-music', prefix: ['/sheet-music', '/rudiments']},
   {label: 'Guitar', icon: Guitar, href: '/guitar', prefix: ['/guitar']},
+  {label: 'Tab Editor', icon: PenTool, href: '/tab-editor', prefix: ['/tab-editor']},
 ] as const;
 
 function isActive(pathname: string, prefixes: readonly string[]) {
@@ -56,6 +60,13 @@ function useDarkMode() {
 function TopNav({pathname}: {pathname: string}) {
   const {isConnected} = useSpotifyAuth();
   const {isDark, toggle} = useDarkMode();
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
+  useEffect(() => {
+    const handler = () => setSettingsOpen(true);
+    window.addEventListener('open-settings', handler);
+    return () => window.removeEventListener('open-settings', handler);
+  }, []);
 
   return (
     <header className="bg-surface flex justify-between items-center w-full px-6 h-16 shrink-0 z-40">
@@ -97,9 +108,14 @@ function TopNav({pathname}: {pathname: string}) {
         >
           {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </button>
-        <button className="hover:bg-surface-container transition-all duration-200 p-2 rounded-full text-on-surface-variant">
+        <button
+          onClick={() => setSettingsOpen(true)}
+          className="hover:bg-surface-container transition-all duration-200 p-2 rounded-full text-on-surface-variant"
+          title="Settings"
+        >
           <Settings className="h-4 w-4" />
         </button>
+        <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
         <div className={cn(
           'h-2 w-2 rounded-full',
           isConnected ? 'bg-emerald-500' : 'bg-outline',
@@ -109,9 +125,9 @@ function TopNav({pathname}: {pathname: string}) {
   );
 }
 
-function Sidebar({pathname}: {pathname: string}) {
+function DefaultSidebarContent({pathname}: {pathname: string}) {
   return (
-    <aside className="hidden md:flex flex-col h-full py-4 bg-surface-container-low w-64 border-r border-outline-variant/20 shrink-0">
+    <>
       <div className="px-6 mb-8">
         <div className="text-sm font-headline font-bold text-on-surface-variant uppercase tracking-widest mb-1">
           My Studio
@@ -148,13 +164,13 @@ function Sidebar({pathname}: {pathname: string}) {
           <Plus className="h-4 w-4" />
           New Session
         </Link>
-        <Link
-          to="/settings"
-          className="text-on-surface-variant/60 hover:text-on-surface px-4 py-2 flex items-center gap-3 hover:bg-surface-variant/50 rounded-lg"
+        <button
+          onClick={() => window.dispatchEvent(new CustomEvent('open-settings'))}
+          className="w-full text-on-surface-variant/60 hover:text-on-surface px-4 py-2 flex items-center gap-3 hover:bg-surface-variant/50 rounded-lg"
         >
           <Settings className="h-4 w-4" />
           <span className="font-medium text-sm">Settings</span>
-        </Link>
+        </button>
         <a
           href="#"
           className="text-on-surface-variant/60 hover:text-on-surface px-4 py-2 flex items-center gap-3 hover:bg-surface-variant/50 rounded-lg"
@@ -163,6 +179,19 @@ function Sidebar({pathname}: {pathname: string}) {
           <span className="font-medium text-sm">Help</span>
         </a>
       </div>
+    </>
+  );
+}
+
+function Sidebar({pathname}: {pathname: string}) {
+  const {sidebarContent} = useSidebar();
+
+  return (
+    <aside className={cn(
+      'hidden md:flex flex-col h-full bg-surface-container-low w-64 border-r border-outline-variant/20 shrink-0',
+      !sidebarContent && 'py-4',
+    )}>
+      {sidebarContent ?? <DefaultSidebarContent pathname={pathname} />}
     </aside>
   );
 }
@@ -175,6 +204,7 @@ export default function Layout({children}: {children: ReactNode}) {
   if (isPlaybook) {
     return (
       <div className="h-screen flex flex-col overflow-hidden bg-surface">
+        <TopNav pathname={pathname} />
         <main className="flex-1 min-h-0 flex flex-col overflow-hidden">
           {children}
         </main>

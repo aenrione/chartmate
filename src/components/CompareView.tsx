@@ -117,31 +117,31 @@ export default function CompareView<
   ]);
 
   return (
-    <div className="bg-white dark:bg-slate-800 overflow-y-auto">
+    <div className="bg-surface-container-low overflow-y-auto">
       <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
         <table>
           <thead>
             <tr>
-              <th className="pt-8 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+              <th className="pt-8 font-medium p-4 pl-8 pt-0 pb-3 text-on-surface-variant text-left">
                 Key
               </th>
-              <th className="pt-8 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+              <th className="pt-8 font-medium p-4 pl-8 pt-0 pb-3 text-on-surface-variant text-left">
                 Current Chart&apos;s Value
               </th>
-              <th className="pt-8 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+              <th className="pt-8 font-medium p-4 pl-8 pt-0 pb-3 text-on-surface-variant text-left">
                 New Chart&apos;s Value
               </th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td className="border-b border-slate-100 dark:border-slate-700 p-1 pl-8 text-slate-500 dark:text-slate-400 text-left">
+              <td className="border-b border-white/5 p-1 pl-8 text-on-surface-variant text-left">
                 Last Modified
               </td>
-              <td className="border-b border-slate-100 dark:border-slate-700 p-1 pl-8 text-slate-500 dark:text-slate-400 text-left">
+              <td className="border-b border-white/5 p-1 pl-8 text-on-surface-variant text-left">
                 {currentModified.toISOString()}
               </td>
-              <td className="border-b border-slate-100 dark:border-slate-700 p-1 pl-8 text-slate-500 dark:text-slate-400 text-left">
+              <td className="border-b border-white/5 p-1 pl-8 text-on-surface-variant text-left">
                 {recommendedModified.toISOString()}
               </td>
             </tr>
@@ -167,17 +167,17 @@ export default function CompareView<
 
                 return (
                   <tr key={key}>
-                    <td className="border-b border-slate-100 dark:border-slate-700 p-1 pl-8 text-slate-500 dark:text-slate-400 text-left">
+                    <td className="border-b border-white/5 p-1 pl-8 text-on-surface-variant text-left">
                       {key}
                     </td>
-                    <td className="border-b border-slate-100 dark:border-slate-700 p-1 pl-8 text-slate-500 dark:text-slate-400 text-left">
+                    <td className="border-b border-white/5 p-1 pl-8 text-on-surface-variant text-left">
                       {currentValue === true
                         ? 'True'
                         : currentValue === false
                           ? 'False'
                           : (currentValue ?? '')}
                     </td>
-                    <td className="border-b border-slate-100 dark:border-slate-700 p-1 pl-8 text-slate-500 dark:text-slate-400 text-left">
+                    <td className="border-b border-white/5 p-1 pl-8 text-on-surface-variant text-left">
                       {recommendedValue === true
                         ? 'True'
                         : recommendedValue === false
@@ -191,7 +191,7 @@ export default function CompareView<
           </tbody>
         </table>
       </div>
-      <div className="bg-white dark:bg-slate-800 px-4 py-3 flex sm:px-6 space-x-4">
+      <div className="bg-surface-container-low px-4 py-3 flex sm:px-6 space-x-4">
         <Button onClick={keepCurrentCallback}>Keep current chart</Button>
 
         <Button onClick={replaceCallback}>Replace current chart</Button>

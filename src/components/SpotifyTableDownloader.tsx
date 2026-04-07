@@ -720,7 +720,7 @@ export default function SpotifyTableDownloader({
 
   return (
     <>
-      <div className="rounded-lg bg-card ring-1 ring-slate-900/5 px-4 py-2 mb-2 space-y-2">
+      <div className="rounded-lg bg-card ring-1 ring-white/5 px-4 py-2 mb-2 space-y-2">
         <div className="flex items-center gap-3">
           <div className="relative flex-1 min-w-[180px] max-w-[320px]">
             <SearchIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
@@ -792,7 +792,7 @@ export default function SpotifyTableDownloader({
         </div>
       </div>
       <div
-        className="bg-card text-card-foreground rounded-lg ring-1 ring-slate-900/5 shadow-xl overflow-y-auto ph-8"
+        className="bg-card text-card-foreground rounded-lg ring-1 ring-white/5 shadow-xl overflow-y-auto ph-8"
         ref={tableContainerRef}>
         <TooltipProvider>
           <Table>
@@ -842,7 +842,7 @@ export default function SpotifyTableDownloader({
                   return (
                     <TableRow
                       key={`group-${item.key}`}
-                      className="bg-secondary/50 cursor-pointer hover:bg-secondary/70"
+                      className="bg-surface-container cursor-pointer hover:bg-surface-container-high"
                       onClick={() => toggleGroupCollapse(item.key)}
                     >
                       <TableCell colSpan={columns.length} className="py-2 px-4">
@@ -868,7 +868,7 @@ export default function SpotifyTableDownloader({
                         <TableCell
                           className={cn(
                             'py-1',
-                            row.getIsExpanded() && 'bg-secondary',
+                            row.getIsExpanded() && 'bg-primary-container/10',
                             groupBy !== 'none' && row.getParentRow() == null && 'pl-8',
                           )}
                           key={cell.id}

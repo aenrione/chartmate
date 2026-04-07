@@ -47,6 +47,7 @@ import {
 } from '@/lib/local-db/setlists';
 import {getSavedCharts} from '@/lib/local-db/saved-charts';
 import {ChartResponseEncore} from '@/lib/chartSelection';
+import {useSidebar} from '@/contexts/SidebarContext';
 
 // ── Setlist Sidebar ──────────────────────────────────────────────────
 
@@ -92,9 +93,9 @@ function SetlistSidebar({
   };
 
   return (
-    <div className="w-64 border-r border-white/5 flex flex-col shrink-0 bg-surface-container-low">
+    <>
       <div className="px-3 py-3 border-b border-white/5 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-on-surface">Setlists</h2>
+        <h2 className="text-sm font-headline font-bold text-on-surface-variant uppercase tracking-widest">Setlists</h2>
         <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onCreate}>
           <Plus className="h-4 w-4" />
         </Button>
@@ -162,7 +163,7 @@ function SetlistSidebar({
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 }
 
@@ -541,6 +542,7 @@ function SetlistEditor({
 // ── Main Page ────────────────────────────────────────────────────────
 
 export default function SetlistsPage() {
+  const {setSidebarContent} = useSidebar();
   const [setlists, setSetlists] = useState<Setlist[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [items, setItems] = useState<SetlistItem[]>([]);
@@ -580,26 +582,26 @@ export default function SetlistsPage() {
     }
   }, [selectedId, loadItems]);
 
-  const handleCreate = async () => {
+  const handleCreate = useCallback(async () => {
     const id = await createSetlist(`Setlist ${setlists.length + 1}`);
     await loadSetlists();
     setSelectedId(id);
     toast.success('Setlist created');
-  };
+  }, [setlists.length, loadSetlists]);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = useCallback(async (id: number) => {
     await deleteSetlist(id);
     const updated = await loadSetlists();
     if (selectedId === id) {
       setSelectedId(updated.length > 0 ? updated[0].id : null);
     }
     toast.success('Setlist deleted');
-  };
+  }, [selectedId, loadSetlists]);
 
-  const handleRename = async (id: number, name: string) => {
+  const handleRename = useCallback(async (id: number, name: string) => {
     await updateSetlist(id, {name});
     await loadSetlists();
-  };
+  }, [loadSetlists]);
 
   const handleAddSongs = async (charts: ChartResponseEncore[]) => {
     if (!selectedId) return;
@@ -635,6 +637,25 @@ export default function SetlistsPage() {
     if (selectedId) await loadItems(selectedId);
   };
 
+  // Inject setlist navigator into the Layout sidebar
+  useEffect(() => {
+    setSidebarContent(
+      <SetlistSidebar
+        setlists={setlists}
+        selectedId={selectedId}
+        onSelect={setSelectedId}
+        onCreate={handleCreate}
+        onDelete={handleDelete}
+        onRename={handleRename}
+      />
+    );
+  }, [setlists, selectedId, setSidebarContent, handleCreate, handleDelete, handleRename]);
+
+  // Clean up sidebar on unmount
+  useEffect(() => {
+    return () => setSidebarContent(null);
+  }, [setSidebarContent]);
+
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center text-sm text-outline">
@@ -645,15 +666,6 @@ export default function SetlistsPage() {
 
   return (
     <div className="flex-1 flex min-h-0">
-      <SetlistSidebar
-        setlists={setlists}
-        selectedId={selectedId}
-        onSelect={setSelectedId}
-        onCreate={handleCreate}
-        onDelete={handleDelete}
-        onRename={handleRename}
-      />
-
       {selectedSetlist ? (
         <SetlistEditor
           setlist={selectedSetlist}
