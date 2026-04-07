@@ -1,13 +1,10 @@
-import {useState} from 'react';
 import {ChevronLeft, ChevronRight, Loader2} from 'lucide-react';
-import {cn} from '@/lib/utils';
 import {usePlaybook} from './PlaybookProvider';
 import {useChartLoader} from '@/lib/useChartLoader';
 import SongView from '@/pages/sheet-music/SongView';
 
 export default function ChartViewer() {
   const {activeItem, loopSectionId, sections, prevSong, nextSong, activeIndex, items} = usePlaybook();
-  const [hoverEdge, setHoverEdge] = useState<'left' | 'right' | null>(null);
 
   const md5 = activeItem?.chartMd5 ?? null;
   const {data, loading, error, status} = useChartLoader(md5);
@@ -35,15 +32,10 @@ export default function ChartViewer() {
         </div>
       )}
 
-      {/* Page-turn affordances */}
+      {/* Page-turn affordances — CSS-only hover, no state to get stale */}
       {activeIndex > 0 && (
         <button
-          className={cn(
-            'absolute left-0 top-0 bottom-0 w-16 z-10 flex items-center justify-center transition-opacity cursor-pointer',
-            hoverEdge === 'left' ? 'opacity-100' : 'opacity-0',
-          )}
-          onMouseEnter={() => setHoverEdge('left')}
-          onMouseLeave={() => setHoverEdge(null)}
+          className="absolute left-0 top-0 bottom-0 w-16 z-10 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
           onClick={prevSong}
         >
           <div className="glass-panel rounded-full p-2">
@@ -53,12 +45,7 @@ export default function ChartViewer() {
       )}
       {activeIndex < items.length - 1 && (
         <button
-          className={cn(
-            'absolute right-0 top-0 bottom-0 w-16 z-10 flex items-center justify-center transition-opacity cursor-pointer',
-            hoverEdge === 'right' ? 'opacity-100' : 'opacity-0',
-          )}
-          onMouseEnter={() => setHoverEdge('right')}
-          onMouseLeave={() => setHoverEdge(null)}
+          className="absolute right-0 top-0 bottom-0 w-16 z-10 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
           onClick={nextSong}
         >
           <div className="glass-panel rounded-full p-2">

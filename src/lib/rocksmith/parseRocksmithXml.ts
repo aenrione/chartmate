@@ -59,6 +59,9 @@ function parseNote(el: Element): RocksmithNote {
     accent: boolAttr(el, 'accent'),
     linkNext: boolAttr(el, 'linkNext'),
     ignore: boolAttr(el, 'ignore'),
+    slap: boolAttr(el, 'slap'),
+    pluck: boolAttr(el, 'pluck'),
+    bendPoints: [],
   };
 }
 

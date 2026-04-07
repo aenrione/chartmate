@@ -23,6 +23,8 @@ import {
   Repeat,
   Square,
   Music,
+  Youtube,
+  Unlink,
 } from 'lucide-react';
 import {LayoutMode, StaveProfile, model} from '@coderline/alphatab';
 import AlphaTabWrapper from './AlphaTabWrapper';
@@ -32,6 +34,12 @@ import {parseRocksmithXml} from '@/lib/rocksmith/parseRocksmithXml';
 import {convertToAlphaTab} from '@/lib/rocksmith/convertToAlphaTab';
 import {cn} from '@/lib/utils';
 import {useLocalStorage} from '@/lib/useLocalStorage';
+import YouTubePlayer from '@/components/YouTubePlayer';
+import {useYoutubeSync} from '@/hooks/useYoutubeSync';
+import {snapToYouTubeRate} from '@/lib/youtube-utils';
+import type {PlaybackClock} from '@/lib/youtube-sync';
+import Tip from '@/components/shared/Tip';
+import {TooltipProvider} from '@/components/ui/tooltip';
 
 type Score = InstanceType<typeof model.Score>;
 type Track = InstanceType<typeof model.Track>;
@@ -106,6 +114,48 @@ export default function GuitarSongView() {
   // Audio offset: Rocksmith beats start at startBeat seconds into the audio
   const audioOffsetRef = useRef(0);
 
+  // PlaybackClock adapter — exposes AlphaTab position as a generic clock
+  const clockRef = useRef<PlaybackClock | null>(null);
+  const isPlayingRef = useRef(false);
+  isPlayingRef.current = isPlaying;
+
+  if (!clockRef.current) {
+    clockRef.current = {
+      get currentTime() {
+        return positionRef.current.currentTime / 1000;
+      },
+      get isPlaying() {
+        return isPlayingRef.current;
+      },
+    };
+  }
+
+  // Stable song key for YouTube DB association
+  const songKey = useMemo(() => {
+    const path = state?.filePath ?? '';
+    // Simple stable hash from file path
+    let hash = 0;
+    for (let i = 0; i < path.length; i++) {
+      hash = ((hash << 5) - hash + path.charCodeAt(i)) | 0;
+    }
+    return `guitar:${Math.abs(hash).toString(36)}`;
+  }, [state?.filePath]);
+
+  // YouTube integration
+  const {
+    youtubeUrl,
+    youtubeVideoId,
+    youtubeOffsetMs,
+    youtubeUrlInput,
+    setYoutubeUrlInput,
+    playerRef: youtubePlayerRef,
+    syncRef: youtubeSyncRef,
+    handleUrlSubmit: handleYoutubeUrlSubmit,
+    handleRemove: handleYoutubeRemove,
+    handleOffsetChange: handleYoutubeOffsetChange,
+    handleReady: handleYoutubeReady,
+  } = useYoutubeSync({songKey, clockRef, tempo: settings.playbackSpeed});
+
   // Dev mode: load from URL query param ?file=/path/to/file.gp5
   const [devFileData, setDevFileData] = useState<Uint8Array | null>(null);
   const devFile = useMemo(() => new URLSearchParams(location.search).get('file'), [location.search]);
@@ -164,7 +214,15 @@ export default function GuitarSongView() {
   const lastSyncRef = useRef(0);
   const onPositionChanged = useCallback(
     (curTime: number, eTime: number, curTick: number, eTick: number) => {
-      setPosition({currentTime: curTime, endTime: eTime, currentTick: curTick, endTick: eTick});
+      const prev = positionRef.current;
+      if (
+        prev.currentTime !== curTime ||
+        prev.endTime !== eTime ||
+        prev.currentTick !== curTick ||
+        prev.endTick !== eTick
+      ) {
+        setPosition({currentTime: curTime, endTime: eTime, currentTick: curTick, endTick: eTick});
+      }
 
       // Sync audio element position (throttled)
       const audio = audioRef.current;
@@ -186,6 +244,13 @@ export default function GuitarSongView() {
   const onPlayerStateChanged = useCallback((playerState: number) => {
     const playing = playerState === 1;
     setIsPlaying(playing);
+
+    // Sync YouTube
+    if (playing) {
+      youtubeSyncRef.current.onResume();
+    } else {
+      youtubeSyncRef.current.onPause();
+    }
 
     const audio = audioRef.current;
     if (!audio || !useOriginalAudio) return;
@@ -295,6 +360,7 @@ export default function GuitarSongView() {
       setSettings(prev => {
         const newSpeed = Math.max(0.25, Math.min(2.0, prev.playbackSpeed + delta));
         alphaTabRef.current?.setPlaybackSpeed(newSpeed);
+        youtubeSyncRef.current.onTempoChange(newSpeed);
         return {...prev, playbackSpeed: newSpeed};
       });
     },
@@ -360,7 +426,7 @@ export default function GuitarSongView() {
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center space-y-4">
           <p className="text-muted-foreground">No file loaded</p>
-          <Link to="/guitar" className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-slate-900 text-white hover:bg-slate-800 h-10 px-4 py-2">
+          <Link to="/guitar" className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-surface-container-low text-on-surface hover:bg-surface-container-high h-10 px-4 py-2">
             Open a file
           </Link>
         </div>
@@ -379,6 +445,7 @@ export default function GuitarSongView() {
   const tracks: Track[] = score?.tracks ?? [];
 
   return (
+    <TooltipProvider delayDuration={300}>
     <div className="flex-1 flex min-h-0">
       {/* Sidebar */}
       <div
@@ -393,7 +460,7 @@ export default function GuitarSongView() {
           <div className="flex items-center gap-2">
             <Link
               to="/guitar"
-              className="inline-flex items-center justify-center rounded-md h-10 w-10 hover:bg-slate-100"
+              className="inline-flex items-center justify-center rounded-md h-10 w-10 hover:bg-surface-container-high"
             >
               <ArrowLeft className="h-4 w-4" />
             </Link>
@@ -506,6 +573,7 @@ export default function GuitarSongView() {
                 onValueChange={([v]) => {
                   setSettings(prev => ({...prev, playbackSpeed: v}));
                   alphaTabRef.current?.setPlaybackSpeed(v);
+                  youtubeSyncRef.current.onTempoChange(v);
                 }}
               />
               <Button
@@ -632,6 +700,88 @@ export default function GuitarSongView() {
             )}
           </div>
 
+          {/* YouTube Integration */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+              <Youtube className="h-3.5 w-3.5" />
+              YouTube
+            </label>
+            {youtubeVideoId ? (
+              <div className="space-y-2">
+                <div className="flex items-center gap-1">
+                  <span className="text-xs text-muted-foreground truncate flex-1">
+                    {youtubeUrl}
+                  </span>
+                  <Tip label="Remove YouTube video">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-5 w-5 shrink-0"
+                      onClick={handleYoutubeRemove}>
+                      <Unlink className="h-3 w-3" />
+                    </Button>
+                  </Tip>
+                </div>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">Offset</span>
+                    <span className="text-xs font-mono text-muted-foreground">
+                      {youtubeOffsetMs >= 0 ? '+' : ''}{(youtubeOffsetMs / 1000).toFixed(1)}s
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-6 w-6 shrink-0"
+                      onClick={() => handleYoutubeOffsetChange(youtubeOffsetMs - 100)}>
+                      <span className="text-xs">-</span>
+                    </Button>
+                    <Slider
+                      value={[youtubeOffsetMs]}
+                      min={-10000}
+                      max={10000}
+                      step={100}
+                      onValueChange={([v]) => handleYoutubeOffsetChange(v)}
+                    />
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-6 w-6 shrink-0"
+                      onClick={() => handleYoutubeOffsetChange(youtubeOffsetMs + 100)}>
+                      <span className="text-xs">+</span>
+                    </Button>
+                  </div>
+                </div>
+                {settings.playbackSpeed !== 1.0 && snapToYouTubeRate(settings.playbackSpeed) !== settings.playbackSpeed && (
+                  <p className="text-xs text-amber-500">
+                    YT rate: {snapToYouTubeRate(settings.playbackSpeed)}x (closest to {settings.playbackSpeed.toFixed(2)}x)
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="flex gap-1">
+                <input
+                  type="text"
+                  placeholder="Paste YouTube URL..."
+                  value={youtubeUrlInput}
+                  onChange={e => setYoutubeUrlInput(e.target.value)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') handleYoutubeUrlSubmit();
+                  }}
+                  className="flex-1 text-xs px-2 py-1 rounded border bg-background min-w-0"
+                />
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="h-7 text-xs shrink-0"
+                  onClick={handleYoutubeUrlSubmit}>
+                  Link
+                </Button>
+              </div>
+            )}
+          </div>
+
           {/* Score info */}
           {score && (
             <div className="space-y-1 text-xs text-muted-foreground border-t pt-3">
@@ -710,7 +860,14 @@ export default function GuitarSongView() {
               step={1}
               onValueChange={([tick]) => {
                 const api = alphaTabRef.current?.api;
-                if (api) api.tickPosition = tick;
+                if (api) {
+                  api.tickPosition = tick;
+                  // Estimate time from tick position for YouTube sync
+                  const estimatedTime = position.endTime > 0
+                    ? (tick / (position.endTick || 1)) * (position.endTime / 1000)
+                    : 0;
+                  youtubeSyncRef.current.onPlay(estimatedTime);
+                }
               }}
               disabled={!isPlayerReady}
             />
@@ -722,6 +879,18 @@ export default function GuitarSongView() {
             </span>
           )}
         </div>
+
+        {/* YouTube Video Panel */}
+        {youtubeVideoId && (
+          <div className="mx-4 mt-2 rounded-lg overflow-hidden border bg-black" style={{height: '240px'}}>
+            <YouTubePlayer
+              ref={youtubePlayerRef}
+              videoId={youtubeVideoId}
+              onReady={handleYoutubeReady}
+              className="w-full h-full"
+            />
+          </div>
+        )}
 
         {/* AlphaTab renderer */}
         <AlphaTabWrapper
@@ -749,5 +918,6 @@ export default function GuitarSongView() {
         />
       )}
     </div>
+    </TooltipProvider>
   );
 }

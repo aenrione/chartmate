@@ -3,16 +3,19 @@ import {useNavigate} from 'react-router-dom';
 import {open} from '@tauri-apps/plugin-dialog';
 import {readFile} from '@tauri-apps/plugin-fs';
 import {invoke} from '@tauri-apps/api/core';
-import {Button} from '@/components/ui/button';
-import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
+import {useLocalStorage} from '@/lib/useLocalStorage';
 import {
   Guitar,
   FileMusic,
-  FolderOpen,
   Clock,
   Trash2,
+  Play,
+  Grid3X3,
+  Dumbbell,
+  Speaker,
+  Music,
+  ChevronRight,
 } from 'lucide-react';
-import {useLocalStorage} from '@/lib/useLocalStorage';
 
 import type {RocksmithArrangement} from '@/lib/rocksmith/types';
 
@@ -46,7 +49,6 @@ export default function GuitarPage() {
       if (result.arrangements.length === 0) {
         throw new Error('No arrangements found in PSARC file');
       }
-      // Use the first arrangement (typically Lead)
       navigate('/guitar/song', {
         state: {
           fileData: null,
@@ -157,105 +159,208 @@ export default function GuitarPage() {
     [setRecentFiles],
   );
 
-  return (
-    <div className="flex-1 overflow-auto p-6">
-      <div className="max-w-3xl mx-auto space-y-6">
-        <div className="flex items-center gap-3">
-          <Guitar className="h-8 w-8" />
-          <div>
-            <h1 className="text-2xl font-bold">Guitar Tablature</h1>
-            <p className="text-sm text-muted-foreground">
-              Open Guitar Pro or Rocksmith files to view and practice
-            </p>
-          </div>
-        </div>
+  const formatTimeAgo = (timestamp: number) => {
+    const seconds = Math.floor((Date.now() - timestamp) / 1000);
+    if (seconds < 60) return 'just now';
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    return `${days}d ago`;
+  };
 
+  return (
+    <div className="flex-1 overflow-y-auto bg-surface">
+      <div className="max-w-5xl mx-auto px-6 py-8 space-y-10">
+
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-1.5 text-sm">
+          <span className="text-on-surface-variant">Practice</span>
+          <ChevronRight className="h-3.5 w-3.5 text-on-surface-variant" />
+          <span className="text-secondary font-medium">Guitar</span>
+        </nav>
+
+        {/* Hero */}
+        <header className="space-y-2">
+          <h1 className="font-headline font-extrabold text-4xl text-on-surface tracking-tight">
+            Guitar Hub
+          </h1>
+          <p className="text-on-surface-variant text-base max-w-xl leading-relaxed">
+            Your practice headquarters. Open tabs, explore the fretboard, and sharpen your technique -- all in one place.
+          </p>
+        </header>
+
+        {/* Error */}
         {error && (
-          <div className="bg-destructive/15 text-destructive text-sm p-3 rounded-md">
+          <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm px-4 py-3 rounded-lg">
             {error}
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Card
-            className="cursor-pointer hover:bg-accent/50 transition-colors"
-            onClick={() => !loading && openFile('guitarpro')}
-          >
-            <CardHeader className="pb-2">
-              <CardTitle className="flex items-center gap-2 text-base">
-                <FileMusic className="h-5 w-5" />
-                Guitar Pro
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Open .gp, .gp3, .gp4, .gp5, .gpx files
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card
-            className="cursor-pointer hover:bg-accent/50 transition-colors"
-            onClick={() => !loading && openFile('rocksmith')}
-          >
-            <CardHeader className="pb-2">
-              <CardTitle className="flex items-center gap-2 text-base">
-                <FolderOpen className="h-5 w-5" />
-                Rocksmith
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Open .psarc archives or .xml arrangements
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {recentFiles.length > 0 && (
-          <div className="space-y-3">
-            <h2 className="text-lg font-semibold flex items-center gap-2">
-              <Clock className="h-5 w-5" />
-              Recent Files
-            </h2>
-            <div className="space-y-1">
-              {recentFiles.map(file => (
-                <div
-                  key={file.path}
-                  className="flex items-center gap-3 p-2 rounded-md hover:bg-accent/50 group"
-                >
-                  <button
-                    className="flex-1 text-left text-sm truncate cursor-pointer"
-                    onClick={() => openRecentFile(file)}
-                    disabled={loading}
-                  >
-                    <span className="font-medium">{file.name}</span>
-                    <span className="text-muted-foreground ml-2 text-xs">
-                      {file.type === 'guitarpro' ? 'Guitar Pro' : 'Rocksmith'}
-                    </span>
-                  </button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-7 w-7 opacity-0 group-hover:opacity-100"
-                    onClick={e => {
-                      e.stopPropagation();
-                      removeRecent(file.path);
-                    }}
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
+        {/* Loading */}
         {loading && (
-          <div className="text-center text-muted-foreground py-8">
+          <div className="flex items-center gap-3 text-on-surface-variant text-sm py-4">
+            <div className="h-4 w-4 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
             Loading file...
           </div>
         )}
+
+        {/* Tools Section */}
+        <section className="space-y-4">
+          <p className="text-xs font-mono font-semibold tracking-[0.2em] uppercase text-outline">
+            Guitarist Toolbox
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {/* Tab Viewer -- primary tool, spans 2 cols */}
+            <div className="md:col-span-2 bg-surface-container-low rounded-xl p-6 border border-white/[0.04] group">
+              <div className="flex flex-col sm:flex-row sm:items-start gap-5">
+                <div className="flex-shrink-0 h-12 w-12 rounded-lg bg-secondary/10 flex items-center justify-center">
+                  <FileMusic className="h-6 w-6 text-secondary" />
+                </div>
+                <div className="flex-1 space-y-3">
+                  <div>
+                    <h3 className="font-headline font-bold text-lg text-on-surface">Tab Viewer</h3>
+                    <p className="text-on-surface-variant text-sm mt-1 leading-relaxed">
+                      Open Guitar Pro (.gp, .gp3-.gp7, .gpx) and Rocksmith (.psarc, .xml) files.
+                      Follow along with scrolling tablature and synchronized audio playback.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => !loading && openFile('guitarpro')}
+                      disabled={loading}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary text-black text-sm font-semibold hover:bg-secondary/90 transition-colors disabled:opacity-50 cursor-pointer"
+                    >
+                      <Play className="h-4 w-4" />
+                      Launch Studio
+                    </button>
+                    <button
+                      onClick={() => !loading && openFile('rocksmith')}
+                      disabled={loading}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-container-high text-on-surface text-sm font-medium hover:bg-surface-container-high/80 transition-colors disabled:opacity-50 cursor-pointer"
+                    >
+                      <Guitar className="h-4 w-4" />
+                      Open Rocksmith
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Fretboard IQ -- Active */}
+            <button
+              onClick={() => navigate('/guitar/fretboard')}
+              className="bg-surface-container-low rounded-xl p-5 border border-secondary-container/20 hover:bg-surface-container transition-all cursor-pointer text-left hover:scale-[1.02]"
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 h-10 w-10 rounded-lg bg-secondary-container/10 flex items-center justify-center">
+                  <Grid3X3 className="h-5 w-5 text-secondary" />
+                </div>
+                <div>
+                  <h3 className="font-headline font-semibold text-sm text-on-surface">Fretboard IQ</h3>
+                  <p className="text-on-surface-variant text-xs mt-0.5">Note recognition drills & fretboard mastery</p>
+                  <span className="inline-block mt-2 text-[10px] font-mono uppercase tracking-wider text-secondary">
+                    6 drills available
+                  </span>
+                </div>
+              </div>
+            </button>
+
+            {/* Chord Finder -- Active */}
+            <button
+              onClick={() => navigate('/guitar/chords')}
+              className="bg-surface-container-low rounded-xl p-5 border border-secondary-container/20 hover:bg-surface-container transition-all cursor-pointer text-left hover:scale-[1.02]"
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 h-10 w-10 rounded-lg bg-secondary-container/10 flex items-center justify-center">
+                  <Music className="h-5 w-5 text-secondary" />
+                </div>
+                <div>
+                  <h3 className="font-headline font-semibold text-sm text-on-surface">Chord Finder</h3>
+                  <p className="text-on-surface-variant text-xs mt-0.5">Search voicings & chord shapes</p>
+                  <span className="inline-block mt-2 text-[10px] font-mono uppercase tracking-wider text-secondary">
+                    120+ voicings
+                  </span>
+                </div>
+              </div>
+            </button>
+
+            {/* Placeholder cards -- future tools */}
+            {[
+              {icon: Dumbbell, name: 'Technique Drills', desc: 'Speed & accuracy exercises'},
+              {icon: Speaker, name: 'Tone Studio', desc: 'Amp & effects chain'},
+            ].map(tool => (
+              <div
+                key={tool.name}
+                className="bg-surface-container-low rounded-xl p-5 border border-white/[0.04] opacity-60 select-none"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 h-10 w-10 rounded-lg bg-white/[0.04] flex items-center justify-center">
+                    <tool.icon className="h-5 w-5 text-on-surface-variant" />
+                  </div>
+                  <div>
+                    <h3 className="font-headline font-semibold text-sm text-on-surface">{tool.name}</h3>
+                    <p className="text-on-surface-variant text-xs mt-0.5">{tool.desc}</p>
+                    <span className="inline-block mt-2 text-[10px] font-mono uppercase tracking-wider text-outline">
+                      Coming soon
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Recently Opened */}
+        {recentFiles.length > 0 && (
+          <section className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-on-surface-variant" />
+              <h2 className="font-headline font-bold text-on-surface text-base">
+                Recently Opened
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+              {recentFiles.map(file => (
+                <div
+                  key={file.path}
+                  className="bg-surface-container rounded-lg px-4 py-3 border border-white/[0.04] group hover:border-secondary/30 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <FileMusic className="h-4 w-4 flex-shrink-0 text-on-surface-variant" />
+                    <button
+                      className="flex-1 min-w-0 text-left cursor-pointer"
+                      onClick={() => openRecentFile(file)}
+                      disabled={loading}
+                    >
+                      <p className="text-sm font-medium text-on-surface truncate">
+                        {file.name}
+                      </p>
+                      <p className="text-xs text-on-surface-variant mt-0.5">
+                        <span>{file.type === 'guitarpro' ? 'Guitar Pro' : 'Rocksmith'}</span>
+                        <span className="mx-1.5 text-outline">|</span>
+                        <span className="text-outline">{formatTimeAgo(file.openedAt)}</span>
+                      </p>
+                    </button>
+                    <button
+                      className="flex-shrink-0 h-7 w-7 rounded-md flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-white/[0.06] transition-all cursor-pointer"
+                      onClick={e => {
+                        e.stopPropagation();
+                        removeRecent(file.path);
+                      }}
+                    >
+                      <Trash2 className="h-3.5 w-3.5 text-on-surface-variant" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
       </div>
     </div>
   );

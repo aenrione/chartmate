@@ -37,6 +37,8 @@ import {
   Grid3X3,
   Bookmark,
   Loader2,
+  Youtube,
+  Unlink,
 } from 'lucide-react';
 import {
   useCallback,
@@ -48,6 +50,9 @@ import {
 import {Link} from 'react-router-dom';
 import useInterval from 'use-interval';
 import {ChartResponseEncore} from '@/lib/chartSelection';
+import YouTubePlayer from '@/components/YouTubePlayer';
+import {snapToYouTubeRate} from '@/lib/youtube-utils';
+import {useYoutubeSync} from '@/hooks/useYoutubeSync';
 
 import {getBasename} from '@/lib/src-shared/utils';
 import {cn} from '@/lib/utils';
@@ -227,6 +232,22 @@ export default function Renderer({
 
   const audioManagerRef = useRef<AudioManager | null>(null);
 
+  // YouTube integration
+  const {
+    youtubeUrl,
+    youtubeVideoId,
+    youtubeOffsetMs,
+    youtubeUrlInput,
+    setYoutubeUrlInput,
+    playerRef: youtubePlayerRef,
+    syncRef: youtubeSyncRef,
+    handleUrlSubmit: handleYoutubeUrlSubmit,
+    handleRemove: handleYoutubeRemove,
+    handleOffsetChange: handleYoutubeOffsetChange,
+    handleReady: handleYoutubeReady,
+    updateClock,
+  } = useYoutubeSync({songKey: metadata.md5, clockRef: audioManagerRef, tempo});
+
   // Songs with only a single audio file (e.g. "song.ogg") don't have individual
   // instrument stems, so we offer synthetic drum playback for those.
   const hasIndividualStems = audioFiles.length > 1;
@@ -295,7 +316,31 @@ export default function Renderer({
     if (audioManagerRef.current) {
       audioManagerRef.current.setTempo(newTempo);
       setTempo(newTempo);
+      youtubeSyncRef.current.onTempoChange(newTempo);
     }
+  }, []);
+
+  // Unified playback wrappers — keep AudioManager and YouTubeSync in lockstep
+  const seekAndPlay = useCallback((timeSeconds: number) => {
+    if (!audioManagerRef.current) return;
+    audioManagerRef.current.play({time: timeSeconds});
+    youtubeSyncRef.current.onPlay(timeSeconds);
+    setIsPlaying(true);
+    setCurrentPlayback(timeSeconds);
+  }, []);
+
+  const pausePlayback = useCallback(() => {
+    if (!audioManagerRef.current) return;
+    audioManagerRef.current.pause();
+    youtubeSyncRef.current.onPause();
+    setIsPlaying(false);
+  }, []);
+
+  const resumePlayback = useCallback(() => {
+    if (!audioManagerRef.current) return;
+    audioManagerRef.current.resume();
+    youtubeSyncRef.current.onResume();
+    setIsPlaying(true);
   }, []);
 
   // Zoom control handlers
@@ -334,8 +379,7 @@ export default function Renderer({
       setPracticeStartMs(startMs);
       setPracticeEndMs(endMs);
       audioManagerRef.current?.setPracticeMode(config);
-      audioManagerRef.current?.play({time: config.startTimeMs / 1000});
-      setIsPlaying(true);
+      seekAndPlay(config.startTimeMs / 1000);
     },
     [],
   );
@@ -659,6 +703,7 @@ export default function Renderer({
           audioManager.setVolume('synthetic', playSyntheticTrack ? syntheticVolume : 0);
         }
         audioManagerRef.current = audioManager;
+        updateClock(audioManager);
         if (import.meta.env.DEV) (window as any).am = audioManager;
 
         // Apply initial per-track volumes loaded from storage
@@ -747,21 +792,16 @@ export default function Renderer({
 
 
   const handlePlay = useCallback(() => {
-    if (!audioManagerRef.current) {
-      return;
-    }
+    if (!audioManagerRef.current) return;
 
     if (isPlaying) {
-      audioManagerRef.current.pause();
-      setIsPlaying(false);
+      pausePlayback();
     } else if (!audioManagerRef.current.isInitialized) {
-      audioManagerRef.current.play({time: 0});
-      setIsPlaying(true);
+      seekAndPlay(0);
     } else {
-      audioManagerRef.current.resume();
-      setIsPlaying(true);
+      resumePlayback();
     }
-  }, [isPlaying]);
+  }, [isPlaying, pausePlayback, seekAndPlay, resumePlayback]);
 
   // Keyboard shortcuts: Space = play/pause, Left/Right = speed control
   useEffect(() => {
@@ -1168,6 +1208,90 @@ export default function Renderer({
             {/* Zoom Control */}
             <ZoomControl zoom={zoom} onZoomChange={handleZoomChange} />
 
+            {/* YouTube Integration */}
+            <div className="space-y-2 pt-4 border-t">
+              <span className="text-sm font-medium flex items-center gap-1">
+                <Youtube className="h-3.5 w-3.5" />
+                YouTube
+              </span>
+              {youtubeVideoId ? (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs text-muted-foreground truncate flex-1">
+                      {youtubeUrl}
+                    </span>
+                    <Tip label="Remove YouTube video">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-5 w-5 shrink-0"
+                        onClick={handleYoutubeRemove}>
+                        <Unlink className="h-3 w-3" />
+                      </Button>
+                    </Tip>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs text-muted-foreground">
+                        Offset
+                      </label>
+                      <span className="text-xs font-mono text-muted-foreground">
+                        {youtubeOffsetMs >= 0 ? '+' : ''}{(youtubeOffsetMs / 1000).toFixed(1)}s
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-6 w-6 shrink-0"
+                        onClick={() => handleYoutubeOffsetChange(youtubeOffsetMs - 100)}>
+                        <span className="text-xs">-</span>
+                      </Button>
+                      <Slider
+                        value={[youtubeOffsetMs]}
+                        min={-10000}
+                        max={10000}
+                        step={100}
+                        onValueChange={([v]) => handleYoutubeOffsetChange(v)}
+                      />
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-6 w-6 shrink-0"
+                        onClick={() => handleYoutubeOffsetChange(youtubeOffsetMs + 100)}>
+                        <span className="text-xs">+</span>
+                      </Button>
+                    </div>
+                  </div>
+                  {tempo !== 1.0 && snapToYouTubeRate(tempo) !== tempo && (
+                    <p className="text-xs text-amber-500">
+                      YT rate: {snapToYouTubeRate(tempo)}x (closest to {tempo.toFixed(2)}x)
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div className="flex gap-1">
+                  <input
+                    type="text"
+                    placeholder="Paste YouTube URL..."
+                    value={youtubeUrlInput}
+                    onChange={e => setYoutubeUrlInput(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') handleYoutubeUrlSubmit();
+                    }}
+                    className="flex-1 text-xs px-2 py-1 rounded border bg-background min-w-0"
+                  />
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="h-7 text-xs shrink-0"
+                    onClick={handleYoutubeUrlSubmit}>
+                    Link
+                  </Button>
+                </div>
+              )}
+            </div>
+
             {/* Practice Mode */}
             <div className="space-y-2 pt-4 border-t">
               <div className="flex items-center justify-between">
@@ -1297,14 +1421,7 @@ export default function Renderer({
                           )}>
                           <button
                             className="flex-1 text-left truncate"
-                            onClick={() => {
-                              const timeSec = section.startMs / 1000;
-                              setCurrentPlayback(timeSec);
-                              if (audioManagerRef.current) {
-                                audioManagerRef.current.play({time: timeSec});
-                                setIsPlaying(true);
-                              }
-                            }}>
+                            onClick={() => seekAndPlay(section.startMs / 1000)}>
                             {section.name}
                           </button>
                           <span className="text-muted-foreground shrink-0">
@@ -1418,16 +1535,7 @@ export default function Renderer({
                 max={songDuration || 100}
                 min={0}
                 className="relative z-10"
-                onValueChange={values => {
-                  const newTime = values[0];
-                  setCurrentPlayback(newTime);
-                  if (audioManagerRef.current) {
-                    audioManagerRef.current.play({
-                      time: newTime,
-                    });
-                    setIsPlaying(true);
-                  }
-                }}
+                onValueChange={values => seekAndPlay(values[0])}
               />
             </div>
             <span className="text-sm text-muted-foreground whitespace-nowrap">
@@ -1458,6 +1566,17 @@ export default function Renderer({
                 </div>
               </h1>
             </div>
+            {/* YouTube Video Panel */}
+            {youtubeVideoId && (
+              <div className="mb-2 rounded-lg overflow-hidden border bg-black" style={{height: '240px'}}>
+                <YouTubePlayer
+                  ref={youtubePlayerRef}
+                  videoId={youtubeVideoId}
+                  onReady={handleYoutubeReady}
+                  className="w-full h-full"
+                />
+              </div>
+            )}
             <div className="flex flex-1 gap-2 overflow-hidden">
               <div
                 className={cn(
@@ -1472,15 +1591,7 @@ export default function Renderer({
                   enableColors={enableColors}
                   showLyrics={showLyrics}
                   zoom={zoom}
-                  onSelectMeasure={time => {
-                    if (audioManagerRef.current == null) {
-                      return;
-                    }
-
-                    audioManagerRef.current.play({time});
-
-                    setIsPlaying(true);
-                  }}
+                  onSelectMeasure={seekAndPlay}
                   triggerRerender={
                     String(viewCloneHero) + String(isMobileMode) + String(zoom)
                   }

@@ -13,6 +13,7 @@ import aesjs from 'aes-js';
 import type {
   RocksmithArrangement,
   RocksmithBeat,
+  RocksmithBendPoint,
   RocksmithNote,
   RocksmithChord,
   RocksmithChordTemplate,
@@ -102,18 +103,34 @@ class BinaryReader {
   }
 }
 
-// Note mask flags
+// Note mask flags — verified against rscustom/rocksmith-custom-song-toolkit,
+// iminashi/Rocksmith2014.NET, and BielPinto/rockern
 const NOTE_MASK = {
-  hammerOn:     0x00000200,
-  pullOff:      0x00000400,
-  harmonic:     0x00000020,
-  harmonicPinch: 0x00008000,
-  palmMute:     0x00000002,
-  mute:         0x00000040,
-  tremolo:      0x40000000,
-  accent:       0x04000000,
-  linkNext:     0x00000008,
-  ignore:       0x00040000,
+  single:         0x00000001,
+  open:           0x00000002,
+  parent:         0x00000004,
+  childLink:      0x00000008,
+  child:          0x00000010,
+  accent:         0x00000020,
+  leftHand:       0x00000040,
+  linkNext:       0x00000080,
+  bend:           0x00000100,
+  hammerOn:       0x00000200,
+  pullOff:        0x00000400,
+  harmonic:       0x00001000,
+  ignore:         0x00002000,
+  rightHand:      0x00004000,
+  palmMute:       0x00008000,
+  mute:           0x00010000,
+  pluck:          0x00020000,
+  pop:            0x00040000,
+  slap:           0x00080000,
+  slide:          0x00100000,
+  sustain:        0x00200000,
+  tap:            0x00400000,
+  tremolo:        0x00800000,
+  harmonicPinch:  0x01000000,
+  unpitchedSlide: 0x02000000,
 };
 
 interface SngNoteRaw {
@@ -123,6 +140,7 @@ interface SngNoteRaw {
   string: number;
   fret: number;
   chordId: number;
+  chordNoteId: number;
   slideTo: number;
   slideUnpitchTo: number;
   tap: number;
@@ -130,7 +148,7 @@ interface SngNoteRaw {
   sustain: number;
   maxBend: number;
   bendCount: number;
-  bends: {time: number; step: number}[];
+  bends: RocksmithBendPoint[];
 }
 
 function readNote(r: BinaryReader): SngNoteRaw {
@@ -143,7 +161,7 @@ function readNote(r: BinaryReader): SngNoteRaw {
   r.i8(); // anchorFret
   r.i8(); // anchorWidth
   const chordId = r.i32();
-  r.u32(); // chordNoteId
+  const chordNoteId = r.i32();
   r.u32(); // phraseId
   r.u32(); // phraseIterationId
   r.u16(); r.u16(); // fingerPrintId[2]
@@ -155,14 +173,14 @@ function readNote(r: BinaryReader): SngNoteRaw {
   r.i8(); // leftHand
   const tap = r.i8();
   r.i8(); // pickDirection
-  r.i8(); // slap
-  r.i8(); // pluck
+  r.i8(); // slap (also in mask)
+  r.i8(); // pluck (also in mask)
   const vibrato = r.i16();
   const sustain = r.f32();
   const maxBend = r.f32();
 
   const bendCount = r.u32();
-  const bends: {time: number; step: number}[] = [];
+  const bends: RocksmithBendPoint[] = [];
   for (let i = 0; i < bendCount; i++) {
     const bTime = r.f32();
     const step = r.f32();
@@ -171,7 +189,7 @@ function readNote(r: BinaryReader): SngNoteRaw {
     bends.push({time: bTime, step});
   }
 
-  return {mask, flags, time, string, fret, chordId, slideTo, slideUnpitchTo, tap, vibrato, sustain, maxBend, bendCount, bends};
+  return {mask, flags, time, string, fret, chordId, chordNoteId, slideTo, slideUnpitchTo, tap, vibrato, sustain, maxBend, bendCount, bends};
 }
 
 export interface SngManifestInfo {
@@ -238,18 +256,33 @@ function parseSngBinary(data: Uint8Array, manifest?: SngManifestInfo): Rocksmith
   const chordNotesCount = r.u32();
   const chordNotesData: {
     mask: number[];
+    bends: RocksmithBendPoint[][]; // per-string bend point arrays
     slideTo: number[];
     slideUnpitchTo: number[];
     vibrato: number[];
   }[] = [];
   for (let i = 0; i < chordNotesCount; i++) {
-    const mask = [r.i32(), r.i32(), r.i32(), r.i32(), r.i32(), r.i32()];
-    // Skip bends (6 strings × (32 bends × 8 bytes + 4 count bytes))
-    r.skip(6 * (32 * 8 + 4));
+    const mask = [r.u32(), r.u32(), r.u32(), r.u32(), r.u32(), r.u32()];
+    // Parse bends: 6 strings × (4-byte count + 32 bend values × 12 bytes each)
+    const bends: RocksmithBendPoint[][] = [];
+    for (let s = 0; s < 6; s++) {
+      const bendCount = r.u32();
+      const stringBends: RocksmithBendPoint[] = [];
+      for (let b = 0; b < 32; b++) {
+        const bTime = r.f32();
+        const step = r.f32();
+        r.skip(3); // padding
+        r.i8(); // unknown
+        if (b < bendCount && step > 0) {
+          stringBends.push({time: bTime, step});
+        }
+      }
+      bends.push(stringBends);
+    }
     const slideTo = [r.i8(), r.i8(), r.i8(), r.i8(), r.i8(), r.i8()];
     const slideUnpitchTo = [r.i8(), r.i8(), r.i8(), r.i8(), r.i8(), r.i8()];
     const vibrato = [r.i16(), r.i16(), r.i16(), r.i16(), r.i16(), r.i16()];
-    chordNotesData.push({mask, slideTo, slideUnpitchTo, vibrato});
+    chordNotesData.push({mask, bends, slideTo, slideUnpitchTo, vibrato});
   }
 
   // Vocals (skip)
@@ -396,33 +429,64 @@ function parseSngBinary(data: Uint8Array, manifest?: SngManifestInfo): Rocksmith
   const notes: RocksmithNote[] = [];
   const chords: RocksmithChord[] = [];
 
+  /** Helper to extract technique flags from a note mask */
+  function extractTechniques(mask: number, raw: SngNoteRaw) {
+    return {
+      hammerOn: !!(mask & NOTE_MASK.hammerOn),
+      pullOff: !!(mask & NOTE_MASK.pullOff),
+      harmonic: !!(mask & NOTE_MASK.harmonic),
+      harmonicPinch: !!(mask & NOTE_MASK.harmonicPinch),
+      palmMute: !!(mask & NOTE_MASK.palmMute),
+      mute: !!(mask & NOTE_MASK.mute),
+      tremolo: !!(mask & NOTE_MASK.tremolo),
+      vibrato: raw.vibrato > 0 || !!(mask & NOTE_MASK.leftHand),
+      tap: raw.tap > 0 || !!(mask & NOTE_MASK.tap),
+      accent: !!(mask & NOTE_MASK.accent),
+      linkNext: !!(mask & NOTE_MASK.linkNext),
+      ignore: !!(mask & NOTE_MASK.ignore),
+      slap: !!(mask & NOTE_MASK.slap),
+      pluck: !!(mask & NOTE_MASK.pluck),
+    };
+  }
+
   for (const raw of maxDiffNotes) {
     if (raw.chordId >= 0 && raw.chordId < chordTemplates.length) {
-      // This is a chord
+      // This is a chord — look up per-string technique data from ChordNotes
       const tpl = chordTemplates[raw.chordId];
+      const cnData = raw.chordNoteId >= 0 && raw.chordNoteId < chordNotesData.length
+        ? chordNotesData[raw.chordNoteId]
+        : null;
+
       const chordNotes: RocksmithNote[] = [];
       for (let s = 0; s < 6; s++) {
         if (tpl.frets[s] >= 0) {
+          const stringMask = cnData ? cnData.mask[s] : 0;
+          const stringBends = cnData ? cnData.bends[s] : [];
+          const maxBend = stringBends.length > 0 ? Math.max(...stringBends.map(b => b.step)) : 0;
+
           chordNotes.push({
             time: raw.time,
             string: s,
             fret: tpl.frets[s],
             sustain: raw.sustain,
-            bend: 0,
-            slideTo: -1,
-            slideUnpitchTo: -1,
-            hammerOn: false,
-            pullOff: false,
-            harmonic: false,
-            harmonicPinch: false,
-            palmMute: false,
-            mute: false,
-            tremolo: false,
-            vibrato: false,
-            tap: false,
-            accent: false,
-            linkNext: false,
-            ignore: false,
+            bend: maxBend,
+            bendPoints: stringBends,
+            slideTo: cnData ? cnData.slideTo[s] : -1,
+            slideUnpitchTo: cnData ? cnData.slideUnpitchTo[s] : -1,
+            hammerOn: !!(stringMask & NOTE_MASK.hammerOn),
+            pullOff: !!(stringMask & NOTE_MASK.pullOff),
+            harmonic: !!(stringMask & NOTE_MASK.harmonic),
+            harmonicPinch: !!(stringMask & NOTE_MASK.harmonicPinch),
+            palmMute: !!(stringMask & NOTE_MASK.palmMute),
+            mute: !!(stringMask & NOTE_MASK.mute),
+            tremolo: !!(stringMask & NOTE_MASK.tremolo),
+            vibrato: (cnData ? cnData.vibrato[s] : 0) > 0,
+            tap: raw.tap > 0 || !!(stringMask & NOTE_MASK.tap),
+            accent: !!(stringMask & NOTE_MASK.accent),
+            linkNext: !!(stringMask & NOTE_MASK.linkNext),
+            ignore: !!(stringMask & NOTE_MASK.ignore),
+            slap: !!(stringMask & NOTE_MASK.slap),
+            pluck: !!(stringMask & NOTE_MASK.pluck),
           });
         }
       }
@@ -435,26 +499,17 @@ function parseSngBinary(data: Uint8Array, manifest?: SngManifestInfo): Rocksmith
       });
     } else {
       // Single note
+      const techniques = extractTechniques(raw.mask, raw);
       notes.push({
         time: raw.time,
         string: raw.string,
         fret: raw.fret,
         sustain: raw.sustain,
         bend: raw.maxBend,
+        bendPoints: raw.bends,
         slideTo: raw.slideTo,
         slideUnpitchTo: raw.slideUnpitchTo,
-        hammerOn: !!(raw.mask & NOTE_MASK.hammerOn),
-        pullOff: !!(raw.mask & NOTE_MASK.pullOff),
-        harmonic: !!(raw.mask & NOTE_MASK.harmonic),
-        harmonicPinch: !!(raw.mask & NOTE_MASK.harmonicPinch),
-        palmMute: !!(raw.mask & NOTE_MASK.palmMute),
-        mute: !!(raw.mask & NOTE_MASK.mute),
-        tremolo: !!(raw.mask & NOTE_MASK.tremolo),
-        vibrato: raw.vibrato > 0,
-        tap: raw.tap > 0,
-        accent: !!(raw.mask & NOTE_MASK.accent),
-        linkNext: !!(raw.mask & NOTE_MASK.linkNext),
-        ignore: !!(raw.mask & NOTE_MASK.ignore),
+        ...techniques,
       });
     }
   }

@@ -12,11 +12,16 @@ import {
   PlayerMode,
   model,
 } from '@coderline/alphatab';
+import {loadActiveSoundfont} from '@/lib/soundfont-store';
 
 type Score = InstanceType<typeof model.Score>;
 type Track = InstanceType<typeof model.Track>;
+type Beat = InstanceType<typeof model.Beat>;
+type Note = InstanceType<typeof model.Note>;
 
 export interface AlphaTabHandle {
+  getApi: () => AlphaTabApi | null;
+  /** @deprecated Use getApi() instead — this may be stale */
   api: AlphaTabApi | null;
   playPause: () => void;
   stop: () => void;
@@ -41,6 +46,8 @@ export interface AlphaTabWrapperProps {
   scale?: number;
   /** Enable playback */
   enablePlayer?: boolean;
+  /** Enable note-level bounds for click detection */
+  includeNoteBounds?: boolean;
   /** Called when a score has been loaded */
   onScoreLoaded?: (score: Score) => void;
   /** Called when player position changes */
@@ -51,8 +58,44 @@ export interface AlphaTabWrapperProps {
   onRenderFinished?: () => void;
   /** Called when player is ready */
   onPlayerReady?: () => void;
+  /** Called when user clicks on a beat */
+  onBeatMouseDown?: (beat: Beat) => void;
+  /** Called when user releases mouse on a beat */
+  onBeatMouseUp?: (beat: Beat | null) => void;
+  /** Called when user clicks on a note */
+  onNoteMouseDown?: (note: Note) => void;
+  /** Called when user releases mouse on a note */
+  onNoteMouseUp?: (note: Note | null) => void;
   /** Additional CSS class for the container */
   className?: string;
+}
+
+const DARK_RESOURCES = {
+  mainGlyphColor: '#e4e4e7ff',
+  secondaryGlyphColor: '#a1a1aa66',
+  staffLineColor: '#52525bff',
+  barSeparatorColor: '#71717aff',
+  scoreInfoColor: '#e4e4e7ff',
+  barNumberColor: '#a1a1aaff',
+};
+
+const LIGHT_RESOURCES = {
+  mainGlyphColor: '#000000ff',
+  secondaryGlyphColor: '#00000066',
+  staffLineColor: '#a5a5a5ff',
+  barSeparatorColor: '#222211ff',
+  scoreInfoColor: '#000000ff',
+  barNumberColor: '#c80000ff',
+};
+
+function applyThemeColors(api: AlphaTabApi) {
+  const isDark = document.documentElement.classList.contains('dark');
+  const colors = isDark ? DARK_RESOURCES : LIGHT_RESOURCES;
+  api.settings.fillFromJson({
+    display: { resources: colors },
+  });
+  api.updateSettings();
+  api.render();
 }
 
 const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
@@ -64,11 +107,16 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       staveProfile = StaveProfile.Default,
       scale = 1.0,
       enablePlayer = true,
+      includeNoteBounds = false,
       onScoreLoaded,
       onPositionChanged,
       onPlayerStateChanged,
       onRenderFinished,
       onPlayerReady,
+      onBeatMouseDown,
+      onBeatMouseUp,
+      onNoteMouseDown,
+      onNoteMouseUp,
       className,
     },
     ref,
@@ -81,6 +129,10 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       onPlayerStateChanged,
       onRenderFinished,
       onPlayerReady,
+      onBeatMouseDown,
+      onBeatMouseUp,
+      onNoteMouseDown,
+      onNoteMouseUp,
     });
 
     // Keep callbacks ref up to date
@@ -90,6 +142,10 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       onPlayerStateChanged,
       onRenderFinished,
       onPlayerReady,
+      onBeatMouseDown,
+      onBeatMouseUp,
+      onNoteMouseDown,
+      onNoteMouseUp,
     };
 
     // Initialize alphaTab API
@@ -97,61 +153,136 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       const el = containerRef.current;
       if (!el) return;
 
-      const settings: Record<string, unknown> = {
-        core: {
-          fontDirectory: '/font/',
-          engine: 'svg',
-          logLevel: 3, // Warning
-        },
-        display: {
-          layoutMode,
-          staveProfile,
-          scale,
-        },
-        player: {
-          enablePlayer,
-          enableCursor: enablePlayer,
-          enableAnimatedBeatCursor: enablePlayer,
-          enableUserInteraction: true,
-          scrollElement: el,
-          scrollMode: 2, // ScrollMode.OffScreen — scrolls when cursor leaves viewport
-          scrollOffsetY: -50,
-          soundFont: enablePlayer ? '/soundfont/sonivox.sf2' : null,
-        },
+      let destroyed = false;
+      let api: AlphaTabApi | null = null;
+      let observer: MutationObserver | null = null;
+
+      const init = async () => {
+        // Load the user-selected soundfont (URL string or Uint8Array from IndexedDB)
+        const soundFont = enablePlayer ? await loadActiveSoundfont() : null;
+        if (destroyed) return;
+
+        // For settings init, only pass URL strings — binary data must be loaded via API after init
+        const soundFontSetting = typeof soundFont === 'string' ? soundFont : '/soundfont/sonivox.sf2';
+
+        const settings: Record<string, unknown> = {
+          core: {
+            fontDirectory: '/font/',
+            engine: 'svg',
+            logLevel: 3, // Warning
+            includeNoteBounds,
+          },
+          display: {
+            layoutMode,
+            staveProfile,
+            scale,
+          },
+          notation: {
+            notationMode: 0, // default
+          },
+          player: {
+            enablePlayer,
+            enableCursor: enablePlayer,
+            enableAnimatedBeatCursor: enablePlayer,
+            enableUserInteraction: true,
+            scrollElement: el,
+            scrollMode: 2, // ScrollMode.OffScreen — scrolls when cursor leaves viewport
+            scrollOffsetY: -50,
+            soundFont: soundFontSetting,
+          },
+        };
+
+        api = new AlphaTabApi(el, settings);
+        apiRef.current = api;
+
+        // Apply theme colors on init (without re-render since first render hasn't happened)
+        const isDark = document.documentElement.classList.contains('dark');
+        const initColors = isDark ? DARK_RESOURCES : LIGHT_RESOURCES;
+        api.settings.fillFromJson({
+          display: { resources: initColors },
+        });
+        api.updateSettings();
+
+        // Watch for dark mode toggle and re-apply colors
+        observer = new MutationObserver(() => {
+          if (apiRef.current) applyThemeColors(apiRef.current);
+        });
+        observer.observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['class'],
+        });
+
+        api.scoreLoaded.on((loadedScore: Score) => {
+          callbacksRef.current.onScoreLoaded?.(loadedScore);
+        });
+
+        api.renderFinished.on(() => {
+          // Remove "rendered by alphaTab" watermark
+          el.querySelectorAll<HTMLElement>('.at-surface-svg text').forEach((txt) => {
+            if (txt.textContent?.includes('rendered by alphaTab')) {
+              txt.closest('div')?.remove();
+            }
+          });
+          callbacksRef.current.onRenderFinished?.();
+        });
+
+        if (enablePlayer) {
+          // If soundfont is binary (from IndexedDB), load it once the default has initialized
+          if (soundFont instanceof Uint8Array) {
+            api.loadSoundFont(soundFont, false);
+          }
+
+          api.playerReady.on(() => {
+            callbacksRef.current.onPlayerReady?.();
+          });
+
+          api.playerPositionChanged.on((e) => {
+            callbacksRef.current.onPositionChanged?.(
+              e.currentTime,
+              e.endTime,
+              e.currentTick,
+              e.endTick,
+            );
+          });
+
+          api.playerStateChanged.on((e) => {
+            callbacksRef.current.onPlayerStateChanged?.(e.state);
+          });
+        }
+
+        // Beat/note mouse events (for editor interaction)
+        api.beatMouseDown.on((beat) => {
+          callbacksRef.current.onBeatMouseDown?.(beat);
+        });
+        api.beatMouseUp.on((beat) => {
+          callbacksRef.current.onBeatMouseUp?.(beat);
+        });
+        if (includeNoteBounds) {
+          api.noteMouseDown.on((note) => {
+            callbacksRef.current.onNoteMouseDown?.(note);
+          });
+          api.noteMouseUp.on((note) => {
+            callbacksRef.current.onNoteMouseUp?.(note);
+          });
+        }
       };
 
-      const api = new AlphaTabApi(el, settings);
-      apiRef.current = api;
+      init();
 
-      api.scoreLoaded.on((loadedScore: Score) => {
-        callbacksRef.current.onScoreLoaded?.(loadedScore);
-      });
-
-      api.renderFinished.on(() => {
-        callbacksRef.current.onRenderFinished?.();
-      });
-
-      if (enablePlayer) {
-        api.playerReady.on(() => {
-          callbacksRef.current.onPlayerReady?.();
-        });
-
-        api.playerPositionChanged.on((e) => {
-          callbacksRef.current.onPositionChanged?.(
-            e.currentTime,
-            e.endTime,
-            e.currentTick,
-            e.endTick,
-          );
-        });
-
-        api.playerStateChanged.on((e) => {
-          callbacksRef.current.onPlayerStateChanged?.(e.state);
-        });
-      }
+      // Listen for soundfont changes from settings dialog
+      const onSoundfontChanged = async () => {
+        const currentApi = apiRef.current;
+        if (!currentApi || !enablePlayer) return;
+        const newSoundFont = await loadActiveSoundfont();
+        currentApi.loadSoundFont(newSoundFont, false);
+      };
+      window.addEventListener('soundfont-changed', onSoundfontChanged);
 
       return () => {
-        api.destroy();
+        destroyed = true;
+        window.removeEventListener('soundfont-changed', onSoundfontChanged);
+        observer?.disconnect();
+        api?.destroy();
         apiRef.current = null;
       };
       // Only re-create on mount/unmount
@@ -210,7 +341,8 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
     }, []);
 
     useImperativeHandle(ref, () => ({
-      api: apiRef.current,
+      getApi: () => apiRef.current,
+      api: apiRef.current, // kept for backwards compat, prefer getApi()
       playPause,
       stop,
       setPlaybackSpeed,

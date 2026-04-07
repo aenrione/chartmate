@@ -207,9 +207,39 @@ function createAlphaTabNote(
         : SlideOutType.OutDown;
   }
 
-  if (rsNote.bend > 0) {
+  if (rsNote.bendPoints && rsNote.bendPoints.length > 0) {
+    // Use full bend curve data for accurate rendering
+    // AlphaTab bend points use positions 0-60 (ratio within the note) and values in quarter-tones
+    const noteStart = rsNote.time;
+    const noteDuration = rsNote.sustain > 0 ? rsNote.sustain : 0.25; // fallback 250ms
+
+    note.addBendPoint(new BendPoint(0, 0)); // always start at zero
+
+    for (const bp of rsNote.bendPoints) {
+      const relativePos = Math.round(((bp.time - noteStart) / noteDuration) * 60);
+      const clampedPos = Math.max(1, Math.min(60, relativePos));
+      const quarterTones = Math.round(bp.step * 4);
+      note.addBendPoint(new BendPoint(clampedPos, quarterTones));
+    }
+
+    // Detect bend type from the curve shape
+    const lastBend = rsNote.bendPoints[rsNote.bendPoints.length - 1];
+    const firstBend = rsNote.bendPoints[0];
+    if (firstBend.step > 0 && firstBend.time <= noteStart + 0.05) {
+      // Pre-bend: starts bent
+      note.bendType = BendType.Prebend;
+      if (lastBend.step < firstBend.step) {
+        note.bendType = BendType.PrebendRelease;
+      }
+    } else if (lastBend.step < rsNote.bend * 0.5) {
+      // Ends lower than max — bend and release
+      note.bendType = BendType.BendRelease;
+    } else {
+      note.bendType = BendType.Bend;
+    }
+  } else if (rsNote.bend > 0) {
+    // Fallback: simple bend from maxBend value
     note.bendType = BendType.Bend;
-    // Simple bend: start at 0, end at bend value (in quarter tones: 1 semitone = 4 quarter tones)
     const bendValue = Math.round(rsNote.bend * 4);
     note.addBendPoint(new BendPoint(0, 0));
     note.addBendPoint(new BendPoint(60, bendValue));

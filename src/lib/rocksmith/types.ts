@@ -22,12 +22,18 @@ export interface RocksmithBeat {
   measure: number; // -1 = not a measure start
 }
 
+export interface RocksmithBendPoint {
+  time: number; // seconds (absolute time of bend keyframe)
+  step: number; // bend amount in semitones (1.0 = full bend)
+}
+
 export interface RocksmithNote {
   time: number;
   string: number; // 0-5 (0 = low E)
   fret: number; // 0-24
   sustain: number; // seconds
-  bend: number; // semitones
+  bend: number; // max bend in semitones
+  bendPoints: RocksmithBendPoint[]; // full bend curve keyframes
   slideTo: number; // target fret, -1 = none
   slideUnpitchTo: number; // unpitched slide target, -1 = none
   hammerOn: boolean;
@@ -42,6 +48,8 @@ export interface RocksmithNote {
   accent: boolean;
   linkNext: boolean;
   ignore: boolean;
+  slap: boolean;
+  pluck: boolean;
 }
 
 export interface RocksmithChord {
