@@ -11,6 +11,8 @@ import {migration_009_saved_charts} from './009_saved_charts';
 import {migration_010_setlists} from './010_setlists';
 import {migration_011_youtube} from './011_youtube';
 import {migration_012_playbook} from './012_playbook';
+import {migration_013_tab_compositions} from './013_tab_compositions';
+import {migration_014_fretboard_iq} from './014_fretboard_iq';
 
 export const migrations: Record<string, Migration> = {
   '001_initial': InitialMigration,
@@ -25,4 +27,6 @@ export const migrations: Record<string, Migration> = {
   '010_setlists': migration_010_setlists,
   '011_youtube': migration_011_youtube,
   '012_playbook': migration_012_playbook,
+  '013_tab_compositions': migration_013_tab_compositions,
+  '014_fretboard_iq': migration_014_fretboard_iq,
 };

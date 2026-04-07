@@ -196,6 +196,42 @@ export interface SongAnnotations {
   updated_at: string;
 }
 
+export interface TabCompositions {
+  id: Generated<number>;
+  title: string;
+  artist: string;
+  album: string;
+  tempo: number;
+  instrument: string;
+  created_at: string;
+  updated_at: string;
+  score_data: ArrayBuffer;
+}
+
+export interface FretboardSessions {
+  id: Generated<number>;
+  drill_type: string;
+  difficulty: string;
+  total_questions: number;
+  correct_answers: number;
+  duration_ms: number;
+  xp_earned: Generated<number>;
+  created_at: string;
+}
+
+export interface FretboardAttempts {
+  id: Generated<number>;
+  session_id: number;
+  drill_type: string;
+  string_index: number;
+  fret: number;
+  expected_answer: string;
+  given_answer: string | null;
+  status: Generated<string>;
+  response_time_ms: number;
+  created_at: string;
+}
+
 export interface DB {
   chorus_charts: ChorusCharts;
   chorus_metadata: ChorusMetadata;
@@ -216,4 +252,7 @@ export interface DB {
   song_sections: SongSections;
   section_progress: SectionProgress;
   song_annotations: SongAnnotations;
+  tab_compositions: TabCompositions;
+  fretboard_sessions: FretboardSessions;
+  fretboard_attempts: FretboardAttempts;
 }
