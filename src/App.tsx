@@ -16,6 +16,10 @@ import GuitarSongView from '@/pages/guitar/GuitarSongView';
 import GuitarTestPage from '@/pages/guitar/GuitarTestPage';
 import RudimentsPage from '@/pages/rudiments/RudimentsPage';
 import RudimentPracticePage from '@/pages/rudiments/RudimentPracticePage';
+import SetlistsPage from '@/pages/SetlistsPage';
+import PlaybookPage from '@/pages/playbook/PlaybookPage';
+import LibraryPage from '@/pages/LibraryPage';
+import DrumsHubPage from '@/pages/DrumsHubPage';
 
 export default function App() {
   const [setupComplete, setSetupComplete] = useState(false);
@@ -27,16 +31,21 @@ export default function App() {
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/sheet-music" element={<SheetMusicPage />} />
+              <Route path="/sheet-music" element={<DrumsHubPage />} />
+              <Route path="/sheet-music/search" element={<SheetMusicPage />} />
               <Route path="/sheet-music/:slug" element={<SheetMusicSongPage />} />
               <Route path="/guitar" element={<GuitarPage />} />
               <Route path="/guitar/song" element={<GuitarSongView />} />
               <Route path="/guitar/test" element={<GuitarTestPage />} />
               <Route path="/rudiments" element={<RudimentsPage />} />
               <Route path="/rudiments/:id" element={<RudimentPracticePage />} />
+              <Route path="/library/setlists" element={<SetlistsPage />} />
               <Route path="/spotify" element={<SpotifyPage />} />
               <Route path="/updates" element={<UpdatesPage />} />
+              <Route path="/setlists" element={<SetlistsPage />} />
+              <Route path="/playbook/:setlistId" element={<PlaybookPage />} />
               <Route path="/browse" element={<BrowsePage />} />
+              <Route path="/library" element={<LibraryPage />} />
             </Routes>
           </Layout>
           {!setupComplete && (
