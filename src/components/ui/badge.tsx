@@ -8,9 +8,12 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: 'border-transparent bg-slate-900 text-white',
-        secondary: 'border-transparent bg-slate-100 text-slate-900',
-        outline: 'border-slate-200 text-slate-700',
+        default: 'border-transparent bg-primary-container text-on-primary-container',
+        secondary: 'border-transparent bg-surface-container-high text-on-surface-variant',
+        outline: 'border-outline-variant/20 text-on-surface-variant',
+        drums: 'border-transparent bg-tertiary-container/20 text-tertiary',
+        guitar: 'border-transparent bg-secondary-container/20 text-secondary',
+        success: 'border-transparent bg-green-900/30 text-green-400',
       },
     },
     defaultVariants: {

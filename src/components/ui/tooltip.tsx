@@ -15,7 +15,7 @@ const TooltipContent = React.forwardRef<
     <TooltipPrimitive.Content
       ref={ref}
       sideOffset={sideOffset}
-      className={cn('z-50 rounded-md bg-slate-900 px-3 py-1.5 text-xs text-white shadow-md', className)}
+      className={cn('z-50 rounded-lg bg-surface-container-highest px-3 py-1.5 text-xs text-on-surface shadow-studio-md', className)}
       {...props}
     />
   </TooltipPrimitive.Portal>
