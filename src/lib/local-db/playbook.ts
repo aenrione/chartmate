@@ -1,4 +1,5 @@
 import {getLocalDb} from './client';
+import {getCurrentTimestamp} from './db-utils';
 
 // ── Type Definitions ──────────────────────────────────────────────────────────
 
@@ -48,7 +49,7 @@ export async function startPracticeSession(
   speed: number,
 ): Promise<number> {
   const db = await getLocalDb();
-  const now = new Date().toISOString();
+  const now = getCurrentTimestamp();
   const result = await db
     .insertInto('practice_sessions')
     .values({
@@ -73,7 +74,7 @@ export async function endPracticeSession(
     .updateTable('practice_sessions')
     .set({
       status: 'completed',
-      ended_at: new Date().toISOString(),
+      ended_at: getCurrentTimestamp(),
       notes: notes ?? null,
     })
     .where('id', '=', sessionId)
@@ -86,7 +87,7 @@ export async function abandonOrphanedSessions(): Promise<void> {
     .updateTable('practice_sessions')
     .set({
       status: 'abandoned',
-      ended_at: new Date().toISOString(),
+      ended_at: getCurrentTimestamp(),
     })
     .where('status', '=', 'active')
     .execute();
@@ -228,7 +229,7 @@ export async function updateSectionStatus(
   status: ProgressStatus,
 ): Promise<void> {
   const db = await getLocalDb();
-  const now = new Date().toISOString();
+  const now = getCurrentTimestamp();
 
   const existing = await db
     .selectFrom('section_progress')
@@ -293,7 +294,7 @@ export async function createAnnotation(
   content: string,
 ): Promise<number> {
   const db = await getLocalDb();
-  const now = new Date().toISOString();
+  const now = getCurrentTimestamp();
   const result = await db
     .insertInto('song_annotations')
     .values({
@@ -314,7 +315,7 @@ export async function updateAnnotation(
   const db = await getLocalDb();
   await db
     .updateTable('song_annotations')
-    .set({content, updated_at: new Date().toISOString()})
+    .set({content, updated_at: getCurrentTimestamp()})
     .where('id', '=', annotationId)
     .execute();
 }
