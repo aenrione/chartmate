@@ -8,6 +8,9 @@ import {migration_006_add_normalized_indexes} from './006_add_normalized_indexes
 import {migration_007_add_track_chart_matches} from './007_add_track_chart_matches';
 import {migration_008_add_spotify_history} from './008_add_spotify_history';
 import {migration_009_saved_charts} from './009_saved_charts';
+import {migration_010_setlists} from './010_setlists';
+import {migration_011_youtube} from './011_youtube';
+import {migration_012_playbook} from './012_playbook';
 
 export const migrations: Record<string, Migration> = {
   '001_initial': InitialMigration,
@@ -19,4 +22,7 @@ export const migrations: Record<string, Migration> = {
   '007_add_track_chart_matches': migration_007_add_track_chart_matches,
   '008_add_spotify_history': migration_008_add_spotify_history,
   '009_saved_charts': migration_009_saved_charts,
+  '010_setlists': migration_010_setlists,
+  '011_youtube': migration_011_youtube,
+  '012_playbook': migration_012_playbook,
 };

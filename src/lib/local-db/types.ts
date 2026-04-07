@@ -131,6 +131,71 @@ export interface SavedCharts {
   saved_at: string;
 }
 
+export interface Setlists {
+  id: Generated<number>;
+  name: string;
+  description: string | null;
+  source_type: string;
+  source_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SetlistItems {
+  id: Generated<number>;
+  setlist_id: number;
+  chart_md5: string;
+  name: string;
+  artist: string;
+  charter: string;
+  position: number;
+  speed: Generated<number>;
+  added_at: string;
+}
+
+export interface YoutubeAssociations {
+  id: Generated<number>;
+  chart_md5: string;
+  youtube_url: string;
+  offset_ms: Generated<number>;
+  created_at: string;
+}
+
+export interface PracticeSessions {
+  id: Generated<number>;
+  setlist_item_id: number;
+  status: string;
+  started_at: string;
+  ended_at: string | null;
+  speed: number;
+  notes: string | null;
+}
+
+export interface SongSections {
+  id: Generated<number>;
+  chart_md5: string;
+  name: string;
+  start_position: number;
+  end_position: number;
+  sort_order: number;
+}
+
+export interface SectionProgress {
+  id: Generated<number>;
+  song_section_id: number;
+  setlist_item_id: number;
+  status: string;
+  updated_at: string;
+}
+
+export interface SongAnnotations {
+  id: Generated<number>;
+  song_section_id: number;
+  content: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface DB {
   chorus_charts: ChorusCharts;
   chorus_metadata: ChorusMetadata;
@@ -143,5 +208,12 @@ export interface DB {
   spotify_playlists: SpotifyPlaylists;
   spotify_track_chart_matches: SpotifyTrackChartMatches;
   saved_charts: SavedCharts;
+  setlists: Setlists;
+  setlist_items: SetlistItems;
   spotify_tracks: SpotifyTracks;
+  youtube_associations: YoutubeAssociations;
+  practice_sessions: PracticeSessions;
+  song_sections: SongSections;
+  section_progress: SectionProgress;
+  song_annotations: SongAnnotations;
 }
