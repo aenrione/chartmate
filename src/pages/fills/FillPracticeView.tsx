@@ -11,7 +11,9 @@ import AlphaTabSheetMusic from '@/pages/sheet-music/AlphaTabSheetMusic';
 import { AudioManager, PracticeModeConfig } from '@/lib/preview/audioManager';
 import { generateRudimentClickTrack } from '@/pages/rudiments/generateRudimentClickTrack';
 import convertToVexFlow from '@/pages/sheet-music/convertToVexflow';
-import type { Measure } from '@/pages/sheet-music/drumTypes';
+import type { Measure, DrumNoteInstrument } from '@/pages/sheet-music/drumTypes';
+import { generateSyntheticDrumTrack, ALL_DRUM_INSTRUMENTS } from '@/pages/sheet-music/generateSyntheticDrumTrack';
+import SyntheticDrumControls from '@/pages/sheet-music/SyntheticDrumControls';
 import ZoomControl from '@/components/shared/ZoomControl';
 import { type FillEntry } from './fillsData';
 import { generateFillChartText } from './generateFillChartText';
@@ -26,6 +28,9 @@ interface PersistedSettings {
   bpm?: number;
   playClickTrack?: boolean;
   masterClickVolume?: number;
+  playSyntheticTrack?: boolean;
+  syntheticVolume?: number;
+  enabledInstruments?: DrumNoteInstrument[];
   enableColors?: boolean;
   loopEnabled?: boolean;
   zoom?: number;
@@ -58,6 +63,11 @@ export default function FillPracticeView({
   const [bpm, setBpm] = useState(120);
   const [playClickTrack, setPlayClickTrack] = useState(true);
   const [masterClickVolume, setMasterClickVolume] = useState(0.7);
+  const [playSyntheticTrack, setPlaySyntheticTrack] = useState(true);
+  const [syntheticVolume, setSyntheticVolume] = useState(0.7);
+  const [enabledInstruments, setEnabledInstruments] = useState<Set<DrumNoteInstrument>>(
+    () => new Set(ALL_DRUM_INSTRUMENTS),
+  );
   const [enableColors, setEnableColors] = useState(true);
   const [loopEnabled, setLoopEnabled] = useState(true);
   const [zoom, setZoom] = useState(1.0);
@@ -138,6 +148,9 @@ export default function FillPracticeView({
         if (parsed.bpm !== undefined) setBpm(parsed.bpm);
         if (parsed.playClickTrack !== undefined) setPlayClickTrack(parsed.playClickTrack);
         if (parsed.masterClickVolume !== undefined) setMasterClickVolume(parsed.masterClickVolume);
+        if (parsed.playSyntheticTrack !== undefined) setPlaySyntheticTrack(parsed.playSyntheticTrack);
+        if (parsed.syntheticVolume !== undefined) setSyntheticVolume(parsed.syntheticVolume);
+        if (parsed.enabledInstruments !== undefined) setEnabledInstruments(new Set(parsed.enabledInstruments));
         if (parsed.enableColors !== undefined) setEnableColors(parsed.enableColors);
         if (parsed.loopEnabled !== undefined) setLoopEnabled(parsed.loopEnabled);
         if (parsed.zoom !== undefined) setZoom(parsed.zoom);
@@ -150,12 +163,20 @@ export default function FillPracticeView({
   useEffect(() => {
     const settings: PersistedSettings = {
       bpm, playClickTrack, masterClickVolume,
+      playSyntheticTrack, syntheticVolume,
+      enabledInstruments: [...enabledInstruments] as DrumNoteInstrument[],
       enableColors, loopEnabled, zoom,
     };
     try {
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
     } catch {}
-  }, [bpm, playClickTrack, masterClickVolume, enableColors, loopEnabled, zoom]);
+  }, [bpm, playClickTrack, masterClickVolume, playSyntheticTrack, syntheticVolume, enabledInstruments, enableColors, loopEnabled, zoom]);
+
+  // Stable key for enabled instruments — used as effect dep to retrigger generation
+  const enabledInstrumentsKey = useMemo(
+    () => [...enabledInstruments].sort().join(','),
+    [enabledInstruments],
+  );
 
   // Load fill stats on mount and when fill changes
   useEffect(() => {
@@ -169,11 +190,15 @@ export default function FillPracticeView({
     if (!settingsLoaded || scaledMeasures.length === 0) return;
 
     async function init() {
-      // Generate click track — pass undefined for stickingAnnotations and false for distinctLR
-      const clickTrack = generateRudimentClickTrack(
-        scaledMeasures, masterClickVolume, undefined, false,
-      );
-      const files = [{ fileName: 'click.mp3', data: clickTrack }];
+      // Generate click track (per-note ticks) and synthetic drum track in parallel
+      const [clickTrack, syntheticTrack] = await Promise.all([
+        Promise.resolve(generateRudimentClickTrack(scaledMeasures, masterClickVolume, undefined, false)),
+        generateSyntheticDrumTrack(scaledMeasures, enabledInstruments),
+      ]);
+      const files = [
+        { fileName: 'click.mp3', data: clickTrack },
+        { fileName: 'synthetic.mp3', data: syntheticTrack },
+      ];
 
       const audioManager = new AudioManager(files, () => {
         setIsPlaying(false);
@@ -183,7 +208,8 @@ export default function FillPracticeView({
       audioManager.ready.then(() => {
         if (audioManagerRef.current) return;
         audioManager.setVolume('click', playClickTrack ? masterClickVolume : 0);
-        // No setTempo — click track is already generated at target BPM
+        audioManager.setVolume('synthetic', playSyntheticTrack ? syntheticVolume : 0);
+        // No setTempo — tracks are already generated at target BPM
         if (practiceModeConfig) {
           audioManager.setPracticeMode(practiceModeConfig);
         }
@@ -205,12 +231,18 @@ export default function FillPracticeView({
       audioManagerRef.current?.destroy();
       audioManagerRef.current = null;
     };
-  }, [scaledMeasures, masterClickVolume, settingsLoaded]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scaledMeasures, masterClickVolume, syntheticVolume, enabledInstrumentsKey, settingsLoaded]);
 
   // Sync click track volume
   useEffect(() => {
     audioManagerRef.current?.setVolume('click', playClickTrack ? masterClickVolume : 0);
   }, [playClickTrack, masterClickVolume]);
+
+  // Sync synthetic drum volume
+  useEffect(() => {
+    audioManagerRef.current?.setVolume('synthetic', playSyntheticTrack ? syntheticVolume : 0);
+  }, [playSyntheticTrack, syntheticVolume]);
 
   // Sync practice mode
   useEffect(() => {
@@ -368,6 +400,16 @@ export default function FillPracticeView({
               <Switch checked={playClickTrack} onCheckedChange={setPlayClickTrack} />
             </div>
           </div>
+
+          {/* Synthetic Drums */}
+          <SyntheticDrumControls
+            enabled={playSyntheticTrack}
+            onEnabledChange={setPlaySyntheticTrack}
+            volume={syntheticVolume}
+            onVolumeChange={setSyntheticVolume}
+            enabledInstruments={enabledInstruments}
+            onEnabledInstrumentsChange={setEnabledInstruments}
+          />
 
           {/* Display */}
           <div className="rounded-xl border p-4 space-y-3">
