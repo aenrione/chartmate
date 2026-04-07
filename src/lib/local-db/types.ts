@@ -129,6 +129,7 @@ export interface SavedCharts {
   has_video_background: number;
   modified_time: string;
   saved_at: string;
+  is_downloaded: Generated<number>;
 }
 
 export interface Setlists {
@@ -232,6 +233,14 @@ export interface FretboardAttempts {
   created_at: string;
 }
 
+export interface FillPracticeSessions {
+  id: Generated<number>;
+  fill_id: string;
+  bpm: number;
+  learned: Generated<number>;
+  created_at: string;
+}
+
 export interface DB {
   chorus_charts: ChorusCharts;
   chorus_metadata: ChorusMetadata;
@@ -255,4 +264,5 @@ export interface DB {
   tab_compositions: TabCompositions;
   fretboard_sessions: FretboardSessions;
   fretboard_attempts: FretboardAttempts;
+  fill_practice_sessions: FillPracticeSessions;
 }

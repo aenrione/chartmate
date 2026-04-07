@@ -5,6 +5,7 @@ import {cn} from '@/lib/utils';
 import {
   Guitar,
   Drum,
+  Music2,
   Settings,
   HelpCircle,
   Plus,
@@ -16,7 +17,7 @@ import {useSidebar} from '@/contexts/SidebarContext';
 import SettingsDialog from '@/components/SettingsDialog';
 
 const TOP_NAV_SECTIONS = [
-  {label: 'Practice', prefix: ['/sheet-music', '/guitar', '/rudiments', '/tab-editor', '/']},
+  {label: 'Practice', prefix: ['/sheet-music', '/guitar', '/rudiments', '/tab-editor', '/fills', '/']},
   {label: 'Library', prefix: ['/library', '/library/setlists']},
   {label: 'Browse', prefix: ['/browse', '/spotify', '/updates']},
   {label: 'Learn', prefix: []},
@@ -26,6 +27,7 @@ const INSTRUMENTS = [
   {label: 'Drums', icon: Drum, href: '/sheet-music', prefix: ['/sheet-music', '/rudiments']},
   {label: 'Guitar', icon: Guitar, href: '/guitar', prefix: ['/guitar']},
   {label: 'Tab Editor', icon: PenTool, href: '/tab-editor', prefix: ['/tab-editor']},
+  {label: 'Fills', icon: Music2, href: '/fills', prefix: ['/fills']},
 ] as const;
 
 function isActive(pathname: string, prefixes: readonly string[]) {

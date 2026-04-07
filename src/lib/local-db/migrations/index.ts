@@ -13,6 +13,8 @@ import {migration_011_youtube} from './011_youtube';
 import {migration_012_playbook} from './012_playbook';
 import {migration_013_tab_compositions} from './013_tab_compositions';
 import {migration_014_fretboard_iq} from './014_fretboard_iq';
+import {migration_015_saved_charts_downloaded} from './015_saved_charts_downloaded';
+import {migration_016_fill_trainer} from './016_fill_trainer';
 
 export const migrations: Record<string, Migration> = {
   '001_initial': InitialMigration,
@@ -29,4 +31,6 @@ export const migrations: Record<string, Migration> = {
   '012_playbook': migration_012_playbook,
   '013_tab_compositions': migration_013_tab_compositions,
   '014_fretboard_iq': migration_014_fretboard_iq,
+  '015_saved_charts_downloaded': migration_015_saved_charts_downloaded,
+  '016_fill_trainer': migration_016_fill_trainer,
 };

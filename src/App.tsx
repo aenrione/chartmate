@@ -17,9 +17,12 @@ import GuitarSongView from '@/pages/guitar/GuitarSongView';
 import GuitarTestPage from '@/pages/guitar/GuitarTestPage';
 import RudimentsPage from '@/pages/rudiments/RudimentsPage';
 import RudimentPracticePage from '@/pages/rudiments/RudimentPracticePage';
+import FillsPage from '@/pages/fills/FillsPage';
+import FillPracticePage from '@/pages/fills/FillPracticePage';
 import SetlistsPage from '@/pages/SetlistsPage';
 import PlaybookPage from '@/pages/playbook/PlaybookPage';
 import LibraryPage from '@/pages/LibraryPage';
+import SavedChartsPage from '@/pages/library/SavedChartsPage';
 import DrumsHubPage from '@/pages/DrumsHubPage';
 import TabEditorPage from '@/pages/tab-editor/TabEditorPage';
 import FretboardIQPage from '@/pages/guitar/fretboard/FretboardIQPage';
@@ -52,7 +55,10 @@ export default function App() {
               <Route path="/guitar/chords" element={<ChordFinderPage />} />
               <Route path="/rudiments" element={<RudimentsPage />} />
               <Route path="/rudiments/:id" element={<RudimentPracticePage />} />
+              <Route path="/fills" element={<FillsPage />} />
+              <Route path="/fills/:id" element={<FillPracticePage />} />
               <Route path="/library/setlists" element={<SetlistsPage />} />
+              <Route path="/library/saved-charts" element={<SavedChartsPage />} />
               <Route path="/spotify" element={<SpotifyPage />} />
               <Route path="/updates" element={<UpdatesPage />} />
               <Route path="/setlists" element={<SetlistsPage />} />
