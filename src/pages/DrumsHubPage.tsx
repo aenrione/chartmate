@@ -83,21 +83,24 @@ export default function DrumsHubPage() {
               </div>
             </Link>
 
-            {/* Fill Trainer -- placeholder */}
-            <div className="bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 opacity-60 select-none">
+            {/* Fill Trainer */}
+            <Link
+              to="/fills"
+              className="bg-surface-container-low rounded-xl p-5 border border-tertiary-container/20 hover:bg-surface-container transition-all cursor-pointer hover:scale-[1.02] group"
+            >
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 h-10 w-10 rounded-lg bg-outline-variant/10 flex items-center justify-center">
-                  <Zap className="h-5 w-5 text-on-surface-variant" />
+                <div className="flex-shrink-0 h-10 w-10 rounded-lg bg-tertiary/10 flex items-center justify-center">
+                  <Zap className="h-5 w-5 text-tertiary" />
                 </div>
                 <div>
                   <h3 className="font-headline font-semibold text-sm text-on-surface">Fill Trainer</h3>
-                  <p className="text-on-surface-variant text-xs mt-0.5">Practice fills over grooves</p>
-                  <span className="inline-block mt-2 text-[10px] font-mono uppercase tracking-wider text-outline">
-                    Coming soon
+                  <p className="text-on-surface-variant text-xs mt-0.5">Famous fills from legendary drummers</p>
+                  <span className="inline-block mt-2 text-[10px] font-mono uppercase tracking-wider text-tertiary">
+                    18 fills
                   </span>
                 </div>
               </div>
-            </div>
+            </Link>
 
             {/* Pad Exercises -- placeholder */}
             <div className="bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 opacity-60 select-none">

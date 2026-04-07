@@ -5,7 +5,6 @@ import {cn} from '@/lib/utils';
 import {
   Guitar,
   Drum,
-  Music2,
   Settings,
   HelpCircle,
   Plus,
@@ -24,10 +23,9 @@ const TOP_NAV_SECTIONS = [
 ] as const;
 
 const INSTRUMENTS = [
-  {label: 'Drums', icon: Drum, href: '/sheet-music', prefix: ['/sheet-music', '/rudiments']},
+  {label: 'Drums', icon: Drum, href: '/sheet-music', prefix: ['/sheet-music', '/rudiments', '/fills']},
   {label: 'Guitar', icon: Guitar, href: '/guitar', prefix: ['/guitar']},
   {label: 'Tab Editor', icon: PenTool, href: '/tab-editor', prefix: ['/tab-editor']},
-  {label: 'Fills', icon: Music2, href: '/fills', prefix: ['/fills']},
 ] as const;
 
 function isActive(pathname: string, prefixes: readonly string[]) {
