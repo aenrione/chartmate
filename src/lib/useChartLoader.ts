@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import {isChartCached, fetchAndCacheChart, listCachedFiles, readCachedFile} from '@/lib/sheet-music-cache';
+import {isChartPersisted, listPersistedFiles, readPersistedFile} from '@/lib/chart-persistent-store';
 import {parseChartFile} from '@eliwhite/scan-chart';
 import {searchAdvanced} from '@/lib/search-encore';
 import {
@@ -23,11 +24,14 @@ export type ChartLoadResult = {
 // In-memory cache so re-renders don't re-fetch
 const loadCache = new Map<string, ChartLoadResult>();
 
-async function readCachedFilesAsFiles(md5: string): Promise<{fileName: string; data: Uint8Array}[]> {
-  const fileNames = await listCachedFiles(md5);
+async function readChartFilesAsFiles(md5: string): Promise<{fileName: string; data: Uint8Array}[]> {
+  const persisted = await isChartPersisted(md5);
+  const listFn = persisted ? listPersistedFiles : listCachedFiles;
+  const readFn = persisted ? readPersistedFile : readCachedFile;
+  const fileNames = await listFn(md5);
   return Promise.all(
     fileNames.map(async name => {
-      const file = await readCachedFile(md5, name);
+      const file = await readFn(md5, name);
       const buffer = await file.arrayBuffer();
       return {fileName: name, data: new Uint8Array(buffer)};
     }),
@@ -117,14 +121,14 @@ export function useChartLoader(md5: string | null): ChartLoaderState {
 
     async function load() {
       try {
-        setStatus('Checking cache...');
-        if (!(await isChartCached(md5!))) {
+        setStatus('Checking local storage...');
+        if (!(await isChartPersisted(md5!)) && !(await isChartCached(md5!))) {
           setStatus('Downloading chart...');
           await fetchAndCacheChart(md5!);
         }
 
         setStatus('Reading files...');
-        const files = await readCachedFilesAsFiles(md5!);
+        const files = await readChartFilesAsFiles(md5!);
 
         setStatus('Fetching metadata...');
         let metadata = await fetchMetadata(md5!);

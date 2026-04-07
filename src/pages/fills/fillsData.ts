@@ -658,3 +658,41 @@ export function getAllTags(): string[] {
   }
   return Array.from(tagSet).sort();
 }
+
+/**
+ * Infer sticking (R/L/K) for each beat group in a fill.
+ *
+ * Rules:
+ *  - Beat groups containing only kick(s) → "K"
+ *  - Beat groups with any hand-played note (snare, hi-hat, tom, crash) → alternating "R" / "L",
+ *    where the alternation continues only on hand-hit beats (kick-only beats don't advance it)
+ *
+ * The returned array has one entry per unique tick position (beat group), in tick order.
+ */
+export function inferFillSticking(notes: NoteEntry[]): string[] {
+  // Group drum types by tick
+  const groups = new Map<number, number[]>();
+  for (const [tick, drum] of notes) {
+    const arr = groups.get(tick) ?? [];
+    arr.push(drum);
+    groups.set(tick, arr);
+  }
+
+  const sortedTicks = [...groups.keys()].sort((a, b) => a - b);
+  const sticking: string[] = [];
+  let nextHand = 0; // 0 = R, 1 = L
+
+  for (const tick of sortedTicks) {
+    const drums = groups.get(tick)!;
+    const hasHandHit = drums.some(d => d !== KICK);
+
+    if (!hasHandHit) {
+      sticking.push('K');
+    } else {
+      sticking.push(nextHand === 0 ? 'R' : 'L');
+      nextHand = 1 - nextHand;
+    }
+  }
+
+  return sticking;
+}

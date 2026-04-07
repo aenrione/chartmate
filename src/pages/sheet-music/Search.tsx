@@ -10,8 +10,11 @@ import {
 import {EncoreResponse, searchEncore} from '@/lib/search-encore';
 import {ChartResponseEncore} from '@/lib/chartSelection';
 import {getSavedCharts, saveChart, unsaveChart} from '@/lib/local-db/saved-charts';
-import {isChartCached, fetchAndCacheChart, deleteCachedChart} from '@/lib/sheet-music-cache';
+import {fetchAndPersistChart, deletePersistedChart} from '@/lib/chart-persistent-store';
+import {markChartDownloaded} from '@/lib/local-db/saved-charts';
 import {cn} from '@/lib/utils';
+import {formatDuration} from '@/lib/ui-utils';
+import {DifficultyDots} from '@/components/shared/DifficultyDots';
 import {toast} from 'sonner';
 
 // In-memory cache so navigating back preserves the search results
@@ -20,32 +23,6 @@ let cachedSearchState: {
   results: EncoreResponse;
   page: number;
 } | null = null;
-
-function DifficultyDots({level}: {level: number | null | undefined}) {
-  const max = 6;
-  const filled = level != null ? Math.min(Math.round(level / 100 * max), max) : 0;
-  return (
-    <div className="flex items-center gap-0.5">
-      {Array.from({length: max}).map((_, i) => (
-        <div
-          key={i}
-          className={cn(
-            'h-1.5 w-1.5 rounded-full',
-            i < filled ? 'bg-tertiary' : 'bg-surface-container-high',
-          )}
-        />
-      ))}
-    </div>
-  );
-}
-
-function formatDuration(ms: number | null | undefined) {
-  if (!ms) return null;
-  const totalSeconds = Math.round(ms / 1000);
-  const m = Math.floor(totalSeconds / 60);
-  const s = totalSeconds % 60;
-  return `${m}:${s.toString().padStart(2, '0')}`;
-}
 
 export default function Search() {
   const [searchQuery, setSearchQuery] = useState(cachedSearchState?.query ?? '');
@@ -85,17 +62,16 @@ export default function Search() {
     try {
       if (savedMd5s.has(md5)) {
         await unsaveChart(md5);
-        await deleteCachedChart(md5);
+        await deletePersistedChart(md5);
         setSavedMd5s(prev => { const next = new Set(prev); next.delete(md5); return next; });
         setSavedCharts(prev => prev.filter(c => c.md5 !== md5));
         toast.success('Chart removed');
       } else {
         const toastId = toast.loading(`Downloading "${chart.name}"...`);
         try {
-          if (!(await isChartCached(md5))) {
-            await fetchAndCacheChart(md5);
-          }
+          await fetchAndPersistChart(md5);
           await saveChart(chart);
+          await markChartDownloaded(md5);
           setSavedMd5s(prev => new Set(prev).add(md5));
           setSavedCharts(prev => [chart, ...prev]);
           toast.success(`"${chart.name}" saved for offline use`, {id: toastId});

@@ -14,11 +14,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import SheetMusic from '@/pages/sheet-music/SheetMusic';
+import AlphaTabSheetMusic from '@/pages/sheet-music/AlphaTabSheetMusic';
 import { AudioManager, PracticeModeConfig } from '@/lib/preview/audioManager';
 import { generateRudimentClickTrack } from './generateRudimentClickTrack';
 import convertToVexFlow from '@/pages/sheet-music/convertToVexflow';
-import type { Measure } from '@/pages/sheet-music/convertToVexflow';
+import type { Measure } from '@/pages/sheet-music/drumTypes';
 import ZoomControl from '@/components/shared/ZoomControl';
 import { getRudimentById, type Rudiment } from './rudimentData';
 import {
@@ -399,7 +399,7 @@ export default function RudimentPracticeView({
         {/* Main content */}
         <div className="flex-1 flex flex-col min-h-0">
           <div className="flex-1 overflow-hidden rounded-xl border p-4">
-            <SheetMusic
+            <AlphaTabSheetMusic
               chart={chart}
               track={track}
               currentTime={currentPlayback}

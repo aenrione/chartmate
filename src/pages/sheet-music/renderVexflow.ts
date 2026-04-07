@@ -18,7 +18,7 @@ import {
   Annotation,
   AnnotationVerticalJustify,
 } from 'vexflow';
-import {Measure} from './convertToVexflow';
+import {Measure} from './drumTypes';
 import {PracticeModeConfig} from '@/lib/preview/audioManager';
 
 export interface RenderData {

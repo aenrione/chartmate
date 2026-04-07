@@ -47,11 +47,15 @@ export default function EditorHelpDialog({open, onOpenChange}: EditorHelpDialogP
                 />
                 <ShortcutRow
                   keys={<><Kbd>Del</Kbd> / <Kbd>Backspace</Kbd></>}
-                  description="Delete note at current position"
+                  description="Delete note on current string. Press again on empty beat to remove the beat entirely."
                 />
                 <ShortcutRow
                   keys={<Kbd>R</Kbd>}
                   description="Insert a rest with the current duration"
+                />
+                <ShortcutRow
+                  keys={<><Kbd>&#8984;</Kbd> + <Kbd>K</Kbd></>}
+                  description="Open Chord Finder — search and insert a chord at the current beat"
                 />
               </tbody>
             </table>
@@ -141,6 +145,21 @@ export default function EditorHelpDialog({open, onOpenChange}: EditorHelpDialogP
             </table>
           </section>
 
+          {/* Clipboard */}
+          <section>
+            <h3 className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Clipboard</h3>
+            <table className="w-full">
+              <tbody>
+                <ShortcutRow keys={<><Kbd>&#8984;</Kbd> + <Kbd>C</Kbd></>} description="Copy note on current string" />
+                <ShortcutRow keys={<><Kbd>&#8984;</Kbd> + <Kbd>X</Kbd></>} description="Cut note on current string" />
+                <ShortcutRow keys={<><Kbd>&#8984;</Kbd> + <Kbd>V</Kbd></>} description="Paste note at current position" />
+                <ShortcutRow keys={<><Kbd>&#8679;</Kbd> + <Kbd>&#8984;</Kbd> + <Kbd>C</Kbd></>} description="Copy entire beat (all strings)" />
+                <ShortcutRow keys={<><Kbd>&#8679;</Kbd> + <Kbd>&#8984;</Kbd> + <Kbd>X</Kbd></>} description="Cut entire beat" />
+                <ShortcutRow keys={<><Kbd>&#8679;</Kbd> + <Kbd>&#8984;</Kbd> + <Kbd>V</Kbd></>} description="Paste entire beat" />
+              </tbody>
+            </table>
+          </section>
+
           {/* Measures & Playback */}
           <section>
             <h3 className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Measures & Playback</h3>
@@ -163,6 +182,7 @@ export default function EditorHelpDialog({open, onOpenChange}: EditorHelpDialogP
               <li>Use <Kbd>&uarr;</Kbd> <Kbd>&darr;</Kbd> to switch strings, <Kbd>&larr;</Kbd> <Kbd>&rarr;</Kbd> to move between beats</li>
               <li>Change note duration with <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd> through <Kbd>7</Kbd> or the toolbar buttons</li>
               <li>Add effects by pressing the shortcut key (H, S, B, M, V, T, G) while on a note</li>
+              <li>Press <Kbd>&#8984;</Kbd>+<Kbd>K</Kbd> to open the Chord Finder and insert chords</li>
               <li>Use <Kbd>+</Kbd> to add more measures as needed</li>
               <li>Press <Kbd>Space</Kbd> to hear your tab played back</li>
             </ol>

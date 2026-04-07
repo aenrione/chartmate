@@ -1,4 +1,4 @@
-import {Measure, DrumNoteInstrument, mapping} from './convertToVexflow';
+import {Measure, DrumNoteInstrument, mapping} from './drumTypes';
 
 export const ALL_DRUM_INSTRUMENTS: DrumNoteInstrument[] = [
   'kick',

@@ -561,7 +561,8 @@ describe('Fill Detection Integration', () => {
   });
 
   describe('When I Come Around fixture test', () => {
-    xit('should detect fills on expected measures', async () => {
+    // TODO: fill detection algorithm needs tuning for this fixture
+    it.skip('should detect fills on expected measures', async () => {
       const fixtureData = await import(
         './__fixtures__/When I Come Around - Green Day.json'
       );
@@ -574,17 +575,6 @@ describe('Fill Detection Integration', () => {
       const fills = extractFills(chart, drumTrack);
 
       const measuresDetected = fills.map(f => f.measureNumber);
-      console.log('Detected measures:', measuresDetected);
-      console.log(
-        'Fills summary:',
-        fills.map(f => ({
-          m: f.measureNumber,
-          st: f.startTick,
-          et: f.endTick,
-          mst: f.startMs,
-          met: f.endMs,
-        })),
-      );
       const expectedAtLeast = [24, 26, 28, 48, 50, 52, 60, 62, 64];
 
       // Each expected measure should appear at least once
@@ -601,7 +591,8 @@ describe('Fill Detection Integration', () => {
 
   describe('Downfall Of Us All - A Day To Remember fixture test', () => {
     // Expected fills on at least 13, 17, 21, 26-27 (this is a single fill that is a quarter note and full measure), 31, 45, 49 & 50, 57, 63, 77, 93, 101, 104, 113
-    xit('should detect fills on expected measures', async () => {
+    // TODO: fill detection algorithm needs tuning for this fixture
+    it.skip('should detect fills on expected measures', async () => {
       const chart: ParsedChart = require('./__fixtures__/Downfall Of Us All - A Day To Remember.json');
       const drumTrack = chart.trackData.find(
         track => track.instrument === 'drums' && track.difficulty === 'expert',
@@ -610,19 +601,11 @@ describe('Fill Detection Integration', () => {
 
       const fills = extractFills(chart, drumTrack);
       const measuresDetected = fills.map(f => f.measureNumber);
-      console.log('Downfall measures detected:', measuresDetected);
 
       const expectedAtLeast = [
         14, 18, 22, 27, 28, 32, 46, 50, 51, 58, 64, 78, 94, 102, 105, 114,
       ];
       expectedAtLeast.forEach(m => expect(measuresDetected).toContain(m));
-
-      // Optional candidate that may or may not be detected depending on config
-      const maybe = 89;
-      // no assertion, but log if missing
-      if (!measuresDetected.includes(maybe)) {
-        console.warn('Optional expected measure not detected:', maybe);
-      }
 
       // Sanity checks
       fills.forEach(f => {
@@ -657,7 +640,6 @@ describe('Fill Detection Integration', () => {
 
       const fills = extractFills(chart, drumTrack);
       const measuresDetected = fills.map(f => f.measureNumber);
-      console.log('Unravelling measures detected:', measuresDetected);
 
       // These are part of the main beat and repeated many times; they should not be fills
       const repeatedGrooveMeasures = [8, 10, 12, 14, 16, 20];

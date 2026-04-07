@@ -27,7 +27,8 @@
         { "url": "https://api.spotify.com/**" },
         { "url": "https://api.enchor.us/**" },
         { "url": "https://files.enchor.us/**" },
-        { "url": "https://musical-artifacts.com/**" }
+        { "url": "https://musical-artifacts.com/**" },
+        { "url": "https://www.songsterr.com/**" }
       ]
     }
   ]

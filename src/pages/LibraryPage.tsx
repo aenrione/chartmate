@@ -18,11 +18,12 @@ const FEATURES = [
   },
   {
     name: 'Saved Charts',
-    desc: 'Your offline collection of bookmarked drum charts, ready for practice anytime.',
+    desc: 'Your offline collection of drum charts. Saved charts are stored on your device and open without internet.',
     icon: FolderHeart,
-    href: '/sheet-music/search',
+    href: '/library/saved-charts',
     accent: 'bg-tertiary/10 text-tertiary',
-    placeholder: true,
+    cta: 'View Library',
+    ctaClass: 'text-tertiary',
   },
   {
     name: 'Practice History',

@@ -189,12 +189,9 @@ export const setupRenderer = (
     //   await audioCtx.resume();
     // },
     destroy: () => {
-      // I can't figure out where this was used
-      // window.clearInterval(progressInterval);
-      console.log('Tearing down the renderer');
       window.removeEventListener('resize', onResize, false);
-      // audioCtx.close();
       renderer.setAnimationLoop(null);
+      renderer.dispose();
     },
   };
 

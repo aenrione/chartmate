@@ -1,6 +1,8 @@
 import {getLocalDb} from './client';
 import {ChartResponseEncore} from '@/lib/chartSelection';
 
+export type SavedChartEntry = ChartResponseEncore & { isDownloaded: boolean };
+
 export async function saveChart(chart: ChartResponseEncore): Promise<void> {
   const db = await getLocalDb();
   await db
@@ -40,7 +42,20 @@ export async function isChartSaved(md5: string): Promise<boolean> {
   return !!row;
 }
 
-export async function getSavedCharts(search?: string): Promise<ChartResponseEncore[]> {
+async function setChartDownloaded(md5: string, downloaded: boolean): Promise<void> {
+  const db = await getLocalDb();
+  const result = await db
+    .updateTable('saved_charts')
+    .set({ is_downloaded: downloaded ? 1 : 0 })
+    .where('md5', '=', md5)
+    .executeTakeFirst();
+  if (!result.numUpdatedRows) throw new Error(`Chart not found in saved_charts: ${md5}`);
+}
+
+export const markChartDownloaded = (md5: string) => setChartDownloaded(md5, true);
+export const markChartNotDownloaded = (md5: string) => setChartDownloaded(md5, false);
+
+export async function getSavedCharts(search?: string): Promise<SavedChartEntry[]> {
   const db = await getLocalDb();
   let query = db
     .selectFrom('saved_charts')
@@ -76,5 +91,6 @@ export async function getSavedCharts(search?: string): Promise<ChartResponseEnco
     modifiedTime: row.modified_time,
     notesData: {} as any,
     file: `https://files.enchor.us/${row.md5}.sng`,
+    isDownloaded: row.is_downloaded === 1,
   }));
 }

@@ -1,4 +1,4 @@
-import {Measure} from './convertToVexflow';
+import {Measure} from './drumTypes';
 
 export interface ClickOptions {
   clickDuration: number; // Duration (in seconds) of each click sound

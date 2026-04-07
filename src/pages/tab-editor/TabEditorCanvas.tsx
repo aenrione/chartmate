@@ -20,6 +20,7 @@ interface TabEditorCanvasProps {
   onNoteMouseDown?: (note: Note) => void;
   onPlayerStateChanged?: (state: number) => void;
   onPlayerReady?: () => void;
+  onPositionChanged?: (currentTime: number, endTime: number, currentTick: number, endTick: number) => void;
   staveMode?: 'tab' | 'notation' | 'both';
 }
 
@@ -30,7 +31,7 @@ function staveProfileFromMode(mode: string): StaveProfile {
 }
 
 const TabEditorCanvas = forwardRef<TabEditorCanvasHandle, TabEditorCanvasProps>(
-  ({cursorBounds, onScoreLoaded, onRenderFinished, onBeatMouseDown, onNoteMouseDown, onPlayerStateChanged, onPlayerReady, staveMode = 'tab'}, ref) => {
+  ({cursorBounds, onScoreLoaded, onRenderFinished, onBeatMouseDown, onNoteMouseDown, onPlayerStateChanged, onPlayerReady, onPositionChanged, staveMode = 'tab'}, ref) => {
     const alphaTabRef = useRef<AlphaTabHandle>(null);
 
     useImperativeHandle(ref, () => ({
@@ -66,6 +67,7 @@ const TabEditorCanvas = forwardRef<TabEditorCanvasHandle, TabEditorCanvasProps>(
           onNoteMouseDown={onNoteMouseDown}
           onPlayerStateChanged={onPlayerStateChanged}
           onPlayerReady={onPlayerReady}
+          onPositionChanged={onPositionChanged}
           className="w-full h-full"
         />
       </div>

@@ -448,15 +448,46 @@ export function duplicateMeasure(score: Score, barIndex: number): void {
   insertMeasureAfter(score, barIndex);
 }
 
+// --- Beat removal ---
+
+/**
+ * Remove a beat (column) from the bar entirely.
+ * Returns the cursor to move to after removal, or null if removal isn't possible
+ * (e.g. it's the only beat in the bar).
+ */
+export function removeBeat(score: Score, cursor: EditorCursor): EditorCursor | null {
+  const voice = getVoice(score, cursor);
+  if (!voice) return null;
+  if (voice.beats.length <= 1) return null; // keep at least one beat per bar
+
+  voice.beats.splice(cursor.beatIndex, 1);
+
+  const bar = voice.bar;
+  if (bar) repairBarLinks(bar.staff);
+
+  finishScore(score);
+
+  // Move cursor: stay at same index if possible, otherwise go back one
+  const newBeatIndex = Math.min(cursor.beatIndex, voice.beats.length - 1);
+  return {...cursor, beatIndex: newBeatIndex};
+}
+
 // --- Beat splitting (add a beat at cursor) ---
 
 export function addBeatAfter(score: Score, cursor: EditorCursor, duration?: number): EditorCursor | null {
   const voice = getVoice(score, cursor);
   if (!voice) return null;
 
+  // Check if bar has room for another beat
+  const capacity = barCapacity(score, cursor.barIndex);
+  const filled = voiceFillAmount(voice);
+  const dur = duration ?? Duration.Quarter;
+  const newBeatValue = DURATION_VALUES[dur] ?? 0.25;
+  if (filled + newBeatValue > capacity + 0.001) return null; // bar full
+
   const newBeat = new Beat();
   newBeat.isEmpty = true;
-  newBeat.duration = duration ?? Duration.Quarter;
+  newBeat.duration = dur;
 
   // Use splice then repair links
   voice.beats.splice(cursor.beatIndex + 1, 0, newBeat);
@@ -662,6 +693,116 @@ export function setDrumNoteAndAdvance(
 
   finishScore(score);
   return null;
+}
+
+// --- Chord operations ---
+
+/**
+ * Replace all notes on the current beat with a chord voicing.
+ * Notes is an array of {stringNumber, fret} (1-based string numbers).
+ */
+export function setChord(
+  score: Score,
+  cursor: EditorCursor,
+  notes: {stringNumber: number; fret: number}[],
+  duration?: number,
+): void {
+  const beat = getBeat(score, cursor);
+  if (!beat) return;
+
+  // Clear existing notes
+  beat.notes.length = 0;
+
+  // Add chord notes
+  for (const {stringNumber, fret} of notes) {
+    const note = new Note();
+    note.string = stringNumber;
+    note.fret = fret;
+    beat.addNote(note);
+  }
+
+  beat.isEmpty = false;
+  if (duration !== undefined) beat.duration = duration;
+
+  finishScore(score);
+}
+
+// --- Clipboard operations ---
+
+export interface ClipboardCell {
+  stringNumber: number;
+  fret: number;
+}
+
+export interface ClipboardBeat {
+  notes: ClipboardCell[];
+  duration: number;
+  isEmpty: boolean;
+}
+
+/** Copy a single note from the current cursor position. */
+export function copyCell(score: Score, cursor: EditorCursor): ClipboardCell | null {
+  const beat = getBeat(score, cursor);
+  if (!beat) return null;
+  const note = findNoteOnString(beat, cursor.stringNumber);
+  if (!note) return null;
+  return {stringNumber: cursor.stringNumber, fret: note.fret};
+}
+
+/** Copy the entire beat (all notes) at the cursor position. */
+export function copyBeat(score: Score, cursor: EditorCursor): ClipboardBeat | null {
+  const beat = getBeat(score, cursor);
+  if (!beat) return null;
+  return {
+    notes: beat.notes.map((n: NoteInstance) => ({stringNumber: n.string, fret: n.fret})),
+    duration: beat.duration,
+    isEmpty: beat.isEmpty,
+  };
+}
+
+/** Paste a single cell (fret value) at the cursor position. */
+export function pasteCell(score: Score, cursor: EditorCursor, cell: ClipboardCell): void {
+  setNote(score, cursor, cell.fret);
+}
+
+/** Paste a full beat at the cursor position — replaces all notes. */
+export function pasteBeat(score: Score, cursor: EditorCursor, beatData: ClipboardBeat): void {
+  const beat = getBeat(score, cursor);
+  if (!beat) return;
+
+  beat.notes.length = 0;
+  beat.duration = beatData.duration;
+  beat.isEmpty = beatData.isEmpty;
+
+  for (const {stringNumber, fret} of beatData.notes) {
+    const note = new Note();
+    note.string = stringNumber;
+    note.fret = fret;
+    beat.addNote(note);
+  }
+
+  finishScore(score);
+}
+
+/** Cut a single cell — copies then removes. */
+export function cutCell(score: Score, cursor: EditorCursor): ClipboardCell | null {
+  const cell = copyCell(score, cursor);
+  if (cell) removeNote(score, cursor);
+  return cell;
+}
+
+/** Cut the entire beat — copies then clears all notes. */
+export function cutBeat(score: Score, cursor: EditorCursor): ClipboardBeat | null {
+  const beatData = copyBeat(score, cursor);
+  if (!beatData) return null;
+
+  const beat = getBeat(score, cursor);
+  if (beat) {
+    beat.notes.length = 0;
+    beat.isEmpty = true;
+    finishScore(score);
+  }
+  return beatData;
 }
 
 export { Duration };

@@ -1,7 +1,7 @@
 import {Slider} from '@/components/ui/slider';
 import {Switch} from '@/components/ui/switch';
 import {cn} from '@/lib/utils';
-import type {DrumNoteInstrument} from './convertToVexflow';
+import type {DrumNoteInstrument} from './drumTypes';
 import {
   ALL_DRUM_INSTRUMENTS,
   DRUM_INSTRUMENT_LABELS,

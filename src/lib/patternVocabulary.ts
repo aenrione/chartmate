@@ -1,4 +1,4 @@
-import type {Measure, Note} from '@/pages/sheet-music/convertToVexflow';
+import type {Measure, Note} from '@/pages/sheet-music/drumTypes';
 
 export interface PatternEntry {
   id: string;

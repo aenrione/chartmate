@@ -1,11 +1,14 @@
 import {useRef, useEffect, useState, useCallback, useMemo} from 'react';
+import {useParams} from 'react-router-dom';
 import {AlphaTabApi, model, importer, Settings, StaveProfile} from '@coderline/alphatab';
+import {loadComposition} from '@/lib/local-db/tab-compositions';
 import TabEditorCanvas, {type TabEditorCanvasHandle} from './TabEditorCanvas';
 import NoteInputPanel from './NoteInputPanel';
 import TabEditorSidebar from './TabEditorSidebar';
 import FretboardGrid from './FretboardGrid';
 import DrumPadGrid from './DrumPadGrid';
 import EditorHelpDialog from './EditorHelpDialog';
+import ChordFinderDialog from './ChordFinderDialog';
 import {createGuitarDemo} from '@/lib/tab-editor/examples/guitar-demo';
 import {createDrumsDemo} from '@/lib/tab-editor/examples/drums-demo';
 import {createBassDemo} from '@/lib/tab-editor/examples/bass-demo';
@@ -16,6 +19,7 @@ import {getDefaultTuningPreset} from '@/lib/tab-editor/tunings';
 import {
   setNote,
   setNoteAndAdvance,
+  setChord,
   toggleDrumNote,
   setDrumNoteAndAdvance,
   insertRest,
@@ -32,6 +36,7 @@ import {
   setTempo,
   type NoteEffect,
 } from '@/lib/tab-editor/scoreOperations';
+import {voicingToNotes, type ChordVoicing} from '@/lib/tab-editor/chordDb';
 import {
   Music,
   Play,
@@ -46,15 +51,24 @@ import {
   Eye,
   BookOpen,
   ChevronDown,
+  Youtube,
+  Unlink,
+  Search,
 } from 'lucide-react';
+import {useYoutubeSync} from '@/hooks/useYoutubeSync';
+import type {PlaybackClock} from '@/lib/youtube-sync';
+import YouTubePlayer from '@/components/YouTubePlayer';
+import {snapToYouTubeRate} from '@/lib/youtube-utils';
 import {downloadAsGp7, exportToAlphaTex, exportToAsciiTab} from '@/lib/tab-editor/exporters';
 import {Link} from 'react-router-dom';
 import {cn} from '@/lib/utils';
+import {toast} from 'sonner';
 
 type Score = InstanceType<typeof model.Score>;
 const {Duration} = model;
 
 export default function TabEditorPage() {
+  const {id} = useParams<{id: string}>();
   const canvasRef = useRef<TabEditorCanvasHandle>(null);
   const apiRef = useRef<AlphaTabApi | null>(null);
   const scoreRef = useRef<Score | null>(null);
@@ -67,6 +81,7 @@ export default function TabEditorPage() {
   const [tempo, setTempoState] = useState(120);
   const [activeTrackIndex, setActiveTrackIndex] = useState(0);
   const [showHelp, setShowHelp] = useState(false);
+  const [showChordFinder, setShowChordFinder] = useState(false);
   const [showFretboard, setShowFretboard] = useState(true);
   const [isReady, setIsReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -76,6 +91,40 @@ export default function TabEditorPage() {
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [showDemoMenu, setShowDemoMenu] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showYoutubePanel, setShowYoutubePanel] = useState(false);
+
+  // PlaybackClock adapter — exposes AlphaTab position as a generic clock
+  const positionRef = useRef({currentTimeMs: 0});
+  const isPlayingRef = useRef(false);
+  isPlayingRef.current = isPlaying;
+  const clockRef = useRef<PlaybackClock | null>(null);
+  if (!clockRef.current) {
+    clockRef.current = {
+      get currentTime() { return positionRef.current.currentTimeMs / 1000; },
+      get isPlaying() { return isPlayingRef.current; },
+    };
+  }
+
+  const songKey = id ? `tab-editor:${id}` : 'tab-editor:new';
+
+  // YouTube integration
+  const {
+    youtubeUrl,
+    youtubeVideoId,
+    youtubeOffsetMs,
+    youtubeUrlInput,
+    setYoutubeUrlInput,
+    playerRef: youtubePlayerRef,
+    syncRef: youtubeSyncRef,
+    handleUrlSubmit: handleYoutubeUrlSubmit,
+    handleRemove: handleYoutubeRemove,
+    handleOffsetChange: handleYoutubeOffsetChange,
+    handleReady: handleYoutubeReady,
+  } = useYoutubeSync({songKey, clockRef, tempo: 1.0});
+
+  const handlePositionChanged = useCallback((currentTime: number) => {
+    positionRef.current.currentTimeMs = currentTime;
+  }, []);
 
   const {
     cursor,
@@ -109,7 +158,12 @@ export default function TabEditorPage() {
 
   const handlePlayPause = useCallback(() => {
     canvasRef.current?.alphaTab?.playPause();
-  }, []);
+    if (isPlaying) {
+      youtubeSyncRef.current.onPause();
+    } else {
+      youtubeSyncRef.current.onResume();
+    }
+  }, [isPlaying, youtubeSyncRef]);
 
   useEditorKeyboard({
     score: scoreRef.current,
@@ -129,13 +183,43 @@ export default function TabEditorPage() {
     isDrumTrack: scoreRef.current?.tracks[activeTrackIndex]?.staves[0]?.isPercussion ?? false,
     currentDuration,
     setCurrentDuration,
+    onShowChordFinder: () => setShowChordFinder(true),
+    onToast: (message: string) => toast(message),
   });
 
-  // Initialize blank score
-  const initScore = useCallback(() => {
+  const loadScore = useCallback((score: InstanceType<typeof model.Score>) => {
+    const api = getApi();
+    if (!api) return;
+    scoreRef.current = score;
+    setScore(score);
+    setTitle(score.title);
+    setArtist(score.artist);
+    setActiveTrackIndex(0);
+    setTrackVersion(v => v + 1);
+    api.renderScore(score, [0]);
+    api.loadMidiForScore();
+    setIsReady(true);
+  }, [getApi, setScore]);
+
+  // Initialize score — loads from DB if :id param present, otherwise creates blank
+  const initScore = useCallback(async () => {
     const api = getApi();
     if (!api || scoreRef.current) return;
     apiRef.current = api;
+
+    if (id) {
+      const composition = await loadComposition(Number(id));
+      if (composition) {
+        try {
+          const data = new Uint8Array(composition.scoreData);
+          const score = importer.ScoreLoader.loadScoreFromBytes(data, new Settings());
+          loadScore(score);
+          return;
+        } catch {
+          // Fall through to blank score if parsing fails
+        }
+      }
+    }
 
     const score = createBlankScore({
       title: 'Untitled',
@@ -149,7 +233,7 @@ export default function TabEditorPage() {
     // Generate MIDI data for playback (may fail if player not ready yet)
     try { api.loadMidiForScore(); } catch { /* will load when player is ready */ }
     setIsReady(true);
-  }, [getApi, setScore]);
+  }, [getApi, id, loadScore, setScore]);
 
   useEffect(() => {
     const timer = setTimeout(initScore, 200);
@@ -178,22 +262,8 @@ export default function TabEditorPage() {
   const handleStop = useCallback(() => {
     canvasRef.current?.alphaTab?.stop();
     setIsPlaying(false);
-  }, []);
-
-  // Load a demo score
-  const loadScore = useCallback((score: InstanceType<typeof model.Score>) => {
-    const api = getApi();
-    if (!api) return;
-    scoreRef.current = score;
-    setScore(score);
-    setTitle(score.title);
-    setArtist(score.artist);
-    setActiveTrackIndex(0);
-    setTrackVersion(v => v + 1);
-    api.renderScore(score, [0]);
-    api.loadMidiForScore();
-    setIsReady(true);
-  }, [getApi, setScore]);
+    youtubeSyncRef.current.onPause();
+  }, [youtubeSyncRef]);
 
   const handleLoadGuitarDemo = useCallback(() => {
     loadScore(createGuitarDemo());
@@ -301,6 +371,16 @@ export default function TabEditorPage() {
       moveTo(targetCursor);
     }
   }, [cursor, moveTo, reRender, currentDuration]);
+
+  // Chord finder — insert selected chord voicing at current beat
+  const handleChordSelect = useCallback((voicing: ChordVoicing) => {
+    const s = scoreRef.current;
+    if (!s) return;
+    const notes = voicingToNotes(voicing);
+    setChord(s, cursor, notes, currentDuration);
+    reRender();
+    toast.success(`Inserted chord`);
+  }, [cursor, currentDuration, reRender]);
 
   // Stave profile toggle — updates via API + re-renders the current score
   const handleStaveModeToggle = useCallback(() => {
@@ -595,6 +675,17 @@ export default function TabEditorPage() {
           {activeTrackIsDrums ? 'Score' : staveMode === 'tab' ? 'Tab' : staveMode === 'notation' ? 'Score' : 'Both'}
         </button>
 
+        {/* Chord Finder */}
+        {!activeTrackIsDrums && (
+          <button
+            onClick={() => setShowChordFinder(true)}
+            className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
+            title="Chord Finder (Cmd+K)"
+          >
+            <Search className="h-4 w-4" />
+          </button>
+        )}
+
         {/* Fretboard / Drum pad toggle */}
         <button
           onClick={() => setShowFretboard(!showFretboard)}
@@ -705,7 +796,94 @@ export default function TabEditorPage() {
         >
           <HelpCircle className="h-4 w-4" />
         </button>
+        <button
+          onClick={() => setShowYoutubePanel(v => !v)}
+          className={cn(
+            'p-2 rounded-lg transition-colors',
+            (showYoutubePanel || youtubeVideoId)
+              ? 'bg-primary/10 text-primary'
+              : 'text-on-surface-variant hover:bg-surface-container-high',
+          )}
+          title="YouTube sync"
+        >
+          <Youtube className="h-4 w-4" />
+        </button>
       </div>
+
+      {/* YouTube Panel */}
+      {showYoutubePanel && (
+        <div className="flex items-start gap-3 px-4 py-2 bg-surface-container-low border-b border-outline-variant/20">
+          {youtubeVideoId ? (
+            <>
+              <div className="rounded-lg overflow-hidden border bg-black shrink-0" style={{width: 320, height: 180}}>
+                <YouTubePlayer
+                  ref={youtubePlayerRef}
+                  videoId={youtubeVideoId}
+                  onReady={handleYoutubeReady}
+                  className="w-full h-full"
+                />
+              </div>
+              <div className="flex flex-col gap-2 flex-1 min-w-0">
+                <div className="flex items-center gap-1">
+                  <span className="text-xs text-on-surface-variant truncate flex-1">{youtubeUrl}</span>
+                  <button
+                    onClick={handleYoutubeRemove}
+                    className="p-1 rounded hover:bg-surface-container-high transition-colors text-on-surface-variant shrink-0"
+                    title="Remove YouTube video"
+                  >
+                    <Unlink className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-on-surface-variant">Offset</span>
+                    <span className="text-xs font-mono text-on-surface-variant">
+                      {youtubeOffsetMs >= 0 ? '+' : ''}{(youtubeOffsetMs / 1000).toFixed(1)}s
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => handleYoutubeOffsetChange(youtubeOffsetMs - 100)}
+                      className="text-xs px-1.5 py-0.5 rounded border border-outline-variant/30 hover:bg-surface-container-high transition-colors"
+                    >-</button>
+                    <input
+                      type="range"
+                      min={-10000}
+                      max={10000}
+                      step={100}
+                      value={youtubeOffsetMs}
+                      onChange={e => handleYoutubeOffsetChange(Number(e.target.value))}
+                      className="flex-1"
+                    />
+                    <button
+                      onClick={() => handleYoutubeOffsetChange(youtubeOffsetMs + 100)}
+                      className="text-xs px-1.5 py-0.5 rounded border border-outline-variant/30 hover:bg-surface-container-high transition-colors"
+                    >+</button>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center gap-2 w-full">
+              <Youtube className="h-4 w-4 text-on-surface-variant shrink-0" />
+              <input
+                type="text"
+                placeholder="Paste YouTube URL and press Enter..."
+                value={youtubeUrlInput}
+                onChange={e => setYoutubeUrlInput(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') handleYoutubeUrlSubmit(); }}
+                className="flex-1 text-xs px-2 py-1 rounded border border-outline-variant/30 bg-surface-container"
+              />
+              <button
+                onClick={handleYoutubeUrlSubmit}
+                className="text-xs px-3 py-1 rounded bg-primary text-on-primary hover:bg-primary/90 transition-colors"
+              >
+                Link
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Main area */}
       <div className="flex flex-1 min-h-0">
@@ -741,6 +919,7 @@ export default function TabEditorPage() {
               onNoteMouseDown={handleNoteClick}
               onPlayerStateChanged={handlePlayerStateChanged}
               onPlayerReady={handlePlayerReady}
+              onPositionChanged={handlePositionChanged}
               staveMode={staveMode}
             />
           </div>
@@ -792,6 +971,11 @@ export default function TabEditorPage() {
       </div>
 
       <EditorHelpDialog open={showHelp} onOpenChange={setShowHelp} />
+      <ChordFinderDialog
+        open={showChordFinder}
+        onOpenChange={setShowChordFinder}
+        onSelectChord={handleChordSelect}
+      />
     </div>
   );
 }

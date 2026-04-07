@@ -14,6 +14,15 @@ import {
   insertMeasureAfter,
   deleteMeasure,
   addBeatAfter,
+  removeBeat,
+  copyCell,
+  copyBeat,
+  pasteCell,
+  pasteBeat,
+  cutCell,
+  cutBeat,
+  type ClipboardCell,
+  type ClipboardBeat,
   type NoteEffect,
   Duration,
 } from './scoreOperations';
@@ -38,6 +47,8 @@ interface UseEditorKeyboardOptions {
   isDrumTrack?: boolean;
   currentDuration: number;
   setCurrentDuration: (d: number) => void;
+  onShowChordFinder?: () => void;
+  onToast?: (message: string) => void;
 }
 
 const FRET_TIMEOUT = 500; // ms to wait for second digit
@@ -61,6 +72,8 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
 
   const fretBufferRef = useRef<string>('');
   const fretTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clipboardCellRef = useRef<ClipboardCell | null>(null);
+  const clipboardBeatRef = useRef<ClipboardBeat | null>(null);
   const optionsRef = useRef(options);
   optionsRef.current = options;
 
@@ -139,8 +152,29 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
           return;
         case 'ArrowRight':
           e.preventDefault();
-          if (e.ctrlKey || e.metaKey) moveToNextMeasure();
-          else moveRight();
+          if (e.ctrlKey || e.metaKey) {
+            moveToNextMeasure();
+          } else if (s) {
+            // Try to move right; if at last beat and bar has room, insert an empty beat
+            const track = s.tracks[c.trackIndex];
+            const staff = track?.staves[0];
+            const bar = staff?.bars[c.barIndex];
+            const voice = bar?.voices[c.voiceIndex];
+            if (voice && c.beatIndex >= voice.beats.length - 1) {
+              const newCursor = addBeatAfter(s, c, currentDuration);
+              if (newCursor) {
+                onScoreChanged();
+                moveTo(newCursor);
+              } else {
+                // Bar is full or no room — move to next bar
+                moveRight();
+              }
+            } else {
+              moveRight();
+            }
+          } else {
+            moveRight();
+          }
           return;
         case 'ArrowUp':
           e.preventDefault();
@@ -156,12 +190,28 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
           return;
       }
 
-      // Delete/Backspace — remove note
+      // Delete/Backspace — remove note, or remove empty beat from bar
       if (e.key === 'Delete' || e.key === 'Backspace') {
         e.preventDefault();
         if (s) {
-          removeNote(s, c);
-          onScoreChanged();
+          const track = s.tracks[c.trackIndex];
+          const staff = track?.staves[0];
+          const bar = staff?.bars[c.barIndex];
+          const voice = bar?.voices[c.voiceIndex];
+          const beat = voice?.beats[c.beatIndex];
+
+          if (beat && beat.isEmpty && beat.notes.length === 0) {
+            // Beat is already empty — remove it from the bar
+            const newCursor = removeBeat(s, c);
+            if (newCursor) {
+              onScoreChanged();
+              moveTo(newCursor);
+            }
+          } else {
+            // Remove the note on the current string
+            removeNote(s, c);
+            onScoreChanged();
+          }
         }
         return;
       }
@@ -185,6 +235,95 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
           onScoreChanged();
         }
         return;
+      }
+
+      // Chord finder (Cmd+K)
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        optionsRef.current.onShowChordFinder?.();
+        return;
+      }
+
+      // Clipboard operations
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'x' || e.key === 'v')) {
+        // Only handle if not in an input field (already checked above)
+        if (!s) return;
+        e.preventDefault();
+        const toast = optionsRef.current.onToast;
+
+        if (e.key === 'c') {
+          if (e.shiftKey) {
+            // Shift+Cmd+C — copy entire beat
+            const beat = copyBeat(s, c);
+            if (beat) {
+              clipboardBeatRef.current = beat;
+              clipboardCellRef.current = null;
+              const noteCount = beat.notes.length;
+              toast?.(`Copied beat (${noteCount} note${noteCount !== 1 ? 's' : ''})`);
+            } else {
+              toast?.('Nothing to copy');
+            }
+          } else {
+            // Cmd+C — copy single cell
+            const cell = copyCell(s, c);
+            if (cell) {
+              clipboardCellRef.current = cell;
+              clipboardBeatRef.current = null;
+              toast?.(`Copied fret ${cell.fret}`);
+            } else {
+              toast?.('Nothing to copy');
+            }
+          }
+          return;
+        }
+
+        if (e.key === 'x') {
+          if (e.shiftKey) {
+            // Shift+Cmd+X — cut entire beat
+            const beat = cutBeat(s, c);
+            if (beat) {
+              clipboardBeatRef.current = beat;
+              clipboardCellRef.current = null;
+              const noteCount = beat.notes.length;
+              toast?.(`Cut beat (${noteCount} note${noteCount !== 1 ? 's' : ''})`);
+              onScoreChanged();
+            } else {
+              toast?.('Nothing to cut');
+            }
+          } else {
+            // Cmd+X — cut single cell
+            const cell = cutCell(s, c);
+            if (cell) {
+              clipboardCellRef.current = cell;
+              clipboardBeatRef.current = null;
+              toast?.(`Cut fret ${cell.fret}`);
+              onScoreChanged();
+            } else {
+              toast?.('Nothing to cut');
+            }
+          }
+          return;
+        }
+
+        if (e.key === 'v') {
+          if (e.shiftKey && clipboardBeatRef.current) {
+            // Shift+Cmd+V — paste entire beat
+            pasteBeat(s, c, clipboardBeatRef.current);
+            const noteCount = clipboardBeatRef.current.notes.length;
+            toast?.(`Pasted beat (${noteCount} note${noteCount !== 1 ? 's' : ''})`);
+            onScoreChanged();
+          } else if (clipboardCellRef.current) {
+            // Cmd+V — paste single cell
+            pasteCell(s, c, clipboardCellRef.current);
+            toast?.(`Pasted fret ${clipboardCellRef.current.fret}`);
+            onScoreChanged();
+          } else if (e.shiftKey) {
+            toast?.('Nothing to paste (no beat copied)');
+          } else {
+            toast?.('Nothing to paste');
+          }
+          return;
+        }
       }
 
       // Drum shortcuts — when on a drum track, single keys trigger drum hits

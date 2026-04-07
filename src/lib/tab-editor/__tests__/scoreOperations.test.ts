@@ -330,6 +330,8 @@ describe('scoreOperations', () => {
       const score = createBlankScore({measureCount: 2});
       const cursor = makeCursor();
       const voice = score.tracks[0].staves[0].bars[0].voices[0];
+      // Shrink the initial whole-note rest to a quarter so there's room
+      voice.beats[0].duration = Duration.Quarter;
       const initialCount = voice.beats.length;
 
       const newCursor = addBeatAfter(score, cursor);
@@ -341,9 +343,11 @@ describe('scoreOperations', () => {
     it('uses specified duration', () => {
       const score = createBlankScore({measureCount: 2});
       const cursor = makeCursor();
+      const voice = score.tracks[0].staves[0].bars[0].voices[0];
+      // Shrink the initial whole-note rest to a quarter so there's room
+      voice.beats[0].duration = Duration.Quarter;
       addBeatAfter(score, cursor, Duration.Eighth);
 
-      const voice = score.tracks[0].staves[0].bars[0].voices[0];
       expect(voice.beats[1].duration).toBe(Duration.Eighth);
     });
   });

@@ -8,7 +8,7 @@ import { searchEncore, searchAdvanced, type EncoreResponse } from '@/lib/search-
 import type { ChartResponseEncore } from '@/lib/chartSelection';
 import { ChartInstruments, preFilterInstruments } from '@/components/ChartInstruments';
 import { downloadSong } from '@/lib/local-songs-folder';
-import { removeStyleTags } from '@/lib/ui-utils';
+import { removeStyleTags, formatDuration } from '@/lib/ui-utils';
 import { getLocalDb } from '@/lib/local-db/client';
 import { toast } from 'sonner';
 
@@ -38,14 +38,6 @@ const DRUM_TYPES = [
   { value: 'fourLanePro', label: '4-Lane Pro' },
   { value: 'fiveLane', label: '5-Lane' },
 ] as const;
-
-function formatDuration(ms: number | null | undefined): string {
-  if (!ms) return '--';
-  const totalSec = Math.round(ms / 1000);
-  const min = Math.floor(totalSec / 60);
-  const sec = totalSec % 60;
-  return `${min}:${sec.toString().padStart(2, '0')}`;
-}
 
 // -- Advanced search types --
 
@@ -468,7 +460,7 @@ export default function BrowseCharts() {
                         <TableCell>
                           <ChartInstruments instruments={chartInstruments} size="sm" />
                         </TableCell>
-                        <TableCell>{formatDuration(chart.song_length)}</TableCell>
+                        <TableCell>{formatDuration(chart.song_length) ?? '--'}</TableCell>
                         <TableCell>
                           <Button
                             size="sm"
@@ -893,7 +885,7 @@ function ChartSidebar({
       </div>
 
       <div className="px-4 pt-4 space-y-3 text-sm">
-        <DetailRow label="Length" value={formatDuration(chart.song_length)} />
+        <DetailRow label="Length" value={formatDuration(chart.song_length) ?? '--'} />
         <DetailRow label="Modified" value={chart.modifiedTime ? new Date(chart.modifiedTime).toLocaleDateString() : '--'} />
 
         <div>

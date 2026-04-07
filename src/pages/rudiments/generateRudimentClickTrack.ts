@@ -1,4 +1,4 @@
-import type { Measure } from '@/pages/sheet-music/convertToVexflow';
+import type { Measure } from '@/pages/sheet-music/drumTypes';
 
 const CLICK_DURATION = 0.05; // 50ms
 const STRONG_TONE = 1000; // Hz for downbeat

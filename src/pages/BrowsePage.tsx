@@ -3,14 +3,16 @@ import {cn} from '@/lib/utils';
 import BrowseCharts from '@/components/BrowseCharts';
 import Spotify from './spotify/Spotify';
 import CompareChartsToLocal from '@/components/CompareChartsToLocal';
+import TabsBrowseTab from '@/components/TabsBrowseTab';
 import {testSameCharter} from '@/lib/chartSelection/comparisonTests';
 
-type Tab = 'charts' | 'spotify' | 'updates';
+type Tab = 'charts' | 'spotify' | 'updates' | 'guitar-tabs';
 
 const TABS: {key: Tab; label: string}[] = [
   {key: 'charts', label: 'Rhythm Charts'},
   {key: 'spotify', label: 'Spotify Import'},
   {key: 'updates', label: 'Updates'},
+  {key: 'guitar-tabs', label: 'Guitar Tabs'},
 ];
 
 const RANKING_GROUPS = [[testSameCharter]];
@@ -55,6 +57,7 @@ export default function BrowsePage() {
             <CompareChartsToLocal rankingGroups={RANKING_GROUPS} exact={true} />
           </div>
         )}
+        {activeTab === 'guitar-tabs' && <TabsBrowseTab />}
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import useInterval from 'use-interval';
 import { parseChartFile } from '@eliwhite/scan-chart';
 import { ArrowLeft, Play, Pause } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,14 +7,9 @@ import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import AlphaTabSheetMusic from '@/pages/sheet-music/AlphaTabSheetMusic';
-import { AudioManager, PracticeModeConfig } from '@/lib/preview/audioManager';
-import { generateRudimentClickTrack } from '@/pages/rudiments/generateRudimentClickTrack';
-import convertToVexFlow from '@/pages/sheet-music/convertToVexflow';
-import type { Measure, DrumNoteInstrument } from '@/pages/sheet-music/drumTypes';
-import { generateSyntheticDrumTrack, ALL_DRUM_INSTRUMENTS } from '@/pages/sheet-music/generateSyntheticDrumTrack';
-import SyntheticDrumControls from '@/pages/sheet-music/SyntheticDrumControls';
+import type { AlphaTabHandle } from '@/pages/guitar/AlphaTabWrapper';
 import ZoomControl from '@/components/shared/ZoomControl';
-import { type FillEntry } from './fillsData';
+import { type FillEntry, inferFillSticking } from './fillsData';
 import { generateFillChartText } from './generateFillChartText';
 import { recordFillSession, getFillStats, type FillStats } from '@/lib/local-db/fill-trainer';
 
@@ -26,32 +20,10 @@ const BASE_BPM = 120;
 
 interface PersistedSettings {
   bpm?: number;
-  playClickTrack?: boolean;
-  masterClickVolume?: number;
-  playSyntheticTrack?: boolean;
-  syntheticVolume?: number;
-  enabledInstruments?: DrumNoteInstrument[];
   enableColors?: boolean;
+  showSticking?: boolean;
   loopEnabled?: boolean;
   zoom?: number;
-}
-
-/**
- * Scale measure timings to a target BPM.
- * This produces measures with adjusted ms timings so the click track
- * is generated at the correct speed WITHOUT using playbackRate (no pitch change).
- */
-function scaleMeasureTimings(measures: Measure[], tempoRatio: number): Measure[] {
-  return measures.map(m => ({
-    ...m,
-    startMs: m.startMs * tempoRatio,
-    endMs: m.endMs * tempoRatio,
-    beats: m.beats.map(b => ({ ...b })),
-    notes: m.notes.map(n => ({
-      ...n,
-      ms: n.ms * tempoRatio,
-    })),
-  }));
 }
 
 export default function FillPracticeView({
@@ -61,21 +33,15 @@ export default function FillPracticeView({
 }) {
   // Settings state
   const [bpm, setBpm] = useState(120);
-  const [playClickTrack, setPlayClickTrack] = useState(true);
-  const [masterClickVolume, setMasterClickVolume] = useState(0.7);
-  const [playSyntheticTrack, setPlaySyntheticTrack] = useState(true);
-  const [syntheticVolume, setSyntheticVolume] = useState(0.7);
-  const [enabledInstruments, setEnabledInstruments] = useState<Set<DrumNoteInstrument>>(
-    () => new Set(ALL_DRUM_INSTRUMENTS),
-  );
   const [enableColors, setEnableColors] = useState(true);
+  const [showSticking, setShowSticking] = useState(true);
   const [loopEnabled, setLoopEnabled] = useState(true);
   const [zoom, setZoom] = useState(1.0);
 
   // Playback state
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentPlayback, setCurrentPlayback] = useState(0);
-  const audioManagerRef = useRef<AudioManager | null>(null);
+  const [isPlayerReady, setIsPlayerReady] = useState(false);
+  const alphaTabHandleRef = useRef<AlphaTabHandle | null>(null);
   const [settingsLoaded, setSettingsLoaded] = useState(false);
 
   // Stats state
@@ -88,9 +54,11 @@ export default function FillPracticeView({
   // Track whether this play session has been recorded
   const hasRecordedRef = useRef(false);
 
-  // Reset hasRecordedRef when fill changes
+  // Reset tracking state when fill changes
   useEffect(() => {
     hasRecordedRef.current = false;
+    setIsPlaying(false);
+    setIsPlayerReady(false);
   }, [fill.id]);
 
   // Generate chart data from fill notes
@@ -107,34 +75,11 @@ export default function FillPracticeView({
     return drumTrack;
   }, [chart]);
 
-  // Base measures at chart's native 120 BPM
-  const baseMeasures = useMemo(() => convertToVexFlow(chart, track), [chart, track]);
-
-  // Tempo ratio for scaling ms timings (pitch-independent)
-  const tempoRatio = useMemo(() => BASE_BPM / bpm, [bpm]);
-
-  // Scaled measures for click track generation
-  const scaledMeasures = useMemo(
-    () => scaleMeasureTimings(baseMeasures, tempoRatio),
-    [baseMeasures, tempoRatio],
+  // Sticking annotations (R/L/K per beat group)
+  const stickingAnnotations = useMemo(
+    () => showSticking ? inferFillSticking(fill.notes) : undefined,
+    [fill.notes, showSticking],
   );
-
-  // Chart duration in seconds
-  const chartDuration = useMemo(() => {
-    if (scaledMeasures.length === 0) return 0;
-    return scaledMeasures[scaledMeasures.length - 1].endMs / 1000;
-  }, [scaledMeasures]);
-
-  // Practice mode config for looping
-  const practiceModeConfig = useMemo<PracticeModeConfig | null>(() => {
-    if (!loopEnabled || chartDuration === 0) return null;
-    return {
-      startMeasureMs: 0,
-      endMeasureMs: chartDuration * 1000,
-      startTimeMs: 0,
-      endTimeMs: chartDuration * 1000,
-    };
-  }, [loopEnabled, chartDuration]);
 
   // Load persisted settings
   const hasLoadedRef = useRef(false);
@@ -146,12 +91,8 @@ export default function FillPracticeView({
       if (raw) {
         const parsed: PersistedSettings = JSON.parse(raw);
         if (parsed.bpm !== undefined) setBpm(parsed.bpm);
-        if (parsed.playClickTrack !== undefined) setPlayClickTrack(parsed.playClickTrack);
-        if (parsed.masterClickVolume !== undefined) setMasterClickVolume(parsed.masterClickVolume);
-        if (parsed.playSyntheticTrack !== undefined) setPlaySyntheticTrack(parsed.playSyntheticTrack);
-        if (parsed.syntheticVolume !== undefined) setSyntheticVolume(parsed.syntheticVolume);
-        if (parsed.enabledInstruments !== undefined) setEnabledInstruments(new Set(parsed.enabledInstruments));
         if (parsed.enableColors !== undefined) setEnableColors(parsed.enableColors);
+        if (parsed.showSticking !== undefined) setShowSticking(parsed.showSticking);
         if (parsed.loopEnabled !== undefined) setLoopEnabled(parsed.loopEnabled);
         if (parsed.zoom !== undefined) setZoom(parsed.zoom);
       }
@@ -161,122 +102,55 @@ export default function FillPracticeView({
 
   // Persist settings
   useEffect(() => {
-    const settings: PersistedSettings = {
-      bpm, playClickTrack, masterClickVolume,
-      playSyntheticTrack, syntheticVolume,
-      enabledInstruments: [...enabledInstruments] as DrumNoteInstrument[],
-      enableColors, loopEnabled, zoom,
-    };
+    if (!settingsLoaded) return;
+    const settings: PersistedSettings = { bpm, enableColors, showSticking, loopEnabled, zoom };
     try {
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
     } catch {}
-  }, [bpm, playClickTrack, masterClickVolume, playSyntheticTrack, syntheticVolume, enabledInstruments, enableColors, loopEnabled, zoom]);
-
-  // Stable key for enabled instruments — used as effect dep to retrigger generation
-  const enabledInstrumentsKey = useMemo(
-    () => [...enabledInstruments].sort().join(','),
-    [enabledInstruments],
-  );
+  }, [bpm, enableColors, showSticking, loopEnabled, zoom, settingsLoaded]);
 
   // Load fill stats on mount and when fill changes
   useEffect(() => {
     getFillStats(fill.id).then(setFillStats).catch(() => {});
   }, [fill.id]);
 
-  // Initialize AudioManager with tempo-scaled click track (no pitch shift)
-  const lastAudioState = useRef({ currentTime: 0, wasPlaying: false });
-
+  // Sync playback speed when bpm changes
   useEffect(() => {
-    if (!settingsLoaded || scaledMeasures.length === 0) return;
+    if (!isPlayerReady) return;
+    alphaTabHandleRef.current?.setPlaybackSpeed(bpm / BASE_BPM);
+  }, [bpm, isPlayerReady]);
 
-    async function init() {
-      // Generate click track (per-note ticks) and synthetic drum track in parallel
-      const [clickTrack, syntheticTrack] = await Promise.all([
-        Promise.resolve(generateRudimentClickTrack(scaledMeasures, masterClickVolume, undefined, false)),
-        generateSyntheticDrumTrack(scaledMeasures, enabledInstruments),
-      ]);
-      const files = [
-        { fileName: 'click.mp3', data: clickTrack },
-        { fileName: 'synthetic.mp3', data: syntheticTrack },
-      ];
+  // Sync loop setting
+  useEffect(() => {
+    if (!isPlayerReady) return;
+    const api = alphaTabHandleRef.current?.getApi();
+    if (api) api.isLooping = loopEnabled;
+  }, [loopEnabled, isPlayerReady]);
 
-      const audioManager = new AudioManager(files, () => {
-        setIsPlaying(false);
-        setCurrentPlayback(0);
-      });
-
-      audioManager.ready.then(() => {
-        if (audioManagerRef.current) return;
-        audioManager.setVolume('click', playClickTrack ? masterClickVolume : 0);
-        audioManager.setVolume('synthetic', playSyntheticTrack ? syntheticVolume : 0);
-        // No setTempo — tracks are already generated at target BPM
-        if (practiceModeConfig) {
-          audioManager.setPracticeMode(practiceModeConfig);
-        }
-        audioManagerRef.current = audioManager;
-
-        if (lastAudioState.current.wasPlaying) {
-          audioManager.play({ time: lastAudioState.current.currentTime });
-          setIsPlaying(true);
-        }
-      });
-    }
-    init();
-
-    return () => {
-      lastAudioState.current = {
-        currentTime: audioManagerRef.current?.currentTime ?? 0,
-        wasPlaying: audioManagerRef.current?.isPlaying ?? false,
-      };
-      audioManagerRef.current?.destroy();
-      audioManagerRef.current = null;
-    };
+  // Called once when AlphaTab's player finishes loading the soundfont
+  const handlePlayerReady = useCallback(() => {
+    setIsPlayerReady(true);
+    alphaTabHandleRef.current?.setPlaybackSpeed(bpm / BASE_BPM);
+    const api = alphaTabHandleRef.current?.getApi();
+    if (api) api.isLooping = loopEnabled;
+  // bpm and loopEnabled intentionally captured at ready time; effects above sync subsequent changes
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scaledMeasures, masterClickVolume, syntheticVolume, enabledInstrumentsKey, settingsLoaded]);
+  }, []);
 
-  // Sync click track volume
-  useEffect(() => {
-    audioManagerRef.current?.setVolume('click', playClickTrack ? masterClickVolume : 0);
-  }, [playClickTrack, masterClickVolume]);
-
-  // Sync synthetic drum volume
-  useEffect(() => {
-    audioManagerRef.current?.setVolume('synthetic', playSyntheticTrack ? syntheticVolume : 0);
-  }, [playSyntheticTrack, syntheticVolume]);
-
-  // Sync practice mode
-  useEffect(() => {
-    audioManagerRef.current?.setPracticeMode(practiceModeConfig);
-  }, [practiceModeConfig]);
-
-  // Playhead polling
-  useInterval(
-    () => {
-      audioManagerRef.current?.checkPracticeModeLoop();
-      setCurrentPlayback(audioManagerRef.current?.currentTime ?? 0);
-    },
-    isPlaying ? 100 : null,
-  );
+  // Track play/pause state from AlphaTab
+  const handlePlayerStateChanged = useCallback((state: number) => {
+    setIsPlaying(state === 1);
+  }, []);
 
   // Play/pause
   const handlePlay = useCallback(() => {
-    if (!audioManagerRef.current) return;
-    if (isPlaying) {
-      audioManagerRef.current.pause();
-      setIsPlaying(false);
-    } else if (!audioManagerRef.current.isInitialized) {
-      // First play — record the session once
-      if (!hasRecordedRef.current) {
-        hasRecordedRef.current = true;
-        recordFillSession(fill.id, bpm, false).catch(() => {});
-      }
-      audioManagerRef.current.play({ time: 0 });
-      setIsPlaying(true);
-    } else {
-      audioManagerRef.current.resume();
-      setIsPlaying(true);
+    if (!isPlayerReady) return;
+    if (!hasRecordedRef.current) {
+      hasRecordedRef.current = true;
+      recordFillSession(fill.id, bpm, false).catch(() => {});
     }
-  }, [isPlaying, fill.id, bpm]);
+    alphaTabHandleRef.current?.playPause();
+  }, [isPlayerReady, fill.id, bpm]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -305,14 +179,11 @@ export default function FillPracticeView({
     await recordFillSession(fill.id, bpm, true);
     setMarkedDone(true);
     setMarking(false);
-    // Reload stats
     const newStats = await getFillStats(fill.id);
     setFillStats(newStats);
-    // Reset "Marked!" after 2 seconds
     setTimeout(() => setMarkedDone(false), 2000);
   };
 
-  // Difficulty badge color
   const difficultyColor =
     fill.difficulty === 'beginner'
       ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
@@ -377,9 +248,14 @@ export default function FillPracticeView({
           </div>
 
           {/* Play */}
-          <Button className="w-full" size="lg" onClick={handlePlay}>
+          <Button
+            className="w-full"
+            size="lg"
+            onClick={handlePlay}
+            disabled={!isPlayerReady}
+          >
             {isPlaying ? <Pause className="h-4 w-4 mr-2" /> : <Play className="h-4 w-4 mr-2" />}
-            {isPlaying ? 'Pause' : 'Play'}
+            {!isPlayerReady ? 'Loading…' : isPlaying ? 'Pause' : 'Play'}
           </Button>
 
           {/* Mark as Learned */}
@@ -392,31 +268,16 @@ export default function FillPracticeView({
             {markedDone ? 'Marked!' : marking ? 'Saving…' : 'Mark as Learned'}
           </Button>
 
-          {/* Click Track */}
-          <div className="rounded-xl border p-4 space-y-3">
-            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Click Track</div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm">Metronome</span>
-              <Switch checked={playClickTrack} onCheckedChange={setPlayClickTrack} />
-            </div>
-          </div>
-
-          {/* Synthetic Drums */}
-          <SyntheticDrumControls
-            enabled={playSyntheticTrack}
-            onEnabledChange={setPlaySyntheticTrack}
-            volume={syntheticVolume}
-            onVolumeChange={setSyntheticVolume}
-            enabledInstruments={enabledInstruments}
-            onEnabledInstrumentsChange={setEnabledInstruments}
-          />
-
           {/* Display */}
           <div className="rounded-xl border p-4 space-y-3">
             <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Display</div>
             <div className="flex items-center justify-between">
               <span className="text-sm">Colors</span>
               <Switch checked={enableColors} onCheckedChange={setEnableColors} />
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Sticking (R/L/K)</span>
+              <Switch checked={showSticking} onCheckedChange={setShowSticking} />
             </div>
           </div>
 
@@ -457,24 +318,20 @@ export default function FillPracticeView({
             <AlphaTabSheetMusic
               chart={chart}
               track={track}
-              currentTime={currentPlayback}
+              currentTime={0}
               showBarNumbers={false}
               enableColors={enableColors}
               showLyrics={false}
               zoom={zoom}
-              onSelectMeasure={time => {
-                if (!audioManagerRef.current) return;
-                // Scale the measure time by tempo ratio for seek
-                audioManagerRef.current.play({ time: time * tempoRatio });
-                setIsPlaying(true);
-              }}
+              onSelectMeasure={() => {}}
               triggerRerender={String(zoom)}
-              practiceModeConfig={practiceModeConfig}
-              onPracticeMeasureSelect={() => {}}
               selectionIndex={null}
-              audioManagerRef={audioManagerRef}
-              playheadTimeScale={1 / tempoRatio}
               maxStavesPerRow={1}
+              noteAnnotations={stickingAnnotations}
+              enablePlayer
+              alphaTabHandleRef={alphaTabHandleRef}
+              onPlayerStateChanged={handlePlayerStateChanged}
+              onPlayerReady={handlePlayerReady}
             />
           </div>
         </div>

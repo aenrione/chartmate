@@ -56,21 +56,21 @@ import {useYoutubeSync} from '@/hooks/useYoutubeSync';
 
 import {getBasename} from '@/lib/src-shared/utils';
 import {cn} from '@/lib/utils';
-import SheetMusic from './SheetMusic';
+import AlphaTabSheetMusic from './AlphaTabSheetMusic';
 import {Files, ParsedChart} from '@/lib/preview/chorus-chart-processing';
 import {AudioManager, PracticeModeConfig} from '@/lib/preview/audioManager';
 import CloneHeroRenderer from './CloneHeroRenderer';
 import {generateClickTrackFromMeasures} from './generateClickTrack';
 import type {ClickVolumes} from './generateClickTrack';
 import convertToVexFlow from './convertToVexflow';
-import type {DrumNoteInstrument} from './convertToVexflow';
+import type {DrumNoteInstrument} from './drumTypes';
 import {generateSyntheticDrumTrack, ALL_DRUM_INSTRUMENTS} from './generateSyntheticDrumTrack';
 import SyntheticDrumControls from './SyntheticDrumControls';
 import {buildPatternVocabulary} from '@/lib/patternVocabulary';
 import PatternVocabularyPanel from '@/components/PatternVocabularyPanel';
 import debounce from 'debounce';
-import {saveChart, unsaveChart, isChartSaved} from '@/lib/local-db/saved-charts';
-import {isChartCached, fetchAndCacheChart, deleteCachedChart} from '@/lib/sheet-music-cache';
+import {saveChart, unsaveChart, isChartSaved, markChartDownloaded} from '@/lib/local-db/saved-charts';
+import {fetchAndPersistChart, deletePersistedChart} from '@/lib/chart-persistent-store';
 import {toast} from 'sonner';
 import Tip from '@/components/shared/Tip';
 import TempoControl from '@/components/shared/TempoControl';
@@ -182,16 +182,15 @@ export default function Renderer({
     try {
       if (isSaved) {
         await unsaveChart(metadata.md5);
-        await deleteCachedChart(metadata.md5);
+        await deletePersistedChart(metadata.md5);
         setIsSaved(false);
         toast.success('Chart removed');
       } else {
         const toastId = toast.loading(`Downloading "${metadata.name}"...`);
         try {
-          if (!(await isChartCached(metadata.md5))) {
-            await fetchAndCacheChart(metadata.md5);
-          }
+          await fetchAndPersistChart(metadata.md5);
           await saveChart(metadata);
+          await markChartDownloaded(metadata.md5);
           setIsSaved(true);
           toast.success(`"${metadata.name}" saved for offline use`, {id: toastId});
         } catch (err) {
@@ -1581,9 +1580,9 @@ export default function Renderer({
               <div
                 className={cn(
                   viewCloneHero ? 'hidden md:flex' : 'flex',
-                  'flex-1',
+                  'flex-1 min-w-0 overflow-hidden',
                 )}>
-                <SheetMusic
+                <AlphaTabSheetMusic
                   currentTime={currentPlayback}
                   chart={chart}
                   track={track}

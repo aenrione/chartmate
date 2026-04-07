@@ -26,6 +26,14 @@ export function calculateTimeRemaining(
   return Math.ceil(remainingItems / itemsPerMs);
 }
 
+export function formatDuration(ms: number | null | undefined): string | null {
+  if (!ms) return null;
+  const totalSeconds = Math.round(ms / 1000);
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
 export function formatTimeRemaining(timeRemainingMs: number) {
   const totalSeconds = Math.max(Math.ceil(timeRemainingMs / 1000), 0);
 

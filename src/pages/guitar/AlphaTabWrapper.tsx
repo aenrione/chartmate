@@ -68,6 +68,8 @@ export interface AlphaTabWrapperProps {
   onNoteMouseUp?: (note: Note | null) => void;
   /** Additional CSS class for the container */
   className?: string;
+  /** Disable AlphaTab's internal scroll/resize tracking */
+  disableAutoResize?: boolean;
 }
 
 const DARK_RESOURCES = {
@@ -118,6 +120,7 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       onNoteMouseDown,
       onNoteMouseUp,
       className,
+      disableAutoResize = false,
     },
     ref,
   ) => {
@@ -156,6 +159,7 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       let destroyed = false;
       let api: AlphaTabApi | null = null;
       let observer: MutationObserver | null = null;
+      let watermarkObserver: MutationObserver | null = null;
 
       const init = async () => {
         // Load the user-selected soundfont (URL string or Uint8Array from IndexedDB)
@@ -185,8 +189,8 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
             enableCursor: enablePlayer,
             enableAnimatedBeatCursor: enablePlayer,
             enableUserInteraction: true,
-            scrollElement: el,
-            scrollMode: 2, // ScrollMode.OffScreen — scrolls when cursor leaves viewport
+            scrollElement: disableAutoResize ? null : el,
+            scrollMode: disableAutoResize ? 0 : 2,
             scrollOffsetY: -50,
             soundFont: soundFontSetting,
           },
@@ -216,13 +220,20 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
           callbacksRef.current.onScoreLoaded?.(loadedScore);
         });
 
-        api.renderFinished.on(() => {
-          // Remove "rendered by alphaTab" watermark
+        const removeWatermark = () => {
           el.querySelectorAll<HTMLElement>('.at-surface-svg text').forEach((txt) => {
             if (txt.textContent?.includes('rendered by alphaTab')) {
-              txt.closest('div')?.remove();
+              const parent = txt.closest('div') ?? txt.closest('svg');
+              parent?.remove();
             }
           });
+        };
+
+        // Observe DOM to remove watermark whenever AlphaTab injects it
+        watermarkObserver = new MutationObserver(() => removeWatermark());
+        watermarkObserver.observe(el, { childList: true, subtree: true });
+
+        api.renderFinished.on(() => {
           callbacksRef.current.onRenderFinished?.();
         });
 
@@ -281,6 +292,7 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       return () => {
         destroyed = true;
         window.removeEventListener('soundfont-changed', onSoundfontChanged);
+        watermarkObserver?.disconnect();
         observer?.disconnect();
         api?.destroy();
         apiRef.current = null;
@@ -357,21 +369,29 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       <>
         <style>{`
           .at-cursor-bar {
-            background: rgba(59, 130, 246, 0.1);
+            background: rgba(59, 130, 246, 0.15);
           }
           .at-cursor-beat {
-            background: rgba(59, 130, 246, 0.9);
-            width: 8px !important;
-            border-radius: 2px;
+            background: rgba(59, 130, 246, 0.85);
+            width: 3px;
           }
           .at-selection div {
             background: rgba(59, 130, 246, 0.1);
+          }
+          .at-highlight * {
+            fill: #3b82f6;
+            stroke: #3b82f6;
           }
         `}</style>
         <div
           ref={containerRef}
           className={className}
-          style={{overflow: 'auto', position: 'relative', width: '100%', height: '100%'}}
+          style={{
+            overflow: disableAutoResize ? 'hidden' : 'auto',
+            position: 'relative',
+            width: '100%',
+            height: disableAutoResize ? 'auto' : '100%',
+          }}
         />
       </>
     );
