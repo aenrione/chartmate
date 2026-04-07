@@ -29,3 +29,4 @@ dist-ssr
 docs/superpowers
 ignore/ExternalSetlistCreator
 .playwright-mcp
+.worktrees/
