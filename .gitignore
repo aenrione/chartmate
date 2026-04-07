@@ -27,3 +27,5 @@ dist-ssr
 *.sw?
 .superpowers/brainstorm
 docs/superpowers
+ignore/ExternalSetlistCreator
+.playwright-mcp
