@@ -54,6 +54,7 @@
     "nuqs": "^2.8.9",
     "p-map": "^7.0.4",
     "parse-sng": "^4.0.3",
+    "pdfjs-dist": "^5.6.205",
     "ratelimit-header-parser": "^0.1.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
