@@ -138,45 +138,57 @@ function DefaultSidebarContent({pathname}: {pathname: string}) {
         {INSTRUMENTS.map(item => {
           const active = isActive(pathname, item.prefix);
           const Icon = item.icon;
-          return (
-            <Link
-              key={item.label}
-              to={item.href}
-              className={cn(
-                'px-4 py-3 flex items-center gap-3 transition-all duration-150',
-                active
-                  ? 'text-on-surface bg-surface-container'
-                  : 'text-on-surface-variant/60 hover:text-on-surface hover:bg-surface-variant/50',
-              )}
-            >
-              <Icon className="h-5 w-5" />
-              <span className="font-medium">{item.label}</span>
-            </Link>
-          );
-        })}
 
-        {pathname.startsWith('/guitar') && (
-          <div className="pl-10 pt-1 space-y-0.5">
-            {[
-              {label: 'Fretboard IQ', href: '/guitar/fretboard', prefix: '/guitar/fretboard'},
-              {label: 'Chord Finder', href: '/guitar/chords', prefix: '/guitar/chords'},
-              {label: 'EarIQ', href: '/guitar/ear', prefix: '/guitar/ear'},
-            ].map(sub => (
+          const subItems =
+            item.href === '/guitar'
+              ? [
+                  {label: 'Fretboard IQ', href: '/guitar/fretboard', prefix: '/guitar/fretboard'},
+                  {label: 'Chord Finder', href: '/guitar/chords', prefix: '/guitar/chords'},
+                  {label: 'EarIQ', href: '/guitar/ear', prefix: '/guitar/ear'},
+                ]
+              : item.href === '/sheet-music'
+              ? [
+                  {label: 'Rudiments', href: '/rudiments', prefix: '/rudiments'},
+                  {label: 'Fills', href: '/fills', prefix: '/fills'},
+                ]
+              : [];
+
+          return (
+            <div key={item.label}>
               <Link
-                key={sub.label}
-                to={sub.href}
+                to={item.href}
                 className={cn(
-                  'block px-3 py-1.5 rounded-md text-sm transition-all duration-150',
-                  pathname.startsWith(sub.prefix)
-                    ? 'text-on-surface bg-surface-container font-medium'
+                  'px-4 py-3 flex items-center gap-3 transition-all duration-150',
+                  active
+                    ? 'text-on-surface bg-surface-container'
                     : 'text-on-surface-variant/60 hover:text-on-surface hover:bg-surface-variant/50',
                 )}
               >
-                {sub.label}
+                <Icon className="h-5 w-5" />
+                <span className="font-medium">{item.label}</span>
               </Link>
-            ))}
-          </div>
-        )}
+
+              {active && subItems.length > 0 && (
+                <div className="pl-10 pb-1 space-y-0.5">
+                  {subItems.map(sub => (
+                    <Link
+                      key={sub.label}
+                      to={sub.href}
+                      className={cn(
+                        'block px-3 py-1.5 rounded-md text-sm transition-all duration-150',
+                        pathname.startsWith(sub.prefix)
+                          ? 'text-on-surface bg-surface-container font-medium'
+                          : 'text-on-surface-variant/60 hover:text-on-surface hover:bg-surface-variant/50',
+                      )}
+                    >
+                      {sub.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </nav>
 
       <div className="px-4 mt-auto space-y-1">

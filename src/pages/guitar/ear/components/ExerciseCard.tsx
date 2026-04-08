@@ -1,6 +1,28 @@
 // src/pages/guitar/ear/components/ExerciseCard.tsx
 import {useNavigate} from 'react-router-dom';
+import {
+  ArrowUpDown,
+  Music,
+  Music2,
+  TrendingUp,
+  Hash,
+  ListMusic,
+  ScanLine,
+  Waves,
+  type LucideIcon,
+} from 'lucide-react';
 import type {ExerciseDescriptor} from '../exercises/types';
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  ArrowUpDown,
+  Music,
+  Music2,
+  TrendingUp,
+  Hash,
+  ListMusic,
+  ScanLine,
+  Waves,
+};
 
 const DIFFICULTY_COLORS = {
   beginner: 'text-green-400 bg-green-400/10',
@@ -15,6 +37,7 @@ interface Props {
 
 export function ExerciseCard({descriptor, bestAccuracy}: Props) {
   const navigate = useNavigate();
+  const Icon: LucideIcon = ICON_MAP[descriptor.icon] ?? Music;
 
   return (
     <button
@@ -22,8 +45,8 @@ export function ExerciseCard({descriptor, bestAccuracy}: Props) {
       className="group relative flex flex-col gap-3 rounded-3xl bg-surface-container p-5 text-left transition-all duration-200 hover:bg-surface-container-high hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
     >
       <div className="flex items-start justify-between">
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-surface-container-highest text-xl">
-          🎵
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-surface-container-highest text-primary">
+          <Icon className="h-5 w-5" />
         </div>
         <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${DIFFICULTY_COLORS[descriptor.difficulty]}`}>
           {descriptor.difficulty}
