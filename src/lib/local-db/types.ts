@@ -207,6 +207,8 @@ export interface TabCompositions {
   album: string;
   tempo: number;
   instrument: string;
+  is_saved: Generated<number>;
+  saved_at: string | null;
   created_at: string;
   updated_at: string;
   score_data: ArrayBuffer;
@@ -263,6 +265,34 @@ export interface ChartPdfs {
   linked_at: string;
 }
 
+export interface EarSessions {
+  id: Generated<number>;
+  exercise_type: string;
+  difficulty: string;
+  total_questions: number;
+  correct_answers: number;
+  skipped_count: Generated<number>;
+  duration_ms: number;
+  xp_earned: Generated<number>;
+  playback_mode: string;
+  direction: string;
+  speed: string;
+  created_at: string;
+}
+
+export interface EarAttempts {
+  id: Generated<number>;
+  session_id: number;
+  exercise_type: string;
+  prompt_item: string;
+  answer_context: string | null;
+  expected_answer: string;
+  given_answer: string | null;
+  status: Generated<string>;
+  response_time_ms: number;
+  created_at: string;
+}
+
 export interface DB {
   chorus_charts: ChorusCharts;
   chorus_metadata: ChorusMetadata;
@@ -289,4 +319,6 @@ export interface DB {
   fill_practice_sessions: FillPracticeSessions;
   pdf_library: PdfLibrary;
   chart_pdfs: ChartPdfs;
+  ear_sessions: EarSessions;
+  ear_attempts: EarAttempts;
 }
