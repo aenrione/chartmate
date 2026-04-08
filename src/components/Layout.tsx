@@ -154,6 +154,29 @@ function DefaultSidebarContent({pathname}: {pathname: string}) {
             </Link>
           );
         })}
+
+        {pathname.startsWith('/guitar') && (
+          <div className="pl-10 pt-1 space-y-0.5">
+            {[
+              {label: 'Fretboard IQ', href: '/guitar/fretboard', prefix: '/guitar/fretboard'},
+              {label: 'Chord Finder', href: '/guitar/chords', prefix: '/guitar/chords'},
+              {label: 'EarIQ', href: '/guitar/ear', prefix: '/guitar/ear'},
+            ].map(sub => (
+              <Link
+                key={sub.label}
+                to={sub.href}
+                className={cn(
+                  'block px-3 py-1.5 rounded-md text-sm transition-all duration-150',
+                  pathname.startsWith(sub.prefix)
+                    ? 'text-on-surface bg-surface-container font-medium'
+                    : 'text-on-surface-variant/60 hover:text-on-surface hover:bg-surface-variant/50',
+                )}
+              >
+                {sub.label}
+              </Link>
+            ))}
+          </div>
+        )}
       </nav>
 
       <div className="px-4 mt-auto space-y-1">

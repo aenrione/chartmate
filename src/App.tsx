@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import { SpotifyAuthProvider } from '@/contexts/SpotifyAuthContext';
 import { SyncProvider } from '@/contexts/SyncContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
@@ -31,53 +31,71 @@ import FretboardDrillPage from '@/pages/guitar/fretboard/FretboardDrillPage';
 import FretboardProgressPage from '@/pages/guitar/fretboard/FretboardProgressPage';
 import FretboardSummaryPage from '@/pages/guitar/fretboard/FretboardSummaryPage';
 import ChordFinderPage from '@/pages/guitar/chords/ChordFinderPage';
+import EarIQPage from '@/pages/guitar/ear/EarIQPage';
+import EarSessionPage from '@/pages/guitar/ear/EarSessionPage';
+import EarSummaryPage from '@/pages/guitar/ear/EarSummaryPage';
+import EarProgressPage from '@/pages/guitar/ear/EarProgressPage';
+import EarRecommendationsPage from '@/pages/guitar/ear/EarRecommendationsPage';
 
-export default function App() {
+function RootLayout() {
   const [setupComplete, setSetupComplete] = useState(false);
-
   return (
-    <BrowserRouter>
-      <SpotifyAuthProvider>
-        <SyncProvider>
-          <SidebarProvider>
+    <SpotifyAuthProvider>
+      <SyncProvider>
+        <SidebarProvider>
           <Layout>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/sheet-music" element={<DrumsHubPage />} />
-              <Route path="/sheet-music/search" element={<SheetMusicPage />} />
-              <Route path="/sheet-music/:slug" element={<SheetMusicSongPage />} />
-              <Route path="/guitar" element={<GuitarPage />} />
-              <Route path="/guitar/song" element={<GuitarSongView />} />
-              <Route path="/guitar/test" element={<GuitarTestPage />} />
-              <Route path="/guitar/fretboard" element={<FretboardIQPage />} />
-              <Route path="/guitar/fretboard/drill/:drillType" element={<FretboardDrillPage />} />
-              <Route path="/guitar/fretboard/progress" element={<FretboardProgressPage />} />
-              <Route path="/guitar/fretboard/summary" element={<FretboardSummaryPage />} />
-              <Route path="/guitar/chords" element={<ChordFinderPage />} />
-              <Route path="/rudiments" element={<RudimentsPage />} />
-              <Route path="/rudiments/:id" element={<RudimentPracticePage />} />
-              <Route path="/fills" element={<FillsPage />} />
-              <Route path="/fills/:id" element={<FillPracticePage />} />
-              <Route path="/library/setlists" element={<SetlistsPage />} />
-              <Route path="/library/saved-charts" element={<SavedChartsPage />} />
-              <Route path="/library/pdf" element={<PdfLibraryTab />} />
-              <Route path="/spotify" element={<SpotifyPage />} />
-              <Route path="/updates" element={<UpdatesPage />} />
-              <Route path="/setlists" element={<SetlistsPage />} />
-              <Route path="/playbook/:setlistId" element={<PlaybookPage />} />
-              <Route path="/browse" element={<BrowsePage />} />
-              <Route path="/library" element={<LibraryPage />} />
-              <Route path="/tab-editor" element={<TabEditorPage />} />
-              <Route path="/tab-editor/:id" element={<TabEditorPage />} />
-            </Routes>
+            <Outlet />
           </Layout>
-          </SidebarProvider>
           {!setupComplete && (
             <FirstLaunchSetup onComplete={() => setSetupComplete(true)} />
           )}
           <Toaster />
-        </SyncProvider>
-      </SpotifyAuthProvider>
-    </BrowserRouter>
+        </SidebarProvider>
+      </SyncProvider>
+    </SpotifyAuthProvider>
   );
+}
+
+const router = createBrowserRouter([
+  {
+    element: <RootLayout />,
+    children: [
+      { path: '/', element: <Home /> },
+      { path: '/sheet-music', element: <DrumsHubPage /> },
+      { path: '/sheet-music/search', element: <SheetMusicPage /> },
+      { path: '/sheet-music/:slug', element: <SheetMusicSongPage /> },
+      { path: '/guitar', element: <GuitarPage /> },
+      { path: '/guitar/song', element: <GuitarSongView /> },
+      { path: '/guitar/test', element: <GuitarTestPage /> },
+      { path: '/guitar/fretboard', element: <FretboardIQPage /> },
+      { path: '/guitar/fretboard/drill/:drillType', element: <FretboardDrillPage /> },
+      { path: '/guitar/fretboard/progress', element: <FretboardProgressPage /> },
+      { path: '/guitar/fretboard/summary', element: <FretboardSummaryPage /> },
+      { path: '/guitar/chords', element: <ChordFinderPage /> },
+      { path: '/guitar/ear', element: <EarIQPage /> },
+      { path: '/guitar/ear/session/:exerciseType', element: <EarSessionPage /> },
+      { path: '/guitar/ear/summary', element: <EarSummaryPage /> },
+      { path: '/guitar/ear/progress', element: <EarProgressPage /> },
+      { path: '/guitar/ear/recommendations', element: <EarRecommendationsPage /> },
+      { path: '/rudiments', element: <RudimentsPage /> },
+      { path: '/rudiments/:id', element: <RudimentPracticePage /> },
+      { path: '/fills', element: <FillsPage /> },
+      { path: '/fills/:id', element: <FillPracticePage /> },
+      { path: '/library/setlists', element: <SetlistsPage /> },
+      { path: '/library/saved-charts', element: <SavedChartsPage /> },
+      { path: '/library/pdf', element: <PdfLibraryTab /> },
+      { path: '/spotify', element: <SpotifyPage /> },
+      { path: '/updates', element: <UpdatesPage /> },
+      { path: '/setlists', element: <SetlistsPage /> },
+      { path: '/playbook/:setlistId', element: <PlaybookPage /> },
+      { path: '/browse', element: <BrowsePage /> },
+      { path: '/library', element: <LibraryPage /> },
+      { path: '/tab-editor', element: <TabEditorPage /> },
+      { path: '/tab-editor/:id', element: <TabEditorPage /> },
+    ],
+  },
+]);
+
+export default function App() {
+  return <RouterProvider router={router} />;
 }
