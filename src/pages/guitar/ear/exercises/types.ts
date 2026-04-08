@@ -13,6 +13,7 @@ export interface EarConfig {
   fixedRoot: boolean;
   autoAdvance: boolean;
   scope: string[]; // subset of answer options; empty = all
+  [key: string]: unknown;
 }
 
 export const DEFAULT_EAR_CONFIG: EarConfig = {
