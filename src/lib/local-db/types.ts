@@ -130,6 +130,7 @@ export interface SavedCharts {
   modified_time: string;
   saved_at: string;
   is_downloaded: Generated<number>;
+  tab_url: string | null;
 }
 
 export interface Setlists {
@@ -179,6 +180,8 @@ export interface SongSections {
   start_position: number;
   end_position: number;
   sort_order: number;
+  pdf_page: number | null;
+  pdf_y_offset: number | null;
 }
 
 export interface SectionProgress {
@@ -241,6 +244,25 @@ export interface FillPracticeSessions {
   created_at: string;
 }
 
+export interface PdfLibrary {
+  id: Generated<number>;
+  filename: string;
+  relative_path: string;
+  file_size_bytes: number;
+  detected_title: string | null;
+  detected_artist: string | null;
+  added_at: string;
+}
+
+export interface ChartPdfs {
+  id: Generated<number>;
+  chart_md5: string;
+  pdf_library_id: number;
+  label: string | null;
+  is_primary: Generated<number>;
+  linked_at: string;
+}
+
 export interface DB {
   chorus_charts: ChorusCharts;
   chorus_metadata: ChorusMetadata;
@@ -265,4 +287,6 @@ export interface DB {
   fretboard_sessions: FretboardSessions;
   fretboard_attempts: FretboardAttempts;
   fill_practice_sessions: FillPracticeSessions;
+  pdf_library: PdfLibrary;
+  chart_pdfs: ChartPdfs;
 }

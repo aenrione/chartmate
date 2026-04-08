@@ -15,6 +15,9 @@ import {migration_013_tab_compositions} from './013_tab_compositions';
 import {migration_014_fretboard_iq} from './014_fretboard_iq';
 import {migration_015_saved_charts_downloaded} from './015_saved_charts_downloaded';
 import {migration_016_fill_trainer} from './016_fill_trainer';
+import {migration_017_saved_chart_tab_url} from './017_saved_chart_tab_url';
+import {migration_018_pdf_library} from './018_pdf_library';
+import {migration_019_song_sections_pdf} from './019_song_sections_pdf';
 
 export const migrations: Record<string, Migration> = {
   '001_initial': InitialMigration,
@@ -33,4 +36,7 @@ export const migrations: Record<string, Migration> = {
   '014_fretboard_iq': migration_014_fretboard_iq,
   '015_saved_charts_downloaded': migration_015_saved_charts_downloaded,
   '016_fill_trainer': migration_016_fill_trainer,
+  '017_saved_chart_tab_url': migration_017_saved_chart_tab_url,
+  '018_pdf_library': migration_018_pdf_library,
+  '019_song_sections_pdf': migration_019_song_sections_pdf,
 };

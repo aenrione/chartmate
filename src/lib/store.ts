@@ -30,4 +30,6 @@ export const STORE_KEYS = {
   SPOTIFY_REFRESH_TOKEN: 'spotify_refresh_token',
   SPOTIFY_TOKEN_EXPIRES_AT: 'spotify_token_expires_at',
   SONGS_FOLDER_PATH: 'songs_folder_path',
+  PDF_LIBRARY_PATH: 'pdf_library_path',
+  PDF_LIBRARY_LAST_SCAN: 'pdf_library_last_scan',
 } as const;
