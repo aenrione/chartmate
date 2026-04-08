@@ -4,6 +4,7 @@ import {
   FolderHeart,
   History,
   ChevronRight,
+  FileText,
 } from 'lucide-react';
 
 const FEATURES = [
@@ -24,6 +25,15 @@ const FEATURES = [
     accent: 'bg-tertiary/10 text-tertiary',
     cta: 'View Library',
     ctaClass: 'text-tertiary',
+  },
+  {
+    name: 'PDF Library',
+    desc: 'Manage your PDF sheet music collection. Point ChartMate at a folder and it will scan recursively, auto-match PDFs to saved charts, and let you view them in the playbook.',
+    icon: FileText,
+    href: '/library/pdf',
+    accent: 'bg-secondary/10 text-secondary',
+    cta: 'Manage PDFs',
+    ctaClass: 'text-secondary',
   },
   {
     name: 'Practice History',

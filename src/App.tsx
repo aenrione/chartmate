@@ -23,6 +23,7 @@ import SetlistsPage from '@/pages/SetlistsPage';
 import PlaybookPage from '@/pages/playbook/PlaybookPage';
 import LibraryPage from '@/pages/LibraryPage';
 import SavedChartsPage from '@/pages/library/SavedChartsPage';
+import PdfLibraryTab from '@/pages/library/PdfLibraryTab';
 import DrumsHubPage from '@/pages/DrumsHubPage';
 import TabEditorPage from '@/pages/tab-editor/TabEditorPage';
 import FretboardIQPage from '@/pages/guitar/fretboard/FretboardIQPage';
@@ -59,6 +60,7 @@ export default function App() {
               <Route path="/fills/:id" element={<FillPracticePage />} />
               <Route path="/library/setlists" element={<SetlistsPage />} />
               <Route path="/library/saved-charts" element={<SavedChartsPage />} />
+              <Route path="/library/pdf" element={<PdfLibraryTab />} />
               <Route path="/spotify" element={<SpotifyPage />} />
               <Route path="/updates" element={<UpdatesPage />} />
               <Route path="/setlists" element={<SetlistsPage />} />
