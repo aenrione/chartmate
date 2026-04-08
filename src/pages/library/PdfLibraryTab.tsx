@@ -1,8 +1,10 @@
 import {useState, useEffect, useCallback} from 'react';
 import {open as openDialog} from '@tauri-apps/plugin-dialog';
+import {openPath} from '@tauri-apps/plugin-opener';
+import {join} from '@tauri-apps/api/path';
 import {
   Loader2, FolderOpen, RefreshCw, LinkIcon, Unlink, CheckCircle,
-  XCircle, FileText, Search, Music2,
+  XCircle, FileText, Search, Music2, ExternalLink, Eye, X,
 } from 'lucide-react';
 import {toast} from 'sonner';
 import {storeGet, storeSet, STORE_KEYS} from '@/lib/store';
@@ -16,11 +18,16 @@ import {
 import {
   getPdfLibraryEntriesWithLinkStatus,
   upsertPdfLibraryEntry,
+  deleteUnmatchedPdfLibraryEntries,
   linkChartPdf,
   unlinkChartPdf,
   type PdfLibraryEntry,
 } from '@/lib/local-db/pdf-library';
 import {getSavedCharts, type SavedChartEntry} from '@/lib/local-db/saved-charts';
+import {usePdfViewer} from '@/hooks/usePdfViewer';
+import PdfPageCanvas from '@/pages/pdf-viewer/PdfPageCanvas';
+import PdfControls from '@/pages/pdf-viewer/PdfControls';
+import type {PDFPageProxy} from 'pdfjs-dist';
 
 type EntryWithLinks = PdfLibraryEntry & {linkedChartMd5s: string[]};
 
@@ -33,6 +40,7 @@ export default function PdfLibraryTab() {
   const [lastScan, setLastScan] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'all' | 'linked' | 'unmatched'>('all');
+  const [previewPath, setPreviewPath] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const [path, entriesWithStatus, charts, scanTime] = await Promise.all([
@@ -61,9 +69,30 @@ export default function PdfLibraryTab() {
   const handlePickFolder = async () => {
     const selected = await openDialog({directory: true, title: 'Select PDF Library Folder'});
     if (!selected || typeof selected !== 'string') return;
+    // Remove unmatched entries from the old folder before switching
+    const removed = await deleteUnmatchedPdfLibraryEntries();
+    if (removed > 0) toast.info(`Removed ${removed} unmatched PDF${removed !== 1 ? 's' : ''} from previous folder`);
     await storeSet(STORE_KEYS.PDF_LIBRARY_PATH, selected);
     setLibraryPath(selected);
     await handleScan(selected);
+  };
+
+  const handleOpenExternal = async (entry: EntryWithLinks) => {
+    const root = libraryPath;
+    if (!root) return;
+    try {
+      const abs = await join(root, entry.relativePath);
+      await openPath(abs);
+    } catch (err) {
+      toast.error('Could not open file: ' + (err instanceof Error ? err.message : String(err)));
+    }
+  };
+
+  const handlePreview = async (entry: EntryWithLinks) => {
+    const root = libraryPath;
+    if (!root) return;
+    const abs = await join(root, entry.relativePath);
+    setPreviewPath(abs);
   };
 
   const handleScan = async (path?: string) => {
@@ -133,7 +162,7 @@ export default function PdfLibraryTab() {
   const unmatchedCount = entries.filter(e => e.linkedChartMd5s.length === 0).length;
 
   return (
-    <div className="flex-1 overflow-y-auto bg-surface">
+    <div className="flex-1 overflow-y-auto bg-surface relative">
       <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
 
         {/* Header */}
@@ -302,6 +331,8 @@ export default function PdfLibraryTab() {
                   chartName={chartName}
                   onLink={handleManualLink}
                   onUnlink={handleUnlink}
+                  onPreview={handlePreview}
+                  onOpenExternal={handleOpenExternal}
                 />
               ))}
             </div>
@@ -335,6 +366,96 @@ export default function PdfLibraryTab() {
           </div>
         )}
       </div>
+
+      {/* PDF Preview Modal */}
+      {previewPath && (
+        <PdfPreviewModal path={previewPath} onClose={() => setPreviewPath(null)} />
+      )}
+    </div>
+  );
+}
+
+// ── PdfPreviewModal ───────────────────────────────────────────────────
+
+function PdfPreviewModal({path, onClose}: {path: string; onClose: () => void}) {
+  const viewer = usePdfViewer(path);
+  const [pages, setPages] = useState<PDFPageProxy[]>([]);
+
+  useEffect(() => {
+    if (viewer.totalPages === 0) { setPages([]); return; }
+    let cancelled = false;
+    const load = async () => {
+      const loaded: PDFPageProxy[] = [];
+      for (let i = 1; i <= viewer.totalPages; i++) {
+        const p = await viewer.getPage(i);
+        if (p) loaded.push(p);
+      }
+      if (!cancelled) setPages(loaded);
+    };
+    load();
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewer.totalPages]);
+
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col bg-surface-container-lowest">
+      {/* Top bar */}
+      <div className="flex items-center justify-between px-4 py-2 border-b border-outline-variant bg-surface">
+        <p className="text-sm font-medium text-on-surface truncate max-w-lg">
+          {path.split('/').pop()}
+        </p>
+        <button
+          onClick={onClose}
+          className="p-1.5 rounded-lg hover:bg-surface-variant transition-colors"
+          title="Close preview"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+
+      {/* Content */}
+      {viewer.isLoading && (
+        <div className="flex-1 flex items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+        </div>
+      )}
+      {viewer.error && (
+        <div className="flex-1 flex items-center justify-center text-error text-sm">
+          {viewer.error}
+        </div>
+      )}
+      {!viewer.isLoading && !viewer.error && (
+        <>
+          <div ref={viewer.scrollContainerRef} className="flex-1 overflow-auto p-4 flex flex-col items-center">
+            {viewer.scrollMode === 'continuous'
+              ? pages.map((page, idx) => (
+                  <div key={idx + 1} data-pdf-page={idx + 1}>
+                    <PdfPageCanvas page={page} zoom={viewer.zoom} pageNumber={idx + 1} />
+                  </div>
+                ))
+              : pages[viewer.currentPage - 1] != null && (
+                  <PdfPageCanvas page={pages[viewer.currentPage - 1]} zoom={viewer.zoom} pageNumber={viewer.currentPage} />
+                )
+            }
+          </div>
+          <PdfControls
+            currentPage={viewer.currentPage}
+            totalPages={viewer.totalPages}
+            zoom={viewer.zoom}
+            scrollMode={viewer.scrollMode}
+            autoScrollSpeed={viewer.autoScrollSpeed}
+            isAutoScrolling={viewer.isAutoScrolling}
+            onPrevPage={() => viewer.goToPage(viewer.currentPage - 1)}
+            onNextPage={() => viewer.goToPage(viewer.currentPage + 1)}
+            onZoomIn={() => viewer.setZoom(viewer.zoom + 0.1)}
+            onZoomOut={() => viewer.setZoom(viewer.zoom - 0.1)}
+            onToggleScrollMode={() => viewer.setScrollMode(viewer.scrollMode === 'continuous' ? 'single' : 'continuous')}
+            onToggleAutoScroll={viewer.toggleAutoScroll}
+            onAutoScrollSpeedChange={viewer.setAutoScrollSpeed}
+            onHalfPageAdvance={viewer.halfPageAdvance}
+          />
+        </>
+      )}
     </div>
   );
 }
@@ -347,12 +468,16 @@ function PdfRow({
   chartName,
   onLink,
   onUnlink,
+  onPreview,
+  onOpenExternal,
 }: {
   entry: EntryWithLinks;
   savedCharts: SavedChartEntry[];
   chartName: (md5: string) => string;
   onLink: (pdfId: number, chartMd5: string) => Promise<void>;
   onUnlink: (chartMd5: string, pdfId: number) => Promise<void>;
+  onPreview: (entry: EntryWithLinks) => void;
+  onOpenExternal: (entry: EntryWithLinks) => void;
 }) {
   const [linking, setLinking] = useState(false);
   const [chartSearch, setChartSearch] = useState('');
@@ -374,6 +499,24 @@ function PdfRow({
         <div className="flex-1 min-w-0">
           <p className="text-sm truncate font-medium text-on-surface">{entry.filename}</p>
           <p className="text-xs text-outline truncate">{entry.relativePath}</p>
+        </div>
+
+        {/* Preview + open external */}
+        <div className="flex items-center gap-1 flex-shrink-0">
+          <button
+            onClick={() => onPreview(entry)}
+            className="p-1.5 rounded-lg hover:bg-surface-variant transition-colors text-outline hover:text-on-surface"
+            title="Preview in ChartMate"
+          >
+            <Eye className="h-3.5 w-3.5" />
+          </button>
+          <button
+            onClick={() => onOpenExternal(entry)}
+            className="p-1.5 rounded-lg hover:bg-surface-variant transition-colors text-outline hover:text-on-surface"
+            title="Open in system viewer"
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+          </button>
         </div>
 
         {isLinked ? (

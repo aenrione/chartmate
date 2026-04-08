@@ -84,6 +84,21 @@ export async function deletePdfLibraryEntry(id: number): Promise<void> {
   await db.deleteFrom('pdf_library').where('id', '=', id).execute();
 }
 
+/** Delete all pdf_library entries that have no chart_pdfs links. */
+export async function deleteUnmatchedPdfLibraryEntries(): Promise<number> {
+  const db = await getLocalDb();
+  const linked = await db.selectFrom('chart_pdfs').select('pdf_library_id').execute();
+  const linkedIds = new Set(linked.map(r => r.pdf_library_id));
+
+  const all = await db.selectFrom('pdf_library').select('id').execute();
+  const toDelete = all.map(r => r.id).filter(id => !linkedIds.has(id));
+
+  if (toDelete.length === 0) return 0;
+
+  await db.deleteFrom('pdf_library').where('id', 'in', toDelete).execute();
+  return toDelete.length;
+}
+
 // ── chart_pdfs operations ─────────────────────────────────────────────
 
 export async function getPdfsForChart(chartMd5: string): Promise<ChartPdfLink[]> {
