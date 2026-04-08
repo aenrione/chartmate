@@ -24,6 +24,8 @@ export type SongSection = {
   startPosition: number;
   endPosition: number;
   sortOrder: number;
+  pdfPage: number | null;
+  pdfYOffset: number | null;
 };
 
 export type SectionProgressRecord = {
@@ -133,6 +135,8 @@ export async function getSectionsForChart(chartMd5: string): Promise<SongSection
     startPosition: r.start_position,
     endPosition: r.end_position,
     sortOrder: r.sort_order,
+    pdfPage: r.pdf_page ?? null,
+    pdfYOffset: r.pdf_y_offset ?? null,
   }));
 }
 
@@ -141,6 +145,8 @@ export async function createSection(
   name: string,
   startPosition: number,
   endPosition: number,
+  pdfPage?: number,
+  pdfYOffset?: number,
 ): Promise<number> {
   const db = await getLocalDb();
 
@@ -160,6 +166,8 @@ export async function createSection(
       start_position: startPosition,
       end_position: endPosition,
       sort_order: sortOrder,
+      pdf_page: pdfPage ?? null,
+      pdf_y_offset: pdfYOffset ?? null,
     })
     .returning('id')
     .executeTakeFirstOrThrow();
