@@ -39,8 +39,8 @@ export const chordProgressions: ExerciseDescriptor = {
     const key = config.fixedRoot ? 'C' : pickRandom(NOTES);
     const prog = pickRandom(PROGRESSIONS);
     const keyIdx = NOTES.indexOf(key as any);
-    const chordTypes = (prog.chords as [number, string][]).map(([, type]) => type);
-    const chordNotes = (prog.chords as [number, string][]).map(([semitones, type]) => {
+    const chordTypes = (prog.chords as readonly (readonly [number, string])[]).map(([, type]) => type);
+    const chordNotes = (prog.chords as readonly (readonly [number, string])[]).map(([semitones, type]) => {
       const root = NOTES[((keyIdx + semitones) % TOTAL + TOTAL) % TOTAL];
       return buildChordNotes(root, CHORD_INTERVALS[type]);
     });
