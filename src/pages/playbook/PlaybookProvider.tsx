@@ -57,7 +57,7 @@ interface PlaybookActions {
   setLoopSectionId: (id: number | null) => void;
   toggleSidebar: () => void;
   setSidebarExpanded: (expanded: boolean) => void;
-  addSection: (name: string, startPos: number, endPos: number) => Promise<void>;
+  addSection: (name: string, startPos: number, endPos: number, pdfPage?: number, pdfYOffset?: number) => Promise<void>;
   removeSection: (sectionId: number) => Promise<void>;
   editSection: (sectionId: number, updates: Partial<Pick<SongSection, 'name' | 'startPosition' | 'endPosition' | 'sortOrder'>>) => Promise<void>;
   setSectionStatus: (sectionId: number, status: ProgressStatus) => Promise<void>;
@@ -187,9 +187,15 @@ export function PlaybookProvider({
     setAnnotations(annots);
   }, [activeItem]);
 
-  const addSectionAction = useCallback(async (name: string, startPos: number, endPos: number) => {
+  const addSectionAction = useCallback(async (
+    name: string,
+    startPos: number,
+    endPos: number,
+    pdfPage?: number,
+    pdfYOffset?: number,
+  ) => {
     if (!activeItem) return;
-    await createSection(activeItem.chartMd5, name, startPos, endPos);
+    await createSection(activeItem.chartMd5, name, startPos, endPos, pdfPage, pdfYOffset);
     await reloadSections();
   }, [activeItem, reloadSections]);
 
