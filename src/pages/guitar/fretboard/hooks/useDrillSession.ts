@@ -1,325 +1,40 @@
-import {useReducer, useCallback, useRef, useEffect} from 'react';
-import type {DrillQuestion, DrillConfig, AnswerResult, PositionWeight} from '../drills/types';
+import {useCallback, useRef} from 'react';
+import {
+  useTrainingSession,
+  type TrainingPhase,
+  type TrainingConfig,
+  type TrainingDescriptor,
+  type AnswerResult,
+} from '@/lib/training/useTrainingSession';
+import type {DrillQuestion, DrillConfig, PositionWeight} from '../drills/types';
 import type {DrillDescriptor} from '../drills/types';
-import type {DrillType, Difficulty, AttemptStatus} from '@/lib/local-db/fretboard';
+import type {DrillType, AttemptStatus} from '@/lib/local-db/fretboard';
 import {createFretboardSession, saveAttempts} from '@/lib/local-db/fretboard';
 
-// ── State ────────────────────────────────────────────────────────────────────
+// ── Re-export for consumers ──────────────────────────────────────────────────
 
-export type SessionPhase =
-  | 'idle'
-  | 'configuring'
-  | 'showing_question'
-  | 'awaiting_answer'
-  | 'showing_feedback'
-  | 'completed';
+/** SessionPhase is now an alias for TrainingPhase from useTrainingSession. */
+export type SessionPhase = TrainingPhase;
 
-export interface SessionState {
-  phase: SessionPhase;
-  drill: DrillDescriptor | null;
-  config: DrillConfig | null;
-  currentQuestion: DrillQuestion | null;
-  questionIndex: number;
-  results: AnswerResult[];
-  score: number;
-  streak: number;
-  bestStreak: number;
-  startTime: number;
-  questionStartTime: number;
-  lastAnswerCorrect: boolean | null;
-  hint: string | null;
-  sessionId: number | null;
-}
+// ── Adapter: DrillDescriptor → TrainingDescriptor ────────────────────────────
 
-const INITIAL_STATE: SessionState = {
-  phase: 'idle',
-  drill: null,
-  config: null,
-  currentQuestion: null,
-  questionIndex: 0,
-  results: [],
-  score: 0,
-  streak: 0,
-  bestStreak: 0,
-  startTime: 0,
-  questionStartTime: 0,
-  lastAnswerCorrect: null,
-  hint: null,
-  sessionId: null,
-};
-
-// ── Actions ──────────────────────────────────────────────────────────────────
-
-type SessionAction =
-  | {type: 'START_CONFIGURING'; drill: DrillDescriptor}
-  | {type: 'START_DRILL'; config: DrillConfig; weights?: PositionWeight[]}
-  | {type: 'SHOW_QUESTION'; question: DrillQuestion}
-  | {type: 'SUBMIT_ANSWER'; answer: string; responseTimeMs: number}
-  | {type: 'SKIP_QUESTION'}
-  | {type: 'SHOW_HINT'}
-  | {type: 'FEEDBACK_COMPLETE'}
-  | {type: 'FINISH_DRILL'; sessionId: number}
-  | {type: 'RESET'};
-
-// ── Reducer ──────────────────────────────────────────────────────────────────
-
-function sessionReducer(state: SessionState, action: SessionAction): SessionState {
-  switch (action.type) {
-    case 'START_CONFIGURING':
-      return {
-        ...INITIAL_STATE,
-        phase: 'configuring',
-        drill: action.drill,
-      };
-
-    case 'START_DRILL':
-      return {
-        ...state,
-        phase: 'showing_question',
-        config: action.config,
-        startTime: Date.now(),
-        questionStartTime: Date.now(),
-        results: [],
-        score: 0,
-        streak: 0,
-        bestStreak: 0,
-        questionIndex: 0,
-      };
-
-    case 'SHOW_QUESTION':
-      return {
-        ...state,
-        phase: 'awaiting_answer',
-        currentQuestion: action.question,
-        questionStartTime: Date.now(),
-        hint: null,
-        lastAnswerCorrect: null,
-      };
-
-    case 'SUBMIT_ANSWER': {
-      if (!state.drill || !state.currentQuestion) return state;
-      const isCorrect = state.drill.validator.validate(state.currentQuestion, action.answer);
-      const result: AnswerResult = {
-        question: state.currentQuestion,
-        givenAnswer: action.answer,
-        isCorrect,
-        isSkipped: false,
-        responseTimeMs: action.responseTimeMs,
-      };
-
-      const newStreak = isCorrect ? state.streak + 1 : 0;
-      const speedBonus = isCorrect ? (action.responseTimeMs < 1000 ? 5 : action.responseTimeMs < 2000 ? 3 : 0) : 0;
-      const scoreGain = isCorrect ? 10 + speedBonus : 0;
-
-      return {
-        ...state,
-        phase: 'showing_feedback',
-        results: [...state.results, result],
-        score: state.score + scoreGain,
-        streak: newStreak,
-        bestStreak: Math.max(state.bestStreak, newStreak),
-        lastAnswerCorrect: isCorrect,
-        questionIndex: state.questionIndex + 1,
-      };
-    }
-
-    case 'SKIP_QUESTION': {
-      if (!state.currentQuestion) return state;
-      const result: AnswerResult = {
-        question: state.currentQuestion,
-        givenAnswer: null,
-        isCorrect: false,
-        isSkipped: true,
-        responseTimeMs: Date.now() - state.questionStartTime,
-      };
-      return {
-        ...state,
-        phase: 'showing_feedback',
-        results: [...state.results, result],
-        streak: 0,
-        lastAnswerCorrect: false,
-        questionIndex: state.questionIndex + 1,
-      };
-    }
-
-    case 'SHOW_HINT':
-      if (!state.drill || !state.currentQuestion) return state;
-      return {
-        ...state,
-        hint: state.drill.generator.getHint(state.currentQuestion),
-      };
-
-    case 'FEEDBACK_COMPLETE':
-      return {
-        ...state,
-        phase: 'showing_question',
-      };
-
-    case 'FINISH_DRILL':
-      return {
-        ...state,
-        phase: 'completed',
-        sessionId: action.sessionId,
-      };
-
-    case 'RESET':
-      return INITIAL_STATE;
-
-    default:
-      return state;
-  }
-}
-
-// ── Hook ─────────────────────────────────────────────────────────────────────
-
-export function useDrillSession() {
-  const [state, dispatch] = useReducer(sessionReducer, INITIAL_STATE);
-  const weightsRef = useRef<PositionWeight[]>([]);
-  const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const finishDrillRef = useRef<() => void>(() => {});
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
-    };
-  }, []);
-
-  const selectDrill = useCallback((drill: DrillDescriptor) => {
-    dispatch({type: 'START_CONFIGURING', drill});
-  }, []);
-
-  const startDrill = useCallback(
-    (config: DrillConfig, weights?: PositionWeight[]) => {
-      if (!state.drill) return;
-      weightsRef.current = weights ?? [];
-      dispatch({type: 'START_DRILL', config, weights});
-
-      // Generate first question
-      const question = state.drill.generator.generate(config, weights);
-      dispatch({type: 'SHOW_QUESTION', question});
-    },
-    [state.drill],
-  );
-
-  const submitAnswer = useCallback(
-    (answer: string) => {
-      if (state.phase !== 'awaiting_answer' || !state.config || !state.drill) return;
-      const responseTimeMs = Date.now() - state.questionStartTime;
-      dispatch({type: 'SUBMIT_ANSWER', answer, responseTimeMs});
-
-      // Auto-advance after feedback delay
-      feedbackTimerRef.current = setTimeout(() => {
-        if (state.questionIndex + 1 >= (state.config?.questionCount ?? 20)) {
-          finishDrillRef.current();
-        } else {
-          dispatch({type: 'FEEDBACK_COMPLETE'});
-          const nextQuestion = state.drill!.generator.generate(
-            state.config!,
-            weightsRef.current,
-          );
-          dispatch({type: 'SHOW_QUESTION', question: nextQuestion});
-        }
-      }, 1200);
-    },
-    [state.phase, state.config, state.drill, state.questionIndex, state.questionStartTime],
-  );
-
-  const skipQuestion = useCallback(() => {
-    if (state.phase !== 'awaiting_answer') return;
-    dispatch({type: 'SKIP_QUESTION'});
-
-    feedbackTimerRef.current = setTimeout(() => {
-      if (!state.config || !state.drill) return;
-      if (state.questionIndex + 1 >= state.config.questionCount) {
-        finishDrillRef.current();
-      } else {
-        dispatch({type: 'FEEDBACK_COMPLETE'});
-        const nextQuestion = state.drill.generator.generate(
-          state.config,
-          weightsRef.current,
-        );
-        dispatch({type: 'SHOW_QUESTION', question: nextQuestion});
-      }
-    }, 800);
-  }, [state.phase, state.config, state.drill, state.questionIndex]);
-
-  const showHint = useCallback(() => {
-    dispatch({type: 'SHOW_HINT'});
-  }, []);
-
-  const finishDrill = useCallback(async () => {
-    if (!state.drill || !state.config) return;
-    const durationMs = Date.now() - state.startTime;
-    const correctCount = state.results.filter(r => r.isCorrect).length + (state.lastAnswerCorrect ? 1 : 0);
-    const totalQuestions = state.results.length + 1;
-
-    const isPerfect = correctCount === totalQuestions;
-    const streakBonus = state.bestStreak * 5;
-    const perfectBonus = isPerfect ? 50 : 0;
-    const xpEarned = state.score + streakBonus + perfectBonus;
-
-    try {
-      const sessionId = await createFretboardSession({
-        drillType: state.drill.type,
-        difficulty: state.drill.difficulty,
-        totalQuestions,
-        correctAnswers: correctCount,
-        durationMs,
-        xpEarned,
-      });
-
-      // Save individual attempts
-      const allResults = [...state.results];
-      if (state.currentQuestion) {
-        allResults.push({
-          question: state.currentQuestion,
-          givenAnswer: state.lastAnswerCorrect !== null ? 'last' : null,
-          isCorrect: state.lastAnswerCorrect ?? false,
-          isSkipped: false,
-          responseTimeMs: Date.now() - state.questionStartTime,
-        });
-      }
-
-      await saveAttempts(
-        sessionId,
-        allResults.map(r => {
-          const position = getQuestionPosition(r.question);
-          return {
-            drillType: state.drill!.type,
-            stringIndex: position.string,
-            fret: position.fret,
-            expectedAnswer: getExpectedAnswer(r.question),
-            givenAnswer: r.givenAnswer,
-            status: (r.isSkipped ? 'skipped' : r.isCorrect ? 'correct' : 'incorrect') as AttemptStatus,
-            responseTimeMs: r.responseTimeMs,
-          };
-        }),
-      );
-
-      dispatch({type: 'FINISH_DRILL', sessionId});
-    } catch (error) {
-      console.error('Failed to save drill session:', error);
-      dispatch({type: 'FINISH_DRILL', sessionId: -1});
-    }
-  }, [state]);
-
-  // Keep ref in sync
-  finishDrillRef.current = finishDrill;
-
-  const reset = useCallback(() => {
-    if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
-    dispatch({type: 'RESET'});
-  }, []);
-
+/**
+ * Wraps the FretboardIQ DrillDescriptor (generator + validator pattern) into
+ * the generic TrainingDescriptor interface expected by useTrainingSession.
+ */
+function makeTrainingDescriptor(
+  drill: DrillDescriptor,
+): TrainingDescriptor<DrillQuestion, DrillConfig & TrainingConfig> {
   return {
-    state,
-    selectDrill,
-    startDrill,
-    submitAnswer,
-    skipQuestion,
-    showHint,
-    reset,
+    generate(config, weights) {
+      return drill.generator.generate(config as DrillConfig, weights as PositionWeight[]);
+    },
+    validate(question, answer) {
+      return drill.validator.validate(question, answer);
+    },
+    getHint(question) {
+      return drill.generator.getHint(question);
+    },
   };
 }
 
@@ -344,4 +59,123 @@ function getQuestionPosition(question: DrillQuestion): {string: number; fret: nu
 
 function getExpectedAnswer(question: DrillQuestion): string {
   return question.correctAnswer;
+}
+
+// ── Hook ─────────────────────────────────────────────────────────────────────
+
+/**
+ * Thin wrapper around useTrainingSession that preserves the FretboardIQ API:
+ *   { state, selectDrill, startDrill, submitAnswer, skipQuestion, showHint, reset }
+ *
+ * `state` shape mirrors the old SessionState so FretboardDrillPage needs no changes.
+ */
+export function useDrillSession() {
+  // Track the selected drill outside the generic hook (generic hook has no concept of "drill")
+  const drillRef = useRef<DrillDescriptor | null>(null);
+  const weightsRef = useRef<PositionWeight[]>([]);
+
+  // Descriptor ref so we can swap when drill changes without remounting
+  const descriptorRef = useRef<TrainingDescriptor<DrillQuestion, DrillConfig & TrainingConfig> | null>(null);
+
+  // Build a stable descriptor shim that always delegates to drillRef.current
+  // This avoids recreating useTrainingSession's callbacks when drill changes.
+  const stableDescriptor = useRef<TrainingDescriptor<DrillQuestion, DrillConfig & TrainingConfig>>({
+    generate(config, weights) {
+      return descriptorRef.current!.generate(config, weights);
+    },
+    validate(question, answer) {
+      return descriptorRef.current!.validate(question, answer);
+    },
+    getHint(question) {
+      return descriptorRef.current!.getHint(question);
+    },
+  }).current;
+
+  const onSessionComplete = useCallback(
+    async (
+      results: AnswerResult<DrillQuestion>[],
+      config: DrillConfig & TrainingConfig,
+      stats: {score: number; bestStreak: number; durationMs: number},
+    ): Promise<number> => {
+      const drill = drillRef.current;
+      if (!drill) return -1;
+
+      const correctCount = results.filter(r => r.isCorrect).length;
+      const totalQuestions = results.length;
+
+      const sessionId = await createFretboardSession({
+        drillType: drill.type as DrillType,
+        difficulty: drill.difficulty,
+        totalQuestions,
+        correctAnswers: correctCount,
+        durationMs: stats.durationMs,
+        xpEarned: stats.score,
+      });
+
+      await saveAttempts(
+        sessionId,
+        results.map(r => {
+          const position = getQuestionPosition(r.question);
+          return {
+            drillType: drill.type as DrillType,
+            stringIndex: position.string,
+            fret: position.fret,
+            expectedAnswer: getExpectedAnswer(r.question),
+            givenAnswer: r.givenAnswer,
+            status: (r.isSkipped
+              ? 'skipped'
+              : r.isCorrect
+                ? 'correct'
+                : 'incorrect') as AttemptStatus,
+            responseTimeMs: r.responseTimeMs,
+          };
+        }),
+      );
+
+      return sessionId;
+    },
+    [],
+  );
+
+  const {state, startConfiguring, startSession, submitAnswer, skipQuestion, showHint, reset} =
+    useTrainingSession<DrillQuestion, DrillConfig & TrainingConfig>({
+      descriptor: stableDescriptor,
+      weights: weightsRef.current,
+      feedbackDelayMs: 1200,
+      skipDelayMs: 800,
+      onSessionComplete,
+    });
+
+  // ── FretboardIQ-specific actions ────────────────────────────────────────────
+
+  const selectDrill = useCallback((drill: DrillDescriptor) => {
+    drillRef.current = drill;
+    descriptorRef.current = makeTrainingDescriptor(drill);
+    startConfiguring();
+  }, [startConfiguring]);
+
+  const startDrill = useCallback(
+    (config: DrillConfig, weights?: PositionWeight[]) => {
+      weightsRef.current = weights ?? [];
+      startSession(config as DrillConfig & TrainingConfig);
+    },
+    [startSession],
+  );
+
+  // ── Compose state with drill field (preserves SessionState shape) ────────────
+
+  const composedState = {
+    ...state,
+    drill: drillRef.current,
+  };
+
+  return {
+    state: composedState,
+    selectDrill,
+    startDrill,
+    submitAnswer,
+    skipQuestion,
+    showHint,
+    reset,
+  };
 }
