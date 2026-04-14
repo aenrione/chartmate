@@ -1,5 +1,5 @@
 import {fetch as tauriFetch} from '@tauri-apps/plugin-http';
-import type {TabSource, TabSearchResult} from './types';
+import type {GpSource, TabSearchResult} from './types';
 
 type SongsterrTrack = {
   instrumentId: number;
@@ -23,7 +23,7 @@ type SongsterrSong = {
   isJunk: boolean;
 };
 
-export const SongsterrSource: TabSource = {
+export const SongsterrSource: GpSource = {
   sourceId: 'songsterr',
   name: 'Songsterr',
 

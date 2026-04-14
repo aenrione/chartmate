@@ -1,5 +1,5 @@
 import {useState, useCallback} from 'react';
-import {TAB_SOURCES, type TabSearchResult} from '@/lib/tab-sources';
+import {TAB_SOURCES, type TabSource, type TabSearchResult} from '@/lib/tab-sources';
 
 type SearchState = {
   results: TabSearchResult[];
@@ -7,7 +7,8 @@ type SearchState = {
   error: string | null;
 };
 
-export function useTabSearch() {
+export function useTabSearch(enabledSources: TabSource[] = TAB_SOURCES) {
+  const sourceKey = enabledSources.map(s => s.sourceId).join(',');
   const [state, setState] = useState<SearchState>({
     results: [],
     loading: false,
@@ -19,10 +20,14 @@ export function useTabSearch() {
       setState({results: [], loading: false, error: null});
       return;
     }
+    if (enabledSources.length === 0) {
+      setState({results: [], loading: false, error: null});
+      return;
+    }
     setState(s => ({...s, loading: true, error: null}));
     try {
       const settled = await Promise.allSettled(
-        TAB_SOURCES.map(source => source.search(query)),
+        enabledSources.map(source => source.search(query)),
       );
       const results: TabSearchResult[] = [];
       const errors: string[] = [];
@@ -36,8 +41,8 @@ export function useTabSearch() {
             : typeof reason === 'string'
               ? reason
               : JSON.stringify(reason);
-          console.error(`[useTabSearch] ${TAB_SOURCES[i].name} failed:`, reason);
-          errors.push(`${TAB_SOURCES[i].name}: ${msg}`);
+          console.error(`[useTabSearch] ${enabledSources[i].name} failed:`, reason);
+          errors.push(`${enabledSources[i].name}: ${msg}`);
         }
       });
       setState({
@@ -48,7 +53,7 @@ export function useTabSearch() {
     } catch (err) {
       setState({results: [], loading: false, error: String(err)});
     }
-  }, []);
+  }, [sourceKey]);
 
   return {...state, search};
 }

@@ -1,7 +1,7 @@
 import {getLocalDb} from './client';
 import {ChartResponseEncore} from '@/lib/chartSelection';
 
-export type SavedChartEntry = ChartResponseEncore & { isDownloaded: boolean };
+export type SavedChartEntry = ChartResponseEncore & { isDownloaded: boolean; tabUrl: string | null };
 
 export async function saveChart(chart: ChartResponseEncore): Promise<void> {
   const db = await getLocalDb();
@@ -92,5 +92,15 @@ export async function getSavedCharts(search?: string): Promise<SavedChartEntry[]
     notesData: {} as any,
     file: `https://files.enchor.us/${row.md5}.sng`,
     isDownloaded: row.is_downloaded === 1,
+    tabUrl: row.tab_url ?? null,
   }));
+}
+
+export async function linkChartTabUrl(md5: string, tabUrl: string): Promise<void> {
+  const db = await getLocalDb();
+  await db
+    .updateTable('saved_charts')
+    .set({tab_url: tabUrl})
+    .where('md5', '=', md5)
+    .execute();
 }

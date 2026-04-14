@@ -32,4 +32,6 @@ export const STORE_KEYS = {
   SONGS_FOLDER_PATH: 'songs_folder_path',
   PDF_LIBRARY_PATH: 'pdf_library_path',
   PDF_LIBRARY_LAST_SCAN: 'pdf_library_last_scan',
+  CUSTOMSFORGE_SESSION_COOKIE: 'customsforge_session_cookie',
+  CUSTOMSFORGE_PSARC_PATH: 'customsforge_psarc_path',
 } as const;

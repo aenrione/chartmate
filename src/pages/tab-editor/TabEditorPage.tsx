@@ -1,7 +1,9 @@
 import {useRef, useEffect, useState, useCallback, useMemo} from 'react';
-import {useParams} from 'react-router-dom';
+import {useParams, useNavigate} from 'react-router-dom';
 import {AlphaTabApi, model, importer, Settings, StaveProfile} from '@coderline/alphatab';
-import {loadComposition} from '@/lib/local-db/tab-compositions';
+import {loadComposition, saveComposition, markCompositionSaved} from '@/lib/local-db/tab-compositions';
+import SaveCompositionDialog, {type CompositionMeta} from './SaveCompositionDialog';
+import {useUnsavedChanges} from './useUnsavedChanges';
 import TabEditorCanvas, {type TabEditorCanvasHandle} from './TabEditorCanvas';
 import NoteInputPanel from './NoteInputPanel';
 import TabEditorSidebar from './TabEditorSidebar';
@@ -59,7 +61,8 @@ import {useYoutubeSync} from '@/hooks/useYoutubeSync';
 import type {PlaybackClock} from '@/lib/youtube-sync';
 import YouTubePlayer from '@/components/YouTubePlayer';
 import {snapToYouTubeRate} from '@/lib/youtube-utils';
-import {downloadAsGp7, exportToAlphaTex, exportToAsciiTab} from '@/lib/tab-editor/exporters';
+import {downloadAsGp7, exportToAlphaTex, exportToAsciiTab, exportToGp7} from '@/lib/tab-editor/exporters';
+import {importFromAsciiTab} from '@/lib/tab-editor/asciiTabImporter';
 import {Link} from 'react-router-dom';
 import {cn} from '@/lib/utils';
 import {toast} from 'sonner';
@@ -69,6 +72,7 @@ const {Duration} = model;
 
 export default function TabEditorPage() {
   const {id} = useParams<{id: string}>();
+  const navigate = useNavigate();
   const canvasRef = useRef<TabEditorCanvasHandle>(null);
   const apiRef = useRef<AlphaTabApi | null>(null);
   const scoreRef = useRef<Score | null>(null);
@@ -90,8 +94,17 @@ export default function TabEditorPage() {
   const [mutedTracks, setMutedTracks] = useState<Set<number>>(new Set());
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [showDemoMenu, setShowDemoMenu] = useState(false);
+  const [showImportMenu, setShowImportMenu] = useState(false);
+  const [showAsciiImport, setShowAsciiImport] = useState(false);
+  const [asciiImportText, setAsciiImportText] = useState('');
+  const [asciiImportTitle, setAsciiImportTitle] = useState('');
+  const [asciiImportArtist, setAsciiImportArtist] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showYoutubePanel, setShowYoutubePanel] = useState(false);
+  const [compositionId, setCompositionId] = useState<number | undefined>(id ? Number(id) : undefined);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const {isDirty, markDirty, markClean, blocker} = useUnsavedChanges();
+  const proceedAfterSaveRef = useRef<(() => void) | null>(null);
 
   // PlaybackClock adapter — exposes AlphaTab position as a generic clock
   const positionRef = useRef({currentTimeMs: 0});
@@ -154,7 +167,8 @@ export default function TabEditorPage() {
     // Regenerate MIDI data so playback reflects score changes
     try { api.loadMidiForScore(); } catch { /* player may not be ready yet */ }
     setRenderKey(k => k + 1);
-  }, [activeTrackIndex, getApi]);
+    markDirty();
+  }, [activeTrackIndex, getApi, markDirty]);
 
   const handlePlayPause = useCallback(() => {
     canvasRef.current?.alphaTab?.playPause();
@@ -333,6 +347,23 @@ export default function TabEditorPage() {
     // Reset so the same file can be re-imported
     e.target.value = '';
   }, [loadScore]);
+
+  const handleImportAscii = useCallback(() => {
+    if (!asciiImportText.trim()) return;
+    try {
+      const score = importFromAsciiTab(asciiImportText);
+      if (asciiImportTitle.trim()) score.title = asciiImportTitle.trim();
+      if (asciiImportArtist.trim()) score.artist = asciiImportArtist.trim();
+      loadScore(score);
+      setShowAsciiImport(false);
+      setAsciiImportText('');
+      setAsciiImportTitle('');
+      setAsciiImportArtist('');
+    } catch (err) {
+      console.error('Failed to import ASCII tab:', err);
+      alert('Failed to parse ASCII tab. Make sure it uses standard 6-string tab notation.');
+    }
+  }, [asciiImportText, asciiImportTitle, asciiImportArtist, loadScore]);
 
   // Drum pad hit handler — adds note to current beat (layer multiple hits)
   // User advances with right arrow or Enter
@@ -595,6 +626,37 @@ export default function TabEditorPage() {
     if (s) s.artist = newArtist;
   }, []);
 
+  const handleSaveComposition = useCallback(async (meta: CompositionMeta) => {
+    const score = scoreRef.current;
+    if (!score) return;
+    const scoreData = exportToGp7(score).buffer as ArrayBuffer;
+    // Update score metadata to match what user entered
+    score.title = meta.title;
+    score.artist = meta.artist;
+    const newId = await saveComposition(scoreData, {
+      id: compositionId,
+      title: meta.title,
+      artist: meta.artist,
+      album: meta.album,
+      tempo: meta.tempo,
+      instrument: meta.instrument,
+    });
+    await markCompositionSaved(newId);
+    setCompositionId(newId);
+    setTitle(meta.title);
+    setArtist(meta.artist);
+    markClean();
+    toast.success('Saved to library');
+    if (!compositionId) {
+      navigate(`/tab-editor/${newId}`, {replace: true});
+    }
+    if (proceedAfterSaveRef.current) {
+      const proceed = proceedAfterSaveRef.current;
+      proceedAfterSaveRef.current = null;
+      proceed();
+    }
+  }, [compositionId, markClean, navigate]);
+
   // String names for status bar
   const stringLabel = useMemo(() => {
     if (activeTrackIsDrums) return 'Drums';
@@ -746,12 +808,48 @@ export default function TabEditorPage() {
           className="hidden"
           onChange={handleImportFile}
         />
+        <div className="relative">
+          <button
+            onClick={() => { setShowImportMenu(!showImportMenu); setShowExportMenu(false); setShowDemoMenu(false); }}
+            className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
+            title="Import"
+          >
+            <Upload className="h-4 w-4" />
+          </button>
+          {showImportMenu && (
+            <>
+              <div className="fixed inset-0 z-30" onClick={() => setShowImportMenu(false)} />
+              <div className="absolute right-0 top-full mt-1 z-40 bg-surface-container-high border border-outline-variant/30 rounded-lg shadow-lg py-1 min-w-[180px]">
+                <button
+                  onClick={() => { fileInputRef.current?.click(); setShowImportMenu(false); }}
+                  className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors"
+                >
+                  GP / AlphaTex file...
+                </button>
+                <button
+                  onClick={() => { setShowAsciiImport(true); setShowImportMenu(false); }}
+                  className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors"
+                >
+                  ASCII Tab text...
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Save to Library */}
         <button
-          onClick={() => fileInputRef.current?.click()}
-          className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
-          title="Import file (GP, GPX, AlphaTex)"
+          onClick={() => setShowSaveDialog(true)}
+          className={cn(
+            'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors',
+            isDirty
+              ? 'bg-primary text-on-primary hover:bg-primary/90'
+              : 'text-on-surface-variant hover:bg-surface-container-high',
+          )}
+          title="Save to library"
         >
-          <Upload className="h-4 w-4" />
+          <Save className="h-3.5 w-3.5" />
+          {isDirty ? 'Save*' : 'Saved'}
         </button>
 
         {/* Export dropdown */}
@@ -976,6 +1074,106 @@ export default function TabEditorPage() {
         onOpenChange={setShowChordFinder}
         onSelectChord={handleChordSelect}
       />
+      <SaveCompositionDialog
+        open={showSaveDialog}
+        onOpenChange={setShowSaveDialog}
+        initialMeta={{
+          title,
+          artist,
+          album: (scoreRef.current as any)?.album ?? '',
+          tempo,
+          instrument: tracks[activeTrackIndex]?.instrument ?? 'guitar',
+        }}
+        onSave={handleSaveComposition}
+      />
+      {blocker.state === 'blocked' && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-surface-container rounded-2xl p-6 max-w-sm w-full mx-4 shadow-xl space-y-4">
+            <h2 className="text-base font-bold text-on-surface">Unsaved Changes</h2>
+            <p className="text-sm text-on-surface-variant">You have unsaved changes. Save before leaving?</p>
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => blocker.reset?.()}
+                className="px-3 py-1.5 text-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => { markClean(); blocker.proceed?.(); }}
+                className="px-3 py-1.5 text-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors"
+              >
+                Discard
+              </button>
+              <button
+                onClick={() => {
+                  proceedAfterSaveRef.current = blocker.proceed ?? null;
+                  blocker.reset?.();
+                  setShowSaveDialog(true);
+                }}
+                className="px-3 py-1.5 text-sm rounded-lg bg-primary text-on-primary hover:bg-primary/90 transition-colors"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ASCII Import Dialog */}
+      {showAsciiImport && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-surface-container-high rounded-xl shadow-xl p-6 w-[600px] max-w-[90vw] flex flex-col gap-4">
+            <h2 className="text-sm font-semibold text-on-surface">Import ASCII Tab</h2>
+            <div className="flex gap-3">
+              <div className="flex-1 flex flex-col gap-1">
+                <label className="text-xs text-on-surface-variant">Title</label>
+                <input
+                  type="text"
+                  value={asciiImportTitle}
+                  onChange={e => setAsciiImportTitle(e.target.value)}
+                  placeholder="Song title"
+                  className="bg-surface-container border border-outline-variant/40 rounded-lg px-3 py-1.5 text-xs text-on-surface outline-none focus:border-primary"
+                />
+              </div>
+              <div className="flex-1 flex flex-col gap-1">
+                <label className="text-xs text-on-surface-variant">Artist</label>
+                <input
+                  type="text"
+                  value={asciiImportArtist}
+                  onChange={e => setAsciiImportArtist(e.target.value)}
+                  placeholder="Artist name"
+                  className="bg-surface-container border border-outline-variant/40 rounded-lg px-3 py-1.5 text-xs text-on-surface outline-none focus:border-primary"
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-xs text-on-surface-variant">Paste ASCII tab below</label>
+              <textarea
+                value={asciiImportText}
+                onChange={e => setAsciiImportText(e.target.value)}
+                placeholder={"e|---0---2---3---|\nB|---1---3---3---|\nG|---0---2---0---|\nD|---2---0---0---|\nA|---3-------2---|\nE|-----------3---|"}
+                rows={12}
+                className="bg-surface-container border border-outline-variant/40 rounded-lg px-3 py-2 text-xs text-on-surface font-mono outline-none focus:border-primary resize-none"
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => { setShowAsciiImport(false); setAsciiImportText(''); setAsciiImportTitle(''); setAsciiImportArtist(''); }}
+                className="px-4 py-1.5 text-xs rounded-lg bg-surface-container hover:bg-surface-container-highest transition-colors text-on-surface"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleImportAscii}
+                disabled={!asciiImportText.trim()}
+                className="px-4 py-1.5 text-xs rounded-lg bg-primary text-on-primary hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Import
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

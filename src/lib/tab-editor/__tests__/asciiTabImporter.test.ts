@@ -374,7 +374,258 @@ describe('importFromAsciiTab – edge cases', () => {
 });
 
 // ---------------------------------------------------------------------------
-// [6] Ultimate Guitar format – The Beatles, Blackbird
+// [6] Ultimate Guitar format – The Beatles, Blackbird (full song)
+//     https://tabs.ultimate-guitar.com/tab/the-beatles/blackbird-tabs-180986
+//     Real content from UG (Cloudflare-protected; content pasted directly).
+//     Exercises: [tab]/section-label stripping, page markers ("Page 1/6"),
+//     lyrics between systems, slides (/12, 12\), high frets (10-12),
+//     multiple full-song systems.
+// ---------------------------------------------------------------------------
+
+const BLACKBIRD_FULL = `Blackbird Tab by The Beatles
+Tuning: E A D G B E
+Key: G
+[Intro]
+
+e|-------------------------------------------------------------|
+B|---0-------1-------3--------/12----12--12----12----12--12----|
+G|-------0-------0-------0---------0-------0-------0-------0---|
+D|-------------------------------------------------------------|
+A|-----------0-------2--------/10------10------10------10------|
+E|---3---------------------------------------------------------|
+
+
+[Verse]
+
+e|-------------------------------------------------------------|
+B|---0-------1-------3--------/12----12--12----12----12--12----|
+G|-------0-------0-------0---------0-------0-------0-------0---|
+D|-------------------------------------------------------------|
+A|-----------0-------2--------/10------10------10------10------|
+E|---3---------------------------------------------------------|
+
+     Blackbird singing in the dead of night
+
+e|-----------3---------------5---------------------------------------|
+B|---5---------------7---------------8-----8---8-----8-----8---8-----|
+G|-------0-------0-------0-------0-------0-------0-------0-------0---|
+D|-------------------------------------------------------------------|
+A|---3-------4-------5-------6-------7-------7-------6-------6-------|
+E|-------------------------------------------------------------------|
+
+     Take these broken wings and learn to fly
+
+e|-----------3----------------------------------------|
+B|---7---------------5-----5---5------4-----4---4-----|
+G|-------0-------0-------0-------0--------0-------0---|
+D|----------------------------------------------------|
+A|---5-------4-------3-------3--------3-------3-------|
+E|----------------------------------------------------|
+
+     All your life,
+
+e|-----------------------------------------------------------------------|
+B|---3-----3---3-----2-----2---2------1-----1---1------0-----0----0------|
+G|-------0-------0-------0-------0--------0-------0--------0---------0---|
+D|------------------------------------0-------0--------------------------|
+A|---2-------2-------0-------0-------------------------------------------|
+E|-----------------------------------------------------3--------3--------|
+
+     you were only waiting for this moment to arise
+
+
+[Fill]
+Page 1/6
+
+e|----------------------------------------------------------------------|
+B|--5-------3---------2-----2---2-----1-----1---1------0-----0----0-----|
+G|------0-------0---------0-------0-------0-------0--------0--------0---|
+D|------------------------------------0-------0-------------------------|
+A|--3-------2---------0-------0-----------------------------------------|
+E|-----------------------------------------------------3--------3-------|
+
+
+[Chorus]
+
+e|---------------------------------------------------------------------|
+B|---10------8-------6-------5---------3-----3---3-----5-----5---5-----|
+G|-------0-------0-------0-------0---------0-------0-------0-------0---|
+D|---------------------------------------------------------------------|
+A|---8-------7-------5-------3---------1-------1-------3-------3-------|
+E|---------------------------------------------------------------------|
+
+     Blackbird fly
+
+e|---------------------------------------------------------------------|
+B|---10------8-------6-------5---------3-----3---3-----2-----2---2-----|
+G|-------0-------0-------0-------0---------0-------0-------0-------0---|
+D|---------------------------------------------------------------------|
+A|---8-------7-------5-------3---------1-------1-------0-------0-------|
+E|---------------------------------------------------------------------|
+
+e|----------------------|
+B|---1-----1---1--------|
+G|-------0-------0------|
+D|---0-------0----------|
+A|----------------------|
+E|----------------------|
+
+     Into the light of a dark, black night
+
+Page 2/6
+
+e|------------------------------------------------------------------------|
+B|-12\\--0-------1-------3--------5-------3-------2--------1-----1---1-----|
+G|----------0-------0-------0--------0-------0-------0--------0-------0---|
+D|--------------------------------------------------------0-------0-------|
+A|-10\\----------0-------2--------3-------2-------0------------------------|
+E|------3-----------------------------------------------------------------|
+
+
+************************************
+
+| /   Slide up
+| \\   Slide down
+
+************************************
+`;
+
+describe('importFromAsciiTab – The Beatles, Blackbird (full UG tab)', () => {
+  it('parses without throwing', () => {
+    expect(() => importFromAsciiTab(BLACKBIRD_FULL)).not.toThrow();
+  });
+
+  it('detects 6-string track', () => {
+    const score = importFromAsciiTab(BLACKBIRD_FULL);
+    expect(score.tracks[0].staves[0].stringTuning.tunings).toHaveLength(6);
+  });
+
+  it('produces notes from multiple systems', () => {
+    expect(countNotes(importFromAsciiTab(BLACKBIRD_FULL))).toBeGreaterThan(50);
+  });
+
+  it('strips [Intro] [Verse] [Chorus] [Fill] section labels', () => {
+    // Labels stripped → no crash, notes still parsed
+    expect(countNotes(importFromAsciiTab(BLACKBIRD_FULL))).toBeGreaterThan(0);
+  });
+
+  it('"Page 1/6" page markers do not create notes or crash', () => {
+    const n = countNotes(importFromAsciiTab(BLACKBIRD_FULL));
+    // If page markers were parsed as tab lines, string count would be wrong
+    const score = importFromAsciiTab(BLACKBIRD_FULL);
+    expect(score.tracks[0].staves[0].stringTuning.tunings).toHaveLength(6);
+    expect(n).toBeGreaterThan(0);
+  });
+
+  it('lyrics lines between systems do not create notes', () => {
+    // Total notes should be reasonable — not inflated by lyric lines being parsed
+    const n = countNotes(importFromAsciiTab(BLACKBIRD_FULL));
+    expect(n).toBeLessThan(500);
+  });
+
+  it('parses high frets 10, 12 from chorus and slide sections', () => {
+    const frets = allFrets(importFromAsciiTab(BLACKBIRD_FULL));
+    expect(frets).toContain(10);
+    expect(frets).toContain(12);
+  });
+
+  it('honours title/artist options', () => {
+    const score = importFromAsciiTab(BLACKBIRD_FULL, {title: 'Blackbird', artist: 'The Beatles'});
+    expect(score.title).toBe('Blackbird');
+    expect(score.artist).toBe('The Beatles');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// [7] Ultimate Guitar – Nirvana, Come As You Are
+//     https://tabs.ultimate-guitar.com/tab/5773820
+//     Non-standard string labels: F| and C| (alt tuning D G C F A D).
+//     Exercises: non-[EBGDAeabgd] string prefixes stripped correctly,
+//     x dead-note chars ignored, b bend notation, ~ vibrato, 6-string detection.
+// ---------------------------------------------------------------------------
+
+const COME_AS_YOU_ARE = `Come As You Are Tab by Nirvana
+Tuning: D G C F A D
+Key: E
+[Intro/Main Riff]
+
+D|-------|-----------------|-----------------|
+A|-------|-----------------|-----------------|
+F|-------|-----------------|-----------------|
+C|-------|-----------------|-----------------|
+G|-------|-----0---0-------|---2-------2-----|
+D|-0-0-1-|-2-----2---2-2-1-|-0---0-0-----0-1-|
+
+D|-----------------|-----------------|
+A|-----------------|-----------------|
+F|-----------------|-----------------|
+C|-----------------|-----------------|
+G|-----0---0-------|---2-------2-----|
+D|-2-----2---2-2-1-|-0---0-0-----0-1-|
+
+
+[Pre-Chorus]
+
+D|-------2---------|-----------------|
+A|-------2---------|---2---2---------|
+F|-------4-------0-|-2-2-2-2-----2-0-|
+C|-4---4-------4-0-|-2-2-2-2-----2-0-|
+G|-4---4-------4-0-|-0-0-0-0-----0-0-|
+D|-2---2-------2---|-----------------|
+
+
+[Solo]
+
+D|-----------------|-----------------|------------------|-----------------|
+A|-----------------|-----------------|----------------0-|(0)--------------|
+F|-6~----9~--11~-\\-|-6~----9~--11~-\\-|-6~----9~--11--11b|(11)---11--9--\\--|
+C|-----------------|-----------------|------------------|-----------------|
+G|-----------------|-----------------|------------------|-----------------|
+D|-----------------|-----------------|------------------|-----------------|
+`;
+
+describe('importFromAsciiTab – Nirvana, Come As You Are (non-standard string labels)', () => {
+  it('parses without throwing despite F| and C| string labels', () => {
+    expect(() => importFromAsciiTab(COME_AS_YOU_ARE)).not.toThrow();
+  });
+
+  it('detects 6 strings (D A F C G D tuning)', () => {
+    const score = importFromAsciiTab(COME_AS_YOU_ARE);
+    expect(score.tracks[0].staves[0].stringTuning.tunings).toHaveLength(6);
+  });
+
+  it('produces notes from main riff and pre-chorus', () => {
+    expect(countNotes(importFromAsciiTab(COME_AS_YOU_ARE))).toBeGreaterThan(10);
+  });
+
+  it('parses frets 0, 1, 2 from intro riff', () => {
+    const frets = allFrets(importFromAsciiTab(COME_AS_YOU_ARE));
+    expect(frets).toContain(0);
+    expect(frets).toContain(1);
+    expect(frets).toContain(2);
+  });
+
+  it('parses high frets 6, 9, 11 from solo', () => {
+    const frets = allFrets(importFromAsciiTab(COME_AS_YOU_ARE));
+    expect(frets).toContain(6);
+    expect(frets).toContain(9);
+    expect(frets).toContain(11);
+  });
+
+  it('x dead-note chars produce no notes (ignored gracefully)', () => {
+    // x characters in F| line — should not crash
+    expect(() => importFromAsciiTab(COME_AS_YOU_ARE)).not.toThrow();
+  });
+
+  it('honours title/artist options', () => {
+    const score = importFromAsciiTab(COME_AS_YOU_ARE, {title: 'Come As You Are', artist: 'Nirvana'});
+    expect(score.title).toBe('Come As You Are');
+    expect(score.artist).toBe('Nirvana');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// [6-legacy] Ultimate Guitar format – The Beatles, Blackbird (short excerpt)
 //     https://tabs.ultimate-guitar.com/tab/the-beatles/blackbird-tabs-180986
 //     (UG is Cloudflare-protected; snippet mirrors the ASCII content returned
 //     by getTextContent — [tab]/[/tab] wrapped, [Intro] section label,

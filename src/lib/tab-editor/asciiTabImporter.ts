@@ -167,7 +167,7 @@ function isTabLine(line: string): boolean {
   const t = line.trim();
   if (t.length < 6) return false;
   // Explicit string-name prefix — handles both "e|" and "E-|" (Barrios/La Catedral style)
-  if (/^[EBGDAeabgd]-?\s*[|:]/.test(t)) return true;
+  if (/^[A-Ga-g]-?\s*[|:]/.test(t)) return true;
   // Lines starting with | are fingering/annotation markers (e.g. |----4---|), not tab lines
   if (t.startsWith('|')) return false;
   // Without a string-name prefix: require high dash density (≥50%) to avoid false positives
@@ -321,7 +321,7 @@ function isBarBetween(colA: number, colB: number, barCols: Set<number>): boolean
 /** Strip the string-name prefix (e.g. "E|", "e|", "B |", "E-|") and return content. */
 function extractContent(line: string): string {
   // Match optional string name (with optional dash separator, e.g. "E-|") + pipe
-  const m = line.match(/^[^\S\n]*[EBGDAeabgd#♭]?-?\s*\|?(.*)/);
+  const m = line.match(/^[^\S\n]*[A-Ga-g#♭]?-?\s*\|?(.*)/);
   const content = m ? m[1] : line;
   // Remove trailing | and whitespace
   return content.replace(/\|\s*$/, '').replace(/\s/g, '');

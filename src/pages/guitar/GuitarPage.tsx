@@ -14,6 +14,7 @@ import {
   Dumbbell,
   Speaker,
   Music,
+  Waves,
   ChevronRight,
   BookMarked,
 } from 'lucide-react';
@@ -291,6 +292,25 @@ export default function GuitarPage() {
                   <p className="text-on-surface-variant text-xs mt-0.5">Search voicings & chord shapes</p>
                   <span className="inline-block mt-2 text-[10px] font-mono uppercase tracking-wider text-secondary">
                     120+ voicings
+                  </span>
+                </div>
+              </div>
+            </button>
+
+            {/* EarIQ -- Active */}
+            <button
+              onClick={() => navigate('/guitar/ear')}
+              className="bg-surface-container-low rounded-xl p-5 border border-secondary-container/20 hover:bg-surface-container transition-all cursor-pointer text-left hover:scale-[1.02]"
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 h-10 w-10 rounded-lg bg-secondary-container/10 flex items-center justify-center">
+                  <Waves className="h-5 w-5 text-secondary" />
+                </div>
+                <div>
+                  <h3 className="font-headline font-semibold text-sm text-on-surface">EarIQ</h3>
+                  <p className="text-on-surface-variant text-xs mt-0.5">Interval, chord & scale ear training</p>
+                  <span className="inline-block mt-2 text-[10px] font-mono uppercase tracking-wider text-secondary">
+                    8 exercises
                   </span>
                 </div>
               </div>
