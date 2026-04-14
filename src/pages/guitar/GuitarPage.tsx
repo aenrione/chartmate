@@ -1,4 +1,4 @@
-import {useState, useCallback} from 'react';
+import {useState, useCallback, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {open} from '@tauri-apps/plugin-dialog';
 import {readFile} from '@tauri-apps/plugin-fs';
@@ -15,7 +15,9 @@ import {
   Speaker,
   Music,
   ChevronRight,
+  BookMarked,
 } from 'lucide-react';
+import {getRepertoireStats} from '@/lib/local-db/repertoire';
 
 import type {RocksmithArrangement} from '@/lib/rocksmith/types';
 
@@ -42,6 +44,13 @@ export default function GuitarPage() {
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [repertoireDue, setRepertoireDue] = useState<number | null>(null);
+
+  useEffect(() => {
+    getRepertoireStats()
+      .then(s => setRepertoireDue(s.dueToday))
+      .catch(() => setRepertoireDue(null));
+  }, []);
 
   const navigateWithPsarc = useCallback(
     async (filePath: string, fileName: string) => {
@@ -283,6 +292,27 @@ export default function GuitarPage() {
                   <span className="inline-block mt-2 text-[10px] font-mono uppercase tracking-wider text-secondary">
                     120+ voicings
                   </span>
+                </div>
+              </div>
+            </button>
+
+            {/* RepertoireIQ -- Active */}
+            <button
+              onClick={() => navigate('/guitar/repertoire')}
+              className="bg-surface-container-low rounded-xl p-5 border border-tertiary/20 hover:bg-surface-container transition-all cursor-pointer text-left hover:scale-[1.02]"
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 h-10 w-10 rounded-lg bg-tertiary/10 flex items-center justify-center">
+                  <BookMarked className="h-5 w-5 text-tertiary" />
+                </div>
+                <div>
+                  <h3 className="font-headline font-semibold text-sm text-on-surface">RepertoireIQ</h3>
+                  <p className="text-on-surface-variant text-xs mt-0.5">Spaced repetition for your repertoire</p>
+                  {repertoireDue !== null && (
+                    <span className={`inline-block mt-2 text-[10px] font-mono uppercase tracking-wider ${repertoireDue > 0 ? 'text-tertiary' : 'text-outline'}`}>
+                      {repertoireDue > 0 ? `${repertoireDue} due today` : 'All caught up'}
+                    </span>
+                  )}
                 </div>
               </div>
             </button>

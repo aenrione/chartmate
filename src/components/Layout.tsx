@@ -145,6 +145,7 @@ function DefaultSidebarContent({pathname}: {pathname: string}) {
                   {label: 'Fretboard IQ', href: '/guitar/fretboard', prefix: '/guitar/fretboard'},
                   {label: 'Chord Finder', href: '/guitar/chords', prefix: '/guitar/chords'},
                   {label: 'EarIQ', href: '/guitar/ear', prefix: '/guitar/ear'},
+                  {label: 'RepertoireIQ', href: '/guitar/repertoire', prefix: '/guitar/repertoire'},
                 ]
               : item.href === '/sheet-music'
               ? [
