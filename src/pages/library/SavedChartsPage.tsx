@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { FolderHeart, Loader2, Search, Play, Bookmark, HardDrive, Wifi } from 'lucide-react';
+import { FolderHeart, Loader2, Search, Play, Bookmark, HardDrive, Wifi, BookMarked } from 'lucide-react';
 import debounce from 'debounce';
 import { getSavedCharts, unsaveChart, SavedChartEntry } from '@/lib/local-db/saved-charts';
 import { deletePersistedChart } from '@/lib/chart-persistent-store';
@@ -9,12 +9,14 @@ import { toast } from 'sonner';
 import { ChartInstruments, preFilterInstruments } from '@/components/ChartInstruments';
 import { DifficultyDots } from '@/components/shared/DifficultyDots';
 import { formatDuration } from '@/lib/ui-utils';
+import AddRepertoireItemDialog from '@/pages/guitar/repertoire/AddRepertoireItemDialog';
 
 export default function SavedChartsPage() {
   const [charts, setCharts] = useState<SavedChartEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [removing, setRemoving] = useState<Set<string>>(new Set());
+  const [addToRepertoire, setAddToRepertoire] = useState<SavedChartEntry | null>(null);
 
   const load = useCallback(async (q?: string) => {
     const results = await getSavedCharts(q);
@@ -170,6 +172,14 @@ export default function SavedChartsPage() {
                         {formatDuration(chart.song_length)}
                       </span>
                     )}
+                    <button
+                      className="ml-auto flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-all"
+                      onClick={e => { e.preventDefault(); e.stopPropagation(); setAddToRepertoire(chart); }}
+                      title="Add to RepertoireIQ"
+                    >
+                      <BookMarked className="h-3 w-3" />
+                      Repertoire
+                    </button>
                   </div>
                   <div className="flex flex-wrap gap-1">
                     <ChartInstruments size="md" classNames="h-5 w-5" instruments={preFilterInstruments(chart)} />
@@ -180,6 +190,21 @@ export default function SavedChartsPage() {
           </div>
         )}
       </div>
+
+      {addToRepertoire && (
+        <AddRepertoireItemDialog
+          open={!!addToRepertoire}
+          onOpenChange={open => { if (!open) setAddToRepertoire(null); }}
+          onSaved={() => toast.success(`"${addToRepertoire.name}" added to RepertoireIQ`)}
+          prefill={{
+            itemType: 'song',
+            title: addToRepertoire.name,
+            artist: addToRepertoire.artist,
+            referenceType: 'saved_chart',
+            referenceId: addToRepertoire.md5,
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -36,6 +36,11 @@ import EarSessionPage from '@/pages/guitar/ear/EarSessionPage';
 import EarSummaryPage from '@/pages/guitar/ear/EarSummaryPage';
 import EarProgressPage from '@/pages/guitar/ear/EarProgressPage';
 import EarRecommendationsPage from '@/pages/guitar/ear/EarRecommendationsPage';
+import RepertoireIQPage from '@/pages/guitar/repertoire/RepertoireIQPage';
+import RepertoireSessionPage from '@/pages/guitar/repertoire/RepertoireSessionPage';
+import RepertoireSummaryPage from '@/pages/guitar/repertoire/RepertoireSummaryPage';
+import RepertoireProgressPage from '@/pages/guitar/repertoire/RepertoireProgressPage';
+import RepertoireManagePage from '@/pages/guitar/repertoire/RepertoireManagePage';
 
 function RootLayout() {
   const [setupComplete, setSetupComplete] = useState(false);
@@ -77,6 +82,11 @@ const router = createBrowserRouter([
       { path: '/guitar/ear/summary', element: <EarSummaryPage /> },
       { path: '/guitar/ear/progress', element: <EarProgressPage /> },
       { path: '/guitar/ear/recommendations', element: <EarRecommendationsPage /> },
+      { path: '/guitar/repertoire', element: <RepertoireIQPage /> },
+      { path: '/guitar/repertoire/session', element: <RepertoireSessionPage /> },
+      { path: '/guitar/repertoire/summary', element: <RepertoireSummaryPage /> },
+      { path: '/guitar/repertoire/progress', element: <RepertoireProgressPage /> },
+      { path: '/guitar/repertoire/manage', element: <RepertoireManagePage /> },
       { path: '/rudiments', element: <RudimentsPage /> },
       { path: '/rudiments/:id', element: <RudimentPracticePage /> },
       { path: '/fills', element: <FillsPage /> },

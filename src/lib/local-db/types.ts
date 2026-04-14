@@ -293,6 +293,47 @@ export interface EarAttempts {
   created_at: string;
 }
 
+export interface RepertoireCollections {
+  id: Generated<number>;
+  name: Generated<string>;
+  description: string | null;
+  color: Generated<string>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RepertoireItems {
+  id: Generated<number>;
+  collection_id: Generated<number>;
+  item_type: string;
+  title: string;
+  artist: string | null;
+  notes: string | null;
+  target_bpm: number | null;
+  reference_type: string | null;
+  reference_id: string | null;
+  interval: Generated<number>;
+  ease_factor: Generated<number>;
+  repetitions: Generated<number>;
+  next_review_date: string;
+  last_reviewed_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RepertoireReviews {
+  id: Generated<number>;
+  item_id: number;
+  quality: number;
+  interval_before: number;
+  interval_after: number;
+  ease_factor_before: number;
+  ease_factor_after: number;
+  duration_ms: number | null;
+  session_notes: string | null;
+  created_at: string;
+}
+
 export interface DB {
   chorus_charts: ChorusCharts;
   chorus_metadata: ChorusMetadata;
@@ -321,4 +362,7 @@ export interface DB {
   chart_pdfs: ChartPdfs;
   ear_sessions: EarSessions;
   ear_attempts: EarAttempts;
+  repertoire_collections: RepertoireCollections;
+  repertoire_items: RepertoireItems;
+  repertoire_reviews: RepertoireReviews;
 }

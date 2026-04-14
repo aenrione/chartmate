@@ -20,6 +20,7 @@ import {migration_018_pdf_library} from './018_pdf_library';
 import {migration_019_song_sections_pdf} from './019_song_sections_pdf';
 import {migration_020_tab_compositions_saved} from './020_tab_compositions_saved';
 import {migration_021_ear_training} from './021_ear_training';
+import {migration_022_repertoire_iq} from './022_repertoire_iq';
 
 export const migrations: Record<string, Migration> = {
   '001_initial': InitialMigration,
@@ -43,4 +44,5 @@ export const migrations: Record<string, Migration> = {
   '019_song_sections_pdf': migration_019_song_sections_pdf,
   '020_tab_compositions_saved': migration_020_tab_compositions_saved,
   '021_ear_training': migration_021_ear_training,
+  '022_repertoire_iq': migration_022_repertoire_iq,
 };
