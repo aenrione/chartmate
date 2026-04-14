@@ -374,6 +374,71 @@ describe('importFromAsciiTab – edge cases', () => {
 });
 
 // ---------------------------------------------------------------------------
+// [6] Ultimate Guitar format – The Beatles, Blackbird
+//     https://tabs.ultimate-guitar.com/tab/the-beatles/blackbird-tabs-180986
+//     (UG is Cloudflare-protected; snippet mirrors the ASCII content returned
+//     by getTextContent — [tab]/[/tab] wrapped, [Intro] section label,
+//     two systems, fingerpicking pattern in G, frets 0-5 across 4 strings)
+// ---------------------------------------------------------------------------
+
+const UG_BLACKBIRD = `[Intro]
+
+[tab]
+e|------------------------|------------------------|
+B|------1-0---------------|------1-0---------------|
+G|----0-------0-----------|----0-------0-----------|
+D|--2---2---2---2---------|--2---2---2---2---------|
+A|3-----------3---3-2-0---|3-----------3---3-2-0---|
+E|------------------------|------------------------|
+
+e|------------------------|------------------------|
+B|------1-0---------------|------3-1---------------|
+G|----0-------0-----------|----0-------0-----------|
+D|--2---2---2---2---------|--4---4---4---4---------|
+A|0-----------0---0-------|5-----------5---5-------|
+E|------------------------|------------------------|
+[/tab]
+`;
+
+describe('importFromAsciiTab – UG format (The Beatles – Blackbird)', () => {
+  it('parses without throwing', () => {
+    expect(() => importFromAsciiTab(UG_BLACKBIRD)).not.toThrow();
+  });
+
+  it('strips [tab]/[/tab] and [Intro] labels, finds 6-string track', () => {
+    const score = importFromAsciiTab(UG_BLACKBIRD);
+    expect(score.tracks[0].staves[0].stringTuning.tunings).toHaveLength(6);
+  });
+
+  it('produces notes from both systems', () => {
+    expect(countNotes(importFromAsciiTab(UG_BLACKBIRD))).toBeGreaterThan(10);
+  });
+
+  it('parses open strings (fret 0)', () => {
+    expect(allFrets(importFromAsciiTab(UG_BLACKBIRD))).toContain(0);
+  });
+
+  it('parses frets 1, 2, 3, 4, 5 from fingerpicking pattern', () => {
+    const frets = allFrets(importFromAsciiTab(UG_BLACKBIRD));
+    expect(frets).toContain(1);
+    expect(frets).toContain(2);
+    expect(frets).toContain(3);
+    expect(frets).toContain(4);
+    expect(frets).toContain(5);
+  });
+
+  it('honours title/artist options', () => {
+    const score = importFromAsciiTab(UG_BLACKBIRD, {title: 'Blackbird', artist: 'The Beatles'});
+    expect(score.title).toBe('Blackbird');
+    expect(score.artist).toBe('The Beatles');
+  });
+
+  it('produces multiple bars from two systems', () => {
+    expect(barCount(importFromAsciiTab(UG_BLACKBIRD))).toBeGreaterThanOrEqual(4);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Metadata header parsing (parseTabBlock)
 // ---------------------------------------------------------------------------
 
