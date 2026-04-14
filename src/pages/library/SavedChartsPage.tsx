@@ -327,6 +327,14 @@ function ChorusSection({
                     {formatDuration(chart.song_length)}
                   </span>
                 )}
+                <button
+                  className="ml-auto flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-all"
+                  onClick={e => { e.preventDefault(); e.stopPropagation(); onAddToRepertoire(chart); }}
+                  title="Add to RepertoireIQ"
+                >
+                  <BookMarked className="h-3 w-3" />
+                  Repertoire
+                </button>
               </div>
             </div>
           </Link>
