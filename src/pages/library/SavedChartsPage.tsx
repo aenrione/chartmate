@@ -231,6 +231,7 @@ export default function SavedChartsPage() {
               md5: addToRepertoire.md5,
               name: addToRepertoire.name,
               artist: addToRepertoire.artist,
+              albumArtMd5: addToRepertoire.albumArtMd5,
             },
           }}
         />
