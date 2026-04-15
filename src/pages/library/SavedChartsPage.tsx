@@ -226,8 +226,12 @@ export default function SavedChartsPage() {
             itemType: 'song',
             title: addToRepertoire.name,
             artist: addToRepertoire.artist,
-            referenceType: 'saved_chart',
-            referenceId: addToRepertoire.md5,
+            linkedItem: {
+              kind: 'saved_chart',
+              md5: addToRepertoire.md5,
+              name: addToRepertoire.name,
+              artist: addToRepertoire.artist,
+            },
           }}
         />
       )}

@@ -310,8 +310,16 @@ export interface RepertoireItems {
   artist: string | null;
   notes: string | null;
   target_bpm: number | null;
+  /** @deprecated Use saved_chart_md5 / composition_id / song_section_id instead */
   reference_type: string | null;
+  /** @deprecated Use saved_chart_md5 / composition_id / song_section_id instead */
   reference_id: string | null;
+  /** Typed FK: references saved_charts.md5 */
+  saved_chart_md5: string | null;
+  /** Typed FK: references tab_compositions.id */
+  composition_id: number | null;
+  /** Typed FK: references song_sections.id */
+  song_section_id: number | null;
   interval: Generated<number>;
   ease_factor: Generated<number>;
   repetitions: Generated<number>;

@@ -1,6 +1,6 @@
 import {useState, useEffect, useCallback} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {ArrowLeft, Music} from 'lucide-react';
+import {useNavigate, Link} from 'react-router-dom';
+import {ArrowLeft, Music, ExternalLink, FileMusic, Bookmark} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import {
   QUALITY_LABELS,
@@ -9,7 +9,7 @@ import {
   previewNextInterval,
   formatInterval,
 } from '@/lib/repertoire/sm2';
-import {getItemsDueToday} from '@/lib/local-db/repertoire';
+import {getItemsDueToday, fetchLinkedResource, LinkedResource} from '@/lib/local-db/repertoire';
 import {useRepertoireSession} from './hooks/useRepertoireSession';
 import type {RepertoireItem, ItemType} from '@/lib/local-db/repertoire';
 
@@ -26,6 +26,18 @@ const QUALITY_COLORS: Record<ReviewQuality, string> = {
   4: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20',
   5: 'border-blue-500/40 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20',
 };
+
+/** Fisher-Yates shuffle — uniform distribution, unlike sort(() => random - 0.5) */
+function shuffleArray<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ── Sub-components ────────────────────────────────────────────────────────────
 
 function LoadingState() {
   return (
@@ -49,6 +61,91 @@ function EmptyState({onBack}: {onBack: () => void}) {
       </button>
     </div>
   );
+}
+
+/**
+ * Renders a preview card for the linked resource (chart, composition, section).
+ * Shown on the back of the review card so the user can open the source material.
+ */
+function LinkedResourcePreview({resource}: {resource: LinkedResource}) {
+  if (resource.type === 'saved_chart') {
+    return (
+      <div className="flex items-center gap-3 rounded-xl bg-surface-container border border-outline-variant/20 overflow-hidden">
+        {resource.albumArtMd5 && (
+          <img
+            src={`https://files.enchor.us/${resource.albumArtMd5}.jpg`}
+            alt=""
+            className="h-16 w-16 object-cover shrink-0"
+          />
+        )}
+        <div className="flex-1 min-w-0 py-2 pr-2">
+          <p className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant mb-0.5">
+            Drum Chart
+          </p>
+          <p className="text-sm font-bold text-on-surface truncate">{resource.name}</p>
+          <p className="text-xs text-on-surface-variant truncate">{resource.artist}</p>
+        </div>
+        <Link
+          to={`/sheet-music/${resource.md5}`}
+          className="shrink-0 mr-3 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-tertiary/10 text-tertiary text-xs font-semibold hover:bg-tertiary/20 transition-colors"
+        >
+          <ExternalLink className="h-3.5 w-3.5" />
+          Open Chart
+        </Link>
+      </div>
+    );
+  }
+
+  if (resource.type === 'composition') {
+    return (
+      <div className="flex items-center gap-3 rounded-xl bg-surface-container border border-outline-variant/20 p-3">
+        <div className="h-10 w-10 rounded-lg bg-secondary/10 flex items-center justify-center shrink-0">
+          <FileMusic className="h-5 w-5 text-secondary" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant mb-0.5">
+            Composition · {resource.tempo} BPM · {resource.instrument}
+          </p>
+          <p className="text-sm font-bold text-on-surface truncate">{resource.title}</p>
+          {resource.artist && (
+            <p className="text-xs text-on-surface-variant truncate">{resource.artist}</p>
+          )}
+        </div>
+        <Link
+          to={`/tab-editor/${resource.id}`}
+          className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary/10 text-secondary text-xs font-semibold hover:bg-secondary/20 transition-colors"
+        >
+          <ExternalLink className="h-3.5 w-3.5" />
+          Open
+        </Link>
+      </div>
+    );
+  }
+
+  if (resource.type === 'song_section') {
+    return (
+      <div className="flex items-center gap-3 rounded-xl bg-surface-container border border-outline-variant/20 p-3">
+        <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+          <Bookmark className="h-5 w-5 text-primary" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant mb-0.5">
+            Song Section
+          </p>
+          <p className="text-sm font-bold text-on-surface truncate">{resource.name}</p>
+        </div>
+        <Link
+          to={`/sheet-music/${resource.chartMd5}`}
+          className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-xs font-semibold hover:bg-primary/20 transition-colors"
+        >
+          <ExternalLink className="h-3.5 w-3.5" />
+          Open Chart
+        </Link>
+      </div>
+    );
+  }
+
+  return null;
 }
 
 function CardFront({item, onShowBack}: {item: RepertoireItem; onShowBack: () => void}) {
@@ -96,14 +193,25 @@ function CardBack({
   item: RepertoireItem;
   onRate: (quality: ReviewQuality) => void;
 }) {
+  const [resource, setResource] = useState<LinkedResource | null | 'loading'>('loading');
+
+  useEffect(() => {
+    fetchLinkedResource(item).then(setResource);
+  }, [item.id]);
+
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-5">
       <div className="rounded-3xl bg-surface-container p-6 text-center">
         <h2 className="text-2xl font-bold text-on-surface">{item.title}</h2>
         {item.artist && (
           <p className="text-on-surface-variant mt-1">{item.artist}</p>
         )}
       </div>
+
+      {/* Linked resource preview */}
+      {resource === 'loading' ? null : resource ? (
+        <LinkedResourcePreview resource={resource} />
+      ) : null}
 
       <div>
         <p className="text-center text-sm font-semibold text-on-surface-variant mb-4">
@@ -143,16 +251,14 @@ function CardBack({
   );
 }
 
+// ── Page ──────────────────────────────────────────────────────────────────────
+
 export default function RepertoireSessionPage() {
   const navigate = useNavigate();
   const [items, setItems] = useState<RepertoireItem[] | null>(null);
 
   useEffect(() => {
-    getItemsDueToday().then(due => {
-      // Shuffle items for variety
-      const shuffled = [...due].sort(() => Math.random() - 0.5);
-      setItems(shuffled);
-    });
+    getItemsDueToday().then(due => setItems(shuffleArray(due)));
   }, []);
 
   const session = useRepertoireSession(items ?? []);

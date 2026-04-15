@@ -6,7 +6,6 @@ import {calculateSM2, todayISO} from '../repertoire/sm2';
 // ── Types ────────────────────────────────────────────────────────────────────
 
 export type ItemType = 'song' | 'song_section' | 'composition' | 'exercise';
-export type ReferenceType = 'saved_chart' | 'song_section' | 'composition';
 
 export interface RepertoireCollection {
   id: number;
@@ -25,8 +24,12 @@ export interface RepertoireItem {
   artist: string | null;
   notes: string | null;
   targetBpm: number | null;
-  referenceType: ReferenceType | null;
-  referenceId: string | null;
+  /** Typed FK to saved_charts.md5 */
+  savedChartMd5: string | null;
+  /** Typed FK to tab_compositions.id */
+  compositionId: number | null;
+  /** Typed FK to song_sections.id */
+  songSectionId: number | null;
   interval: number;
   easeFactor: number;
   repetitions: number;
@@ -61,6 +64,12 @@ export interface RepertoireStats {
   lastReviewDate: string | null;
 }
 
+// Typed linked resource — resolved from the item's FK columns
+export type LinkedResource =
+  | { type: 'saved_chart'; md5: string; name: string; artist: string; albumArtMd5: string | null; tabUrl: string | null }
+  | { type: 'composition'; id: number; title: string; artist: string; tempo: number; instrument: string }
+  | { type: 'song_section'; id: number; name: string; chartMd5: string };
+
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function rowToItem(row: any): RepertoireItem {
@@ -72,8 +81,9 @@ function rowToItem(row: any): RepertoireItem {
     artist: row.artist,
     notes: row.notes,
     targetBpm: row.target_bpm,
-    referenceType: row.reference_type as ReferenceType | null,
-    referenceId: row.reference_id,
+    savedChartMd5: row.saved_chart_md5 ?? null,
+    compositionId: row.composition_id ?? null,
+    songSectionId: row.song_section_id ?? null,
     interval: row.interval,
     easeFactor: row.ease_factor,
     repetitions: row.repetitions,
@@ -151,8 +161,9 @@ export async function createItem(data: {
   artist?: string;
   notes?: string;
   targetBpm?: number;
-  referenceType?: ReferenceType;
-  referenceId?: string;
+  savedChartMd5?: string;
+  compositionId?: number;
+  songSectionId?: number;
 }): Promise<number> {
   const db = await getLocalDb();
   const now = getCurrentTimestamp();
@@ -166,8 +177,9 @@ export async function createItem(data: {
       artist: data.artist ?? null,
       notes: data.notes ?? null,
       target_bpm: data.targetBpm ?? null,
-      reference_type: data.referenceType ?? null,
-      reference_id: data.referenceId ?? null,
+      saved_chart_md5: data.savedChartMd5 ?? null,
+      composition_id: data.compositionId ?? null,
+      song_section_id: data.songSectionId ?? null,
       interval: 1,
       ease_factor: 2.5,
       repetitions: 0,
@@ -175,7 +187,7 @@ export async function createItem(data: {
       last_reviewed_at: null,
       created_at: now,
       updated_at: now,
-    })
+    } as any)
     .executeTakeFirstOrThrow();
   return Number(result.insertId);
 }
@@ -214,11 +226,12 @@ export async function getItemsDueToday(): Promise<RepertoireItem[]> {
 
 export async function getOverdueItems(): Promise<RepertoireItem[]> {
   const db = await getLocalDb();
-  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+  const today = todayISO();
+  // "overdue" = due on any day strictly before today (yesterday and earlier)
   const rows = await db
     .selectFrom('repertoire_items')
     .selectAll()
-    .where('next_review_date', '<', yesterday)
+    .where('next_review_date', '<', today)
     .orderBy('next_review_date', 'asc')
     .execute();
   return rows.map(rowToItem);
@@ -232,8 +245,9 @@ export async function updateItem(
     artist: string | null;
     notes: string | null;
     targetBpm: number | null;
-    referenceType: ReferenceType | null;
-    referenceId: string | null;
+    savedChartMd5: string | null;
+    compositionId: number | null;
+    songSectionId: number | null;
   }>,
 ): Promise<void> {
   const db = await getLocalDb();
@@ -246,10 +260,11 @@ export async function updateItem(
       ...(data.artist !== undefined && {artist: data.artist}),
       ...(data.notes !== undefined && {notes: data.notes}),
       ...(data.targetBpm !== undefined && {target_bpm: data.targetBpm}),
-      ...(data.referenceType !== undefined && {reference_type: data.referenceType}),
-      ...(data.referenceId !== undefined && {reference_id: data.referenceId}),
+      ...(data.savedChartMd5 !== undefined && {saved_chart_md5: data.savedChartMd5}),
+      ...(data.compositionId !== undefined && {composition_id: data.compositionId}),
+      ...(data.songSectionId !== undefined && {song_section_id: data.songSectionId}),
       updated_at: now,
-    })
+    } as any)
     .where('id', '=', id)
     .execute();
 }
@@ -259,19 +274,88 @@ export async function deleteItem(id: number): Promise<void> {
   await db.deleteFrom('repertoire_items').where('id', '=', id).execute();
 }
 
-/** Check if a referenced item already has a repertoire entry */
-export async function findItemByReference(
-  referenceType: ReferenceType,
-  referenceId: string,
-): Promise<RepertoireItem | null> {
+/** Check if a chart already has a repertoire entry */
+export async function findItemBySavedChart(md5: string): Promise<RepertoireItem | null> {
   const db = await getLocalDb();
   const row = await db
     .selectFrom('repertoire_items')
     .selectAll()
-    .where('reference_type', '=', referenceType)
-    .where('reference_id', '=', referenceId)
+    .where('saved_chart_md5', '=', md5)
     .executeTakeFirst();
   return row ? rowToItem(row) : null;
+}
+
+/** Check if a composition already has a repertoire entry */
+export async function findItemByComposition(compositionId: number): Promise<RepertoireItem | null> {
+  const db = await getLocalDb();
+  const row = await db
+    .selectFrom('repertoire_items')
+    .selectAll()
+    .where('composition_id', '=', compositionId)
+    .executeTakeFirst();
+  return row ? rowToItem(row) : null;
+}
+
+// ── Linked Resource ───────────────────────────────────────────────────────────
+
+/**
+ * Fetch the linked resource for a repertoire item (chart, composition, or
+ * song section). Returns null if the item has no link or the linked row no
+ * longer exists.
+ */
+export async function fetchLinkedResource(item: RepertoireItem): Promise<LinkedResource | null> {
+  const db = await getLocalDb();
+
+  if (item.savedChartMd5) {
+    const row = await db
+      .selectFrom('saved_charts')
+      .select(['md5', 'name', 'artist', 'album_art_md5', 'tab_url'])
+      .where('md5', '=', item.savedChartMd5)
+      .executeTakeFirst();
+    if (!row) return null;
+    return {
+      type: 'saved_chart',
+      md5: row.md5,
+      name: row.name,
+      artist: row.artist,
+      albumArtMd5: row.album_art_md5 ?? null,
+      tabUrl: (row as any).tab_url ?? null,
+    };
+  }
+
+  if (item.compositionId) {
+    const row = await db
+      .selectFrom('tab_compositions')
+      .select(['id', 'title', 'artist', 'tempo', 'instrument'])
+      .where('id', '=', item.compositionId)
+      .executeTakeFirst();
+    if (!row) return null;
+    return {
+      type: 'composition',
+      id: Number(row.id),
+      title: row.title,
+      artist: row.artist,
+      tempo: row.tempo,
+      instrument: row.instrument,
+    };
+  }
+
+  if (item.songSectionId) {
+    const row = await db
+      .selectFrom('song_sections')
+      .select(['id', 'name', 'chart_md5'])
+      .where('id', '=', item.songSectionId)
+      .executeTakeFirst();
+    if (!row) return null;
+    return {
+      type: 'song_section',
+      id: Number(row.id),
+      name: row.name,
+      chartMd5: row.chart_md5,
+    };
+  }
+
+  return null;
 }
 
 // ── Reviews ───────────────────────────────────────────────────────────────────
@@ -355,18 +439,24 @@ export async function getRepertoireStats(): Promise<RepertoireStats> {
   const db = await getLocalDb();
   const today = todayISO();
 
-  const items = await db
-    .selectFrom('repertoire_items')
-    .select(['id', 'next_review_date', 'repetitions'])
-    .execute();
-
-  const totalItems = items.length;
-  const dueToday = items.filter(i => i.next_review_date <= today).length;
-  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-  const overdue = items.filter(i => i.next_review_date < yesterday).length;
-  const newItems = items.filter(i => i.repetitions === 0).length;
-  const learningItems = items.filter(i => i.repetitions > 0 && i.repetitions < 2).length;
-  const reviewItems = items.filter(i => i.repetitions >= 2).length;
+  // Single aggregate query instead of loading all rows into JS memory
+  const [agg] = await sql<{
+    total_items: number;
+    due_today: number;
+    overdue: number;
+    new_items: number;
+    learning_items: number;
+    review_items: number;
+  }>`
+    SELECT
+      COUNT(*) AS total_items,
+      SUM(CASE WHEN next_review_date <= ${today} THEN 1 ELSE 0 END) AS due_today,
+      SUM(CASE WHEN next_review_date < ${today} THEN 1 ELSE 0 END) AS overdue,
+      SUM(CASE WHEN repetitions = 0 THEN 1 ELSE 0 END) AS new_items,
+      SUM(CASE WHEN repetitions = 1 THEN 1 ELSE 0 END) AS learning_items,
+      SUM(CASE WHEN repetitions >= 2 THEN 1 ELSE 0 END) AS review_items
+    FROM repertoire_items
+  `.execute(db).then(r => r.rows);
 
   // Streak: consecutive days with at least one review
   const reviewDates = await db
@@ -395,15 +485,16 @@ export async function getRepertoireStats(): Promise<RepertoireStats> {
   longestStreak = Math.max(longestStreak, streak);
 
   const lastDate = dates.length > 0 ? dates[dates.length - 1] : null;
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
   currentStreak = lastDate && (lastDate === today || lastDate === yesterday) ? streak : 0;
 
   return {
-    totalItems,
-    dueToday,
-    overdue,
-    newItems,
-    learningItems,
-    reviewItems,
+    totalItems: Number(agg?.total_items ?? 0),
+    dueToday: Number(agg?.due_today ?? 0),
+    overdue: Number(agg?.overdue ?? 0),
+    newItems: Number(agg?.new_items ?? 0),
+    learningItems: Number(agg?.learning_items ?? 0),
+    reviewItems: Number(agg?.review_items ?? 0),
     currentStreak,
     longestStreak,
     lastReviewDate: lastDate,
