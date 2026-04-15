@@ -18,7 +18,8 @@ import {
   previewNextInterval,
   formatInterval,
 } from '@/lib/repertoire/sm2';
-import {getItemsDueToday, fetchLinkedResource, LinkedResource} from '@/lib/local-db/repertoire';
+import {getItemsDueToday, getItemsByIds, fetchLinkedResource, LinkedResource} from '@/lib/local-db/repertoire';
+import {loadSession, saveSession, clearSession} from '@/lib/repertoire/session-persistence';
 import {useRepertoireSession} from './hooks/useRepertoireSession';
 import type {RepertoireItem, ItemType} from '@/lib/local-db/repertoire';
 
@@ -386,12 +387,51 @@ function CardBack({
 export default function RepertoireSessionPage() {
   const navigate = useNavigate();
   const [items, setItems] = useState<RepertoireItem[] | null>(null);
+  const [initialIndex, setInitialIndex] = useState(0);
+  const [initialResults, setInitialResults] = useState<{item: RepertoireItem; quality: number}[]>([]);
+  const [startedAt, setStartedAt] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    getItemsDueToday().then(due => setItems(shuffleArray(due)));
+    async function init() {
+      const saved = loadSession();
+
+      if (saved && saved.currentIndex < saved.itemIds.length) {
+        // Restore all items in the saved order
+        const allItems = await getItemsByIds(saved.itemIds);
+        if (allItems.length > 0) {
+          // Reconstruct already-done results from the saved pairs
+          const doneResults = saved.resultPairs
+            .map(p => {
+              const item = allItems.find(i => i.id === p.itemId);
+              return item ? {item, quality: p.quality} : null;
+            })
+            .filter((r): r is NonNullable<typeof r> => r !== null);
+
+          setItems(allItems);
+          setInitialIndex(saved.currentIndex);
+          setInitialResults(doneResults as any);
+          setStartedAt(saved.startedAt);
+          return;
+        }
+      }
+
+      // No saved session — start fresh
+      const due = await getItemsDueToday();
+      const shuffled = shuffleArray(due);
+      const now = new Date().toISOString();
+      setItems(shuffled);
+      setStartedAt(now);
+
+      // Persist immediately so navigating away before any rating still saves order
+      if (shuffled.length > 0) {
+        saveSession({itemIds: shuffled.map(i => i.id), currentIndex: 0, resultPairs: [], startedAt: now});
+      }
+    }
+
+    init();
   }, []);
 
-  const session = useRepertoireSession(items ?? []);
+  const session = useRepertoireSession(items ?? [], initialIndex, initialResults as any, startedAt);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -418,6 +458,7 @@ export default function RepertoireSessionPage() {
 
   useEffect(() => {
     if (session.phase === 'completed') {
+      clearSession();
       navigate('/guitar/repertoire/summary', {state: {results: session.results}});
     }
   }, [session.phase, session.results, navigate]);

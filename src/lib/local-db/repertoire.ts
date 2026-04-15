@@ -226,6 +226,19 @@ export async function getAllItems(collectionId?: number): Promise<RepertoireItem
   return rows.map(rowToItem);
 }
 
+/** Fetch multiple items by ID, returned in the same order as `ids`. */
+export async function getItemsByIds(ids: number[]): Promise<RepertoireItem[]> {
+  if (ids.length === 0) return [];
+  const db = await getLocalDb();
+  const rows = await db
+    .selectFrom('repertoire_items')
+    .selectAll()
+    .where('id', 'in', ids)
+    .execute();
+  const byId = new Map(rows.map(r => [Number(r.id), r]));
+  return ids.map(id => byId.get(id)).filter((r): r is NonNullable<typeof r> => !!r).map(rowToItem);
+}
+
 export async function getItemsDueToday(): Promise<RepertoireItem[]> {
   const db = await getLocalDb();
   const today = todayISO();
