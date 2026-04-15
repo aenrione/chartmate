@@ -66,7 +66,21 @@ export interface RepertoireStats {
 
 // Typed linked resource — resolved from the item's FK columns
 export type LinkedResource =
-  | { type: 'saved_chart'; md5: string; name: string; artist: string; albumArtMd5: string | null; tabUrl: string | null }
+  | {
+      type: 'saved_chart';
+      md5: string;
+      name: string;
+      artist: string;
+      charter: string | null;
+      albumArtMd5: string | null;
+      tabUrl: string | null;
+      diffDrums: number | null;
+      diffGuitar: number | null;
+      diffBass: number | null;
+      diffKeys: number | null;
+      songLength: number | null;
+      isDownloaded: boolean;
+    }
   | { type: 'composition'; id: number; title: string; artist: string; tempo: number; instrument: string }
   | { type: 'song_section'; id: number; name: string; chartMd5: string };
 
@@ -309,7 +323,11 @@ export async function fetchLinkedResource(item: RepertoireItem): Promise<LinkedR
   if (item.savedChartMd5) {
     const row = await db
       .selectFrom('saved_charts')
-      .select(['md5', 'name', 'artist', 'album_art_md5', 'tab_url'])
+      .select([
+        'md5', 'name', 'artist', 'charter', 'album_art_md5', 'tab_url',
+        'diff_drums', 'diff_guitar', 'diff_bass', 'diff_keys',
+        'song_length', 'is_downloaded',
+      ])
       .where('md5', '=', item.savedChartMd5)
       .executeTakeFirst();
     if (!row) return null;
@@ -318,8 +336,15 @@ export async function fetchLinkedResource(item: RepertoireItem): Promise<LinkedR
       md5: row.md5,
       name: row.name,
       artist: row.artist,
+      charter: row.charter ?? null,
       albumArtMd5: row.album_art_md5 ?? null,
       tabUrl: (row as any).tab_url ?? null,
+      diffDrums: row.diff_drums ?? null,
+      diffGuitar: row.diff_guitar ?? null,
+      diffBass: row.diff_bass ?? null,
+      diffKeys: row.diff_keys ?? null,
+      songLength: row.song_length ?? null,
+      isDownloaded: row.is_downloaded === 1,
     };
   }
 

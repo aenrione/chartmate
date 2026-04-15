@@ -1,7 +1,16 @@
 import {useState, useEffect, useCallback} from 'react';
 import {useNavigate, Link} from 'react-router-dom';
-import {ArrowLeft, Music, ExternalLink, FileMusic, Bookmark} from 'lucide-react';
+import {
+  ArrowLeft, Music, ExternalLink, FileMusic, Bookmark,
+  HardDrive, Wifi, Clock,
+} from 'lucide-react';
 import {cn} from '@/lib/utils';
+import {
+  Dialog,
+  DialogContent,
+} from '@/components/ui/dialog';
+import {DifficultyDots} from '@/components/shared/DifficultyDots';
+import {formatDuration} from '@/lib/ui-utils';
 import {
   QUALITY_LABELS,
   REVIEW_QUALITIES,
@@ -27,7 +36,7 @@ const QUALITY_COLORS: Record<ReviewQuality, string> = {
   5: 'border-blue-500/40 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20',
 };
 
-/** Fisher-Yates shuffle — uniform distribution, unlike sort(() => random - 0.5) */
+/** Fisher-Yates shuffle */
 function shuffleArray<T>(arr: T[]): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -35,6 +44,120 @@ function shuffleArray<T>(arr: T[]): T[] {
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
+}
+
+// ── Quick-look dialog for saved charts ───────────────────────────────────────
+
+type SavedChartResource = Extract<LinkedResource, {type: 'saved_chart'}>;
+
+function SavedChartQuickLookDialog({
+  chart,
+  open,
+  onClose,
+}: {
+  chart: SavedChartResource;
+  open: boolean;
+  onClose: () => void;
+}) {
+  const instruments: {label: string; diff: number | null}[] = [
+    {label: 'Drums', diff: chart.diffDrums},
+    {label: 'Guitar', diff: chart.diffGuitar},
+    {label: 'Bass', diff: chart.diffBass},
+    {label: 'Keys', diff: chart.diffKeys},
+  ].filter(i => i.diff != null);
+
+  return (
+    <Dialog open={open} onOpenChange={open => { if (!open) onClose(); }}>
+      <DialogContent className="sm:max-w-sm p-0 overflow-hidden gap-0">
+        {/* Album art banner */}
+        <div className="relative h-48 bg-surface-container overflow-hidden">
+          {chart.albumArtMd5 ? (
+            <img
+              src={`https://files.enchor.us/${chart.albumArtMd5}.jpg`}
+              alt={chart.name}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="h-full w-full flex items-center justify-center">
+              <Music className="h-16 w-16 text-on-surface-variant/20" />
+            </div>
+          )}
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          {/* Title over art */}
+          <div className="absolute bottom-0 left-0 right-0 px-4 pb-4">
+            <h2 className="text-lg font-bold text-white leading-tight">{chart.name}</h2>
+            <p className="text-sm text-white/80">{chart.artist}</p>
+          </div>
+          {/* Download badge */}
+          <div className={cn(
+            'absolute top-3 right-3 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-mono font-semibold backdrop-blur-sm',
+            chart.isDownloaded
+              ? 'bg-tertiary-container/80 text-on-tertiary-container'
+              : 'bg-surface/70 text-outline',
+          )}>
+            {chart.isDownloaded
+              ? <><HardDrive className="h-3 w-3" /> Offline</>
+              : <><Wifi className="h-3 w-3" /> Online only</>
+            }
+          </div>
+        </div>
+
+        <div className="p-4 flex flex-col gap-4">
+          {/* Meta row */}
+          <div className="flex items-center gap-4 text-xs text-on-surface-variant">
+            {chart.charter && (
+              <span>Charted by <span className="text-on-surface font-medium">{chart.charter}</span></span>
+            )}
+            {chart.songLength != null && (
+              <span className="flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                {formatDuration(chart.songLength)}
+              </span>
+            )}
+          </div>
+
+          {/* Difficulty per instrument */}
+          {instruments.length > 0 && (
+            <div className="grid grid-cols-2 gap-x-6 gap-y-2">
+              {instruments.map(inst => (
+                <div key={inst.label} className="flex items-center gap-2">
+                  <span className="text-xs text-on-surface-variant w-10 shrink-0">{inst.label}</span>
+                  <DifficultyDots level={inst.diff} />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Tab URL */}
+          {chart.tabUrl && (
+            <a
+              href={chart.tabUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-surface-container border border-outline-variant/30 text-sm font-medium text-on-surface hover:bg-surface-container-high transition-colors"
+            >
+              <ExternalLink className="h-4 w-4" />
+              View Tab
+            </a>
+          )}
+
+          {/* Open full chart — warns about leaving session */}
+          <Link
+            to={`/sheet-music/${chart.md5}`}
+            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-primary/10 text-primary text-sm font-semibold hover:bg-primary/20 transition-colors"
+            onClick={onClose}
+          >
+            <ExternalLink className="h-4 w-4" />
+            Open Full Chart
+          </Link>
+          <p className="text-center text-[10px] text-on-surface-variant -mt-2">
+            Opens chart view — your review session will pause
+          </p>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────────
@@ -64,35 +187,43 @@ function EmptyState({onBack}: {onBack: () => void}) {
 }
 
 /**
- * Renders a preview card for the linked resource (chart, composition, section).
- * Shown on the back of the review card so the user can open the source material.
+ * Renders a preview card for the linked resource shown on the back of the card.
+ * For saved_chart, clicking opens the quick-look dialog instead of navigating.
  */
 function LinkedResourcePreview({resource}: {resource: LinkedResource}) {
+  const [quickLookOpen, setQuickLookOpen] = useState(false);
+
   if (resource.type === 'saved_chart') {
     return (
-      <div className="flex items-center gap-3 rounded-xl bg-surface-container border border-outline-variant/20 overflow-hidden">
-        {resource.albumArtMd5 && (
-          <img
-            src={`https://files.enchor.us/${resource.albumArtMd5}.jpg`}
-            alt=""
-            className="h-16 w-16 object-cover shrink-0"
-          />
-        )}
-        <div className="flex-1 min-w-0 py-2 pr-2">
-          <p className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant mb-0.5">
-            Drum Chart
-          </p>
-          <p className="text-sm font-bold text-on-surface truncate">{resource.name}</p>
-          <p className="text-xs text-on-surface-variant truncate">{resource.artist}</p>
-        </div>
-        <Link
-          to={`/sheet-music/${resource.md5}`}
-          className="shrink-0 mr-3 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-tertiary/10 text-tertiary text-xs font-semibold hover:bg-tertiary/20 transition-colors"
+      <>
+        <button
+          type="button"
+          onClick={() => setQuickLookOpen(true)}
+          className="w-full flex items-center gap-3 rounded-xl bg-surface-container border border-outline-variant/20 overflow-hidden hover:bg-surface-container-high transition-colors text-left"
         >
-          <ExternalLink className="h-3.5 w-3.5" />
-          Open Chart
-        </Link>
-      </div>
+          {resource.albumArtMd5 && (
+            <img
+              src={`https://files.enchor.us/${resource.albumArtMd5}.jpg`}
+              alt=""
+              className="h-16 w-16 object-cover shrink-0"
+            />
+          )}
+          <div className="flex-1 min-w-0 py-2">
+            <p className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant mb-0.5">
+              Drum Chart · tap to preview
+            </p>
+            <p className="text-sm font-bold text-on-surface truncate">{resource.name}</p>
+            <p className="text-xs text-on-surface-variant truncate">{resource.artist}</p>
+          </div>
+          <ExternalLink className="h-4 w-4 text-on-surface-variant mr-3 shrink-0" />
+        </button>
+
+        <SavedChartQuickLookDialog
+          chart={resource}
+          open={quickLookOpen}
+          onClose={() => setQuickLookOpen(false)}
+        />
+      </>
     );
   }
 
@@ -208,10 +339,9 @@ function CardBack({
         )}
       </div>
 
-      {/* Linked resource preview */}
-      {resource === 'loading' ? null : resource ? (
+      {resource !== 'loading' && resource && (
         <LinkedResourcePreview resource={resource} />
-      ) : null}
+      )}
 
       <div>
         <p className="text-center text-sm font-semibold text-on-surface-variant mb-4">
@@ -263,7 +393,6 @@ export default function RepertoireSessionPage() {
 
   const session = useRepertoireSession(items ?? []);
 
-  // Keyboard shortcuts
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (session.phase === 'showing_front' && e.key === ' ') {
@@ -287,7 +416,6 @@ export default function RepertoireSessionPage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  // Navigate to summary when complete
   useEffect(() => {
     if (session.phase === 'completed') {
       navigate('/guitar/repertoire/summary', {state: {results: session.results}});
@@ -301,7 +429,6 @@ export default function RepertoireSessionPage() {
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/20 shrink-0">
         <button
           onClick={() => navigate('/guitar/repertoire')}
@@ -311,7 +438,6 @@ export default function RepertoireSessionPage() {
           Exit
         </button>
         <div className="flex items-center gap-3">
-          {/* Progress bar */}
           <div className="w-32 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
             <div
               className="h-full bg-primary rounded-full transition-all duration-300"
@@ -324,7 +450,6 @@ export default function RepertoireSessionPage() {
         </div>
       </div>
 
-      {/* Card area */}
       <div className="flex-1 overflow-y-auto flex items-start justify-center px-6 py-8">
         <div className="w-full max-w-xl">
           {currentItem && phase === 'showing_front' && (
