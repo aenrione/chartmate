@@ -57,6 +57,7 @@ import {
   Youtube,
   Unlink,
   Maximize2,
+  Minimize2,
   Search,
   Plus,
 } from 'lucide-react';
@@ -128,6 +129,8 @@ export default function TabEditorPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const psarcFileInputRef = useRef<HTMLInputElement>(null);
   const [showYoutubePanel, setShowYoutubePanel] = useState(false);
+  const [youtubeFullscreen, setYoutubeFullscreen] = useState(false);
+  const ytSyncSuppressRef = useRef(false);
   const [compositionId, setCompositionId] = useState<number | undefined>(id ? Number(id) : undefined);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [pendingPreviewImage, setPendingPreviewImage] = useState<string | null>(null);
@@ -160,7 +163,7 @@ export default function TabEditorPage() {
 
   // PlaybackClock adapter — exposes AlphaTab position as a generic clock
   const positionRef = useRef({currentTimeMs: 0});
-  const isPlayingRef = useRef(false);
+  const isPlayingRef = useRef(isPlaying);
   isPlayingRef.current = isPlaying;
   const clockRef = useRef<PlaybackClock | null>(null);
   if (!clockRef.current) {
@@ -186,7 +189,24 @@ export default function TabEditorPage() {
     handleOffsetChange: handleYoutubeOffsetChange,
     handleReady: handleYoutubeReady,
     handleSeek: handleYoutubeSeek,
+    migrateKey: migrateYoutubeKey,
+    seedFromDb: seedYoutubeFromDb,
   } = useYoutubeSync({songKey, clockRef, tempo: 1.0});
+
+  // Auto-show YouTube panel when an association is loaded from DB
+  useEffect(() => {
+    if (youtubeVideoId) setShowYoutubePanel(true);
+  }, [youtubeVideoId]);
+
+  // When YouTube user manually plays/pauses, sync AlphaTab to match
+  const handleYoutubeStateChange = useCallback((state: number) => {
+    if (ytSyncSuppressRef.current) return;
+    if (state === 1 && !isPlayingRef.current) {
+      canvasRef.current?.alphaTab?.playPause();
+    } else if (state === 2 && isPlayingRef.current) {
+      canvasRef.current?.alphaTab?.playPause();
+    }
+  }, []);
 
   const handlePositionChanged = useCallback((currentTime: number) => {
     positionRef.current.currentTimeMs = currentTime;
@@ -224,6 +244,8 @@ export default function TabEditorPage() {
   }, [activeTrackIndex, getApi, markDirty]);
 
   const handlePlayPause = useCallback(() => {
+    ytSyncSuppressRef.current = true;
+    setTimeout(() => { ytSyncSuppressRef.current = false; }, 800);
     canvasRef.current?.alphaTab?.playPause();
     if (isPlaying) {
       youtubeSyncRef.current.onPause();
@@ -297,6 +319,7 @@ export default function TabEditorPage() {
           loadScore(score);
           // DB meta is authoritative — override whatever getScoreTempo read from bytes
           if (composition.meta.tempo > 0) setTempoState(composition.meta.tempo);
+          if (composition.meta.youtubeUrl) seedYoutubeFromDb(composition.meta.youtubeUrl);
           return;
         } catch {
           // Fall through to blank score if parsing fails
@@ -316,7 +339,7 @@ export default function TabEditorPage() {
     // Generate MIDI data for playback (may fail if player not ready yet)
     try { api.loadMidiForScore(); } catch { /* will load when player is ready */ }
     setIsReady(true);
-  }, [getApi, id, loadScore, markDirty, setScore, resetKey]);
+  }, [getApi, id, loadScore, markDirty, setScore, resetKey, seedYoutubeFromDb]);
 
   useEffect(() => {
     const timer = setTimeout(initScore, 200);
@@ -343,6 +366,8 @@ export default function TabEditorPage() {
   }, []);
 
   const handleStop = useCallback(() => {
+    ytSyncSuppressRef.current = true;
+    setTimeout(() => { ytSyncSuppressRef.current = false; }, 800);
     canvasRef.current?.alphaTab?.stop();
     setIsPlaying(false);
     youtubeSyncRef.current.onPause();
@@ -755,6 +780,10 @@ export default function TabEditorPage() {
       previewImage: meta.previewImage,
     });
     await markCompositionSaved(newId);
+    // Migrate YouTube association from old key to new id-based key when saving for first time
+    if (!compositionId) {
+      await migrateYoutubeKey(`tab-editor:${newId}`);
+    }
     setCompositionId(newId);
     setTitle(meta.title);
     setArtist(meta.artist);
@@ -769,7 +798,7 @@ export default function TabEditorPage() {
       proceedAfterSaveRef.current = null;
       proceed();
     }
-  }, [compositionId, markClean, navigate]);
+  }, [compositionId, markClean, navigate, migrateYoutubeKey]);
 
   const handleSave = useCallback(() => {
     if (compositionId && isDirty) {
@@ -1079,19 +1108,28 @@ export default function TabEditorPage() {
         <div className="flex items-start gap-3 px-4 py-2 bg-surface-container-low border-b border-outline-variant/20">
           {youtubeVideoId ? (
             <>
-              <div className="rounded-lg overflow-hidden border bg-black shrink-0 relative group" style={{width: 320, height: 180}}>
+              <div
+                className={cn(
+                  'overflow-hidden border bg-black shrink-0 relative group',
+                  youtubeFullscreen
+                    ? 'fixed inset-0 z-[9999] rounded-none border-none'
+                    : 'rounded-lg',
+                )}
+                style={youtubeFullscreen ? undefined : {width: 320, height: 180}}
+              >
                 <YouTubePlayer
                   ref={youtubePlayerRef}
                   videoId={youtubeVideoId}
                   onReady={handleYoutubeReady}
+                  onStateChange={handleYoutubeStateChange}
                   className="w-full h-full"
                 />
                 <button
-                  onClick={() => youtubePlayerRef.current?.requestFullscreen()}
+                  onClick={() => setYoutubeFullscreen(v => !v)}
                   className="absolute top-2 right-2 p-1.5 rounded bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80"
-                  title="Fullscreen"
+                  title={youtubeFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
                 >
-                  <Maximize2 className="h-3.5 w-3.5" />
+                  {youtubeFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
                 </button>
               </div>
               <div className="flex flex-col gap-2 flex-1 min-w-0">

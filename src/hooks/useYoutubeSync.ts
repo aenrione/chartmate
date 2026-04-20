@@ -132,6 +132,28 @@ export function useYoutubeSync({songKey, clockRef, tempo}: UseYoutubeSyncOptions
     syncRef.current.setClock(clock);
   }, []);
 
+  /** Migrate the YouTube association to a new song key (e.g. after saving a new composition). */
+  const migrateKey = useCallback(async (newKey: string) => {
+    if (!youtubeUrl || songKey === newKey) return;
+    await saveYoutubeAssociation(newKey, youtubeUrl, youtubeOffsetMs);
+    await deleteYoutubeAssociation(songKey);
+  }, [songKey, youtubeUrl, youtubeOffsetMs]);
+
+  /**
+   * Seed a YouTube URL from an external source (e.g. DB composition metadata)
+   * without showing a toast. No-ops if an association already exists.
+   */
+  const seedFromDb = useCallback(async (url: string) => {
+    const videoId = extractYoutubeVideoId(url);
+    if (!videoId) return;
+    const existing = await getYoutubeAssociation(songKey);
+    if (existing) return;
+    await saveYoutubeAssociation(songKey, url, 0);
+    setYoutubeUrl(url);
+    setYoutubeUrlInput(url);
+    setYoutubeVideoId(videoId);
+  }, [songKey]);
+
   return {
     youtubeUrl,
     youtubeVideoId,
@@ -146,5 +168,7 @@ export function useYoutubeSync({songKey, clockRef, tempo}: UseYoutubeSyncOptions
     handleReady,
     handleSeek,
     updateClock,
+    migrateKey,
+    seedFromDb,
   };
 }

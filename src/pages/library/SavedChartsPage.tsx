@@ -48,6 +48,7 @@ export default function SavedChartsPage() {
 
   // Bulk import
   const dirInputRef = useRef<HTMLInputElement>(null);
+  const pageRef = useRef<HTMLDivElement>(null);
   const [bulkImporting, setBulkImporting] = useState(false);
   const [sort, setSort] = useState<CompositionSortOrder>('saved_at_desc');
 
@@ -219,6 +220,7 @@ export default function SavedChartsPage() {
       toast.success(`Deleted ${count} item${count !== 1 ? 's' : ''}`);
       exitSelectionMode();
       loadTab(activeTab, search || undefined, sort);
+      pageRef.current?.scrollTo({top: 0, behavior: 'smooth'});
     } catch {
       toast.error('Some items failed to delete');
     } finally {
@@ -302,7 +304,7 @@ export default function SavedChartsPage() {
   const isLoading = loadingByTab[activeTab];
 
   return (
-    <div className="flex-1 overflow-y-auto bg-surface">
+    <div ref={pageRef} className="flex-1 overflow-y-auto bg-surface">
       <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
         <header className="space-y-1">
           <div className="flex items-center gap-2">
