@@ -31,6 +31,7 @@ export interface AlphaTabHandle {
   renderScore: (score: Score, trackIndexes?: number[]) => void;
   renderTracks: (tracks: Track[]) => void;
   setScale: (scale: number) => void;
+  print: () => void;
 }
 
 export interface AlphaTabWrapperProps {
@@ -132,6 +133,12 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
   ) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const apiRef = useRef<AlphaTabApi | null>(null);
+    // Track latest fileData/trackIndexes so init() can load them if they arrived
+    // before the async init completes (race condition).
+    const fileDataRef = useRef(fileData);
+    const trackIndexesRef = useRef(trackIndexes);
+    fileDataRef.current = fileData;
+    trackIndexesRef.current = trackIndexes;
     const callbacksRef = useRef({
       onScoreLoaded,
       onPositionChanged,
@@ -296,6 +303,13 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
 
         if (!destroyed) {
           callbacksRef.current.onApiReady?.();
+          // Load any fileData that was set before init() completed. The
+          // fileData effect won't re-run because the ref change doesn't
+          // trigger React effects, so we must load it here.
+          const pending = fileDataRef.current;
+          if (pending) {
+            api.load(pending, trackIndexesRef.current);
+          }
         }
       };
 
@@ -390,6 +404,7 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       renderScore: renderScoreFn,
       renderTracks: renderTracksFn,
       setScale: setScaleFn,
+      print: () => apiRef.current?.print(),
     }));
 
     return (
