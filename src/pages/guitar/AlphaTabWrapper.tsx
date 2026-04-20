@@ -12,7 +12,7 @@ import {
   PlayerMode,
   model,
 } from '@coderline/alphatab';
-import {loadActiveSoundfont} from '@/lib/soundfont-store';
+import {loadActiveSoundfont, soundfontToUrl} from '@/lib/soundfont-store';
 
 type Score = InstanceType<typeof model.Score>;
 type Track = InstanceType<typeof model.Track>;
@@ -58,6 +58,8 @@ export interface AlphaTabWrapperProps {
   onRenderFinished?: () => void;
   /** Called when player is ready */
   onPlayerReady?: () => void;
+  /** Called when the AlphaTab API has been initialized (before any score is loaded) */
+  onApiReady?: () => void;
   /** Called when user clicks on a beat */
   onBeatMouseDown?: (beat: Beat) => void;
   /** Called when user releases mouse on a beat */
@@ -115,6 +117,7 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       onPlayerStateChanged,
       onRenderFinished,
       onPlayerReady,
+      onApiReady,
       onBeatMouseDown,
       onBeatMouseUp,
       onNoteMouseDown,
@@ -132,6 +135,7 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       onPlayerStateChanged,
       onRenderFinished,
       onPlayerReady,
+      onApiReady,
       onBeatMouseDown,
       onBeatMouseUp,
       onNoteMouseDown,
@@ -145,6 +149,7 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       onPlayerStateChanged,
       onRenderFinished,
       onPlayerReady,
+      onApiReady,
       onBeatMouseDown,
       onBeatMouseUp,
       onNoteMouseDown,
@@ -160,14 +165,22 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       let api: AlphaTabApi | null = null;
       let observer: MutationObserver | null = null;
       let watermarkObserver: MutationObserver | null = null;
+      let activeBlobUrl: string | null = null;
+
+      const makeSoundfontUrl = (sf: string | Uint8Array): string => {
+        if (typeof sf === 'string') return sf;
+        // Blob URL lets AlphaTab load binary data during init — avoids post-init
+        // loadSoundFont() which throws InvalidStateError on unstarted Web Audio nodes.
+        if (activeBlobUrl) URL.revokeObjectURL(activeBlobUrl);
+        activeBlobUrl = soundfontToUrl(sf);
+        return activeBlobUrl;
+      };
 
       const init = async () => {
-        // Load the user-selected soundfont (URL string or Uint8Array from IndexedDB)
         const soundFont = enablePlayer ? await loadActiveSoundfont() : null;
         if (destroyed) return;
 
-        // For settings init, only pass URL strings — binary data must be loaded via API after init
-        const soundFontSetting = typeof soundFont === 'string' ? soundFont : '/soundfont/sonivox.sf2';
+        const soundFontSetting = soundFont ? makeSoundfontUrl(soundFont) : '/soundfont/sonivox.sf2';
 
         const settings: Record<string, unknown> = {
           core: {
@@ -238,11 +251,6 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
         });
 
         if (enablePlayer) {
-          // If soundfont is binary (from IndexedDB), load it once the default has initialized
-          if (soundFont instanceof Uint8Array) {
-            api.loadSoundFont(soundFont, false);
-          }
-
           api.playerReady.on(() => {
             callbacksRef.current.onPlayerReady?.();
           });
@@ -276,21 +284,31 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
             callbacksRef.current.onNoteMouseUp?.(note);
           });
         }
+
+        if (!destroyed) {
+          callbacksRef.current.onApiReady?.();
+        }
       };
 
       init();
 
-      // Listen for soundfont changes from settings dialog
       const onSoundfontChanged = async () => {
         const currentApi = apiRef.current;
         if (!currentApi || !enablePlayer) return;
         const newSoundFont = await loadActiveSoundfont();
-        currentApi.loadSoundFont(newSoundFont, false);
+        const url = makeSoundfontUrl(newSoundFont);
+        try {
+          currentApi.loadSoundFont(url, false);
+        } catch {
+          // InvalidStateError if audio nodes haven't been started yet — safe to ignore,
+          // the blob URL approach for init handles the startup case correctly.
+        }
       };
       window.addEventListener('soundfont-changed', onSoundfontChanged);
 
       return () => {
         destroyed = true;
+        if (activeBlobUrl) URL.revokeObjectURL(activeBlobUrl);
         window.removeEventListener('soundfont-changed', onSoundfontChanged);
         watermarkObserver?.disconnect();
         observer?.disconnect();

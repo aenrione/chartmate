@@ -122,6 +122,12 @@ export function setActiveSoundfontId(id: string): void {
   localStorage.setItem(ACTIVE_KEY, id);
 }
 
+/** Returns sf if it's already a URL, otherwise creates a blob URL. Caller must revoke blob URLs. */
+export function soundfontToUrl(sf: string | Uint8Array): string {
+  if (typeof sf === 'string') return sf;
+  return URL.createObjectURL(new Blob([sf]));
+}
+
 /** Resolve the active soundfont to a URL string or Uint8Array for AlphaTab */
 export async function loadActiveSoundfont(): Promise<string | Uint8Array> {
   const id = getActiveSoundfontId();
@@ -134,7 +140,7 @@ export async function loadActiveSoundfont(): Promise<string | Uint8Array> {
 
 export async function importSoundfontFile(file: File): Promise<SoundfontEntry> {
   const data = await file.arrayBuffer();
-  const id = file.name.replace(/\.sf2$/i, '').replace(/[^a-zA-Z0-9_-]/g, '-').toLowerCase();
+  const id = file.name.replace(/\.sf2$/i, '').replace(/[^a-zA-Z0-9_-]/g, '_').toLowerCase();
   const entry: SoundfontEntry = {
     id,
     name: file.name.replace(/\.sf2$/i, ''),

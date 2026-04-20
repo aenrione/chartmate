@@ -28,6 +28,7 @@ tauri-plugin-store = "2.4.2"
 tauri-plugin-deep-link = "2.4.7"
 tauri-plugin-single-instance = { version = "2.4.0", features = ["deep-link"] }
 tauri-plugin-http = "2.5.7"
+tauri-plugin-localhost = "2"
 tauri-plugin-sql = { version = "2.3.2", features = ["sqlite"] }
 flate2 = "1"
 aes = "0.8"
@@ -36,4 +37,8 @@ cfb-mode = "0.8"
 cipher = "0.4"
 ww2ogg = "0.1.0"
 symphonia = { version = "0.5.5", features = ["ogg", "vorbis"] }
+url = "2"
+tokio = { version = "1", features = ["rt", "time"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "stream"] }
+base64 = "0.22"
 

@@ -23,6 +23,7 @@ import {
   getActiveSoundfontId,
   setActiveSoundfontId,
   loadActiveSoundfont,
+  soundfontToUrl,
   importSoundfontFile,
   downloadSoundfont,
   BUILT_IN_SOUNDFONT,
@@ -248,6 +249,50 @@ describe('soundfont-store', () => {
     });
   });
 
+  describe('soundfontToUrl', () => {
+    it('returns URL strings unchanged', () => {
+      const url = '/soundfont/sonivox.sf2';
+      expect(soundfontToUrl(url)).toBe(url);
+    });
+
+    it('returns a blob URL for Uint8Array data', () => {
+      const data = new Uint8Array([1, 2, 3, 4]);
+      const url = soundfontToUrl(data);
+      expect(url).toMatch(/^blob:/);
+      URL.revokeObjectURL(url);
+    });
+
+    it('creates distinct blob URLs for different calls', () => {
+      const a = soundfontToUrl(new Uint8Array([1]));
+      const b = soundfontToUrl(new Uint8Array([2]));
+      expect(a).not.toBe(b);
+      URL.revokeObjectURL(a);
+      URL.revokeObjectURL(b);
+    });
+
+    it('loadActiveSoundfont + soundfontToUrl produces a usable URL for binary soundfonts', async () => {
+      const data = new ArrayBuffer(64);
+      new Uint8Array(data).fill(0xff);
+      await saveSoundfont({
+        id: 'blob-test',
+        name: 'Blob Test',
+        size: 64,
+        source: 'imported',
+        data,
+        createdAt: Date.now(),
+      });
+      setActiveSoundfontId('blob-test');
+
+      const sf = await loadActiveSoundfont();
+      expect(sf).toBeInstanceOf(Uint8Array);
+
+      // soundfontToUrl must produce a blob URL, not throw
+      const url = soundfontToUrl(sf as Uint8Array);
+      expect(url).toMatch(/^blob:/);
+      URL.revokeObjectURL(url);
+    });
+  });
+
   describe('importSoundfontFile', () => {
     it('imports a File and stores it', async () => {
       const buffer = new ArrayBuffer(1024);
@@ -267,7 +312,7 @@ describe('soundfont-store', () => {
     it('sanitizes special characters in filename to create id', async () => {
       const file = new File([new ArrayBuffer(10)], 'My Guitar (v2).sf2');
       const entry = await importSoundfontFile(file);
-      expect(entry.id).toBe('my-guitar--v2-');
+      expect(entry.id).toBe('my_guitar__v2_');
     });
   });
 

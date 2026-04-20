@@ -83,15 +83,20 @@ const YouTubePlayer = forwardRef<YouTubePlayerHandle, YouTubePlayerProps>(
         containerRef.current.innerHTML = '';
         containerRef.current.appendChild(playerDiv);
 
+        // YouTube rejects non-HTTP origins (e.g. tauri://localhost) with Error 153.
+        // Only pass origin when it's a real HTTP URL; omit otherwise so YouTube auto-detects.
+        const origin = window.location.origin.startsWith('http') ? window.location.origin : undefined;
+
         playerRef.current = new window.YT.Player(playerDiv, {
           videoId,
+          // youtube-nocookie.com reduces embedding restrictions in sandboxed WebViews
+          host: 'https://www.youtube-nocookie.com',
           playerVars: {
             autoplay: 0,
             controls: 1,
-            modestbranding: 1,
             rel: 0,
             enablejsapi: 1,
-            origin: window.location.origin,
+            ...(origin && {origin}),
           },
           events: {
             onReady: () => {
@@ -100,6 +105,10 @@ const YouTubePlayer = forwardRef<YouTubePlayerHandle, YouTubePlayerProps>(
             },
             onStateChange: (event: YT.OnStateChangeEvent) => {
               onStateChange?.(event.data);
+            },
+            onError: (event: YT.OnErrorEvent) => {
+              setIsLoading(false);
+              setError(`YouTube player error ${event.data}`);
             },
           },
         });
