@@ -1,4 +1,4 @@
-import {exportToAlphaTex} from './exporters';
+import {exportToGp7} from './exporters';
 import {model, importer, Settings} from '@coderline/alphatab';
 
 type Score = InstanceType<typeof model.Score>;
@@ -6,53 +6,32 @@ type Score = InstanceType<typeof model.Score>;
 const MAX_HISTORY = 50;
 
 export class UndoManager {
-  private undoStack: string[] = [];
-  private redoStack: string[] = [];
+  private undoStack: Uint8Array[] = [];
+  private redoStack: Uint8Array[] = [];
 
   /**
    * Take a snapshot of the current score state.
    * Call this BEFORE making any mutation.
    */
   pushSnapshot(score: Score): void {
-    const snapshot = exportToAlphaTex(score);
+    const snapshot = exportToGp7(score);
     this.undoStack.push(snapshot);
     if (this.undoStack.length > MAX_HISTORY) {
       this.undoStack.shift();
     }
-    // Any new action clears the redo stack
     this.redoStack.length = 0;
   }
 
-  /**
-   * Undo: restore the previous state.
-   * Returns the restored Score, or null if nothing to undo.
-   */
   undo(currentScore: Score): Score | null {
     if (this.undoStack.length === 0) return null;
-
-    // Save current state to redo stack
-    const currentSnapshot = exportToAlphaTex(currentScore);
-    this.redoStack.push(currentSnapshot);
-
-    // Pop and restore previous state
-    const previousSnapshot = this.undoStack.pop()!;
-    return this.deserialize(previousSnapshot);
+    this.redoStack.push(exportToGp7(currentScore));
+    return this.deserialize(this.undoStack.pop()!);
   }
 
-  /**
-   * Redo: restore the next state.
-   * Returns the restored Score, or null if nothing to redo.
-   */
   redo(currentScore: Score): Score | null {
     if (this.redoStack.length === 0) return null;
-
-    // Save current state to undo stack
-    const currentSnapshot = exportToAlphaTex(currentScore);
-    this.undoStack.push(currentSnapshot);
-
-    // Pop and restore next state
-    const nextSnapshot = this.redoStack.pop()!;
-    return this.deserialize(nextSnapshot);
+    this.undoStack.push(exportToGp7(currentScore));
+    return this.deserialize(this.redoStack.pop()!);
   }
 
   get canUndo(): boolean {
@@ -68,13 +47,9 @@ export class UndoManager {
     this.redoStack.length = 0;
   }
 
-  private deserialize(alphaTex: string): Score | null {
+  private deserialize(data: Uint8Array): Score | null {
     try {
-      const settings = new Settings();
-      const tex = new importer.AlphaTexImporter();
-      tex.initFromString(alphaTex, settings);
-      const score = tex.readScore();
-      return score;
+      return importer.ScoreLoader.loadScoreFromBytes(data, new Settings());
     } catch {
       return null;
     }
