@@ -180,7 +180,7 @@ export default function SavedChartsPage() {
     try {
       await deleteComposition(comp.id);
       if (activeTab === 'drums') {
-        loadDrums(search || undefined);
+        loadDrums(search || undefined, sort);
       } else {
         setCompositions(prev => prev.filter(c => c.id !== comp.id));
       }
@@ -226,49 +226,67 @@ export default function SavedChartsPage() {
     }
   };
 
+  const handleSelectAll = () => {
+    if (activeTab === 'chorus') {
+      const allMd5s = charts.map(c => c.md5);
+      const allSelected = allMd5s.every(md5 => selectedChartMd5s.has(md5));
+      setSelectedChartMd5s(allSelected ? new Set() : new Set(allMd5s));
+    } else if (activeTab === 'drums') {
+      const compIds = drumsItems.filter(i => i.sourceType === 'composition').map(i => (i.data as TabComposition).id);
+      const chartMd5s = drumsItems.filter(i => i.sourceType === 'chorus').map(i => (i.data as SavedChartEntry).md5);
+      const allSelected = compIds.every(id => selectedCompIds.has(id)) && chartMd5s.every(md5 => selectedChartMd5s.has(md5));
+      if (allSelected) {
+        setSelectedCompIds(new Set());
+        setSelectedChartMd5s(new Set());
+      } else {
+        setSelectedCompIds(new Set(compIds));
+        setSelectedChartMd5s(new Set(chartMd5s));
+      }
+    } else {
+      const allIds = compositions.map(c => c.id);
+      const allSelected = allIds.every(id => selectedCompIds.has(id));
+      setSelectedCompIds(allSelected ? new Set() : new Set(allIds));
+    }
+  };
+
   const handleBulkImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
     e.target.value = '';
     if (files.length === 0) return;
     setBulkImporting(true);
-    let imported = 0;
-    let failed = 0;
-    for (const file of files) {
-      try {
-        const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
-        let score;
-        let thumbnailUrl: string | null = null;
-        let asciiMeta: AsciiImportOptions | null = null;
-        if (ext === 'txt' || ext === 'tab') {
-          const text = await file.text();
-          const result = importFromAsciiTabWithMeta(text);  // No title override — let file header win
-          score = result.score;
-          thumbnailUrl = result.meta.thumbnailUrl ?? null;
-          asciiMeta = result.meta;
-        } else {
-          const buf = await file.arrayBuffer();
-          score = importer.ScoreLoader.loadScoreFromBytes(new Uint8Array(buf), new Settings());
-        }
-        const scoreData = exportToGp7(score).buffer as ArrayBuffer;
-        const instrument = score.tracks[0]?.staves[0]?.isPercussion ? 'drums'
-          : score.tracks[0]?.name?.toLowerCase().includes('bass') ? 'bass' : 'guitar';
-        const fileBaseName = file.name.replace(/\.[^.]+$/, '');
-        const newId = await saveComposition(scoreData, {
-          title: asciiMeta?.title || score.title || fileBaseName,
-          artist: asciiMeta?.artist || score.artist || '',
-          album: (score as any).album || '',
-          tempo: getScoreTempo(score),
-          instrument,
-          previewImage: thumbnailUrl,
-          youtubeUrl: asciiMeta?.youtubeUrl ?? null,
-        });
-        await markCompositionSaved(newId);
-        imported++;
-      } catch {
-        failed++;
+    const results = await Promise.allSettled(files.map(async file => {
+      const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
+      let score;
+      let thumbnailUrl: string | null = null;
+      let asciiMeta: AsciiImportOptions | null = null;
+      if (ext === 'txt' || ext === 'tab') {
+        const text = await file.text();
+        const result = importFromAsciiTabWithMeta(text);
+        score = result.score;
+        thumbnailUrl = result.meta.thumbnailUrl ?? null;
+        asciiMeta = result.meta;
+      } else {
+        const buf = await file.arrayBuffer();
+        score = importer.ScoreLoader.loadScoreFromBytes(new Uint8Array(buf), new Settings());
       }
-    }
+      const scoreData = exportToGp7(score).buffer as ArrayBuffer;
+      const instrument = score.tracks[0]?.staves[0]?.isPercussion ? 'drums'
+        : score.tracks[0]?.name?.toLowerCase().includes('bass') ? 'bass' : 'guitar';
+      const fileBaseName = file.name.replace(/\.[^.]+$/, '');
+      const newId = await saveComposition(scoreData, {
+        title: asciiMeta?.title || score.title || fileBaseName,
+        artist: asciiMeta?.artist || score.artist || '',
+        album: (score as any).album || '',
+        tempo: getScoreTempo(score),
+        instrument,
+        previewImage: thumbnailUrl,
+        youtubeUrl: asciiMeta?.youtubeUrl ?? null,
+      });
+      await markCompositionSaved(newId);
+    }));
     setBulkImporting(false);
+    const imported = results.filter(r => r.status === 'fulfilled').length;
+    const failed = results.filter(r => r.status === 'rejected').length;
     loadTab(activeTab, search || undefined, sort);
     if (imported > 0) toast.success(`Imported ${imported} file${imported !== 1 ? 's' : ''}`);
     if (failed > 0) toast.error(`${failed} file${failed !== 1 ? 's' : ''} failed to import`);
@@ -427,37 +445,7 @@ export default function SavedChartsPage() {
           <div className="fixed bottom-0 inset-x-0 z-40 flex items-center justify-between gap-4 px-6 py-4 bg-surface-container border-t border-outline/20 shadow-lg">
             <div className="flex items-center gap-3">
               <button
-                onClick={() => {
-                  if (activeTab === 'chorus') {
-                    const allMd5s = charts.map(c => c.md5);
-                    const allSelected = allMd5s.every(md5 => selectedChartMd5s.has(md5));
-                    if (allSelected) {
-                      setSelectedChartMd5s(new Set());
-                    } else {
-                      setSelectedChartMd5s(new Set(allMd5s));
-                    }
-                  } else if (activeTab === 'drums') {
-                    const compIds = drumsItems.filter(i => i.sourceType === 'composition').map(i => (i.data as TabComposition).id);
-                    const chartMd5s = drumsItems.filter(i => i.sourceType === 'chorus').map(i => (i.data as SavedChartEntry).md5);
-                    const allCompSelected = compIds.every(id => selectedCompIds.has(id));
-                    const allChartSelected = chartMd5s.every(md5 => selectedChartMd5s.has(md5));
-                    if (allCompSelected && allChartSelected) {
-                      setSelectedCompIds(new Set());
-                      setSelectedChartMd5s(new Set());
-                    } else {
-                      setSelectedCompIds(new Set(compIds));
-                      setSelectedChartMd5s(new Set(chartMd5s));
-                    }
-                  } else {
-                    const allIds = compositions.map(c => c.id);
-                    const allSelected = allIds.every(id => selectedCompIds.has(id));
-                    if (allSelected) {
-                      setSelectedCompIds(new Set());
-                    } else {
-                      setSelectedCompIds(new Set(allIds));
-                    }
-                  }
-                }}
+                onClick={handleSelectAll}
                 className="text-xs font-semibold text-tertiary hover:underline"
               >
                 {totalSelected > 0 ? 'Deselect All' : 'Select All'}
@@ -533,7 +521,7 @@ export default function SavedChartsPage() {
       {/* Edit metadata dialog */}
       {editTarget && (
         <SaveCompositionDialog
-          open={!!editTarget}
+          open
           onOpenChange={open => { if (!open) setEditTarget(null); }}
           initialMeta={{
             title: editTarget.title,
@@ -567,6 +555,22 @@ export default function SavedChartsPage() {
           }}
         />
       )}
+    </div>
+  );
+}
+
+function SelectionOverlay({isSelected}: {isSelected: boolean}) {
+  return (
+    <div className={cn(
+      'absolute inset-0 z-20 flex items-center justify-center pointer-events-none',
+      isSelected ? 'bg-primary/20' : '',
+    )}>
+      <div className={cn(
+        'h-6 w-6 rounded-full border-2 flex items-center justify-center',
+        isSelected ? 'bg-primary border-primary' : 'bg-surface/80 border-outline',
+      )}>
+        {isSelected && <span className="text-on-primary text-xs font-bold">✓</span>}
+      </div>
     </div>
   );
 }
@@ -657,19 +661,7 @@ function ChorusSection({
                     : <Bookmark className="h-4 w-4 fill-tertiary text-tertiary" />
                   }
                 </button>
-                {selectionMode && (
-                  <div className={cn(
-                    'absolute inset-0 z-20 flex items-center justify-center pointer-events-none',
-                    isSelected ? 'bg-primary/20' : '',
-                  )}>
-                    <div className={cn(
-                      'h-6 w-6 rounded-full border-2 flex items-center justify-center',
-                      isSelected ? 'bg-primary border-primary' : 'bg-surface/80 border-outline',
-                    )}>
-                      {isSelected && <span className="text-on-primary text-xs font-bold">✓</span>}
-                    </div>
-                  </div>
-                )}
+                {selectionMode && <SelectionOverlay isSelected={isSelected} />}
               </div>
               <div className="flex flex-1 flex-col gap-2 p-4">
                 <div className="min-w-0">
@@ -783,19 +775,7 @@ function CompositionCard({
             }
           </button>
         </div>
-        {selectionMode && (
-          <div className={cn(
-            'absolute inset-0 z-20 flex items-center justify-center pointer-events-none',
-            isSelected ? 'bg-primary/20' : '',
-          )}>
-            <div className={cn(
-              'h-6 w-6 rounded-full border-2 flex items-center justify-center',
-              isSelected ? 'bg-primary border-primary' : 'bg-surface/80 border-outline',
-            )}>
-              {isSelected && <span className="text-on-primary text-xs font-bold">✓</span>}
-            </div>
-          </div>
-        )}
+        {selectionMode && <SelectionOverlay isSelected={isSelected ?? false} />}
       </div>
       <div className="flex flex-1 flex-col gap-1.5 p-4">
         <div className="min-w-0">
@@ -985,19 +965,7 @@ function DrumsSection({
                     : <Bookmark className="h-4 w-4 fill-tertiary text-tertiary" />
                   }
                 </button>
-                {selectionMode && (
-                  <div className={cn(
-                    'absolute inset-0 z-20 flex items-center justify-center pointer-events-none',
-                    isSelected ? 'bg-primary/20' : '',
-                  )}>
-                    <div className={cn(
-                      'h-6 w-6 rounded-full border-2 flex items-center justify-center',
-                      isSelected ? 'bg-primary border-primary' : 'bg-surface/80 border-outline',
-                    )}>
-                      {isSelected && <span className="text-on-primary text-xs font-bold">✓</span>}
-                    </div>
-                  </div>
-                )}
+                {selectionMode && <SelectionOverlay isSelected={isSelected} />}
               </div>
               <div className="flex flex-1 flex-col gap-1.5 p-4">
                 <div className="min-w-0">

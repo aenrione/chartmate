@@ -17,7 +17,7 @@ type CompositionRow = {
   updated_at: string;
 };
 
-function rowToComposition(r: CompositionRow): TabComposition {
+export function rowToComposition(r: CompositionRow): TabComposition {
   return {
     id: r.id!,
     title: r.title,
@@ -35,6 +35,13 @@ function rowToComposition(r: CompositionRow): TabComposition {
 }
 
 export type CompositionSortOrder = 'saved_at_desc' | 'title_asc' | 'artist_asc' | 'tempo_asc';
+
+export const COMPOSITION_SORT_MAP: Record<CompositionSortOrder, {col: any; dir: 'asc' | 'desc'}> = {
+  saved_at_desc: {col: 'saved_at', dir: 'desc'},
+  title_asc:     {col: 'title',    dir: 'asc'},
+  artist_asc:    {col: 'artist',   dir: 'asc'},
+  tempo_asc:     {col: 'tempo',    dir: 'asc'},
+};
 
 export type TabComposition = {
   id: number;
@@ -166,13 +173,7 @@ export async function getSavedCompositions(
 ): Promise<TabComposition[]> {
   const db = await getLocalDb();
 
-  const orderCol: Record<CompositionSortOrder, {col: any; dir: 'asc' | 'desc'}> = {
-    saved_at_desc: {col: 'saved_at', dir: 'desc'},
-    title_asc:     {col: 'title',    dir: 'asc'},
-    artist_asc:    {col: 'artist',   dir: 'asc'},
-    tempo_asc:     {col: 'tempo',    dir: 'asc'},
-  };
-  const {col, dir} = orderCol[sort];
+  const {col, dir} = COMPOSITION_SORT_MAP[sort];
 
   let query = db
     .selectFrom('tab_compositions')

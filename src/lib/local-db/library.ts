@@ -1,5 +1,5 @@
 import {getLocalDb} from './client';
-import type {TabComposition, CompositionSortOrder} from './tab-compositions';
+import {rowToComposition, COMPOSITION_SORT_MAP, type TabComposition, type CompositionSortOrder} from './tab-compositions';
 import type {SavedChartEntry} from './saved-charts';
 
 export type LibraryItem =
@@ -12,13 +12,7 @@ export async function getDrumsLibraryItems(
 ): Promise<LibraryItem[]> {
   const db = await getLocalDb();
 
-  const orderCol: Record<CompositionSortOrder, {col: any; dir: 'asc' | 'desc'}> = {
-    saved_at_desc: {col: 'saved_at', dir: 'desc'},
-    title_asc:     {col: 'title',    dir: 'asc'},
-    artist_asc:    {col: 'artist',   dir: 'asc'},
-    tempo_asc:     {col: 'tempo',    dir: 'asc'},
-  };
-  const {col, dir} = orderCol[sort];
+  const {col, dir} = COMPOSITION_SORT_MAP[sort];
 
   let compQuery = db
     .selectFrom('tab_compositions')
@@ -26,32 +20,6 @@ export async function getDrumsLibraryItems(
     .where('is_saved', '=', 1)
     .where('instrument', '=', 'drums')
     .orderBy(col, dir);
-
-  if (search && search.trim()) {
-    const term = `%${search.trim()}%`;
-    compQuery = compQuery.where(eb =>
-      eb.or([eb('title', 'like', term), eb('artist', 'like', term)])
-    );
-  }
-
-  const compRows = await compQuery.execute();
-  const compositions: LibraryItem[] = compRows.map(r => ({
-    sourceType: 'composition' as const,
-    data: {
-      id: r.id!,
-      title: r.title,
-      artist: r.artist,
-      album: r.album,
-      tempo: r.tempo,
-      instrument: r.instrument,
-      previewImage: r.preview_image ?? null,
-      youtubeUrl: r.youtube_url ?? null,
-      isSaved: true,
-      savedAt: r.saved_at ?? null,
-      createdAt: r.created_at,
-      updatedAt: r.updated_at,
-    },
-  }));
 
   let chartQuery = db
     .selectFrom('saved_charts')
@@ -61,12 +29,21 @@ export async function getDrumsLibraryItems(
 
   if (search && search.trim()) {
     const term = `%${search.trim()}%`;
+    compQuery = compQuery.where(eb =>
+      eb.or([eb('title', 'like', term), eb('artist', 'like', term)])
+    );
     chartQuery = chartQuery.where(eb =>
       eb.or([eb('name', 'like', term), eb('artist', 'like', term)])
     );
   }
 
-  const chartRows = await chartQuery.execute();
+  const [compRows, chartRows] = await Promise.all([compQuery.execute(), chartQuery.execute()]);
+
+  const compositions: LibraryItem[] = compRows.map(r => ({
+    sourceType: 'composition' as const,
+    data: rowToComposition(r),
+  }));
+
   const choruses: LibraryItem[] = chartRows.map(row => ({
     sourceType: 'chorus' as const,
     data: {
