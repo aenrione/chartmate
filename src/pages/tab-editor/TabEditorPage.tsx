@@ -66,6 +66,7 @@ import type {PlaybackClock} from '@/lib/youtube-sync';
 import YouTubePlayer from '@/components/YouTubePlayer';
 import {snapToYouTubeRate} from '@/lib/youtube-utils';
 import {exportToAlphaTex, exportToAsciiTab, exportToGp7} from '@/lib/tab-editor/exporters';
+import {UndoManager} from '@/lib/tab-editor/undoManager';
 import {importFromAsciiTabWithMeta, extractAsciiTabMeta} from '@/lib/tab-editor/asciiTabImporter';
 import {cn, sanitizeFilename} from '@/lib/utils';
 import {toast} from 'sonner';
@@ -97,6 +98,9 @@ export default function TabEditorPage() {
   const scoreRef = useRef<Score | null>(null);
   const handleDrumAdvanceRef = useRef<(() => void) | null>(null);
   const handleDrumHitRef = useRef<((midi: number) => void) | null>(null);
+  const undoManagerRef = useRef(new UndoManager());
+  const canvasScrollRef = useRef<HTMLDivElement>(null);
+  const lastPlaybackYRef = useRef(0);
   const [currentDuration, setCurrentDuration] = useState(Duration.Quarter);
   const [, setRenderKey] = useState(0);
   const [title, setTitle] = useState('Untitled');
@@ -254,6 +258,55 @@ export default function TabEditorPage() {
     }
   }, [isPlaying, youtubeSyncRef]);
 
+  const applyUndoRedo = useCallback((score: Score) => {
+    const api = getApi();
+    if (!api) return;
+    scoreRef.current = score;
+    setScore(score);
+    setTitle(score.title);
+    setArtist(score.artist);
+    const scoreTempo = getScoreTempo(score);
+    if (scoreTempo > 0) setTempoState(scoreTempo);
+    api.renderScore(score, [activeTrackIndex]);
+    try { api.loadMidiForScore(); } catch { }
+    markDirty();
+  }, [getApi, setScore, activeTrackIndex, markDirty]);
+
+  const handleUndo = useCallback(() => {
+    const score = scoreRef.current;
+    if (!score) return;
+    const restored = undoManagerRef.current.undo(score);
+    if (restored) applyUndoRedo(restored);
+    else toast('Nothing to undo');
+  }, [applyUndoRedo]);
+
+  const handleRedo = useCallback(() => {
+    const score = scoreRef.current;
+    if (!score) return;
+    const restored = undoManagerRef.current.redo(score);
+    if (restored) applyUndoRedo(restored);
+    else toast('Nothing to redo');
+  }, [applyUndoRedo]);
+
+  const handleBeforeMutation = useCallback(() => {
+    if (scoreRef.current) undoManagerRef.current.pushSnapshot(scoreRef.current);
+  }, []);
+
+  const handleActiveBeatsChanged = useCallback((beats: InstanceType<typeof model.Beat>[]) => {
+    if (!isPlayingRef.current) return;
+    const beat = beats[0];
+    if (!beat) return;
+    const api = getApi();
+    const beatBounds = api?.boundsLookup?.findBeat(beat);
+    if (!beatBounds) return;
+    const y = beatBounds.visualBounds.y;
+    if (Math.abs(y - lastPlaybackYRef.current) < 20) return;
+    lastPlaybackYRef.current = y;
+    const container = canvasScrollRef.current;
+    if (!container) return;
+    container.scrollTo({top: Math.max(0, y - container.clientHeight / 3), behavior: 'smooth'});
+  }, [getApi]);
+
   useEditorKeyboard({
     score: scoreRef.current,
     cursor,
@@ -274,6 +327,9 @@ export default function TabEditorPage() {
     setCurrentDuration,
     onShowChordFinder: () => setShowChordFinder(true),
     onToast: (message: string) => toast(message),
+    onBeforeMutation: handleBeforeMutation,
+    onUndo: handleUndo,
+    onRedo: handleRedo,
   });
 
   const loadScore = useCallback((score: InstanceType<typeof model.Score>) => {
@@ -290,6 +346,7 @@ export default function TabEditorPage() {
     api.renderScore(score, [0]);
     api.loadMidiForScore();
     setIsReady(true);
+    undoManagerRef.current.clear();
   }, [getApi, setScore]);
 
   // Initialize score — loads from DB if :id param present, otherwise creates blank
@@ -1218,13 +1275,18 @@ export default function TabEditorPage() {
 
         <div className="flex-1 min-h-0 min-w-0 flex flex-col">
           {/* Score canvas — scrollable, with bottom padding for the overlay */}
-          <div className={cn(
-            'flex-1 min-h-0 overflow-y-auto p-4',
-            showFretboard && 'pb-[220px]', // space for fretboard/drum pad overlay
-          )}>
+          <div
+            ref={canvasScrollRef}
+            className={cn(
+              'flex-1 min-h-0 overflow-y-auto p-4',
+              showFretboard && 'pb-[220px]',
+            )}
+          >
             <TabEditorCanvas
               ref={canvasRef}
               cursorBounds={cursorBounds}
+              cursorStringNumber={cursor.stringNumber}
+              cursorStringCount={scoreRef.current?.tracks[cursor.trackIndex]?.staves[0]?.stringTuning?.tunings?.length ?? 6}
               onScoreLoaded={handleScoreLoaded}
               onRenderFinished={handleRenderFinished}
               onBeatMouseDown={handleBeatClick}
@@ -1232,6 +1294,7 @@ export default function TabEditorPage() {
               onPlayerStateChanged={handlePlayerStateChanged}
               onPlayerReady={handlePlayerReady}
               onPositionChanged={handlePositionChanged}
+              onActiveBeatsChanged={handleActiveBeatsChanged}
               staveMode={staveMode}
             />
           </div>

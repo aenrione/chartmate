@@ -68,6 +68,8 @@ export interface AlphaTabWrapperProps {
   onNoteMouseDown?: (note: Note) => void;
   /** Called when user releases mouse on a note */
   onNoteMouseUp?: (note: Note | null) => void;
+  /** Called when the set of actively-playing beats changes during playback */
+  onActiveBeatsChanged?: (beats: Beat[]) => void;
   /** Additional CSS class for the container */
   className?: string;
   /** Disable AlphaTab's internal scroll/resize tracking */
@@ -122,6 +124,7 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       onBeatMouseUp,
       onNoteMouseDown,
       onNoteMouseUp,
+      onActiveBeatsChanged,
       className,
       disableAutoResize = false,
     },
@@ -140,6 +143,7 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       onBeatMouseUp,
       onNoteMouseDown,
       onNoteMouseUp,
+      onActiveBeatsChanged,
     });
 
     // Keep callbacks ref up to date
@@ -154,6 +158,7 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       onBeatMouseUp,
       onNoteMouseDown,
       onNoteMouseUp,
+      onActiveBeatsChanged,
     };
 
     // Initialize alphaTab API
@@ -266,6 +271,10 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
 
           api.playerStateChanged.on((e) => {
             callbacksRef.current.onPlayerStateChanged?.(e.state);
+          });
+
+          api.activeBeatsChanged.on((e) => {
+            callbacksRef.current.onActiveBeatsChanged?.(e.activeBeats);
           });
         }
 

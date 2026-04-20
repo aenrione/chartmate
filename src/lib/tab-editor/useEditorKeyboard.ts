@@ -49,6 +49,9 @@ interface UseEditorKeyboardOptions {
   setCurrentDuration: (d: number) => void;
   onShowChordFinder?: () => void;
   onToast?: (message: string) => void;
+  onBeforeMutation?: () => void;
+  onUndo?: () => void;
+  onRedo?: () => void;
 }
 
 const FRET_TIMEOUT = 500; // ms to wait for second digit
@@ -82,6 +85,7 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
     if (isNaN(fret) || fret < 0 || fret > 24) return;
     const s = optionsRef.current.score;
     if (!s) return;
+    optionsRef.current.onBeforeMutation?.();
     const nextCursor = setNoteAndAdvance(
       s,
       optionsRef.current.cursor,
@@ -107,6 +111,23 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
 
       const s = optionsRef.current.score;
       const c = optionsRef.current.cursor;
+
+      // Undo / Redo
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+        e.preventDefault();
+        if (e.shiftKey) {
+          optionsRef.current.onRedo?.();
+        } else {
+          optionsRef.current.onUndo?.();
+        }
+        return;
+      }
+
+      // Helper: snapshot then re-render
+      const mutate = () => {
+        optionsRef.current.onBeforeMutation?.();
+        optionsRef.current.onScoreChanged();
+      };
 
       // Digit keys — fret number entry
       if (/^[0-9]$/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
@@ -163,7 +184,7 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
             if (voice && c.beatIndex >= voice.beats.length - 1) {
               const newCursor = addBeatAfter(s, c, currentDuration);
               if (newCursor) {
-                onScoreChanged();
+                mutate();
                 moveTo(newCursor);
               } else {
                 // Bar is full or no room — move to next bar
@@ -204,13 +225,13 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
             // Beat is already empty — remove it from the bar
             const newCursor = removeBeat(s, c);
             if (newCursor) {
-              onScoreChanged();
+              mutate();
               moveTo(newCursor);
             }
           } else {
             // Remove the note on the current string
             removeNote(s, c);
-            onScoreChanged();
+            mutate();
           }
         }
         return;
@@ -232,7 +253,7 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
         if (dur !== undefined && s) {
           setBeatDuration(s, c, dur);
           setCurrentDuration(dur);
-          onScoreChanged();
+          mutate();
         }
         return;
       }
@@ -286,7 +307,7 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
               clipboardCellRef.current = null;
               const noteCount = beat.notes.length;
               toast?.(`Cut beat (${noteCount} note${noteCount !== 1 ? 's' : ''})`);
-              onScoreChanged();
+              mutate();
             } else {
               toast?.('Nothing to cut');
             }
@@ -297,7 +318,7 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
               clipboardCellRef.current = cell;
               clipboardBeatRef.current = null;
               toast?.(`Cut fret ${cell.fret}`);
-              onScoreChanged();
+              mutate();
             } else {
               toast?.('Nothing to cut');
             }
@@ -311,12 +332,12 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
             pasteBeat(s, c, clipboardBeatRef.current);
             const noteCount = clipboardBeatRef.current.notes.length;
             toast?.(`Pasted beat (${noteCount} note${noteCount !== 1 ? 's' : ''})`);
-            onScoreChanged();
+            mutate();
           } else if (clipboardCellRef.current) {
             // Cmd+V — paste single cell
             pasteCell(s, c, clipboardCellRef.current);
             toast?.(`Pasted fret ${clipboardCellRef.current.fret}`);
-            onScoreChanged();
+            mutate();
           } else if (e.shiftKey) {
             toast?.('Nothing to paste (no beat copied)');
           } else {
@@ -353,7 +374,7 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
         e.preventDefault();
         if (s) {
           const nextCursor = insertRest(s, c, optionsRef.current.currentDuration);
-          onScoreChanged();
+          mutate();
           if (nextCursor) moveTo(nextCursor);
         }
         return;
@@ -411,7 +432,7 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
               toggleEffect(s, c, action);
               break;
           }
-          onScoreChanged();
+          mutate();
         }
       }
     };
