@@ -323,7 +323,7 @@ export default function Renderer({
   const seekAndPlay = useCallback((timeSeconds: number) => {
     if (!audioManagerRef.current) return;
     audioManagerRef.current.play({time: timeSeconds});
-    youtubeSyncRef.current.onPlay(timeSeconds);
+    youtubeSyncRef.current.onPlayFrom(timeSeconds);
     setIsPlaying(true);
     setCurrentPlayback(timeSeconds);
   }, []);

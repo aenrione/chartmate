@@ -22,6 +22,7 @@ export interface YouTubePlayerHandle {
   setPlaybackRate(rate: number): void;
   getCurrentTime(): number;
   isPlaying(): boolean;
+  requestFullscreen(): void;
   destroy(): void;
 }
 
@@ -96,6 +97,7 @@ const YouTubePlayer = forwardRef<YouTubePlayerHandle, YouTubePlayerProps>(
             controls: 1,
             rel: 0,
             enablejsapi: 1,
+            fs: 1,
             ...(origin && {origin}),
           },
           events: {
@@ -151,8 +153,12 @@ const YouTubePlayer = forwardRef<YouTubePlayerHandle, YouTubePlayerProps>(
         return playerRef.current?.getCurrentTime() ?? 0;
       },
       isPlaying(): boolean {
-        // YT.PlayerState.PLAYING === 1
         return playerRef.current?.getPlayerState() === 1;
+      },
+      requestFullscreen() {
+        // getIframe() is not in the @types/youtube types but exists at runtime
+        const iframe = (playerRef.current as unknown as {getIframe?(): HTMLIFrameElement})?.getIframe?.();
+        iframe?.requestFullscreen?.();
       },
       destroy() {
         if (playerRef.current) {

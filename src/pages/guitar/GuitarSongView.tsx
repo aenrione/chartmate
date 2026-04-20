@@ -25,6 +25,7 @@ import {
   Music,
   Youtube,
   Unlink,
+  Maximize2,
 } from 'lucide-react';
 import {LayoutMode, StaveProfile, model} from '@coderline/alphatab';
 import AlphaTabWrapper from './AlphaTabWrapper';
@@ -88,6 +89,7 @@ export default function GuitarSongView() {
   const [selectedTrackIndex, setSelectedTrackIndex] = useState(0);
   const [isPlayerReady, setIsPlayerReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [alphaTabApiReady, setAlphaTabApiReady] = useState(false);
 
   // Position state (batched to avoid render loops from rapid alphaTab events)
   const [position, setPosition] = useState({currentTime: 0, endTime: 0, currentTick: 0, endTick: 0});
@@ -154,6 +156,7 @@ export default function GuitarSongView() {
     handleRemove: handleYoutubeRemove,
     handleOffsetChange: handleYoutubeOffsetChange,
     handleReady: handleYoutubeReady,
+    handleSeek: handleYoutubeSeek,
   } = useYoutubeSync({songKey, clockRef, tempo: settings.playbackSpeed});
 
   // Dev mode: load from URL query param ?file=/path/to/file.gp5
@@ -245,7 +248,6 @@ export default function GuitarSongView() {
     const playing = playerState === 1;
     setIsPlaying(playing);
 
-    // Sync YouTube
     if (playing) {
       youtubeSyncRef.current.onResume();
     } else {
@@ -270,12 +272,12 @@ export default function GuitarSongView() {
     setIsPlayerReady(true);
   }, []);
 
-  // Load Rocksmith score into alphaTab after it mounts
+  // Load Rocksmith score into alphaTab after API is ready
   useEffect(() => {
-    if (rocksmithScore && alphaTabRef.current) {
+    if (rocksmithScore && alphaTabApiReady && alphaTabRef.current) {
       alphaTabRef.current.renderScore(rocksmithScore, [0]);
     }
-  }, [rocksmithScore]);
+  }, [rocksmithScore, alphaTabApiReady]);
 
   // Extract original audio from PSARC (lazy - only when first toggled on)
   useEffect(() => {
@@ -862,11 +864,10 @@ export default function GuitarSongView() {
                 const api = alphaTabRef.current?.api;
                 if (api) {
                   api.tickPosition = tick;
-                  // Estimate time from tick position for YouTube sync
                   const estimatedTime = position.endTime > 0
                     ? (tick / (position.endTick || 1)) * (position.endTime / 1000)
                     : 0;
-                  youtubeSyncRef.current.onPlay(estimatedTime);
+                  handleYoutubeSeek(estimatedTime);
                 }
               }}
               disabled={!isPlayerReady}
@@ -882,13 +883,20 @@ export default function GuitarSongView() {
 
         {/* YouTube Video Panel */}
         {youtubeVideoId && (
-          <div className="mx-4 mt-2 rounded-lg overflow-hidden border bg-black" style={{height: '240px'}}>
+          <div className="mx-4 mt-2 rounded-lg overflow-hidden border bg-black relative group" style={{height: '240px'}}>
             <YouTubePlayer
               ref={youtubePlayerRef}
               videoId={youtubeVideoId}
               onReady={handleYoutubeReady}
               className="w-full h-full"
             />
+            <button
+              onClick={() => youtubePlayerRef.current?.requestFullscreen()}
+              className="absolute top-2 right-2 p-1.5 rounded bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80"
+              title="Fullscreen"
+            >
+              <Maximize2 className="h-3.5 w-3.5" />
+            </button>
           </div>
         )}
 
@@ -905,6 +913,7 @@ export default function GuitarSongView() {
           onPositionChanged={onPositionChanged}
           onPlayerStateChanged={onPlayerStateChanged}
           onPlayerReady={onPlayerReady}
+          onApiReady={() => setAlphaTabApiReady(true)}
           className="flex-1"
         />
       </div>

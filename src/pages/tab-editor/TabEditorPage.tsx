@@ -1,5 +1,5 @@
 import {useRef, useEffect, useState, useCallback, useMemo} from 'react';
-import {useParams, useNavigate} from 'react-router-dom';
+import {useParams, useNavigate, useLocation} from 'react-router-dom';
 import {AlphaTabApi, model, importer, Settings, StaveProfile} from '@coderline/alphatab';
 import {loadComposition, saveComposition, markCompositionSaved} from '@/lib/local-db/tab-compositions';
 import SaveCompositionDialog, {type CompositionMeta} from './SaveCompositionDialog';
@@ -36,6 +36,7 @@ import {
   removeTrack,
   setTrackTuning,
   setTempo,
+  getScoreTempo,
   type NoteEffect,
 } from '@/lib/tab-editor/scoreOperations';
 import {voicingToNotes, type ChordVoicing} from '@/lib/tab-editor/chordDb';
@@ -55,24 +56,41 @@ import {
   ChevronDown,
   Youtube,
   Unlink,
+  Maximize2,
   Search,
+  Plus,
 } from 'lucide-react';
 import {useYoutubeSync} from '@/hooks/useYoutubeSync';
 import type {PlaybackClock} from '@/lib/youtube-sync';
 import YouTubePlayer from '@/components/YouTubePlayer';
 import {snapToYouTubeRate} from '@/lib/youtube-utils';
-import {downloadAsGp7, exportToAlphaTex, exportToAsciiTab, exportToGp7} from '@/lib/tab-editor/exporters';
-import {importFromAsciiTab} from '@/lib/tab-editor/asciiTabImporter';
-import {Link} from 'react-router-dom';
-import {cn} from '@/lib/utils';
+import {exportToAlphaTex, exportToAsciiTab, exportToGp7} from '@/lib/tab-editor/exporters';
+import {importFromAsciiTabWithMeta, extractAsciiTabMeta} from '@/lib/tab-editor/asciiTabImporter';
+import {cn, sanitizeFilename} from '@/lib/utils';
 import {toast} from 'sonner';
+import {invoke} from '@tauri-apps/api/core';
+import {join, appCacheDir} from '@tauri-apps/api/path';
+import {writeFile} from '@tauri-apps/plugin-fs';
+import {save as saveDialog} from '@tauri-apps/plugin-dialog';
+import {convertToAlphaTab} from '@/lib/rocksmith/convertToAlphaTab';
+import type {RocksmithArrangement} from '@/lib/rocksmith/types';
 
 type Score = InstanceType<typeof model.Score>;
 const {Duration} = model;
 
+// Per-id caches — survive route changes without unmounting persistence
+type EditorUIState = {
+  staveMode: 'both' | 'tab' | 'notation';
+  showFretboard: boolean;
+  mutedTracks: Set<number>;
+};
+const _editorScoreCache = new Map<string, Uint8Array>(); // dirty score bytes
+const _editorUICache = new Map<string, EditorUIState>();  // UI preferences
+
 export default function TabEditorPage() {
   const {id} = useParams<{id: string}>();
   const navigate = useNavigate();
+  const location = useLocation();
   const canvasRef = useRef<TabEditorCanvasHandle>(null);
   const apiRef = useRef<AlphaTabApi | null>(null);
   const scoreRef = useRef<Score | null>(null);
@@ -86,12 +104,18 @@ export default function TabEditorPage() {
   const [activeTrackIndex, setActiveTrackIndex] = useState(0);
   const [showHelp, setShowHelp] = useState(false);
   const [showChordFinder, setShowChordFinder] = useState(false);
-  const [showFretboard, setShowFretboard] = useState(true);
+  const [showFretboard, setShowFretboard] = useState(
+    () => _editorUICache.get(id ?? 'new')?.showFretboard ?? true,
+  );
   const [isReady, setIsReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPlayerReady, setIsPlayerReady] = useState(false);
-  const [staveMode, setStaveMode] = useState<'both' | 'tab' | 'notation'>('tab');
-  const [mutedTracks, setMutedTracks] = useState<Set<number>>(new Set());
+  const [staveMode, setStaveMode] = useState<'both' | 'tab' | 'notation'>(
+    () => _editorUICache.get(id ?? 'new')?.staveMode ?? 'tab',
+  );
+  const [mutedTracks, setMutedTracks] = useState<Set<number>>(
+    () => new Set(_editorUICache.get(id ?? 'new')?.mutedTracks ?? []),
+  );
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [showDemoMenu, setShowDemoMenu] = useState(false);
   const [showImportMenu, setShowImportMenu] = useState(false);
@@ -99,12 +123,40 @@ export default function TabEditorPage() {
   const [asciiImportText, setAsciiImportText] = useState('');
   const [asciiImportTitle, setAsciiImportTitle] = useState('');
   const [asciiImportArtist, setAsciiImportArtist] = useState('');
+  const asciiTitleManual = useRef(false);
+  const asciiArtistManual = useRef(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const psarcFileInputRef = useRef<HTMLInputElement>(null);
   const [showYoutubePanel, setShowYoutubePanel] = useState(false);
   const [compositionId, setCompositionId] = useState<number | undefined>(id ? Number(id) : undefined);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [pendingPreviewImage, setPendingPreviewImage] = useState<string | null>(null);
+  const [resetKey, setResetKey] = useState(0);
+  const [showNewTabConfirm, setShowNewTabConfirm] = useState(false);
   const {isDirty, markDirty, markClean, blocker} = useUnsavedChanges();
   const proceedAfterSaveRef = useRef<(() => void) | null>(null);
+  const isDirtyRef = useRef(isDirty);
+  isDirtyRef.current = isDirty;
+
+  // Sync UI prefs to cache on every change
+  useEffect(() => {
+    _editorUICache.set(id ?? 'new', {staveMode, showFretboard, mutedTracks});
+  }, [id, staveMode, showFretboard, mutedTracks]);
+
+  // On unmount: serialize dirty score to bytes so it survives navigation
+  useEffect(() => {
+    const cacheKey = id ?? 'new';
+    return () => {
+      if (isDirtyRef.current && scoreRef.current) {
+        try {
+          _editorScoreCache.set(cacheKey, exportToGp7(scoreRef.current));
+        } catch { /* ignore serialization errors */ }
+      } else {
+        _editorScoreCache.delete(cacheKey);
+      }
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   // PlaybackClock adapter — exposes AlphaTab position as a generic clock
   const positionRef = useRef({currentTimeMs: 0});
@@ -133,6 +185,7 @@ export default function TabEditorPage() {
     handleRemove: handleYoutubeRemove,
     handleOffsetChange: handleYoutubeOffsetChange,
     handleReady: handleYoutubeReady,
+    handleSeek: handleYoutubeSeek,
   } = useYoutubeSync({songKey, clockRef, tempo: 1.0});
 
   const handlePositionChanged = useCallback((currentTime: number) => {
@@ -208,6 +261,8 @@ export default function TabEditorPage() {
     setScore(score);
     setTitle(score.title);
     setArtist(score.artist);
+    const scoreTempo = getScoreTempo(score);
+    if (scoreTempo > 0) setTempoState(scoreTempo);
     setActiveTrackIndex(0);
     setTrackVersion(v => v + 1);
     api.renderScore(score, [0]);
@@ -221,6 +276,18 @@ export default function TabEditorPage() {
     if (!api || scoreRef.current) return;
     apiRef.current = api;
 
+    // Check in-memory cache first — restores unsaved edits after navigation
+    const cacheKey = id ?? 'new';
+    const cachedBytes = _editorScoreCache.get(cacheKey);
+    if (cachedBytes) {
+      try {
+        const score = importer.ScoreLoader.loadScoreFromBytes(cachedBytes, new Settings());
+        loadScore(score);
+        markDirty();
+        return;
+      } catch { /* fall through */ }
+    }
+
     if (id) {
       const composition = await loadComposition(Number(id));
       if (composition) {
@@ -228,6 +295,8 @@ export default function TabEditorPage() {
           const data = new Uint8Array(composition.scoreData);
           const score = importer.ScoreLoader.loadScoreFromBytes(data, new Settings());
           loadScore(score);
+          // DB meta is authoritative — override whatever getScoreTempo read from bytes
+          if (composition.meta.tempo > 0) setTempoState(composition.meta.tempo);
           return;
         } catch {
           // Fall through to blank score if parsing fails
@@ -247,7 +316,7 @@ export default function TabEditorPage() {
     // Generate MIDI data for playback (may fail if player not ready yet)
     try { api.loadMidiForScore(); } catch { /* will load when player is ready */ }
     setIsReady(true);
-  }, [getApi, id, loadScore, setScore]);
+  }, [getApi, id, loadScore, markDirty, setScore, resetKey]);
 
   useEffect(() => {
     const timer = setTimeout(initScore, 200);
@@ -291,40 +360,31 @@ export default function TabEditorPage() {
     loadScore(createBassDemo());
   }, [loadScore]);
 
-  // Export handlers
-  const handleExportGp7 = useCallback(() => {
+  // Export handlers — use native save dialog so user picks location
+  const handleExportGp7 = useCallback(async () => {
     const s = scoreRef.current;
     if (!s) return;
-    const filename = (s.title || 'tab').replace(/[^a-zA-Z0-9_-]/g, '_') + '.gp';
-    downloadAsGp7(s, filename);
+    const filePath = await saveDialog({defaultPath: sanitizeFilename(s.title, 'gp'), filters: [{name: 'Guitar Pro', extensions: ['gp', 'gp7']}]});
+    if (!filePath) return;
+    await writeFile(filePath, exportToGp7(s));
     setShowExportMenu(false);
   }, []);
 
-  const handleExportAlphaTex = useCallback(() => {
+  const handleExportAlphaTex = useCallback(async () => {
     const s = scoreRef.current;
     if (!s) return;
-    const tex = exportToAlphaTex(s);
-    const blob = new Blob([tex], {type: 'text/plain'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = (s.title || 'tab').replace(/[^a-zA-Z0-9_-]/g, '_') + '.alphatex';
-    a.click();
-    URL.revokeObjectURL(url);
+    const filePath = await saveDialog({defaultPath: sanitizeFilename(s.title, 'alphatex'), filters: [{name: 'AlphaTex', extensions: ['alphatex', 'tex']}]});
+    if (!filePath) return;
+    await writeFile(filePath, new TextEncoder().encode(exportToAlphaTex(s)));
     setShowExportMenu(false);
   }, []);
 
-  const handleExportAscii = useCallback(() => {
+  const handleExportAscii = useCallback(async () => {
     const s = scoreRef.current;
     if (!s) return;
-    const ascii = exportToAsciiTab(s);
-    const blob = new Blob([ascii], {type: 'text/plain'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = (s.title || 'tab').replace(/[^a-zA-Z0-9_-]/g, '_') + '.txt';
-    a.click();
-    URL.revokeObjectURL(url);
+    const filePath = await saveDialog({defaultPath: sanitizeFilename(s.title, 'txt'), filters: [{name: 'Text', extensions: ['txt']}]});
+    if (!filePath) return;
+    await writeFile(filePath, new TextEncoder().encode(exportToAsciiTab(s)));
     setShowExportMenu(false);
   }, []);
 
@@ -351,10 +411,19 @@ export default function TabEditorPage() {
   const handleImportAscii = useCallback(() => {
     if (!asciiImportText.trim()) return;
     try {
-      const score = importFromAsciiTab(asciiImportText);
-      if (asciiImportTitle.trim()) score.title = asciiImportTitle.trim();
-      if (asciiImportArtist.trim()) score.artist = asciiImportArtist.trim();
+      const overrides = {
+        title: asciiImportTitle.trim() || undefined,
+        artist: asciiImportArtist.trim() || undefined,
+      };
+      const {score, meta} = importFromAsciiTabWithMeta(asciiImportText, overrides);
       loadScore(score);
+      if (meta.youtubeUrl) {
+        setShowYoutubePanel(true);
+        handleYoutubeUrlSubmit(meta.youtubeUrl);
+      }
+      if (meta.thumbnailUrl) {
+        setPendingPreviewImage(meta.thumbnailUrl);
+      }
       setShowAsciiImport(false);
       setAsciiImportText('');
       setAsciiImportTitle('');
@@ -363,7 +432,25 @@ export default function TabEditorPage() {
       console.error('Failed to import ASCII tab:', err);
       alert('Failed to parse ASCII tab. Make sure it uses standard 6-string tab notation.');
     }
-  }, [asciiImportText, asciiImportTitle, asciiImportArtist, loadScore]);
+  }, [asciiImportText, asciiImportTitle, asciiImportArtist, loadScore, handleYoutubeUrlSubmit]);
+
+  const handleImportPsarc = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+    try {
+      const bytes = await file.arrayBuffer();
+      const tempPath = await join(await appCacheDir(), `tab-editor-import-${Date.now()}.psarc`);
+      await writeFile(tempPath, new Uint8Array(bytes));
+      const {arrangements} = await invoke<{arrangements: RocksmithArrangement[]}>('parse_psarc', {path: tempPath});
+      if (arrangements.length === 0) throw new Error('No arrangements found in PSARC');
+      const arr = arrangements.find(a => a.arrangementType === 'Lead') ?? arrangements[0];
+      loadScore(convertToAlphaTab(arr));
+    } catch (err) {
+      console.error('Failed to import PSARC:', err);
+      alert(`Failed to import PSARC: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }, [loadScore]);
 
   // Drum pad hit handler — adds note to current beat (layer multiple hits)
   // User advances with right arrow or Enter
@@ -614,6 +701,31 @@ export default function TabEditorPage() {
     reRender();
   }, [reRender]);
 
+  const doNewTab = useCallback(() => {
+    scoreRef.current = null;
+    _editorScoreCache.delete('new');
+    setCompositionId(undefined);
+    setPendingPreviewImage(null);
+    setTitle('Untitled');
+    setArtist('');
+    setTempoState(120);
+    setActiveTrackIndex(0);
+    markClean();
+    setResetKey(k => k + 1);
+  }, [markClean]);
+
+  const handleNewTab = useCallback(() => {
+    if (id) {
+      navigate('/tab-editor');
+      return;
+    }
+    if (isDirty) {
+      setShowNewTabConfirm(true);
+      return;
+    }
+    doNewTab();
+  }, [id, isDirty, navigate, doNewTab]);
+
   const handleTitleChange = useCallback((newTitle: string) => {
     setTitle(newTitle);
     const s = scoreRef.current;
@@ -640,12 +752,14 @@ export default function TabEditorPage() {
       album: meta.album,
       tempo: meta.tempo,
       instrument: meta.instrument,
+      previewImage: meta.previewImage,
     });
     await markCompositionSaved(newId);
     setCompositionId(newId);
     setTitle(meta.title);
     setArtist(meta.artist);
     markClean();
+    _editorScoreCache.delete(id ?? 'new');
     toast.success('Saved to library');
     if (!compositionId) {
       navigate(`/tab-editor/${newId}`, {replace: true});
@@ -656,6 +770,37 @@ export default function TabEditorPage() {
       proceed();
     }
   }, [compositionId, markClean, navigate]);
+
+  const handleSave = useCallback(() => {
+    if (compositionId && isDirty) {
+      handleSaveComposition({
+        title,
+        artist,
+        album: (scoreRef.current as any)?.album ?? '',
+        tempo,
+        instrument: tracks[activeTrackIndex]?.instrument ?? 'guitar',
+        previewImage: pendingPreviewImage,
+      });
+    } else {
+      setShowSaveDialog(true);
+    }
+  }, [compositionId, isDirty, handleSaveComposition, title, artist, tempo, tracks, activeTrackIndex, pendingPreviewImage]);
+
+  // Keep a stable ref so the keydown listener never needs re-registration
+  const handleSaveRef = useRef(handleSave);
+  handleSaveRef.current = handleSave;
+
+  // Cmd+S / Ctrl+S shortcut — registered once, reads latest handleSave via ref
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault();
+        handleSaveRef.current();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
   // String names for status bar
   const stringLabel = useMemo(() => {
@@ -674,13 +819,12 @@ export default function TabEditorPage() {
     <div className="flex flex-col h-full">
       {/* Toolbar */}
       <div className="flex items-center gap-3 px-4 py-2 bg-surface-container border-b border-outline-variant/20">
-        <Link
-          to="/guitar"
+        <button
+          onClick={() => navigate((location.state as any)?.from ?? '/guitar', {state: {activeTab: (location.state as any)?.activeTab}})}
           className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
         >
           <ChevronLeft className="h-4 w-4" />
-        </Link>
-
+        </button>
         <div className="flex items-center gap-2">
           <Music className="h-4 w-4 text-primary" />
           <h1 className="text-sm font-bold text-on-surface">Tab Editor</h1>
@@ -720,6 +864,15 @@ export default function TabEditorPage() {
         </div>
 
         <div className="flex-1" />
+
+        {/* New tab */}
+        <button
+          onClick={handleNewTab}
+          className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
+          title="New tab"
+        >
+          <Plus className="h-4 w-4" />
+        </button>
 
         {/* View mode toggle — disabled for percussion (score only) */}
         <button
@@ -762,8 +915,8 @@ export default function TabEditorPage() {
           <Piano className="h-4 w-4" />
         </button>
 
-        {/* Demos dropdown */}
-        <div className="relative">
+        {/* Demos dropdown — only shown on blank new tabs */}
+        {!compositionId && !isDirty && <div className="relative">
           <button
             onClick={() => { setShowDemoMenu(!showDemoMenu); setShowExportMenu(false); }}
             className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium text-on-surface-variant hover:bg-surface-container-high transition-colors"
@@ -798,7 +951,22 @@ export default function TabEditorPage() {
               </div>
             </>
           )}
-        </div>
+        </div>}
+
+        {/* Save to Library */}
+        <button
+          onClick={handleSave}
+          className={cn(
+            'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors',
+            isDirty
+              ? 'bg-primary text-on-primary hover:bg-primary/90'
+              : 'text-on-surface-variant hover:bg-surface-container-high',
+          )}
+          title={compositionId && isDirty ? 'Save (⌘S)' : 'Save to library (⌘S)'}
+        >
+          <Save className="h-3.5 w-3.5" />
+          {isDirty ? 'Save*' : 'Saved'}
+        </button>
 
         {/* Import */}
         <input
@@ -807,6 +975,13 @@ export default function TabEditorPage() {
           accept=".gp,.gp3,.gp4,.gp5,.gpx,.gp7,.alphatex,.tex"
           className="hidden"
           onChange={handleImportFile}
+        />
+        <input
+          ref={psarcFileInputRef}
+          type="file"
+          accept=".psarc"
+          className="hidden"
+          onChange={handleImportPsarc}
         />
         <div className="relative">
           <button
@@ -832,25 +1007,16 @@ export default function TabEditorPage() {
                 >
                   ASCII Tab text...
                 </button>
+                <button
+                  onClick={() => { psarcFileInputRef.current?.click(); setShowImportMenu(false); }}
+                  className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors"
+                >
+                  PSARC file...
+                </button>
               </div>
             </>
           )}
         </div>
-
-        {/* Save to Library */}
-        <button
-          onClick={() => setShowSaveDialog(true)}
-          className={cn(
-            'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors',
-            isDirty
-              ? 'bg-primary text-on-primary hover:bg-primary/90'
-              : 'text-on-surface-variant hover:bg-surface-container-high',
-          )}
-          title="Save to library"
-        >
-          <Save className="h-3.5 w-3.5" />
-          {isDirty ? 'Save*' : 'Saved'}
-        </button>
 
         {/* Export dropdown */}
         <div className="relative">
@@ -913,13 +1079,20 @@ export default function TabEditorPage() {
         <div className="flex items-start gap-3 px-4 py-2 bg-surface-container-low border-b border-outline-variant/20">
           {youtubeVideoId ? (
             <>
-              <div className="rounded-lg overflow-hidden border bg-black shrink-0" style={{width: 320, height: 180}}>
+              <div className="rounded-lg overflow-hidden border bg-black shrink-0 relative group" style={{width: 320, height: 180}}>
                 <YouTubePlayer
                   ref={youtubePlayerRef}
                   videoId={youtubeVideoId}
                   onReady={handleYoutubeReady}
                   className="w-full h-full"
                 />
+                <button
+                  onClick={() => youtubePlayerRef.current?.requestFullscreen()}
+                  className="absolute top-2 right-2 p-1.5 rounded bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80"
+                  title="Fullscreen"
+                >
+                  <Maximize2 className="h-3.5 w-3.5" />
+                </button>
               </div>
               <div className="flex flex-col gap-2 flex-1 min-w-0">
                 <div className="flex items-center gap-1">
@@ -1083,9 +1256,42 @@ export default function TabEditorPage() {
           album: (scoreRef.current as any)?.album ?? '',
           tempo,
           instrument: tracks[activeTrackIndex]?.instrument ?? 'guitar',
+          previewImage: pendingPreviewImage,
         }}
         onSave={handleSaveComposition}
       />
+      {showNewTabConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-surface-container rounded-2xl p-6 max-w-sm w-full mx-4 shadow-xl space-y-4">
+            <h2 className="text-base font-bold text-on-surface">Unsaved Changes</h2>
+            <p className="text-sm text-on-surface-variant">You have unsaved changes. Save before creating a new tab?</p>
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => setShowNewTabConfirm(false)}
+                className="px-3 py-1.5 text-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => { setShowNewTabConfirm(false); _editorScoreCache.delete('new'); doNewTab(); }}
+                className="px-3 py-1.5 text-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors"
+              >
+                Discard
+              </button>
+              <button
+                onClick={() => {
+                  setShowNewTabConfirm(false);
+                  proceedAfterSaveRef.current = doNewTab;
+                  setShowSaveDialog(true);
+                }}
+                className="px-3 py-1.5 text-sm rounded-lg bg-primary text-on-primary hover:bg-primary/90 transition-colors"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {blocker.state === 'blocked' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="bg-surface-container rounded-2xl p-6 max-w-sm w-full mx-4 shadow-xl space-y-4">
@@ -1099,7 +1305,7 @@ export default function TabEditorPage() {
                 Cancel
               </button>
               <button
-                onClick={() => { markClean(); blocker.proceed?.(); }}
+                onClick={() => { markClean(); _editorScoreCache.delete(id ?? 'new'); blocker.proceed?.(); }}
                 className="px-3 py-1.5 text-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors"
               >
                 Discard
@@ -1130,7 +1336,7 @@ export default function TabEditorPage() {
                 <input
                   type="text"
                   value={asciiImportTitle}
-                  onChange={e => setAsciiImportTitle(e.target.value)}
+                  onChange={e => { asciiTitleManual.current = true; setAsciiImportTitle(e.target.value); }}
                   placeholder="Song title"
                   className="bg-surface-container border border-outline-variant/40 rounded-lg px-3 py-1.5 text-xs text-on-surface outline-none focus:border-primary"
                 />
@@ -1140,7 +1346,7 @@ export default function TabEditorPage() {
                 <input
                   type="text"
                   value={asciiImportArtist}
-                  onChange={e => setAsciiImportArtist(e.target.value)}
+                  onChange={e => { asciiArtistManual.current = true; setAsciiImportArtist(e.target.value); }}
                   placeholder="Artist name"
                   className="bg-surface-container border border-outline-variant/40 rounded-lg px-3 py-1.5 text-xs text-on-surface outline-none focus:border-primary"
                 />
@@ -1150,15 +1356,21 @@ export default function TabEditorPage() {
               <label className="text-xs text-on-surface-variant">Paste ASCII tab below</label>
               <textarea
                 value={asciiImportText}
-                onChange={e => setAsciiImportText(e.target.value)}
-                placeholder={"e|---0---2---3---|\nB|---1---3---3---|\nG|---0---2---0---|\nD|---2---0---0---|\nA|---3-------2---|\nE|-----------3---|"}
+                onChange={e => {
+                  const val = e.target.value;
+                  setAsciiImportText(val);
+                  const meta = extractAsciiTabMeta(val);
+                  if (meta.title && !asciiTitleManual.current) setAsciiImportTitle(meta.title);
+                  if (meta.artist && !asciiArtistManual.current) setAsciiImportArtist(meta.artist);
+                }}
+                placeholder={"Title: Song Name\nArtist: Artist Name\nTempo: 120\nYouTube: https://youtu.be/...\nThumbnail: https://...\n\ne|---0---2---3---|\nB|---1---3---3---|\nG|---0---2---0---|\nD|---2---0---0---|\nA|---3-------2---|\nE|-----------3---|"}
                 rows={12}
                 className="bg-surface-container border border-outline-variant/40 rounded-lg px-3 py-2 text-xs text-on-surface font-mono outline-none focus:border-primary resize-none"
               />
             </div>
             <div className="flex justify-end gap-2">
               <button
-                onClick={() => { setShowAsciiImport(false); setAsciiImportText(''); setAsciiImportTitle(''); setAsciiImportArtist(''); }}
+                onClick={() => { setShowAsciiImport(false); setAsciiImportText(''); setAsciiImportTitle(''); setAsciiImportArtist(''); asciiTitleManual.current = false; asciiArtistManual.current = false; }}
                 className="px-4 py-1.5 text-xs rounded-lg bg-surface-container hover:bg-surface-container-highest transition-colors text-on-surface"
               >
                 Cancel

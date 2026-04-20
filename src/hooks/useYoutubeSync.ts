@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {toast} from 'sonner';
 import debounce from 'debounce';
 import type {YouTubePlayerHandle} from '@/components/YouTubePlayer';
@@ -68,15 +68,17 @@ export function useYoutubeSync({songKey, clockRef, tempo}: UseYoutubeSyncOptions
     [songKey],
   );
 
-  const handleUrlSubmit = useCallback(async () => {
-    const videoId = extractYoutubeVideoId(youtubeUrlInput);
+  const handleUrlSubmit = useCallback(async (overrideUrl?: string | React.MouseEvent | React.KeyboardEvent) => {
+    const url = typeof overrideUrl === 'string' ? overrideUrl : youtubeUrlInput;
+    const videoId = extractYoutubeVideoId(url);
     if (!videoId) {
       toast.error('Invalid YouTube URL');
       return;
     }
-    setYoutubeUrl(youtubeUrlInput);
+    setYoutubeUrl(url);
+    if (url !== youtubeUrlInput) setYoutubeUrlInput(url);
     setYoutubeVideoId(videoId);
-    await saveYoutubeAssociation(songKey, youtubeUrlInput, youtubeOffsetMs);
+    await saveYoutubeAssociation(songKey, url, youtubeOffsetMs);
     toast.success('YouTube video linked');
   }, [youtubeUrlInput, songKey, youtubeOffsetMs]);
 
@@ -113,6 +115,18 @@ export function useYoutubeSync({songKey, clockRef, tempo}: UseYoutubeSyncOptions
     playerRef.current?.setPlaybackRate(tempo);
   }, [youtubeOffsetMs, tempo, clockRef]);
 
+  /**
+   * Call when the user scrubs the playback position. Seeks YouTube without
+   * changing its play state — unlike onPlayFrom which also starts playback.
+   */
+  const handleSeek = useCallback((timeSeconds: number) => {
+    if (clockRef.current?.isPlaying) {
+      syncRef.current.onPlayFrom(timeSeconds);
+    } else {
+      syncRef.current.onSeekTo(timeSeconds);
+    }
+  }, [clockRef]);
+
   /** Call when the clock source changes (e.g. AudioManager re-created) */
   const updateClock = useCallback((clock: PlaybackClock | null) => {
     syncRef.current.setClock(clock);
@@ -130,6 +144,7 @@ export function useYoutubeSync({songKey, clockRef, tempo}: UseYoutubeSyncOptions
     handleRemove,
     handleOffsetChange,
     handleReady,
+    handleSeek,
     updateClock,
   };
 }
