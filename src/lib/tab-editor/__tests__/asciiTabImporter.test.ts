@@ -854,10 +854,16 @@ describe('importFromAsciiTab – time signature detection', () => {
     const mb = score.masterBars[0];
     const voice = bar.voices[0];
     const beatCount = voice.beats.filter(b => !b.isEmpty).length;
-    // Bar capacity in whole-note fractions
+    // Map AlphaTab Duration enum → whole-note fraction
+    const durFractionMap: Record<number, number> = {
+      [model.Duration.Whole]: 1, [model.Duration.Half]: 0.5,
+      [model.Duration.Quarter]: 0.25, [model.Duration.Eighth]: 0.125,
+      [model.Duration.Sixteenth]: 0.0625, [model.Duration.ThirtySecond]: 0.03125,
+      [model.Duration.SixtyFourth]: 0.015625,
+    };
+    const firstBeat = voice.beats.find(b => !b.isEmpty);
+    const beatDurFraction = firstBeat ? (durFractionMap[firstBeat.duration] ?? 0.0625) : 0.0625;
     const capacity = mb.timeSignatureNumerator / mb.timeSignatureDenominator;
-    // Beat duration as whole-note fraction (sixteenth = 1/16)
-    const beatDurFraction = 1 / mb.timeSignatureDenominator;
     const slotsAvailable = capacity / beatDurFraction;
     expect(slotsAvailable).toBeGreaterThanOrEqual(beatCount);
   });

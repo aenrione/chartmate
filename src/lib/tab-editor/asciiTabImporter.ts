@@ -455,10 +455,11 @@ function pickTimeSig(beatCount: number): {num: number; denom: number; beatDurati
   if (beatCount <= 8) return {num: 4, denom: 4, beatDuration: Duration.Eighth};
   if (beatCount <= 12) return {num: 3, denom: 4, beatDuration: Duration.Sixteenth};
   if (beatCount <= 16) return {num: 4, denom: 4, beatDuration: Duration.Sixteenth};
-  // Dense bars (>16 beats): use num/16 time signature so exactly beatCount
-  // sixteenth-note slots fit — avoids silent overflow beats that confuse playback.
-  // e.g. 20 beats → 20/16, 22 beats → 22/16 (AlphaTab accepts arbitrary numerators).
-  return {num: beatCount, denom: 16, beatDuration: Duration.Sixteenth};
+  // Dense bars (> 16 beats): use 4/4 with 32nd notes (capacity = 32).
+  // This keeps the displayed time signature as standard "4/4" rather than
+  // non-standard N/16 fractions which AlphaTab renders verbatim and look bizarre.
+  if (beatCount <= 32) return {num: 4, denom: 4, beatDuration: Duration.ThirtySecond};
+  return {num: 4, denom: 4, beatDuration: Duration.SixtyFourth};
 }
 
 function addEmptyBar(

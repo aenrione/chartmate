@@ -61,15 +61,25 @@ const TabEditorCanvas = forwardRef<TabEditorCanvasHandle, TabEditorCanvasProps>(
     // Compute string-row cursor: highlight only the row for the active string.
     // AlphaTab's stringNumber: 1 = bottom (lowest pitch), N = top (highest pitch).
     // Visual row order in tab: top row = highest string = stringNumber N.
+    //
+    // Height formula: the staff spans from the first string line (y = cursorBounds.y)
+    // to just below the last string line. The N-1 inter-string spaces fill nearly all
+    // of cursorBounds.height, with roughly 1px left for the last line's stroke.
+    // So: spacing ≈ (cursorBounds.height - 1) / (stringCount - 1).
+    // We center each zone on its string line; the outermost zones are clamped to
+    // stay within [cursorBounds.y, cursorBounds.y + cursorBounds.height].
     let stringCursorStyle: React.CSSProperties | null = null;
-    if (cursorBounds) {
-      const rowHeight = cursorBounds.height / cursorStringCount;
+    if (cursorBounds && cursorStringCount > 1) {
+      const spacing = (cursorBounds.height - 1) / (cursorStringCount - 1);
       const rowIndex = cursorStringCount - cursorStringNumber; // 0 = top row
+      const lineY = cursorBounds.y + rowIndex * spacing;
+      const zoneTop = Math.max(cursorBounds.y, lineY - spacing / 2);
+      const zoneBottom = Math.min(cursorBounds.y + cursorBounds.height, lineY + spacing / 2);
       stringCursorStyle = {
         left: cursorBounds.x,
-        top: cursorBounds.y + rowIndex * rowHeight,
+        top: zoneTop,
         width: cursorBounds.width,
-        height: rowHeight,
+        height: Math.max(spacing, zoneBottom - zoneTop),
         // Only transition horizontal movement — vertical jumps between lines are instant
         transition: 'left 75ms, width 75ms',
       };
@@ -79,7 +89,7 @@ const TabEditorCanvas = forwardRef<TabEditorCanvasHandle, TabEditorCanvasProps>(
       <div className="relative flex-1 overflow-auto bg-white dark:bg-zinc-900 rounded-lg z-0">
         {stringCursorStyle && (
           <div
-            className="absolute pointer-events-none z-10 border-2 border-primary rounded-sm"
+            className="absolute pointer-events-none z-10 border-2 border-primary bg-primary/20 rounded-none"
             style={stringCursorStyle}
           />
         )}
