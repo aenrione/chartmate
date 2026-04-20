@@ -319,6 +319,7 @@ export default function TabEditorPage() {
           loadScore(score);
           // DB meta is authoritative — override whatever getScoreTempo read from bytes
           if (composition.meta.tempo > 0) setTempoState(composition.meta.tempo);
+          if (composition.meta.previewImage) setPendingPreviewImage(composition.meta.previewImage);
           if (composition.meta.youtubeUrl) seedYoutubeFromDb(composition.meta.youtubeUrl);
           return;
         } catch {
@@ -778,6 +779,7 @@ export default function TabEditorPage() {
       tempo: meta.tempo,
       instrument: meta.instrument,
       previewImage: meta.previewImage,
+      youtubeUrl: meta.youtubeUrl ?? null,
     });
     await markCompositionSaved(newId);
     // Migrate YouTube association from old key to new id-based key when saving for first time
@@ -809,11 +811,12 @@ export default function TabEditorPage() {
         tempo,
         instrument: tracks[activeTrackIndex]?.instrument ?? 'guitar',
         previewImage: pendingPreviewImage,
+        youtubeUrl: youtubeUrl || null,
       });
     } else {
       setShowSaveDialog(true);
     }
-  }, [compositionId, isDirty, handleSaveComposition, title, artist, tempo, tracks, activeTrackIndex, pendingPreviewImage]);
+  }, [compositionId, isDirty, handleSaveComposition, title, artist, tempo, tracks, activeTrackIndex, pendingPreviewImage, youtubeUrl]);
 
   // Keep a stable ref so the keydown listener never needs re-registration
   const handleSaveRef = useRef(handleSave);
@@ -1295,6 +1298,7 @@ export default function TabEditorPage() {
           tempo,
           instrument: tracks[activeTrackIndex]?.instrument ?? 'guitar',
           previewImage: pendingPreviewImage,
+          youtubeUrl: youtubeUrl || null,
         }}
         onSave={handleSaveComposition}
       />
