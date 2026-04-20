@@ -443,15 +443,12 @@ function resolveStringEvents(
 // Score builder
 // ---------------------------------------------------------------------------
 
-/** Choose a time signature and beat duration based on beat count (max 16 beats). */
+/** Choose a beat duration for a 4/4 bar that fits all beats without overflow. */
 function pickTimeSig(beatCount: number): {num: number; denom: number; beatDuration: number} {
-  if (beatCount <= 1)  return {num: 4, denom: 4, beatDuration: Duration.Whole};
-  if (beatCount === 2) return {num: 2, denom: 4, beatDuration: Duration.Half};
-  if (beatCount === 3) return {num: 3, denom: 4, beatDuration: Duration.Quarter};
-  if (beatCount === 4) return {num: 4, denom: 4, beatDuration: Duration.Quarter};
-  if (beatCount === 6) return {num: 6, denom: 8, beatDuration: Duration.Eighth};
+  if (beatCount <= 1) return {num: 4, denom: 4, beatDuration: Duration.Whole};
+  if (beatCount <= 2) return {num: 4, denom: 4, beatDuration: Duration.Half};
+  if (beatCount <= 4) return {num: 4, denom: 4, beatDuration: Duration.Quarter};
   if (beatCount <= 8) return {num: 4, denom: 4, beatDuration: Duration.Eighth};
-  if (beatCount <= 12) return {num: 3, denom: 4, beatDuration: Duration.Sixteenth};
   return {num: 4, denom: 4, beatDuration: Duration.Sixteenth};
 }
 

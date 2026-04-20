@@ -820,19 +820,19 @@ describe('importFromAsciiTab – time signature detection', () => {
     expect(timeSig(importFromAsciiTab(tab))).toEqual({num: 4, denom: 4});
   });
 
-  it('3 beats per bar → 3/4', () => {
+  it('3 beats per bar → 4/4 quarter notes', () => {
     const tab = `e|---0---2---4---|\nB|---------------|\nG|---------------|\nD|---------------|\nA|---------------|\nE|---------------|`;
-    expect(timeSig(importFromAsciiTab(tab))).toEqual({num: 3, denom: 4});
+    expect(timeSig(importFromAsciiTab(tab))).toEqual({num: 4, denom: 4});
   });
 
-  it('6 beats per bar → 6/8', () => {
+  it('6 beats per bar → 4/4 eighth notes', () => {
     const tab = `e|---0---2---3---5---7---9---|\nB|---------------------------|\nG|---------------------------|\nD|---------------------------|\nA|---------------------------|\nE|---------------------------|`;
-    expect(timeSig(importFromAsciiTab(tab))).toEqual({num: 6, denom: 8});
+    expect(timeSig(importFromAsciiTab(tab))).toEqual({num: 4, denom: 4});
   });
 
-  it('2 beats per bar → 2/4', () => {
+  it('2 beats per bar → 4/4 half notes', () => {
     const tab = `e|---0---5---|\nB|-----------|\nG|-----------|\nD|-----------|\nA|-----------|\nE|-----------|`;
-    expect(timeSig(importFromAsciiTab(tab))).toEqual({num: 2, denom: 4});
+    expect(timeSig(importFromAsciiTab(tab))).toEqual({num: 4, denom: 4});
   });
 
   it('dense bar (20 notes) never overflows — all beats fit in bar capacity', () => {
