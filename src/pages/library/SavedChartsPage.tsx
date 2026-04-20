@@ -7,7 +7,7 @@ import {
 import debounce from 'debounce';
 import {Settings, importer} from '@coderline/alphatab';
 import {getSavedCharts, unsaveChart, type SavedChartEntry} from '@/lib/local-db/saved-charts';
-import {getSavedCompositions, deleteComposition, updateCompositionMeta, saveComposition, markCompositionSaved, type TabComposition} from '@/lib/local-db/tab-compositions';
+import {getSavedCompositions, deleteComposition, updateCompositionMeta, saveComposition, markCompositionSaved, type TabComposition, type CompositionSortOrder} from '@/lib/local-db/tab-compositions';
 import {getDrumsLibraryItems, type LibraryItem} from '@/lib/local-db/library';
 import {deletePersistedChart} from '@/lib/chart-persistent-store';
 import {cn} from '@/lib/utils';
@@ -49,6 +49,7 @@ export default function SavedChartsPage() {
   // Bulk import
   const dirInputRef = useRef<HTMLInputElement>(null);
   const [bulkImporting, setBulkImporting] = useState(false);
+  const [sort, setSort] = useState<CompositionSortOrder>('saved_at_desc');
 
   // Chorus state
   const [charts, setCharts] = useState<SavedChartEntry[]>([]);
@@ -71,48 +72,49 @@ export default function SavedChartsPage() {
     setChartsLoading(false);
   }, []);
 
-  const loadCompositions = useCallback(async (instrument: string, q?: string) => {
+  const loadCompositions = useCallback(async (instrument: string, q?: string, s: CompositionSortOrder = 'saved_at_desc') => {
     setCompositionsLoading(true);
-    const results = await getSavedCompositions(instrument, q);
+    const results = await getSavedCompositions(instrument, q, s);
     setCompositions(results);
     setCompositionsLoading(false);
   }, []);
 
-  const loadDrums = useCallback(async (q?: string) => {
+  const loadDrums = useCallback(async (q?: string, s: CompositionSortOrder = 'saved_at_desc') => {
     setDrumsLoading(true);
-    const results = await getDrumsLibraryItems(q);
+    const results = await getDrumsLibraryItems(q, s);
     setDrumsItems(results);
     setDrumsLoading(false);
   }, []);
 
-  const loadTab = useCallback((tab: Tab, q?: string) => {
-    const loaders: Record<Tab, (q?: string) => void> = {
-      chorus: loadChorus,
+  const loadTab = useCallback((tab: Tab, q?: string, s: CompositionSortOrder = 'saved_at_desc') => {
+    const loaders: Record<Tab, (q?: string, s?: CompositionSortOrder) => void> = {
+      chorus: (q) => loadChorus(q),
       drums: loadDrums,
-      guitar: (q) => loadCompositions('guitar', q),
-      bass: (q) => loadCompositions('bass', q),
-      keys: (q) => loadCompositions('keys', q),
+      guitar: (q, s) => loadCompositions('guitar', q, s),
+      bass: (q, s) => loadCompositions('bass', q, s),
+      keys: (q, s) => loadCompositions('keys', q, s),
     };
-    loaders[tab](q);
+    loaders[tab](q, s);
   }, [loadChorus, loadDrums, loadCompositions]);
 
-  useEffect(() => { loadTab(activeTab); }, [activeTab, loadTab]);
+  useEffect(() => { loadTab(activeTab, undefined, sort); }, [activeTab, loadTab, sort]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSearch = useCallback(
-    debounce((q: string) => loadTab(activeTab, q || undefined), 300),
+    debounce((q: string, s: CompositionSortOrder) => loadTab(activeTab, q || undefined, s), 300),
     [activeTab, loadTab],
   );
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const q = e.target.value;
     setSearch(q);
-    debouncedSearch(q);
+    debouncedSearch(q, sort);
   };
 
   const handleTabChange = (tab: Tab) => {
     setActiveTab(tab);
     setSearch('');
+    setSort('saved_at_desc');
   };
 
   const handleRemoveChart = async (chart: SavedChartEntry, e: React.MouseEvent) => {
@@ -289,6 +291,22 @@ export default function SavedChartsPage() {
             onChange={handleSearch}
           />
         </div>
+
+        {activeTab !== 'chorus' && (
+          <div className="flex items-center gap-2">
+            <label className="text-xs text-on-surface-variant font-medium">Sort</label>
+            <select
+              value={sort}
+              onChange={e => setSort(e.target.value as CompositionSortOrder)}
+              className="rounded-lg bg-surface-container-high px-2 py-1.5 text-xs text-on-surface focus:outline-none focus:ring-2 focus:ring-tertiary/40"
+            >
+              <option value="saved_at_desc">Date Added</option>
+              <option value="title_asc">Title A→Z</option>
+              <option value="artist_asc">Artist A→Z</option>
+              <option value="tempo_asc">Tempo ↑</option>
+            </select>
+          </div>
+        )}
 
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
