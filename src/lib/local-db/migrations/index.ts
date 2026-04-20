@@ -22,6 +22,8 @@ import {migration_020_tab_compositions_saved} from './020_tab_compositions_saved
 import {migration_021_ear_training} from './021_ear_training';
 import {migration_022_repertoire_iq} from './022_repertoire_iq';
 import {migration_023_repertoire_typed_refs} from './023_repertoire_typed_refs';
+import {migration_024_tab_compositions_preview_image} from './024_tab_compositions_preview_image';
+import {migration_025_tab_compositions_youtube_url} from './025_tab_compositions_youtube_url';
 
 export const migrations: Record<string, Migration> = {
   '001_initial': InitialMigration,
@@ -47,4 +49,6 @@ export const migrations: Record<string, Migration> = {
   '021_ear_training': migration_021_ear_training,
   '022_repertoire_iq': migration_022_repertoire_iq,
   '023_repertoire_typed_refs': migration_023_repertoire_typed_refs,
+  '024_tab_compositions_preview_image': migration_024_tab_compositions_preview_image,
+  '025_tab_compositions_youtube_url': migration_025_tab_compositions_youtube_url,
 };

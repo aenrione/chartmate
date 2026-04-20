@@ -207,11 +207,13 @@ export interface TabCompositions {
   album: string;
   tempo: number;
   instrument: string;
+  preview_image: string | null;
   is_saved: Generated<number>;
   saved_at: string | null;
   created_at: string;
   updated_at: string;
   score_data: ArrayBuffer;
+  youtube_url: string | null;
 }
 
 export interface FretboardSessions {
