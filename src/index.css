@@ -10,6 +10,18 @@
   }
 }
 
+/* ── Safe area / bottom nav height ─────────────────────────────────── */
+
+:root {
+  --bottom-nav-safe-height: 0px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --bottom-nav-safe-height: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 /* ── Light Theme (default) ─────────────────────────────────────────── */
 
 :root {
@@ -266,4 +278,24 @@ textarea {
 
 .ghost-border {
   border: 1px solid rgba(71, 69, 84, 0.15);
+}
+
+/* ── Print / PDF export ─────────────────────────────────────────── */
+
+@media print {
+  [data-print-hide],
+  .at-cursor-bar,
+  .at-cursor-beat,
+  .at-selection {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+  }
+}
+
+/* iOS in-page print fallback — applied via body.printing */
+body.printing [data-print-hide] {
+  display: none !important;
 }
