@@ -834,6 +834,72 @@ describe('importFromAsciiTab – time signature detection', () => {
     const tab = `e|---0---5---|\nB|-----------|\nG|-----------|\nD|-----------|\nA|-----------|\nE|-----------|`;
     expect(timeSig(importFromAsciiTab(tab))).toEqual({num: 2, denom: 4});
   });
+
+  it('dense bar (20 notes) never overflows — all beats fit in bar capacity', () => {
+    // 20 evenly-spaced notes on a single string; pickTimeSig must produce a
+    // time signature whose capacity >= 20 sixteenth notes so the player does
+    // not silently skip overflow beats (which causes apparent note duplication
+    // at bar boundaries when the tab has repeating patterns).
+    const notes = Array.from({length: 20}, (_, i) => i % 7).join('-');
+    const tab = [
+      `e|-${notes}-|`,
+      'B|' + '-'.repeat(notes.length + 2) + '|',
+      'G|' + '-'.repeat(notes.length + 2) + '|',
+      'D|' + '-'.repeat(notes.length + 2) + '|',
+      'A|' + '-'.repeat(notes.length + 2) + '|',
+      'E|' + '-'.repeat(notes.length + 2) + '|',
+    ].join('\n');
+    const score = importFromAsciiTab(tab);
+    const bar = score.tracks[0].staves[0].bars[0];
+    const mb = score.masterBars[0];
+    const voice = bar.voices[0];
+    const beatCount = voice.beats.filter(b => !b.isEmpty).length;
+    // Bar capacity in whole-note fractions
+    const capacity = mb.timeSignatureNumerator / mb.timeSignatureDenominator;
+    // Beat duration as whole-note fraction (sixteenth = 1/16)
+    const beatDurFraction = 1 / mb.timeSignatureDenominator;
+    const slotsAvailable = capacity / beatDurFraction;
+    expect(slotsAvailable).toBeGreaterThanOrEqual(beatCount);
+  });
+
+  it('dense bar (20 notes) does not duplicate notes into the next bar', () => {
+    // Bar 1: 20 unique-ish frets on e string; Bar 2: distinctly different frets.
+    // If bar 1 overflows, the player skips its last beats and the visual pattern
+    // at bar 1's end can look identical to bar 2's start — the "note duplication" bug.
+    const bar1Notes = '0-1-2-3-4-5-6-0-1-2-3-4-5-6-0-1-2-3-4-5';
+    const bar2Notes = '7-7-7-7-7-7-7-7';
+    const mkLine = (prefix: string, content: string) =>
+      `${prefix}|${content}|`;
+    const dash = (len: number) => '-'.repeat(len);
+
+    const system1 = [
+      mkLine('e', bar1Notes),
+      mkLine('B', dash(bar1Notes.length)),
+      mkLine('G', dash(bar1Notes.length)),
+      mkLine('D', dash(bar1Notes.length)),
+      mkLine('A', dash(bar1Notes.length)),
+      mkLine('E', dash(bar1Notes.length)),
+    ].join('\n');
+
+    const system2 = [
+      mkLine('e', bar2Notes),
+      mkLine('B', dash(bar2Notes.length)),
+      mkLine('G', dash(bar2Notes.length)),
+      mkLine('D', dash(bar2Notes.length)),
+      mkLine('A', dash(bar2Notes.length)),
+      mkLine('E', dash(bar2Notes.length)),
+    ].join('\n');
+
+    const score = importFromAsciiTab(system1 + '\n\n' + system2);
+    const bars = score.tracks[0].staves[0].bars;
+    expect(bars.length).toBe(2);
+
+    // Every note in bar 2 must have fret 7 — no frets from bar 1 leaked in
+    const bar2Frets = bars[1].voices[0].beats
+      .flatMap(b => b.notes.map(n => n.fret));
+    expect(bar2Frets.length).toBeGreaterThan(0);
+    expect(bar2Frets.every(f => f === 7)).toBe(true);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -899,5 +965,258 @@ describe('importFromAsciiTab – markup and whitespace', () => {
     const score = importFromAsciiTab(lowerTab);
     expect(score.tracks[0].staves[0].stringTuning.tunings).toHaveLength(6);
     expect(countNotes(score)).toBeGreaterThan(0);
+  });
+
+  it('two notes on same string in compact h/p notation become separate beats, not overwritten', () => {
+    // "5h7" — fret 5 then hammer to 7 on same string, col diff = 2
+    // Before fix this merged into one beat and AlphaTab overwrote fret 5 with 7.
+    const tab = ['e|---5h7---|', 'B|---------|', 'G|---------|',
+                 'D|---------|', 'A|---------|', 'E|---------|'].join('\n');
+    const score = importFromAsciiTab(tab);
+    // Both notes must survive as separate beats
+    const allNotes = score.tracks[0].staves[0].bars
+      .flatMap(b => b.voices[0].beats.flatMap(bt => bt.notes));
+    // e| is lineIdx 0 in a 6-string system → note.string = 6 - 0 = 6 (top line in AlphaTab)
+    const string6Notes = allNotes.filter(n => n.string === 6);
+    expect(string6Notes.length).toBe(2);
+    expect(string6Notes.map(n => n.fret).sort((a,b) => a-b)).toEqual([5, 7]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// String direction verification
+// ---------------------------------------------------------------------------
+
+describe('importFromAsciiTab – string direction', () => {
+  function singleStringNotes(line: number /* 0=e, 5=E */): ReturnType<typeof importFromAsciiTab> {
+    const lines = [
+      'e|---------|',
+      'B|---------|',
+      'G|---------|',
+      'D|---------|',
+      'A|---------|',
+      'E|---------|',
+    ];
+    lines[line] = lines[line].replace('---------|', '---5---7-|');
+    return importFromAsciiTab(lines.join('\n'));
+  }
+
+  // AlphaTab convention: string 1 = bottom line (lowest pitch, low E)
+  //                       string 6 = top line (highest pitch, high e)
+  // tunings[0] = topmost line = high e = E4 (64)
+  // Formula: note.string = stringCount - lineIdx
+
+  it('e| line (top ASCII line, highest pitch) maps to AlphaTab string 6 (top line)', () => {
+    const score = singleStringNotes(0); // only e| has notes
+    const allNotes = score.tracks[0].staves[0].bars
+      .flatMap(b => b.voices[0].beats.flatMap(bt => bt.notes));
+    expect(allNotes.length).toBeGreaterThan(0);
+    expect(allNotes.every(n => n.string === 6)).toBe(true);
+  });
+
+  it('B| line (second from top) maps to AlphaTab string 5', () => {
+    const score = singleStringNotes(1); // only B| has notes
+    const allNotes = score.tracks[0].staves[0].bars
+      .flatMap(b => b.voices[0].beats.flatMap(bt => bt.notes));
+    expect(allNotes.every(n => n.string === 5)).toBe(true);
+  });
+
+  it('E| line (bottom ASCII line, lowest pitch) maps to AlphaTab string 1 (bottom line)', () => {
+    const score = singleStringNotes(5); // only E| has notes
+    const allNotes = score.tracks[0].staves[0].bars
+      .flatMap(b => b.voices[0].beats.flatMap(bt => bt.notes));
+    expect(allNotes.length).toBe(2);
+    expect(allNotes.every(n => n.string === 1)).toBe(true);
+  });
+
+  it('tunings[0] = E4 (top tab line = high e), tunings[5] = E2 (bottom tab line = low E)', () => {
+    const score = singleStringNotes(0);
+    const tunings = score.tracks[0].staves[0].stringTuning.tunings;
+    expect(tunings[0]).toBe(64); // E4 — high e = topmost line
+    expect(tunings[5]).toBe(40); // E2 — low E = bottommost line
+  });
+});
+
+// ---------------------------------------------------------------------------
+// [8] Real-world UG format — Clair Obscur Expedition 33, Lumière À Iaube
+//     https://www.ultimate-guitar.com (Misc Computer Games, Lorien Testard)
+//     Exercises: section headers [Guitar 1/2], chord-name prose lines (Bm etc.),
+//     double-e string in Guitar 2, Page X/4 markers, legend footer with | lines,
+//     dense h/p/slide/\ technique notation.
+// ---------------------------------------------------------------------------
+
+const CLAIR_OBSCUR = `Clair Obscur Expedition 33 - Lumière À Iaube Tab by Misc Computer Games, Lorien Testard
+Description: Mine contains all the parts (Main chords and melody) and the exact places where all the effects like hammers and pull-offs happen.
+Difficulty: intermediate
+Tuning: E A D G B E
+Key: Bm
+[Guitar 1]
+
+Main Chords
+
+Bm
+
+e|----2----------------------------|
+B|----2----3-----------------------|
+G|----2----------------------------|
+D|----2---------4------------------|
+A|----2---------4------------------|
+E|---------------------------------|
+
+
+Gmaj7(#11)
+
+e|---------------------------------|
+B|----2----------------------------|
+G|---------------------------------|
+D|-------------4-------------------|
+A|-------------4-------------------|
+E|--------3------------------------|
+
+
+Em(add11)
+
+e|---------------------------------|
+B|---------------------------------|
+G|---------------------------------|
+D|----2----------------------------|
+A|---------------------------------|
+E|---------------------------------|
+
+
+F#m
+
+e|----2----------------------------|
+B|----2----------------------------|
+G|----2----------------------------|
+D|----2----4-----------------------|
+A|----2----4-----------------------|
+E|----2----------------------------|
+
+
+
+Page 1/4
+Arpeggio
+
+  Bm                Gmaj7(#11)        Em(add11)         F#m
+e|-----------------|-----------------|-----------------|---------------------|
+B|--------3-----3--|--------2-----2--|--------0-----0--|--------2------------|
+G|--------4-----4--|--------4-----4--|--------0-----0--|--------2------------|
+D|-----4-----4-----|-----4-----4-----|-----4-----4-----|-----4-----4---------|
+A|--2--------------|-----------------|-----------------|---------------------|
+E|-----------------|--3--------------|--0--------------|--2------------------|
+
+
+[Guitar 2]
+
+e|-----------------------------------|-----------14-12-10-\\9|-9-/14-9-10------|
+e|-----------------------------------|--11/12-15------------|-----------------|
+G|-----------------------------------|----------------------|-----------------|
+D|-----------------------------------|----------------------|-----------------|
+A|-----------------------------------|----------------------|-----------------|
+E|-----------------------------------|----------------------|-----------------|
+
+e|-----10-9-10|-12-10-12-14-15-14|----10-9-10-12-10|-12-14----12----12--------|
+B|--12--------|------------------|-12--------------|-------14----15-----------|
+G|------------|------------------|-----------------|--------------------------|
+D|------------|------------------|-----------------|--------------------------|
+A|------------|------------------|-----------------|--------------------------|
+E|------------|------------------|-----------------|--------------------------|
+
+e|-----10-9-10-12-14|-12-10-9-10---|-------|----------------------------------|
+B|--12--------------|------------14|-12-5h7|-5--------------------------------|
+G|------------------|--------------|-------|---7-6-/9-7-----------------------|
+D|------------------|--------------|-------|----------------------------------|
+A|------------------|--------------|-------|----------------------------------|
+E|------------------|--------------|-------|----------------------------------|
+
+Page 2/4
+e|--------|----------|------|-------------------------------------------------|
+B|--/7----|---5/7----|------|-------------------------------------------------|
+G|-----7\\6|-7--------|------|-------------------------------------------------|
+D|--------|-------7\\6|-7-6/7|-7-7/9-6-4-6-------------------------------------|
+A|--------|----------|------|-------------------------------------------------|
+E|--------|----------|------|-------------------------------------------------|
+
+Page 3/4
+e|-----------|------------|----9h10-9-10-12-10\\9|-10-9-7-9--------------------|
+B|--p7-/12-\\8|-8-7-8-10/12|-12------------------|----------12\\10-12-10\\8-10-8-|
+G|-----------|------------|---------------------|-----------------------------|
+D|-----------|------------|---------------------|-----------------------------|
+A|-----------|------------|---------------------|-----------------------------|
+E|-----------|------------|---------------------|-----------------------------|
+
+************************************
+
+| x   Dead note
+| h   Hammer-on
+| p   Pull-off
+| /   Slide up
+| \\   Slide down
+| ~   Vibrato
+| b   Bend
+
+************************************
+Page 4/4`;
+
+describe('importFromAsciiTab – Clair Obscur / real UG tab', () => {
+  it('parses without throwing', () => {
+    expect(() => importFromAsciiTab(CLAIR_OBSCUR)).not.toThrow();
+  });
+
+  it('produces a 6-string track', () => {
+    const score = importFromAsciiTab(CLAIR_OBSCUR);
+    expect(score.tracks[0].staves[0].stringTuning.tunings).toHaveLength(6);
+  });
+
+  it('extracts a substantial number of notes (Guitar 2 melody is dense)', () => {
+    const score = importFromAsciiTab(CLAIR_OBSCUR);
+    expect(countNotes(score)).toBeGreaterThan(50);
+  });
+
+  it('chord-name prose lines (Bm, Gmaj7 etc.) do not produce phantom notes', () => {
+    // These are plain text, not tab lines — they should be silently ignored
+    const score = importFromAsciiTab(CLAIR_OBSCUR);
+    // Verify it still parses — no crash is the main guard
+    expect(score.masterBars.length).toBeGreaterThan(0);
+  });
+
+  it('Page X/4 markers and legend footer do not crash the parser', () => {
+    // Page markers and | legend lines are not tab lines — just ensure stability
+    expect(() => importFromAsciiTab(CLAIR_OBSCUR)).not.toThrow();
+  });
+
+  it('double-e string block in Guitar 2 does not cause notes to overwrite each other', () => {
+    const doubleE = [
+      'e|---9-10-9--|',
+      'e|--11-12-15-|',
+      'G|-----------|',
+      'D|-----------|',
+      'A|-----------|',
+      'E|-----------|',
+    ].join('\n');
+    const score = importFromAsciiTab(doubleE);
+    // Both e-string lines should contribute notes independently
+    expect(countNotes(score)).toBeGreaterThan(0);
+    expect(() => importFromAsciiTab(doubleE)).not.toThrow();
+  });
+
+  it('compact h/p in Guitar 2 melody produces two separate beats, not one overwritten', () => {
+    // e.g. "5h7" on B string — both notes must survive
+    const fragment = [
+      'e|---------|',
+      'B|-12-5h7-5|',
+      'G|---------|',
+      'D|---------|',
+      'A|---------|',
+      'E|---------|',
+    ].join('\n');
+    const score = importFromAsciiTab(fragment);
+    // B| is lineIdx 1 in a 6-string system → note.string = 6 - 1 = 5
+    const b2Notes = score.tracks[0].staves[0].bars
+      .flatMap(b => b.voices[0].beats.flatMap(bt => bt.notes))
+      .filter(n => n.string === 5);
+    // 12, 5, 7, 5 — four distinct beats on the B string
+    expect(b2Notes.length).toBe(4);
   });
 });

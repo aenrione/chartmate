@@ -79,12 +79,9 @@ const TabEditorCanvas = forwardRef<TabEditorCanvasHandle, TabEditorCanvasProps>(
       <div className="relative flex-1 overflow-auto bg-white dark:bg-zinc-900 rounded-lg z-0">
         {stringCursorStyle && (
           <div
-            className="absolute pointer-events-none z-10"
+            className="absolute pointer-events-none z-10 border-2 border-primary rounded-sm"
             style={stringCursorStyle}
-          >
-            {/* Left-edge indicator: thin vertical bar that doesn't overlap the fret number */}
-            <div className="absolute left-0 top-1 bottom-1 w-[3px] rounded-full bg-primary" />
-          </div>
+          />
         )}
 
         <AlphaTabWrapper
