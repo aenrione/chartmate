@@ -196,11 +196,12 @@ export default function SavedChartsPage() {
     if (!editTarget) return;
     await updateCompositionMeta(editTarget.id, meta);
     setEditTarget(null);
-    loadTab(activeTab, search || undefined);
+    loadTab(activeTab, search || undefined, sort);
     toast.success('Metadata updated');
   };
 
   const handleBulkDelete = async () => {
+    const count = selectedCompIds.size + selectedChartMd5s.size;
     setConfirmBulkDelete(false);
     setBulkDeleting(true);
     try {
@@ -215,7 +216,7 @@ export default function SavedChartsPage() {
           })
         );
       }
-      toast.success(`Deleted ${totalSelected} item${totalSelected !== 1 ? 's' : ''}`);
+      toast.success(`Deleted ${count} item${count !== 1 ? 's' : ''}`);
       exitSelectionMode();
       loadTab(activeTab, search || undefined, sort);
     } catch {
@@ -268,7 +269,7 @@ export default function SavedChartsPage() {
       }
     }
     setBulkImporting(false);
-    loadTab(activeTab, search || undefined);
+    loadTab(activeTab, search || undefined, sort);
     if (imported > 0) toast.success(`Imported ${imported} file${imported !== 1 ? 's' : ''}`);
     if (failed > 0) toast.error(`${failed} file${failed !== 1 ? 's' : ''} failed to import`);
   };
