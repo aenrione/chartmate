@@ -836,10 +836,8 @@ describe('importFromAsciiTab – time signature detection', () => {
   });
 
   it('dense bar (20 notes) never overflows — all beats fit in bar capacity', () => {
-    // 20 evenly-spaced notes on a single string; pickTimeSig must produce a
-    // time signature whose capacity >= 20 sixteenth notes so the player does
-    // not silently skip overflow beats (which causes apparent note duplication
-    // at bar boundaries when the tab has repeating patterns).
+    // 20 notes on one string → splitToStandardBars splits into bars[0] (16 beats) + bars[1] (4).
+    // Verify bars[0] capacity >= its beat count so the player never skips beats.
     const notes = Array.from({length: 20}, (_, i) => i % 7).join('-');
     const tab = [
       `e|-${notes}-|`,
@@ -869,9 +867,9 @@ describe('importFromAsciiTab – time signature detection', () => {
   });
 
   it('dense bar (20 notes) does not duplicate notes into the next bar', () => {
-    // Bar 1: 20 unique-ish frets on e string; Bar 2: distinctly different frets.
-    // If bar 1 overflows, the player skips its last beats and the visual pattern
-    // at bar 1's end can look identical to bar 2's start — the "note duplication" bug.
+    // The 20-note ASCII bar splits into 2 score bars (16 + 4) via splitToStandardBars.
+    // A separate system with 8 all-7 notes becomes the 3rd bar.
+    // No fret from bar 1 should appear in that final bar.
     const bar1Notes = '0-1-2-3-4-5-6-0-1-2-3-4-5-6-0-1-2-3-4-5';
     const bar2Notes = '7-7-7-7-7-7-7-7';
     const mkLine = (prefix: string, content: string) =>
@@ -898,13 +896,14 @@ describe('importFromAsciiTab – time signature detection', () => {
 
     const score = importFromAsciiTab(system1 + '\n\n' + system2);
     const bars = score.tracks[0].staves[0].bars;
-    expect(bars.length).toBe(2);
+    // 20 notes → split into 2 bars (16 + 4), plus the all-7 system = 3 bars total
+    expect(bars.length).toBe(3);
 
-    // Every note in bar 2 must have fret 7 — no frets from bar 1 leaked in
-    const bar2Frets = bars[1].voices[0].beats
+    // Every note in the last bar must be fret 7 — no frets from bar 1 leaked in
+    const lastBarFrets = bars[2].voices[0].beats
       .flatMap(b => b.notes.map(n => n.fret));
-    expect(bar2Frets.length).toBeGreaterThan(0);
-    expect(bar2Frets.every(f => f === 7)).toBe(true);
+    expect(lastBarFrets.length).toBeGreaterThan(0);
+    expect(lastBarFrets.every(f => f === 7)).toBe(true);
   });
 });
 

@@ -73,14 +73,14 @@ const TabEditorCanvas = forwardRef<TabEditorCanvasHandle, TabEditorCanvasProps>(
       const spacing = (cursorBounds.height - 1) / (cursorStringCount - 1);
       const rowIndex = cursorStringCount - cursorStringNumber; // 0 = top row
       const lineY = cursorBounds.y + rowIndex * spacing;
-      const zoneTop = Math.max(cursorBounds.y, lineY - spacing / 2);
-      const zoneBottom = Math.min(cursorBounds.y + cursorBounds.height, lineY + spacing / 2);
+      // No clamping: let zones extend ±spacing/2 around each string line.
+      // For the top/bottom strings this reaches ~6px beyond the staff bounds —
+      // that whitespace exists anyway and clamping was shifting those zones off-center.
       stringCursorStyle = {
         left: cursorBounds.x,
-        top: zoneTop,
+        top: lineY - spacing / 2,
         width: cursorBounds.width,
-        height: Math.max(spacing, zoneBottom - zoneTop),
-        // Only transition horizontal movement — vertical jumps between lines are instant
+        height: spacing,
         transition: 'left 75ms, width 75ms',
       };
     }

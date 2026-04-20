@@ -158,7 +158,8 @@ function buildScoreFromParsed(tabText: string, merged: AsciiImportOptions): Scor
   if (allBars.length === 0) {
     addEmptyBar(score, staff, tempo, 4, 4);
   } else {
-    allBars.forEach((parsedBar, i) => {
+    const expandedBars = allBars.flatMap(splitToStandardBars);
+    expandedBars.forEach((parsedBar, i) => {
       const beatCount = parsedBar.beats.length;
       const {num, denom, beatDuration} = pickTimeSig(beatCount);
       addParsedBar(score, staff, parsedBar, i, tempo, num, denom, beatDuration, stringCount);
@@ -442,10 +443,7 @@ function resolveStringEvents(
 // Score builder
 // ---------------------------------------------------------------------------
 
-/** Choose a time signature and beat duration based on beat count.
- *  The result must satisfy: (num/denom) / beatDurationValue >= beatCount
- *  so the bar never overflows (overflow beats are silent and confusing).
- */
+/** Choose a time signature and beat duration based on beat count (max 16 beats). */
 function pickTimeSig(beatCount: number): {num: number; denom: number; beatDuration: number} {
   if (beatCount <= 1)  return {num: 4, denom: 4, beatDuration: Duration.Whole};
   if (beatCount === 2) return {num: 2, denom: 4, beatDuration: Duration.Half};
@@ -454,12 +452,22 @@ function pickTimeSig(beatCount: number): {num: number; denom: number; beatDurati
   if (beatCount === 6) return {num: 6, denom: 8, beatDuration: Duration.Eighth};
   if (beatCount <= 8) return {num: 4, denom: 4, beatDuration: Duration.Eighth};
   if (beatCount <= 12) return {num: 3, denom: 4, beatDuration: Duration.Sixteenth};
-  if (beatCount <= 16) return {num: 4, denom: 4, beatDuration: Duration.Sixteenth};
-  // Dense bars (> 16 beats): use 4/4 with 32nd notes (capacity = 32).
-  // This keeps the displayed time signature as standard "4/4" rather than
-  // non-standard N/16 fractions which AlphaTab renders verbatim and look bizarre.
-  if (beatCount <= 32) return {num: 4, denom: 4, beatDuration: Duration.ThirtySecond};
-  return {num: 4, denom: 4, beatDuration: Duration.SixtyFourth};
+  return {num: 4, denom: 4, beatDuration: Duration.Sixteenth};
+}
+
+/**
+ * Split a parsed bar with more than 16 beats into multiple bars of max 16 beats each.
+ * This ensures no bar overflows its 4/4 capacity and avoids artificial trailing silence
+ * from using wider note values (32nd/64th) to fit all beats into one bar.
+ */
+function splitToStandardBars(parsedBar: ParsedBar): ParsedBar[] {
+  const MAX_BEATS = 16;
+  if (parsedBar.beats.length <= MAX_BEATS) return [parsedBar];
+  const result: ParsedBar[] = [];
+  for (let i = 0; i < parsedBar.beats.length; i += MAX_BEATS) {
+    result.push({beats: parsedBar.beats.slice(i, i + MAX_BEATS)});
+  }
+  return result;
 }
 
 function addEmptyBar(
