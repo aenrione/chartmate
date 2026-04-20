@@ -7,7 +7,7 @@ import {
 import debounce from 'debounce';
 import {Settings, importer} from '@coderline/alphatab';
 import {getSavedCharts, unsaveChart, type SavedChartEntry} from '@/lib/local-db/saved-charts';
-import {getSavedCompositions, deleteComposition, updateCompositionMeta, saveComposition, markCompositionSaved, type TabComposition, type CompositionSortOrder} from '@/lib/local-db/tab-compositions';
+import {getSavedCompositions, deleteComposition, deleteCompositionBatch, updateCompositionMeta, saveComposition, markCompositionSaved, type TabComposition, type CompositionSortOrder} from '@/lib/local-db/tab-compositions';
 import {getDrumsLibraryItems, type LibraryItem} from '@/lib/local-db/library';
 import {deletePersistedChart} from '@/lib/chart-persistent-store';
 import {cn} from '@/lib/utils';
@@ -51,6 +51,13 @@ export default function SavedChartsPage() {
   const [bulkImporting, setBulkImporting] = useState(false);
   const [sort, setSort] = useState<CompositionSortOrder>('saved_at_desc');
 
+  // Selection mode
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedCompIds, setSelectedCompIds] = useState<Set<number>>(new Set());
+  const [selectedChartMd5s, setSelectedChartMd5s] = useState<Set<string>>(new Set());
+  const [bulkDeleting, setBulkDeleting] = useState(false);
+  const [confirmBulkDelete, setConfirmBulkDelete] = useState(false);
+
   // Chorus state
   const [charts, setCharts] = useState<SavedChartEntry[]>([]);
   const [chartsLoading, setChartsLoading] = useState(false);
@@ -64,6 +71,30 @@ export default function SavedChartsPage() {
   // Drums state (merged)
   const [drumsItems, setDrumsItems] = useState<LibraryItem[]>([]);
   const [drumsLoading, setDrumsLoading] = useState(false);
+
+  const totalSelected = selectedCompIds.size + selectedChartMd5s.size;
+
+  const exitSelectionMode = () => {
+    setSelectionMode(false);
+    setSelectedCompIds(new Set());
+    setSelectedChartMd5s(new Set());
+  };
+
+  const toggleSelectComp = (id: number) => {
+    setSelectedCompIds(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectChart = (md5: string) => {
+    setSelectedChartMd5s(prev => {
+      const next = new Set(prev);
+      next.has(md5) ? next.delete(md5) : next.add(md5);
+      return next;
+    });
+  };
 
   const loadChorus = useCallback(async (q?: string) => {
     setChartsLoading(true);
@@ -115,6 +146,7 @@ export default function SavedChartsPage() {
     setActiveTab(tab);
     setSearch('');
     setSort('saved_at_desc');
+    exitSelectionMode();
   };
 
   const handleRemoveChart = async (chart: SavedChartEntry, e: React.MouseEvent) => {
@@ -166,6 +198,31 @@ export default function SavedChartsPage() {
     setEditTarget(null);
     loadTab(activeTab, search || undefined);
     toast.success('Metadata updated');
+  };
+
+  const handleBulkDelete = async () => {
+    setConfirmBulkDelete(false);
+    setBulkDeleting(true);
+    try {
+      if (selectedCompIds.size > 0) {
+        await deleteCompositionBatch(Array.from(selectedCompIds));
+      }
+      if (selectedChartMd5s.size > 0) {
+        await Promise.all(
+          Array.from(selectedChartMd5s).map(async md5 => {
+            await unsaveChart(md5);
+            await deletePersistedChart(md5);
+          })
+        );
+      }
+      toast.success(`Deleted ${totalSelected} item${totalSelected !== 1 ? 's' : ''}`);
+      exitSelectionMode();
+      loadTab(activeTab, search || undefined, sort);
+    } catch {
+      toast.error('Some items failed to delete');
+    } finally {
+      setBulkDeleting(false);
+    }
   };
 
   const handleBulkImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -246,6 +303,17 @@ export default function SavedChartsPage() {
                 onChange={handleBulkImport}
               />
               <button
+                onClick={() => selectionMode ? exitSelectionMode() : setSelectionMode(true)}
+                className={cn(
+                  'flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors',
+                  selectionMode
+                    ? 'bg-primary text-on-primary hover:bg-primary/90'
+                    : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-container',
+                )}
+              >
+                {selectionMode ? 'Cancel' : 'Select'}
+              </button>
+              <button
                 onClick={() => dirInputRef.current?.click()}
                 disabled={bulkImporting}
                 className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-50"
@@ -319,6 +387,9 @@ export default function SavedChartsPage() {
             onRemove={handleRemoveChart}
             onAddToRepertoire={setAddToRepertoire}
             search={search}
+            selectionMode={selectionMode}
+            selectedMd5s={selectedChartMd5s}
+            onToggleSelect={toggleSelectChart}
           />
         ) : activeTab === 'drums' ? (
           <DrumsSection
@@ -329,6 +400,11 @@ export default function SavedChartsPage() {
             onRemoveChart={handleRemoveChart}
             onEditComposition={(comp, e) => { e.preventDefault(); e.stopPropagation(); setEditTarget(comp); }}
             search={search}
+            selectionMode={selectionMode}
+            selectedCompIds={selectedCompIds}
+            selectedChartMd5s={selectedChartMd5s}
+            onToggleSelectComp={toggleSelectComp}
+            onToggleSelectChart={toggleSelectChart}
           />
         ) : (
           <CompositionsSection
@@ -339,7 +415,65 @@ export default function SavedChartsPage() {
             onEdit={(comp, e) => { e.preventDefault(); e.stopPropagation(); setEditTarget(comp); }}
             search={search}
             activeTab={activeTab}
+            selectionMode={selectionMode}
+            selectedIds={selectedCompIds}
+            onToggleSelect={toggleSelectComp}
           />
+        )}
+
+        {/* Sticky bottom action bar */}
+        {selectionMode && (
+          <div className="fixed bottom-0 inset-x-0 z-40 flex items-center justify-between gap-4 px-6 py-4 bg-surface-container border-t border-outline/20 shadow-lg">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => {
+                  if (activeTab === 'chorus') {
+                    const allMd5s = charts.map(c => c.md5);
+                    const allSelected = allMd5s.every(md5 => selectedChartMd5s.has(md5));
+                    if (allSelected) {
+                      setSelectedChartMd5s(new Set());
+                    } else {
+                      setSelectedChartMd5s(new Set(allMd5s));
+                    }
+                  } else if (activeTab === 'drums') {
+                    const compIds = drumsItems.filter(i => i.sourceType === 'composition').map(i => (i.data as TabComposition).id);
+                    const chartMd5s = drumsItems.filter(i => i.sourceType === 'chorus').map(i => (i.data as SavedChartEntry).md5);
+                    const allCompSelected = compIds.every(id => selectedCompIds.has(id));
+                    const allChartSelected = chartMd5s.every(md5 => selectedChartMd5s.has(md5));
+                    if (allCompSelected && allChartSelected) {
+                      setSelectedCompIds(new Set());
+                      setSelectedChartMd5s(new Set());
+                    } else {
+                      setSelectedCompIds(new Set(compIds));
+                      setSelectedChartMd5s(new Set(chartMd5s));
+                    }
+                  } else {
+                    const allIds = compositions.map(c => c.id);
+                    const allSelected = allIds.every(id => selectedCompIds.has(id));
+                    if (allSelected) {
+                      setSelectedCompIds(new Set());
+                    } else {
+                      setSelectedCompIds(new Set(allIds));
+                    }
+                  }
+                }}
+                className="text-xs font-semibold text-tertiary hover:underline"
+              >
+                {totalSelected > 0 ? 'Deselect All' : 'Select All'}
+              </button>
+              <span className="text-xs text-on-surface-variant">
+                {totalSelected} selected
+              </span>
+            </div>
+            <button
+              disabled={totalSelected === 0 || bulkDeleting}
+              onClick={() => setConfirmBulkDelete(true)}
+              className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg bg-error text-on-error hover:bg-error/90 transition-colors disabled:opacity-40"
+            >
+              {bulkDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+              Delete {totalSelected > 0 ? totalSelected : ''} Selected
+            </button>
+          </div>
         )}
       </div>
 
@@ -363,6 +497,32 @@ export default function SavedChartsPage() {
                 className="px-3 py-1.5 text-sm rounded-lg bg-error text-on-error hover:bg-error/90 transition-colors"
               >
                 Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bulk delete confirmation */}
+      {confirmBulkDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-surface-container rounded-2xl p-6 max-w-sm w-full mx-4 shadow-xl space-y-4">
+            <h2 className="text-base font-bold text-on-surface">Delete {totalSelected} Items</h2>
+            <p className="text-sm text-on-surface-variant">
+              Permanently delete {totalSelected} selected item{totalSelected !== 1 ? 's' : ''}? This cannot be undone.
+            </p>
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => setConfirmBulkDelete(false)}
+                className="px-3 py-1.5 text-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleBulkDelete}
+                className="px-3 py-1.5 text-sm rounded-lg bg-error text-on-error hover:bg-error/90 transition-colors"
+              >
+                Delete All
               </button>
             </div>
           </div>
@@ -416,12 +576,18 @@ function ChorusSection({
   onRemove,
   onAddToRepertoire,
   search,
+  selectionMode,
+  selectedMd5s,
+  onToggleSelect,
 }: {
   charts: SavedChartEntry[];
   removing: Set<string>;
   onRemove: (chart: SavedChartEntry, e: React.MouseEvent) => void;
   onAddToRepertoire: (chart: SavedChartEntry) => void;
   search: string;
+  selectionMode?: boolean;
+  selectedMd5s?: Set<string>;
+  onToggleSelect?: (md5: string) => void;
 }) {
   if (charts.length === 0) {
     return (
@@ -445,75 +611,95 @@ function ChorusSection({
         {charts.length} saved · {charts.filter(c => c.isDownloaded).length} offline
       </p>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {charts.map(chart => (
-          <Link
-            to={`/sheet-music/${chart.md5}`}
-            key={chart.md5}
-            className="group relative flex flex-col overflow-hidden rounded-2xl bg-surface-container-low transition-all duration-200 hover:-translate-y-0.5 hover:bg-surface-container"
-          >
-            <div className="relative flex h-36 items-center justify-center overflow-hidden bg-surface-container">
-              <img
-                src={`https://files.enchor.us/${chart.albumArtMd5}.jpg`}
-                alt={`${chart.name} album art`}
-                className="h-full w-full object-cover opacity-40"
-              />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-tertiary/90 text-on-tertiary opacity-0 shadow-lg transition-all duration-200 group-hover:opacity-100 group-hover:scale-110">
-                  <Play className="h-5 w-5 fill-current" />
+        {charts.map(chart => {
+          const isSelected = selectedMd5s?.has(chart.md5) ?? false;
+          return (
+            <Link
+              to={`/sheet-music/${chart.md5}`}
+              key={chart.md5}
+              onClick={e => { if (selectionMode) { e.preventDefault(); onToggleSelect?.(chart.md5); } }}
+              className={cn(
+                'group relative flex flex-col overflow-hidden rounded-2xl bg-surface-container-low transition-all duration-200 hover:-translate-y-0.5 hover:bg-surface-container',
+                selectionMode && isSelected && 'ring-2 ring-primary',
+              )}
+            >
+              <div className="relative flex h-36 items-center justify-center overflow-hidden bg-surface-container">
+                <img
+                  src={`https://files.enchor.us/${chart.albumArtMd5}.jpg`}
+                  alt={`${chart.name} album art`}
+                  className="h-full w-full object-cover opacity-40"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-tertiary/90 text-on-tertiary opacity-0 shadow-lg transition-all duration-200 group-hover:opacity-100 group-hover:scale-110">
+                    <Play className="h-5 w-5 fill-current" />
+                  </div>
                 </div>
-              </div>
-              <div className={cn(
-                'absolute left-3 top-3 z-10 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-mono font-semibold backdrop-blur-sm',
-                chart.isDownloaded
-                  ? 'bg-tertiary-container/80 text-on-tertiary-container'
-                  : 'bg-surface/70 text-outline',
-              )}>
-                {chart.isDownloaded
-                  ? <><HardDrive className="h-3 w-3" /> Offline</>
-                  : <><Wifi className="h-3 w-3" /> Online only</>
-                }
-              </div>
-              <button
-                className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-surface/70 backdrop-blur-sm transition-colors hover:bg-surface"
-                onClick={(e) => onRemove(chart, e)}
-                disabled={removing.has(chart.md5)}
-                title="Remove from library"
-              >
-                {removing.has(chart.md5)
-                  ? <Loader2 className="h-4 w-4 animate-spin text-on-surface-variant" />
-                  : <Bookmark className="h-4 w-4 fill-tertiary text-tertiary" />
-                }
-              </button>
-            </div>
-            <div className="flex flex-1 flex-col gap-2 p-4">
-              <div className="min-w-0">
-                <h3 className="truncate text-sm font-bold text-on-surface">{chart.name}</h3>
-                <p className="truncate text-xs text-on-surface-variant">{chart.artist}</p>
-              </div>
-              <div className="mt-auto flex items-center gap-3">
-                {chart.diff_drums != null && (
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-mono text-[10px] uppercase text-on-surface-variant">Diff</span>
-                    <DifficultyDots level={chart.diff_drums} />
+                <div className={cn(
+                  'absolute left-3 top-3 z-10 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-mono font-semibold backdrop-blur-sm',
+                  chart.isDownloaded
+                    ? 'bg-tertiary-container/80 text-on-tertiary-container'
+                    : 'bg-surface/70 text-outline',
+                )}>
+                  {chart.isDownloaded
+                    ? <><HardDrive className="h-3 w-3" /> Offline</>
+                    : <><Wifi className="h-3 w-3" /> Online only</>
+                  }
+                </div>
+                <button
+                  className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-surface/70 backdrop-blur-sm transition-colors hover:bg-surface"
+                  onClick={(e) => onRemove(chart, e)}
+                  disabled={removing.has(chart.md5)}
+                  title="Remove from library"
+                >
+                  {removing.has(chart.md5)
+                    ? <Loader2 className="h-4 w-4 animate-spin text-on-surface-variant" />
+                    : <Bookmark className="h-4 w-4 fill-tertiary text-tertiary" />
+                  }
+                </button>
+                {selectionMode && (
+                  <div className={cn(
+                    'absolute inset-0 z-20 flex items-center justify-center pointer-events-none',
+                    isSelected ? 'bg-primary/20' : '',
+                  )}>
+                    <div className={cn(
+                      'h-6 w-6 rounded-full border-2 flex items-center justify-center',
+                      isSelected ? 'bg-primary border-primary' : 'bg-surface/80 border-outline',
+                    )}>
+                      {isSelected && <span className="text-on-primary text-xs font-bold">✓</span>}
+                    </div>
                   </div>
                 )}
-                {chart.song_length != null && (
-                  <span className="font-mono text-xs text-on-surface-variant">
-                    {formatDuration(chart.song_length)}
-                  </span>
-                )}
-                <button
-                  className="ml-auto flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-all"
-                  onClick={e => { e.preventDefault(); e.stopPropagation(); onAddToRepertoire(chart); }}
-                  title="Add to RepertoireIQ"
-                >
-                  <BookMarked className="h-3 w-3" />
-                  Repertoire
-                </button>
               </div>
-            </div>
-          </Link>
-        ))}
+              <div className="flex flex-1 flex-col gap-2 p-4">
+                <div className="min-w-0">
+                  <h3 className="truncate text-sm font-bold text-on-surface">{chart.name}</h3>
+                  <p className="truncate text-xs text-on-surface-variant">{chart.artist}</p>
+                </div>
+                <div className="mt-auto flex items-center gap-3">
+                  {chart.diff_drums != null && (
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-mono text-[10px] uppercase text-on-surface-variant">Diff</span>
+                      <DifficultyDots level={chart.diff_drums} />
+                    </div>
+                  )}
+                  {chart.song_length != null && (
+                    <span className="font-mono text-xs text-on-surface-variant">
+                      {formatDuration(chart.song_length)}
+                    </span>
+                  )}
+                  <button
+                    className="ml-auto flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-all"
+                    onClick={e => { e.preventDefault(); e.stopPropagation(); onAddToRepertoire(chart); }}
+                    title="Add to RepertoireIQ"
+                  >
+                    <BookMarked className="h-3 w-3" />
+                    Repertoire
+                  </button>
+                </div>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </>
   );
@@ -527,6 +713,9 @@ function CompositionCard({
   badge,
   instrumentLabel,
   activeTab,
+  selectionMode,
+  isSelected,
+  onToggleSelect,
 }: {
   comp: TabComposition;
   removing: Set<number>;
@@ -535,12 +724,26 @@ function CompositionCard({
   badge?: string;
   instrumentLabel?: string;
   activeTab: Tab;
+  selectionMode?: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: (id: number) => void;
 }) {
+  const handleCardClick = (e: React.MouseEvent) => {
+    if (selectionMode) {
+      e.preventDefault();
+      onToggleSelect?.(comp.id);
+    }
+  };
+
   return (
     <Link
       to={`/tab-editor/${comp.id}`}
       state={{from: '/library/saved-charts', activeTab}}
-      className="group relative flex flex-col overflow-hidden rounded-2xl bg-surface-container-low transition-all duration-200 hover:-translate-y-0.5 hover:bg-surface-container"
+      onClick={handleCardClick}
+      className={cn(
+        'group relative flex flex-col overflow-hidden rounded-2xl bg-surface-container-low transition-all duration-200 hover:-translate-y-0.5 hover:bg-surface-container',
+        selectionMode && isSelected && 'ring-2 ring-primary',
+      )}
     >
       <div className="relative flex h-28 items-center justify-center overflow-hidden bg-surface-container">
         {comp.previewImage ? (
@@ -579,6 +782,19 @@ function CompositionCard({
             }
           </button>
         </div>
+        {selectionMode && (
+          <div className={cn(
+            'absolute inset-0 z-20 flex items-center justify-center pointer-events-none',
+            isSelected ? 'bg-primary/20' : '',
+          )}>
+            <div className={cn(
+              'h-6 w-6 rounded-full border-2 flex items-center justify-center',
+              isSelected ? 'bg-primary border-primary' : 'bg-surface/80 border-outline',
+            )}>
+              {isSelected && <span className="text-on-primary text-xs font-bold">✓</span>}
+            </div>
+          </div>
+        )}
       </div>
       <div className="flex flex-1 flex-col gap-1.5 p-4">
         <div className="min-w-0">
@@ -608,6 +824,9 @@ function CompositionsSection({
   onEdit,
   search,
   activeTab,
+  selectionMode,
+  selectedIds,
+  onToggleSelect,
 }: {
   compositions: TabComposition[];
   instrument: string;
@@ -616,6 +835,9 @@ function CompositionsSection({
   onEdit: (comp: TabComposition, e: React.MouseEvent) => void;
   search: string;
   activeTab: Tab;
+  selectionMode?: boolean;
+  selectedIds?: Set<number>;
+  onToggleSelect?: (id: number) => void;
 }) {
   const instrumentLabel = instrument.charAt(0).toUpperCase() + instrument.slice(1);
 
@@ -652,6 +874,9 @@ function CompositionsSection({
             onEdit={onEdit}
             instrumentLabel={instrumentLabel}
             activeTab={activeTab}
+            selectionMode={selectionMode}
+            isSelected={selectedIds?.has(comp.id)}
+            onToggleSelect={onToggleSelect}
           />
         ))}
       </div>
@@ -667,6 +892,11 @@ function DrumsSection({
   onRemoveChart,
   onEditComposition,
   search,
+  selectionMode,
+  selectedCompIds,
+  selectedChartMd5s,
+  onToggleSelectComp,
+  onToggleSelectChart,
 }: {
   items: LibraryItem[];
   removingComps: Set<number>;
@@ -675,8 +905,12 @@ function DrumsSection({
   onRemoveChart: (chart: SavedChartEntry, e: React.MouseEvent) => void;
   onEditComposition: (comp: TabComposition, e: React.MouseEvent) => void;
   search: string;
-})
- {
+  selectionMode?: boolean;
+  selectedCompIds?: Set<number>;
+  selectedChartMd5s?: Set<string>;
+  onToggleSelectComp?: (id: number) => void;
+  onToggleSelectChart?: (md5: string) => void;
+}) {
   if (items.length === 0) {
     return (
       <div className="py-20 text-center space-y-3">
@@ -706,16 +940,24 @@ function DrumsSection({
                 onEdit={onEditComposition}
                 badge="Tab"
                 activeTab="drums"
+                selectionMode={selectionMode}
+                isSelected={selectedCompIds?.has(comp.id)}
+                onToggleSelect={onToggleSelectComp}
               />
             );
           }
 
           const chart = item.data as SavedChartEntry;
+          const isSelected = selectedChartMd5s?.has(chart.md5) ?? false;
           return (
             <Link
               to={`/sheet-music/${chart.md5}`}
               key={`chorus-${chart.md5}`}
-              className="group relative flex flex-col overflow-hidden rounded-2xl bg-surface-container-low transition-all duration-200 hover:-translate-y-0.5 hover:bg-surface-container"
+              onClick={e => { if (selectionMode) { e.preventDefault(); onToggleSelectChart?.(chart.md5); } }}
+              className={cn(
+                'group relative flex flex-col overflow-hidden rounded-2xl bg-surface-container-low transition-all duration-200 hover:-translate-y-0.5 hover:bg-surface-container',
+                selectionMode && isSelected && 'ring-2 ring-primary',
+              )}
             >
               <div className="relative flex h-28 items-center justify-center overflow-hidden bg-surface-container">
                 <img
@@ -742,6 +984,19 @@ function DrumsSection({
                     : <Bookmark className="h-4 w-4 fill-tertiary text-tertiary" />
                   }
                 </button>
+                {selectionMode && (
+                  <div className={cn(
+                    'absolute inset-0 z-20 flex items-center justify-center pointer-events-none',
+                    isSelected ? 'bg-primary/20' : '',
+                  )}>
+                    <div className={cn(
+                      'h-6 w-6 rounded-full border-2 flex items-center justify-center',
+                      isSelected ? 'bg-primary border-primary' : 'bg-surface/80 border-outline',
+                    )}>
+                      {isSelected && <span className="text-on-primary text-xs font-bold">✓</span>}
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="flex flex-1 flex-col gap-1.5 p-4">
                 <div className="min-w-0">
