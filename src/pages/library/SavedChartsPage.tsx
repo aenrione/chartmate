@@ -1,12 +1,13 @@
-import {useState, useEffect, useCallback} from 'react';
-import {Link} from 'react-router-dom';
+import {useState, useEffect, useCallback, useRef} from 'react';
+import {Link, useLocation} from 'react-router-dom';
 import {
   FolderHeart, Loader2, Search, Play, Bookmark, HardDrive, Wifi,
-  Music2, BookMarked,
+  Music2, BookMarked, Trash2, Pencil, FolderOpen,
 } from 'lucide-react';
 import debounce from 'debounce';
+import {Settings, importer} from '@coderline/alphatab';
 import {getSavedCharts, unsaveChart, type SavedChartEntry} from '@/lib/local-db/saved-charts';
-import {getSavedCompositions, deleteComposition, type TabComposition} from '@/lib/local-db/tab-compositions';
+import {getSavedCompositions, deleteComposition, updateCompositionMeta, saveComposition, markCompositionSaved, type TabComposition} from '@/lib/local-db/tab-compositions';
 import {getDrumsLibraryItems, type LibraryItem} from '@/lib/local-db/library';
 import {deletePersistedChart} from '@/lib/chart-persistent-store';
 import {cn} from '@/lib/utils';
@@ -15,6 +16,10 @@ import {Toggle} from '@/components/ui/toggle';
 import {DifficultyDots} from '@/components/shared/DifficultyDots';
 import {formatDuration} from '@/lib/ui-utils';
 import AddRepertoireItemDialog from '@/pages/guitar/repertoire/AddRepertoireItemDialog';
+import {importFromAsciiTabWithMeta, type AsciiImportOptions} from '@/lib/tab-editor/asciiTabImporter';
+import {exportToGp7} from '@/lib/tab-editor/exporters';
+import {getScoreTempo} from '@/lib/tab-editor/scoreOperations';
+import SaveCompositionDialog, {type CompositionMeta} from '@/pages/tab-editor/SaveCompositionDialog';
 
 type Tab = 'chorus' | 'guitar' | 'bass' | 'drums' | 'keys';
 
@@ -27,9 +32,23 @@ const TABS: {id: Tab; label: string}[] = [
 ];
 
 export default function SavedChartsPage() {
-  const [activeTab, setActiveTab] = useState<Tab>('chorus');
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState<Tab>(() => {
+    const fromState = (location.state as any)?.activeTab as Tab | undefined;
+    return TABS.some(t => t.id === fromState) ? fromState! : 'chorus';
+  });
   const [search, setSearch] = useState('');
   const [addToRepertoire, setAddToRepertoire] = useState<SavedChartEntry | null>(null);
+
+  // Delete confirmation
+  const [deleteTarget, setDeleteTarget] = useState<TabComposition | null>(null);
+
+  // Edit metadata dialog
+  const [editTarget, setEditTarget] = useState<TabComposition | null>(null);
+
+  // Bulk import
+  const dirInputRef = useRef<HTMLInputElement>(null);
+  const [bulkImporting, setBulkImporting] = useState(false);
 
   // Chorus state
   const [charts, setCharts] = useState<SavedChartEntry[]>([]);
@@ -116,7 +135,13 @@ export default function SavedChartsPage() {
   const handleRemoveComposition = async (comp: TabComposition, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (removingComps.has(comp.id)) return;
+    setDeleteTarget(comp);
+  };
+
+  const confirmDeleteComposition = async () => {
+    const comp = deleteTarget;
+    if (!comp) return;
+    setDeleteTarget(null);
     setRemovingComps(prev => new Set(prev).add(comp.id));
     try {
       await deleteComposition(comp.id);
@@ -131,6 +156,62 @@ export default function SavedChartsPage() {
     } finally {
       setRemovingComps(prev => {const next = new Set(prev); next.delete(comp.id); return next;});
     }
+  };
+
+  const handleEditSave = async (meta: CompositionMeta) => {
+    if (!editTarget) return;
+    await updateCompositionMeta(editTarget.id, meta);
+    setEditTarget(null);
+    loadTab(activeTab, search || undefined);
+    toast.success('Metadata updated');
+  };
+
+  const handleBulkImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    e.target.value = '';
+    if (files.length === 0) return;
+    setBulkImporting(true);
+    let imported = 0;
+    let failed = 0;
+    for (const file of files) {
+      try {
+        const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
+        let score;
+        let thumbnailUrl: string | null = null;
+        let asciiMeta: AsciiImportOptions | null = null;
+        if (ext === 'txt' || ext === 'tab') {
+          const text = await file.text();
+          const result = importFromAsciiTabWithMeta(text);  // No title override — let file header win
+          score = result.score;
+          thumbnailUrl = result.meta.thumbnailUrl ?? null;
+          asciiMeta = result.meta;
+        } else {
+          const buf = await file.arrayBuffer();
+          score = importer.ScoreLoader.loadScoreFromBytes(new Uint8Array(buf), new Settings());
+        }
+        const scoreData = exportToGp7(score).buffer as ArrayBuffer;
+        const instrument = score.tracks[0]?.staves[0]?.isPercussion ? 'drums'
+          : score.tracks[0]?.name?.toLowerCase().includes('bass') ? 'bass' : 'guitar';
+        const fileBaseName = file.name.replace(/\.[^.]+$/, '');
+        const newId = await saveComposition(scoreData, {
+          title: asciiMeta?.title || score.title || fileBaseName,
+          artist: asciiMeta?.artist || score.artist || '',
+          album: (score as any).album || '',
+          tempo: getScoreTempo(score),
+          instrument,
+          previewImage: thumbnailUrl,
+          youtubeUrl: asciiMeta?.youtubeUrl ?? null,
+        });
+        await markCompositionSaved(newId);
+        imported++;
+      } catch {
+        failed++;
+      }
+    }
+    setBulkImporting(false);
+    loadTab(activeTab, search || undefined);
+    if (imported > 0) toast.success(`Imported ${imported} file${imported !== 1 ? 's' : ''}`);
+    if (failed > 0) toast.error(`${failed} file${failed !== 1 ? 's' : ''} failed to import`);
   };
 
   const loadingByTab: Record<Tab, boolean> = {
@@ -151,6 +232,30 @@ export default function SavedChartsPage() {
             <h1 className="font-headline font-extrabold text-3xl text-on-surface tracking-tight">
               Library
             </h1>
+            <div className="ml-auto flex items-center gap-2">
+              <input
+                ref={dirInputRef}
+                type="file"
+                multiple
+                // @ts-ignore — webkitdirectory not in TS types
+                webkitdirectory=""
+                accept=".gp,.gp3,.gp4,.gp5,.gpx,.gp7,.alphatex,.tex,.txt,.tab,.psarc"
+                className="hidden"
+                onChange={handleBulkImport}
+              />
+              <button
+                onClick={() => dirInputRef.current?.click()}
+                disabled={bulkImporting}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-50"
+                title="Import files from a folder"
+              >
+                {bulkImporting
+                  ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  : <FolderOpen className="h-3.5 w-3.5" />
+                }
+                {bulkImporting ? 'Importing…' : 'Import Folder'}
+              </button>
+            </div>
           </div>
           <p className="text-on-surface-variant text-sm max-w-xl leading-relaxed">
             Your saved charts and compositions, organized by instrument.
@@ -204,6 +309,7 @@ export default function SavedChartsPage() {
             removingCharts={removingCharts}
             onRemoveComposition={handleRemoveComposition}
             onRemoveChart={handleRemoveChart}
+            onEditComposition={(comp, e) => { e.preventDefault(); e.stopPropagation(); setEditTarget(comp); }}
             search={search}
           />
         ) : (
@@ -212,10 +318,56 @@ export default function SavedChartsPage() {
             instrument={activeTab}
             removing={removingComps}
             onRemove={handleRemoveComposition}
+            onEdit={(comp, e) => { e.preventDefault(); e.stopPropagation(); setEditTarget(comp); }}
             search={search}
+            activeTab={activeTab}
           />
         )}
       </div>
+
+      {/* Delete confirmation */}
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-surface-container rounded-2xl p-6 max-w-sm w-full mx-4 shadow-xl space-y-4">
+            <h2 className="text-base font-bold text-on-surface">Delete Composition</h2>
+            <p className="text-sm text-on-surface-variant">
+              Delete <strong>{deleteTarget.title || 'Untitled'}</strong>? This cannot be undone.
+            </p>
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => setDeleteTarget(null)}
+                className="px-3 py-1.5 text-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDeleteComposition}
+                className="px-3 py-1.5 text-sm rounded-lg bg-error text-on-error hover:bg-error/90 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit metadata dialog */}
+      {editTarget && (
+        <SaveCompositionDialog
+          open={!!editTarget}
+          onOpenChange={open => { if (!open) setEditTarget(null); }}
+          initialMeta={{
+            title: editTarget.title,
+            artist: editTarget.artist,
+            album: editTarget.album,
+            tempo: editTarget.tempo,
+            instrument: editTarget.instrument,
+            previewImage: editTarget.previewImage,
+            youtubeUrl: editTarget.youtubeUrl,
+          }}
+          onSave={handleEditSave}
+        />
+      )}
 
       {addToRepertoire && (
         <AddRepertoireItemDialog
@@ -353,40 +505,62 @@ function CompositionCard({
   comp,
   removing,
   onRemove,
+  onEdit,
   badge,
   instrumentLabel,
+  activeTab,
 }: {
   comp: TabComposition;
   removing: Set<number>;
   onRemove: (comp: TabComposition, e: React.MouseEvent) => void;
+  onEdit: (comp: TabComposition, e: React.MouseEvent) => void;
   badge?: string;
   instrumentLabel?: string;
+  activeTab: Tab;
 }) {
   return (
     <Link
       to={`/tab-editor/${comp.id}`}
+      state={{from: '/library/saved-charts', activeTab}}
       className="group relative flex flex-col overflow-hidden rounded-2xl bg-surface-container-low transition-all duration-200 hover:-translate-y-0.5 hover:bg-surface-container"
     >
       <div className="relative flex h-28 items-center justify-center overflow-hidden bg-surface-container">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary opacity-60 group-hover:opacity-100 transition-opacity">
-          <Music2 className="h-6 w-6" />
-        </div>
+        {comp.previewImage ? (
+          <img
+            src={comp.previewImage}
+            alt={comp.title}
+            className="h-full w-full object-cover opacity-60"
+          />
+        ) : (
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary opacity-60 group-hover:opacity-100 transition-opacity">
+            <Music2 className="h-6 w-6" />
+          </div>
+        )}
         {badge && (
           <div className="absolute left-3 top-3 z-10 rounded-full bg-surface/70 px-2 py-0.5 text-[10px] font-mono font-semibold backdrop-blur-sm text-outline">
             {badge}
           </div>
         )}
-        <button
-          className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-surface/70 backdrop-blur-sm transition-colors hover:bg-surface"
-          onClick={(e) => onRemove(comp, e)}
-          disabled={removing.has(comp.id)}
-          title="Remove from library"
-        >
-          {removing.has(comp.id)
-            ? <Loader2 className="h-4 w-4 animate-spin text-on-surface-variant" />
-            : <Bookmark className="h-4 w-4 fill-tertiary text-tertiary" />
-          }
-        </button>
+        <div className="absolute right-3 top-3 z-10 flex items-center gap-1">
+          <button
+            className="flex h-7 w-7 items-center justify-center rounded-full bg-surface/70 backdrop-blur-sm transition-colors hover:bg-surface opacity-0 group-hover:opacity-100"
+            onClick={(e) => onEdit(comp, e)}
+            title="Edit metadata"
+          >
+            <Pencil className="h-3.5 w-3.5 text-on-surface-variant" />
+          </button>
+          <button
+            className="flex h-7 w-7 items-center justify-center rounded-full bg-surface/70 backdrop-blur-sm transition-colors hover:bg-surface"
+            onClick={(e) => onRemove(comp, e)}
+            disabled={removing.has(comp.id)}
+            title="Delete from library"
+          >
+            {removing.has(comp.id)
+              ? <Loader2 className="h-4 w-4 animate-spin text-on-surface-variant" />
+              : <Trash2 className="h-3.5 w-3.5 text-error" />
+            }
+          </button>
+        </div>
       </div>
       <div className="flex flex-1 flex-col gap-1.5 p-4">
         <div className="min-w-0">
@@ -413,13 +587,17 @@ function CompositionsSection({
   instrument,
   removing,
   onRemove,
+  onEdit,
   search,
+  activeTab,
 }: {
   compositions: TabComposition[];
   instrument: string;
   removing: Set<number>;
   onRemove: (comp: TabComposition, e: React.MouseEvent) => void;
+  onEdit: (comp: TabComposition, e: React.MouseEvent) => void;
   search: string;
+  activeTab: Tab;
 }) {
   const instrumentLabel = instrument.charAt(0).toUpperCase() + instrument.slice(1);
 
@@ -453,7 +631,9 @@ function CompositionsSection({
             comp={comp}
             removing={removing}
             onRemove={onRemove}
+            onEdit={onEdit}
             instrumentLabel={instrumentLabel}
+            activeTab={activeTab}
           />
         ))}
       </div>
@@ -467,6 +647,7 @@ function DrumsSection({
   removingCharts,
   onRemoveComposition,
   onRemoveChart,
+  onEditComposition,
   search,
 }: {
   items: LibraryItem[];
@@ -474,8 +655,10 @@ function DrumsSection({
   removingCharts: Set<string>;
   onRemoveComposition: (comp: TabComposition, e: React.MouseEvent) => void;
   onRemoveChart: (chart: SavedChartEntry, e: React.MouseEvent) => void;
+  onEditComposition: (comp: TabComposition, e: React.MouseEvent) => void;
   search: string;
-}) {
+})
+ {
   if (items.length === 0) {
     return (
       <div className="py-20 text-center space-y-3">
@@ -502,7 +685,9 @@ function DrumsSection({
                 comp={comp}
                 removing={removingComps}
                 onRemove={onRemoveComposition}
+                onEdit={onEditComposition}
                 badge="Tab"
+                activeTab="drums"
               />
             );
           }
