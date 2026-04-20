@@ -60,7 +60,9 @@ import {
   Minimize2,
   Search,
   Plus,
+  Printer,
 } from 'lucide-react';
+import {useAlphaTabPrint} from '@/hooks/usePrint';
 import {useYoutubeSync} from '@/hooks/useYoutubeSync';
 import type {PlaybackClock} from '@/lib/youtube-sync';
 import YouTubePlayer from '@/components/YouTubePlayer';
@@ -470,6 +472,8 @@ export default function TabEditorPage() {
     await writeFile(filePath, new TextEncoder().encode(exportToAsciiTab(s)));
     setShowExportMenu(false);
   }, []);
+
+  const handlePrint = useAlphaTabPrint(getApi);
 
   // Import handler
   const handleImportFile = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1142,6 +1146,15 @@ export default function TabEditorPage() {
             </>
           )}
         </div>
+        <button
+          onClick={handlePrint}
+          disabled={!isReady}
+          className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant disabled:opacity-40 disabled:cursor-not-allowed"
+          title="Print / Save as PDF"
+          data-print-hide
+        >
+          <Printer className="h-4 w-4" />
+        </button>
         <button
           onClick={() => setShowHelp(true)}
           className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
