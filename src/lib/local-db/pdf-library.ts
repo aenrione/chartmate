@@ -79,14 +79,15 @@ export async function deletePdfLibraryEntry(id: number): Promise<void> {
 }
 
 /** Delete all pdf_library entries that have no chart_pdfs links. */
-export async function deleteUnmatchedPdfLibraryEntries(): Promise<void> {
+export async function deleteUnmatchedPdfLibraryEntries(): Promise<number> {
   const db = await getLocalDb();
-  await db
+  const result = await db
     .deleteFrom('pdf_library')
     .where('id', 'not in',
       db.selectFrom('chart_pdfs').select('pdf_library_id'),
     )
-    .execute();
+    .executeTakeFirst();
+  return Number(result.numDeletedRows);
 }
 
 // ── chart_pdfs operations ─────────────────────────────────────────────

@@ -109,9 +109,7 @@ const MAX_FRET = 24;
 // ── Typed interfaces for non-standard property access ─────────────────────────
 type LocationState = { from?: string; activeTab?: string };
 
-interface ScoreWithAlbum extends Score {
-  album?: string;
-}
+// Score already has album: string — no extension needed
 
 // Per-id caches — survive route changes without unmounting persistence
 type EditorUIState = {
@@ -900,7 +898,7 @@ export default function TabEditorPage() {
       handleSaveComposition({
         title,
         artist,
-        album: (scoreRef.current as ScoreWithAlbum | null)?.album ?? '',
+        album: scoreRef.current?.album ?? '',
         tempo,
         instrument: tracks[activeTrackIndex]?.instrument ?? 'guitar',
         previewImage: pendingPreviewImage,
@@ -1389,7 +1387,7 @@ export default function TabEditorPage() {
         initialMeta={{
           title,
           artist,
-          album: (scoreRef.current as ScoreWithAlbum | null)?.album ?? '',
+          album: scoreRef.current?.album ?? '',
           tempo,
           instrument: tracks[activeTrackIndex]?.instrument ?? 'guitar',
           previewImage: pendingPreviewImage,
