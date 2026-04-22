@@ -26,7 +26,6 @@ tauri-plugin-fs = "2.4.5"
 tauri-plugin-dialog = "2.6.0"
 tauri-plugin-store = "2.4.2"
 tauri-plugin-deep-link = "2.4.7"
-tauri-plugin-single-instance = { version = "2.4.0", features = ["deep-link"] }
 tauri-plugin-http = "2.5.7"
 tauri-plugin-localhost = "2"
 tauri-plugin-sql = { version = "2.3.2", features = ["sqlite"] }
@@ -41,4 +40,7 @@ url = "2"
 tokio = { version = "1", features = ["rt", "time"] }
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "stream"] }
 base64 = "0.22"
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-single-instance = { version = "2.4.0", features = ["deep-link"] }
 

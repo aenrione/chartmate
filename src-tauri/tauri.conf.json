@@ -22,7 +22,7 @@
       "assetProtocol": {
         "enable": true,
         "scope": {
-          "allow": ["$HOME/.cache/chartmate/**"],
+          "allow": ["$HOME/**"],
           "deny": []
         }
       }
