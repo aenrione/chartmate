@@ -26,6 +26,8 @@ import {
   Youtube,
   Unlink,
   Maximize2,
+  Minimize2,
+  EyeOff,
 } from 'lucide-react';
 import {LayoutMode, StaveProfile, model} from '@coderline/alphatab';
 import AlphaTabWrapper from './AlphaTabWrapper';
@@ -34,6 +36,7 @@ import GuitarPracticeControls from './GuitarPracticeControls';
 import {parseRocksmithXml} from '@/lib/rocksmith/parseRocksmithXml';
 import {convertToAlphaTab} from '@/lib/rocksmith/convertToAlphaTab';
 import {cn} from '@/lib/utils';
+import {useHideHeaderOnMobile} from '@/contexts/LayoutContext';
 import {useLocalStorage} from '@/lib/useLocalStorage';
 import YouTubePlayer from '@/components/YouTubePlayer';
 import {useYoutubeSync} from '@/hooks/useYoutubeSync';
@@ -78,6 +81,7 @@ function formatTime(ms: number): string {
 }
 
 export default function GuitarSongView() {
+  useHideHeaderOnMobile();
   const location = useLocation();
   const navigate = useNavigate();
   const state = location.state as LocationState | null;
@@ -106,6 +110,10 @@ export default function GuitarSongView() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [masterVolume, setMasterVolume] = useState(1.0);
   const [showPracticeMode, setShowPracticeMode] = useState(false);
+  const [showYoutubePanel, setShowYoutubePanel] = useState(false);
+  const [youtubeFullscreen, setYoutubeFullscreen] = useState(false);
+  // Suppress YouTube→AlphaTab state feedback after AlphaTab-initiated commands
+  const ytSyncSuppressRef = useRef(false);
 
   // Original audio state (PSARC only)
   const [useOriginalAudio, setUseOriginalAudio] = useState(state?.fileType === 'psarc');
@@ -248,6 +256,10 @@ export default function GuitarSongView() {
     const playing = playerState === 1;
     setIsPlaying(playing);
 
+    // Suppress YouTube→AlphaTab feedback for 800ms after this command settles
+    ytSyncSuppressRef.current = true;
+    setTimeout(() => { ytSyncSuppressRef.current = false; }, 800);
+
     if (playing) {
       youtubeSyncRef.current.onResume();
     } else {
@@ -258,7 +270,6 @@ export default function GuitarSongView() {
     if (!audio || !useOriginalAudio) return;
 
     if (playing) {
-      // Sync position before playing (audio is pre-trimmed, no offset needed)
       audio.currentTime = Math.max(0, positionRef.current.currentTime / 1000);
       audio.playbackRate = settings.playbackSpeed;
       audio.play().catch(() => {});
@@ -267,6 +278,21 @@ export default function GuitarSongView() {
       audio.pause();
     }
   }, [useOriginalAudio, settings.playbackSpeed]);
+
+  // When YouTube user manually plays/pauses, sync AlphaTab to match
+  const handleYoutubeStateChange = useCallback((state: number) => {
+    if (ytSyncSuppressRef.current) return;
+    if (state === 1 && !isPlayingRef.current) {
+      alphaTabRef.current?.playPause();
+    } else if (state === 2 && isPlayingRef.current) {
+      alphaTabRef.current?.playPause();
+    }
+  }, []);
+
+  // Auto-show YouTube panel when an association is loaded
+  useEffect(() => {
+    if (youtubeVideoId) setShowYoutubePanel(true);
+  }, [youtubeVideoId]);
 
   const onPlayerReady = useCallback(() => {
     setIsPlayerReady(true);
@@ -453,11 +479,17 @@ export default function GuitarSongView() {
       <div
         className={cn(
           'w-64 border-r flex-shrink-0 overflow-y-auto bg-background',
-          'fixed inset-y-0 left-0 z-[1100] transition-transform md:static md:translate-x-0',
+          'fixed inset-y-0 left-0 z-[1100] transition-transform lg:static lg:translate-x-0',
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
-        <div className="p-4 space-y-5">
+        <div
+          className="p-4 space-y-5"
+          style={{
+            paddingTop: 'max(env(safe-area-inset-top, 0px), 1rem)',
+            paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 1rem)',
+          }}
+        >
           {/* Back + title */}
           <div className="flex items-center gap-2">
             <Link
@@ -478,7 +510,7 @@ export default function GuitarSongView() {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className="lg:hidden"
               onClick={() => setIsSidebarOpen(false)}
             >
               <X className="h-4 w-4" />
@@ -704,10 +736,23 @@ export default function GuitarSongView() {
 
           {/* YouTube Integration */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-              <Youtube className="h-3.5 w-3.5" />
-              YouTube
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                <Youtube className="h-3.5 w-3.5" />
+                YouTube
+              </label>
+              {youtubeVideoId && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-5 w-5 shrink-0"
+                  onClick={() => setShowYoutubePanel(v => !v)}
+                  title={showYoutubePanel ? 'Hide video' : 'Show video'}
+                >
+                  {showYoutubePanel ? <EyeOff className="h-3 w-3" /> : <Youtube className="h-3 w-3" />}
+                </Button>
+              )}
+            </div>
             {youtubeVideoId ? (
               <div className="space-y-2">
                 <div className="flex items-center gap-1">
@@ -801,7 +846,7 @@ export default function GuitarSongView() {
       {/* Mobile sidebar overlay */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-30 md:hidden"
+          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
@@ -813,7 +858,7 @@ export default function GuitarSongView() {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="lg:hidden"
             onClick={() => setIsSidebarOpen(true)}
           >
             <Menu className="h-4 w-4" />
@@ -883,19 +928,28 @@ export default function GuitarSongView() {
 
         {/* YouTube Video Panel */}
         {youtubeVideoId && (
-          <div className="mx-4 mt-2 rounded-lg overflow-hidden border bg-black relative group" style={{height: '240px'}}>
+          <div
+            className={cn(
+              'overflow-hidden border bg-black relative group',
+              youtubeFullscreen
+                ? 'fixed inset-0 z-[9999] rounded-none border-none'
+                : showYoutubePanel ? 'mx-4 mt-2 rounded-lg' : 'hidden',
+            )}
+            style={youtubeFullscreen ? undefined : {height: '240px'}}
+          >
             <YouTubePlayer
               ref={youtubePlayerRef}
               videoId={youtubeVideoId}
               onReady={handleYoutubeReady}
+              onStateChange={handleYoutubeStateChange}
               className="w-full h-full"
             />
             <button
-              onClick={() => youtubePlayerRef.current?.requestFullscreen()}
+              onClick={() => setYoutubeFullscreen(v => !v)}
               className="absolute top-2 right-2 p-1.5 rounded bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80"
-              title="Fullscreen"
+              title={youtubeFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
             >
-              <Maximize2 className="h-3.5 w-3.5" />
+              {youtubeFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
             </button>
           </div>
         )}

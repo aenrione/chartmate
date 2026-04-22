@@ -1,21 +1,37 @@
 import {useState, useEffect, useCallback} from 'react';
 import debounce from 'debounce';
-import {Search, X, FileMusic, Music2, Link2} from 'lucide-react';
+import {Search, X, FileMusic, Music2, Link2, Bookmark} from 'lucide-react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import {createItem, ItemType} from '@/lib/local-db/repertoire';
+import {createItem, ItemType, searchSongSectionsWithChart, type SongSectionWithChart} from '@/lib/local-db/repertoire';
 import {getSavedCharts, type SavedChartEntry} from '@/lib/local-db/saved-charts';
 import {listCompositions, type TabComposition} from '@/lib/local-db/tab-compositions';
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function albumArtUrl(md5: string): string {
+  return `https://files.enchor.us/${md5}.jpg`;
+}
+
+function resolveLinkedTitle(linked: LinkedItem): string {
+  if (linked.kind === 'composition') return linked.title;
+  return linked.name; // covers 'saved_chart' and 'song_section'
+}
+
+function resolveLinkedArtist(linked: LinkedItem): string {
+  return linked.kind === 'song_section' ? linked.chartArtist : linked.artist;
+}
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 type LinkedItem =
   | { kind: 'saved_chart'; md5: string; name: string; artist: string; albumArtMd5: string }
-  | { kind: 'composition'; id: number; title: string; artist: string; tempo: number; instrument: string };
+  | { kind: 'composition'; id: number; title: string; artist: string; tempo: number; instrument: string }
+  | { kind: 'song_section'; id: number; name: string; chartMd5: string; chartName: string; chartArtist: string; albumArtMd5: string | null };
 
 interface AddRepertoireItemDialogProps {
   open: boolean;
@@ -75,7 +91,7 @@ function ChartSearchSelect({
       <div className="flex items-center gap-3 rounded-xl bg-surface-container border border-primary/30 overflow-hidden">
         {selected.albumArtMd5 ? (
           <img
-            src={`https://files.enchor.us/${selected.albumArtMd5}.jpg`}
+            src={albumArtUrl(selected.albumArtMd5)}
             alt=""
             className="h-14 w-14 object-cover shrink-0"
           />
@@ -130,7 +146,7 @@ function ChartSearchSelect({
           >
             {chart.albumArtMd5 ? (
               <img
-                src={`https://files.enchor.us/${chart.albumArtMd5}.jpg`}
+                src={albumArtUrl(chart.albumArtMd5)}
                 alt=""
                 className="h-9 w-9 rounded-lg object-cover shrink-0"
               />
@@ -233,7 +249,129 @@ function CompositionSearchSelect({
   );
 }
 
-// ── Optional link panel (for song_section / exercise) ─────────────────────────
+// ── Inline song section search-select ────────────────────────────────────────
+
+function SongSectionSearchSelect({
+  selected,
+  onSelect,
+  onClear,
+}: {
+  selected: Extract<LinkedItem, {kind: 'song_section'}> | null;
+  onSelect: (item: Extract<LinkedItem, {kind: 'song_section'}>) => void;
+  onClear: () => void;
+}) {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<SongSectionWithChart[]>([]);
+  const [searching, setSearching] = useState(false);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const search = useCallback(
+    debounce(async (q: string) => {
+      setSearching(true);
+      try {
+        setResults(await searchSongSectionsWithChart(q || undefined));
+      } finally {
+        setSearching(false);
+      }
+    }, 250),
+    [],
+  );
+
+  useEffect(() => {
+    if (!selected) search(query);
+  }, [query, selected, search]);
+
+  if (selected) {
+    return (
+      <div className="flex items-center gap-3 rounded-xl bg-surface-container border border-primary/30 overflow-hidden">
+        {selected.albumArtMd5 ? (
+          <img
+            src={albumArtUrl(selected.albumArtMd5)}
+            alt=""
+            className="h-14 w-14 object-cover shrink-0"
+          />
+        ) : (
+          <div className="h-14 w-14 bg-surface-container-high flex items-center justify-center shrink-0">
+            <Bookmark className="h-6 w-6 text-on-surface-variant" />
+          </div>
+        )}
+        <div className="flex-1 min-w-0 py-2 pr-1">
+          <p className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant mb-0.5">
+            Song Section
+          </p>
+          <p className="text-sm font-bold text-on-surface truncate">{selected.name}</p>
+          <p className="text-xs text-on-surface-variant truncate">{selected.chartName} — {selected.chartArtist}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => { onClear(); setQuery(''); }}
+          className="mr-3 p-1.5 rounded-lg hover:bg-surface-container-high transition-colors"
+          title="Change section"
+        >
+          <X className="h-4 w-4 text-on-surface-variant" />
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-xl border border-outline-variant/30 overflow-hidden">
+      <div className="relative bg-surface-container-low">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-on-surface-variant pointer-events-none" />
+        <input
+          type="text"
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          placeholder="Search sections by name, song, or artist…"
+          autoFocus
+          className="w-full pl-9 pr-3 py-2.5 bg-transparent text-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none"
+        />
+      </div>
+      <div className="max-h-52 overflow-y-auto divide-y divide-outline-variant/10 bg-surface-container">
+        {searching ? (
+          <p className="py-4 text-center text-xs text-on-surface-variant">Searching…</p>
+        ) : results.length === 0 ? (
+          <p className="py-4 text-center text-xs text-on-surface-variant">
+            No sections found. Create sections in Playbook first.
+          </p>
+        ) : results.map(section => (
+          <button
+            key={section.id}
+            type="button"
+            onClick={() => onSelect({
+              kind: 'song_section',
+              id: section.id,
+              name: section.name,
+              chartMd5: section.chartMd5,
+              chartName: section.chartName,
+              chartArtist: section.chartArtist,
+              albumArtMd5: section.albumArtMd5,
+            })}
+            className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-surface-container-high text-left transition-colors"
+          >
+            {section.albumArtMd5 ? (
+              <img
+                src={albumArtUrl(section.albumArtMd5)}
+                alt=""
+                className="h-9 w-9 rounded-lg object-cover shrink-0"
+              />
+            ) : (
+              <div className="h-9 w-9 rounded-lg bg-surface-container-high shrink-0 flex items-center justify-center">
+                <Bookmark className="h-4 w-4 text-on-surface-variant" />
+              </div>
+            )}
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-on-surface truncate">{section.name}</p>
+              <p className="text-xs text-on-surface-variant truncate">{section.chartName} — {section.chartArtist}</p>
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Optional link panel (for exercise only) ───────────────────────────────────
 
 function OptionalLinkPanel({
   linked,
@@ -268,7 +406,11 @@ function OptionalLinkPanel({
   }, [query, tab, showPanel, linked, searchCharts]);
 
   if (linked) {
-    const label = linked.kind === 'saved_chart' ? `${linked.name} — ${linked.artist}` : `${linked.title} · ${linked.tempo} BPM`;
+    const label = linked.kind === 'saved_chart'
+      ? `${linked.name} — ${linked.artist}`
+      : linked.kind === 'composition'
+        ? `${linked.title} · ${linked.tempo} BPM`
+        : `${linked.name}`;
     const icon = linked.kind === 'saved_chart'
       ? <Music2 className="h-4 w-4 text-tertiary" />
       : <FileMusic className="h-4 w-4 text-secondary" />;
@@ -326,7 +468,7 @@ function OptionalLinkPanel({
                 onClick={() => onLink({kind: 'saved_chart', md5: chart.md5, name: chart.name, artist: chart.artist, albumArtMd5: chart.albumArtMd5})}
                 className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-surface-container-high text-left transition-colors">
                 {chart.albumArtMd5
-                  ? <img src={`https://files.enchor.us/${chart.albumArtMd5}.jpg`} alt="" className="h-8 w-8 rounded object-cover shrink-0" />
+                  ? <img src={albumArtUrl(chart.albumArtMd5)} alt="" className="h-8 w-8 rounded object-cover shrink-0" />
                   : <div className="h-8 w-8 rounded bg-surface-container-high shrink-0 flex items-center justify-center"><Music2 className="h-4 w-4 text-on-surface-variant" /></div>}
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-on-surface truncate">{chart.name}</p>
@@ -373,6 +515,7 @@ export default function AddRepertoireItemDialog({
   const handleTypeChange = (type: ItemType) => {
     if (type !== 'song' && linked?.kind === 'saved_chart') setLinked(null);
     if (type !== 'composition' && linked?.kind === 'composition') setLinked(null);
+    if (type !== 'song_section' && linked?.kind === 'song_section') setLinked(null);
     setItemType(type);
   };
 
@@ -389,30 +532,45 @@ export default function AddRepertoireItemDialog({
     if (!targetBpm) setTargetBpm(String(item.tempo));
   };
 
-  // Derived: for song/composition types the title comes from the selection
-  const titleDerivedFromLink = (itemType === 'song' || itemType === 'composition') && !!linked;
+  const handleSectionSelect = (item: Extract<LinkedItem, {kind: 'song_section'}>) => {
+    setLinked(item);
+    setTitle(item.name);
+    setArtist(item.chartArtist);
+  };
+
+  // Derived: for song/composition/song_section types the title comes from the selection
+  const titleDerivedFromLink = (itemType === 'song' || itemType === 'composition' || itemType === 'song_section') && !!linked;
   const saveDisabled = saving || (titleDerivedFromLink ? !linked : !title.trim());
 
   const handleSave = async () => {
     const resolvedTitle = titleDerivedFromLink
-      ? (linked!.kind === 'saved_chart' ? linked!.name : linked!.title)
+      ? resolveLinkedTitle(linked!)
       : title.trim();
 
     if (!resolvedTitle) {
-      setError(itemType === 'song' ? 'Select a chart first' : itemType === 'composition' ? 'Select a composition first' : 'Title is required');
+      setError(
+        itemType === 'song' ? 'Select a chart first' :
+        itemType === 'composition' ? 'Select a composition first' :
+        itemType === 'song_section' ? 'Select a section first' :
+        'Title is required'
+      );
       return;
     }
     setError('');
     setSaving(true);
     try {
+      const resolvedArtist = titleDerivedFromLink
+        ? resolveLinkedArtist(linked!)
+        : artist.trim();
       await createItem({
         itemType,
         title: resolvedTitle,
-        artist: (titleDerivedFromLink ? (linked!.artist) : artist.trim()) || undefined,
+        artist: resolvedArtist || undefined,
         notes: notes.trim() || undefined,
         targetBpm: targetBpm ? parseInt(targetBpm, 10) : undefined,
         savedChartMd5: linked?.kind === 'saved_chart' ? linked.md5 : undefined,
         compositionId: linked?.kind === 'composition' ? linked.id : undefined,
+        songSectionId: linked?.kind === 'song_section' ? linked.id : undefined,
       });
       onSaved();
       onOpenChange(false);
@@ -488,8 +646,22 @@ export default function AddRepertoireItemDialog({
             </div>
           )}
 
-          {/* Manual title — only for song_section and exercise */}
-          {(itemType === 'song_section' || itemType === 'exercise') && (
+          {/* Song section type: section search-select */}
+          {itemType === 'song_section' && (
+            <div>
+              <label className="text-sm font-medium text-on-surface block mb-1.5">
+                Section <span className="text-red-400">*</span>
+              </label>
+              <SongSectionSearchSelect
+                selected={linked?.kind === 'song_section' ? linked : null}
+                onSelect={handleSectionSelect}
+                onClear={() => setLinked(null)}
+              />
+            </div>
+          )}
+
+          {/* Manual title — only for exercise */}
+          {itemType === 'exercise' && (
             <div>
               <label className="text-sm font-medium text-on-surface block mb-1.5">
                 Title <span className="text-red-400">*</span>
@@ -498,21 +670,7 @@ export default function AddRepertoireItemDialog({
                 type="text"
                 value={title}
                 onChange={e => setTitle(e.target.value)}
-                placeholder={itemType === 'exercise' ? 'e.g. Pentatonic box pattern' : 'Section name'}
-                className="w-full px-3 py-2.5 rounded-xl bg-surface-container border border-outline-variant/30 text-on-surface text-sm focus:outline-none focus:border-primary transition-colors"
-              />
-            </div>
-          )}
-
-          {/* Manual artist — only for song_section */}
-          {itemType === 'song_section' && (
-            <div>
-              <label className="text-sm font-medium text-on-surface block mb-1.5">Artist</label>
-              <input
-                type="text"
-                value={artist}
-                onChange={e => setArtist(e.target.value)}
-                placeholder="Artist name"
+                placeholder="e.g. Pentatonic box pattern"
                 className="w-full px-3 py-2.5 rounded-xl bg-surface-container border border-outline-variant/30 text-on-surface text-sm focus:outline-none focus:border-primary transition-colors"
               />
             </div>
@@ -550,8 +708,8 @@ export default function AddRepertoireItemDialog({
             />
           </div>
 
-          {/* Optional link — for song_section and exercise */}
-          {(itemType === 'song_section' || itemType === 'exercise') && (
+          {/* Optional link — for exercise only */}
+          {itemType === 'exercise' && (
             <div>
               <label className="text-sm font-medium text-on-surface block mb-1.5">
                 Link{' '}

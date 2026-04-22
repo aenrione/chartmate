@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { parseChartFile } from '@eliwhite/scan-chart';
-import { ArrowLeft, Play, Pause } from 'lucide-react';
+import { ArrowLeft, Play, Pause, Menu } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useHideHeaderOnMobile } from '@/contexts/LayoutContext';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
@@ -31,6 +33,8 @@ export default function FillPracticeView({
 }: {
   fill: FillEntry;
 }) {
+  useHideHeaderOnMobile();
+
   // Settings state
   const [bpm, setBpm] = useState(120);
   const [enableColors, setEnableColors] = useState(true);
@@ -46,6 +50,8 @@ export default function FillPracticeView({
 
   // Stats state
   const [fillStats, setFillStats] = useState<FillStats | null>(null);
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Mark as learned state
   const [marking, setMarking] = useState(false);
@@ -193,7 +199,7 @@ export default function FillPracticeView({
 
   return (
     <TooltipProvider delayDuration={300}>
-    <div className="flex-1 flex flex-col min-h-0 p-4">
+    <div className="flex-1 flex flex-col min-h-0 p-2 lg:p-4">
       {/* Header */}
       <div className="flex items-start gap-4 mb-4">
         <Link to="/fills">
@@ -223,8 +229,26 @@ export default function FillPracticeView({
       </div>
 
       <div className="flex gap-6 flex-1 min-h-0">
+        {/* Mobile overlay */}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+
         {/* Sidebar */}
-        <div className="w-64 shrink-0 space-y-4 overflow-y-auto">
+        <div
+          className={cn(
+            'w-64 shrink-0 space-y-4 overflow-y-auto bg-background',
+            'fixed inset-y-0 left-0 z-[1100] transition-transform px-4 lg:static lg:translate-x-0 lg:px-0',
+            isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
+          )}
+          style={{
+            paddingTop: 'max(env(safe-area-inset-top, 0px), 1rem)',
+            paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 1rem)',
+          }}
+        >
           {/* BPM */}
           <div className="rounded-xl border p-4">
             <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Tempo</div>
@@ -314,7 +338,19 @@ export default function FillPracticeView({
 
         {/* Main content */}
         <div className="flex-1 flex flex-col min-h-0">
-          <div className="flex-1 overflow-hidden rounded-xl border p-4">
+          {/* Mobile transport bar */}
+          <div className="lg:hidden flex items-center gap-2 pb-2 mb-2 border-b shrink-0">
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setIsSidebarOpen(true)}>
+              <Menu className="h-4 w-4" />
+            </Button>
+            <Button size="sm" onClick={handlePlay} disabled={!isPlayerReady}>
+              {isPlaying ? <Pause className="h-3 w-3 mr-1" /> : <Play className="h-3 w-3 mr-1" />}
+              {!isPlayerReady ? 'Loading…' : isPlaying ? 'Pause' : 'Play'}
+            </Button>
+            <span className="text-sm font-mono font-bold ml-auto">{bpm} BPM</span>
+          </div>
+
+          <div className="flex-1 overflow-hidden lg:rounded-xl lg:border lg:p-4">
             <AlphaTabSheetMusic
               chart={chart}
               track={track}

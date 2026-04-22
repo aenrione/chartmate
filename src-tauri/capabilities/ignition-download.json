@@ -1,0 +1,9 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "ignition-download",
+  "description": "Capability for ephemeral Ignition4 download WebView windows",
+  "windows": ["ignition-dl-*"],
+  "permissions": [
+    "core:default"
+  ]
+}

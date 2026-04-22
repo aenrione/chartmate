@@ -46,6 +46,11 @@ import {
   Pause,
   Square,
   ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  ChevronDown,
+  ChevronsLeft,
+  ChevronsRight,
   Save,
   Download,
   Upload,
@@ -53,7 +58,6 @@ import {
   Piano,
   Eye,
   BookOpen,
-  ChevronDown,
   Youtube,
   Unlink,
   Maximize2,
@@ -61,7 +65,20 @@ import {
   Search,
   Plus,
   Printer,
+  Menu,
+  MoreVertical,
+  Undo2,
+  Redo2,
+  X,
 } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {useHideHeaderOnMobile, useHideBottomNavOnMobile} from '@/contexts/LayoutContext';
 import {useAlphaTabPrint} from '@/hooks/usePrint';
 import {useYoutubeSync} from '@/hooks/useYoutubeSync';
 import type {PlaybackClock} from '@/lib/youtube-sync';
@@ -82,6 +99,20 @@ import type {RocksmithArrangement} from '@/lib/rocksmith/types';
 type Score = InstanceType<typeof model.Score>;
 const {Duration} = model;
 
+// ── Named constants ────────────────────────────────────────────────────────────
+const YOUTUBE_SYNC_SUPPRESS_MS = 800;
+const SCORE_INIT_DELAY_MS = 200;
+const PLAYBACK_SCROLL_THRESHOLD_PX = 20;
+const DEFAULT_TEMPO_BPM = 120;
+const MAX_FRET = 24;
+
+// ── Typed interfaces for non-standard property access ─────────────────────────
+type LocationState = { from?: string; activeTab?: string };
+
+interface ScoreWithAlbum extends Score {
+  album?: string;
+}
+
 // Per-id caches — survive route changes without unmounting persistence
 type EditorUIState = {
   staveMode: 'both' | 'tab' | 'notation';
@@ -92,6 +123,9 @@ const _editorScoreCache = new Map<string, Uint8Array>(); // dirty score bytes
 const _editorUICache = new Map<string, EditorUIState>();  // UI preferences
 
 export default function TabEditorPage() {
+  useHideHeaderOnMobile();
+  useHideBottomNavOnMobile();
+
   const {id} = useParams<{id: string}>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -107,7 +141,7 @@ export default function TabEditorPage() {
   const [, setRenderKey] = useState(0);
   const [title, setTitle] = useState('Untitled');
   const [artist, setArtist] = useState('');
-  const [tempo, setTempoState] = useState(120);
+  const [tempo, setTempoState] = useState(DEFAULT_TEMPO_BPM);
   const [activeTrackIndex, setActiveTrackIndex] = useState(0);
   const [showHelp, setShowHelp] = useState(false);
   const [showChordFinder, setShowChordFinder] = useState(false);
@@ -143,6 +177,7 @@ export default function TabEditorPage() {
   const [resetKey, setResetKey] = useState(0);
   const [showNewTabConfirm, setShowNewTabConfirm] = useState(false);
   const {isDirty, markDirty, markClean, blocker} = useUnsavedChanges();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const proceedAfterSaveRef = useRef<(() => void) | null>(null);
   const isDirtyRef = useRef(isDirty);
   isDirtyRef.current = isDirty;
@@ -251,7 +286,7 @@ export default function TabEditorPage() {
 
   const handlePlayPause = useCallback(() => {
     ytSyncSuppressRef.current = true;
-    setTimeout(() => { ytSyncSuppressRef.current = false; }, 800);
+    setTimeout(() => { ytSyncSuppressRef.current = false; }, YOUTUBE_SYNC_SUPPRESS_MS);
     canvasRef.current?.alphaTab?.playPause();
     if (isPlaying) {
       youtubeSyncRef.current.onPause();
@@ -302,7 +337,7 @@ export default function TabEditorPage() {
     const beatBounds = api?.boundsLookup?.findBeat(beat);
     if (!beatBounds) return;
     const y = beatBounds.visualBounds.y;
-    if (Math.abs(y - lastPlaybackYRef.current) < 20) return;
+    if (Math.abs(y - lastPlaybackYRef.current) < PLAYBACK_SCROLL_THRESHOLD_PX) return;
     lastPlaybackYRef.current = y;
     const container = canvasScrollRef.current;
     if (!container) return;
@@ -389,7 +424,7 @@ export default function TabEditorPage() {
 
     const score = createBlankScore({
       title: 'Untitled',
-      tempo: 120,
+      tempo: DEFAULT_TEMPO_BPM,
       measureCount: 4,
       instrument: 'guitar',
     });
@@ -402,7 +437,7 @@ export default function TabEditorPage() {
   }, [getApi, id, loadScore, markDirty, setScore, resetKey, seedYoutubeFromDb]);
 
   useEffect(() => {
-    const timer = setTimeout(initScore, 200);
+    const timer = setTimeout(initScore, SCORE_INIT_DELAY_MS);
     return () => clearTimeout(timer);
   }, [initScore]);
 
@@ -427,7 +462,7 @@ export default function TabEditorPage() {
 
   const handleStop = useCallback(() => {
     ytSyncSuppressRef.current = true;
-    setTimeout(() => { ytSyncSuppressRef.current = false; }, 800);
+    setTimeout(() => { ytSyncSuppressRef.current = false; }, YOUTUBE_SYNC_SUPPRESS_MS);
     canvasRef.current?.alphaTab?.stop();
     setIsPlaying(false);
     youtubeSyncRef.current.onPause();
@@ -447,29 +482,29 @@ export default function TabEditorPage() {
 
   // Export handlers — use native save dialog so user picks location
   const handleExportGp7 = useCallback(async () => {
-    const s = scoreRef.current;
-    if (!s) return;
-    const filePath = await saveDialog({defaultPath: sanitizeFilename(s.title, 'gp'), filters: [{name: 'Guitar Pro', extensions: ['gp', 'gp7']}]});
+    const score = scoreRef.current;
+    if (!score) return;
+    const filePath = await saveDialog({defaultPath: sanitizeFilename(score.title, 'gp'), filters: [{name: 'Guitar Pro', extensions: ['gp', 'gp7']}]});
     if (!filePath) return;
-    await writeFile(filePath, exportToGp7(s));
+    await writeFile(filePath, exportToGp7(score));
     setShowExportMenu(false);
   }, []);
 
   const handleExportAlphaTex = useCallback(async () => {
-    const s = scoreRef.current;
-    if (!s) return;
-    const filePath = await saveDialog({defaultPath: sanitizeFilename(s.title, 'alphatex'), filters: [{name: 'AlphaTex', extensions: ['alphatex', 'tex']}]});
+    const score = scoreRef.current;
+    if (!score) return;
+    const filePath = await saveDialog({defaultPath: sanitizeFilename(score.title, 'alphatex'), filters: [{name: 'AlphaTex', extensions: ['alphatex', 'tex']}]});
     if (!filePath) return;
-    await writeFile(filePath, new TextEncoder().encode(exportToAlphaTex(s)));
+    await writeFile(filePath, new TextEncoder().encode(exportToAlphaTex(score)));
     setShowExportMenu(false);
   }, []);
 
   const handleExportAscii = useCallback(async () => {
-    const s = scoreRef.current;
-    if (!s) return;
-    const filePath = await saveDialog({defaultPath: sanitizeFilename(s.title, 'txt'), filters: [{name: 'Text', extensions: ['txt']}]});
+    const score = scoreRef.current;
+    if (!score) return;
+    const filePath = await saveDialog({defaultPath: sanitizeFilename(score.title, 'txt'), filters: [{name: 'Text', extensions: ['txt']}]});
     if (!filePath) return;
-    await writeFile(filePath, new TextEncoder().encode(exportToAsciiTab(s)));
+    await writeFile(filePath, new TextEncoder().encode(exportToAsciiTab(score)));
     setShowExportMenu(false);
   }, []);
 
@@ -485,9 +520,8 @@ export default function TabEditorPage() {
         const data = new Uint8Array(reader.result as ArrayBuffer);
         const score = importer.ScoreLoader.loadScoreFromBytes(data, new Settings());
         loadScore(score);
-      } catch (err) {
-        console.error('Failed to import file:', err);
-        alert('Failed to import file. Make sure it is a valid Guitar Pro or supported tab format.');
+      } catch {
+        toast.error('Failed to import file. Make sure it is a valid Guitar Pro or supported tab format.');
       }
     };
     reader.readAsArrayBuffer(file);
@@ -515,9 +549,8 @@ export default function TabEditorPage() {
       setAsciiImportText('');
       setAsciiImportTitle('');
       setAsciiImportArtist('');
-    } catch (err) {
-      console.error('Failed to import ASCII tab:', err);
-      alert('Failed to parse ASCII tab. Make sure it uses standard 6-string tab notation.');
+    } catch {
+      toast.error('Failed to parse ASCII tab. Make sure it uses standard 6-string tab notation.');
     }
   }, [asciiImportText, asciiImportTitle, asciiImportArtist, loadScore, handleYoutubeUrlSubmit]);
 
@@ -534,28 +567,27 @@ export default function TabEditorPage() {
       const arr = arrangements.find(a => a.arrangementType === 'Lead') ?? arrangements[0];
       loadScore(convertToAlphaTab(arr));
     } catch (err) {
-      console.error('Failed to import PSARC:', err);
-      alert(`Failed to import PSARC: ${err instanceof Error ? err.message : String(err)}`);
+      toast.error(`Failed to import PSARC: ${err instanceof Error ? err.message : String(err)}`);
     }
   }, [loadScore]);
 
   // Drum pad hit handler — adds note to current beat (layer multiple hits)
   // User advances with right arrow or Enter
   const handleDrumHit = useCallback((midiNote: number) => {
-    const s = scoreRef.current;
-    if (!s) return;
-    toggleDrumNote(s, cursor, midiNote);
+    const score = scoreRef.current;
+    if (!score) return;
+    toggleDrumNote(score, cursor, midiNote);
     // Set the beat duration to current selected duration
-    const beat = s.tracks[cursor.trackIndex]?.staves[0]?.bars[cursor.barIndex]?.voices[cursor.voiceIndex]?.beats[cursor.beatIndex];
+    const beat = score.tracks[cursor.trackIndex]?.staves[0]?.bars[cursor.barIndex]?.voices[cursor.voiceIndex]?.beats[cursor.beatIndex];
     if (beat) beat.duration = currentDuration;
     reRender();
   }, [cursor, reRender, currentDuration]);
 
   // Advance drum cursor to next beat position
   const handleDrumAdvance = useCallback(() => {
-    const s = scoreRef.current;
-    if (!s) return;
-    const next = insertRest(s, cursor, currentDuration);
+    const score = scoreRef.current;
+    if (!score) return;
+    const next = insertRest(score, cursor, currentDuration);
     reRender();
     if (next) moveTo(next);
     else moveRight();
@@ -565,10 +597,10 @@ export default function TabEditorPage() {
 
   // Fretboard click handler — place note and advance within bar
   const handleFretClick = useCallback((stringNumber: number, fret: number) => {
-    const s = scoreRef.current;
-    if (!s) return;
+    const score = scoreRef.current;
+    if (!score) return;
     const targetCursor = {...cursor, stringNumber};
-    const nextCursor = setNoteAndAdvance(s, targetCursor, fret, currentDuration);
+    const nextCursor = setNoteAndAdvance(score, targetCursor, fret, currentDuration);
     reRender();
     if (nextCursor) {
       moveTo(nextCursor);
@@ -579,10 +611,10 @@ export default function TabEditorPage() {
 
   // Chord finder — insert selected chord voicing at current beat
   const handleChordSelect = useCallback((voicing: ChordVoicing) => {
-    const s = scoreRef.current;
-    if (!s) return;
+    const score = scoreRef.current;
+    if (!score) return;
     const notes = voicingToNotes(voicing);
-    setChord(s, cursor, notes, currentDuration);
+    setChord(score, cursor, notes, currentDuration);
     reRender();
     toast.success(`Inserted chord`);
   }, [cursor, currentDuration, reRender]);
@@ -614,48 +646,48 @@ export default function TabEditorPage() {
   // NoteInputPanel callbacks
   const handleDurationChange = useCallback((duration: number) => {
     setCurrentDuration(duration);
-    const s = scoreRef.current;
-    if (s) {
-      setBeatDuration(s, cursor, duration);
+    const score = scoreRef.current;
+    if (score) {
+      setBeatDuration(score, cursor, duration);
       reRender();
     }
   }, [cursor, reRender]);
 
   const handleEffectToggle = useCallback((effect: NoteEffect | 'slide' | 'bend') => {
-    const s = scoreRef.current;
-    if (!s) return;
-    if (effect === 'slide') toggleSlide(s, cursor);
-    else if (effect === 'bend') toggleBend(s, cursor);
-    else toggleEffect(s, cursor, effect);
+    const score = scoreRef.current;
+    if (!score) return;
+    if (effect === 'slide') toggleSlide(score, cursor);
+    else if (effect === 'bend') toggleBend(score, cursor);
+    else toggleEffect(score, cursor, effect);
     reRender();
   }, [cursor, reRender]);
 
   const handleDotToggle = useCallback(() => {
-    const s = scoreRef.current;
-    if (!s) return;
-    toggleDot(s, cursor);
+    const score = scoreRef.current;
+    if (!score) return;
+    toggleDot(score, cursor);
     reRender();
   }, [cursor, reRender]);
 
   const handleRestInsert = useCallback(() => {
-    const s = scoreRef.current;
-    if (!s) return;
-    const next = insertRest(s, cursor, currentDuration);
+    const score = scoreRef.current;
+    if (!score) return;
+    const next = insertRest(score, cursor, currentDuration);
     reRender();
     if (next) moveTo(next);
   }, [cursor, currentDuration, reRender, moveTo]);
 
   const handleAddMeasure = useCallback(() => {
-    const s = scoreRef.current;
-    if (!s) return;
-    insertMeasureAfter(s, cursor.barIndex);
+    const score = scoreRef.current;
+    if (!score) return;
+    insertMeasureAfter(score, cursor.barIndex);
     reRender();
   }, [cursor.barIndex, reRender]);
 
   const handleDeleteMeasure = useCallback(() => {
-    const s = scoreRef.current;
-    if (!s) return;
-    deleteMeasure(s, cursor.barIndex);
+    const score = scoreRef.current;
+    if (!score) return;
+    deleteMeasure(score, cursor.barIndex);
     reRender();
   }, [cursor.barIndex, reRender]);
 
@@ -664,9 +696,9 @@ export default function TabEditorPage() {
 
   // Sidebar callbacks
   const tracks = useMemo(() => {
-    const s = scoreRef.current;
-    if (!s) return [{name: 'Guitar', instrument: 'guitar' as InstrumentType, stringCount: 6, tuningName: 'Standard (E A D G B E)'}];
-    return s.tracks.map(t => {
+    const score = scoreRef.current;
+    if (!score) return [{name: 'Guitar', instrument: 'guitar' as InstrumentType, stringCount: 6, tuningName: 'Standard (E A D G B E)'}];
+    return score.tracks.map(t => {
       const staff = t.staves[0];
       const isPercussion = staff?.isPercussion ?? false;
       const instrument: InstrumentType = isPercussion ? 'drums' : t.name.toLowerCase().includes('bass') ? 'bass' : 'guitar';
@@ -679,9 +711,9 @@ export default function TabEditorPage() {
 
   // Get current tuning for fretboard
   const currentTuning = useMemo(() => {
-    const s = scoreRef.current;
-    if (!s) return [64, 59, 55, 50, 45, 40]; // standard guitar
-    const staff = s.tracks[activeTrackIndex]?.staves[0];
+    const score = scoreRef.current;
+    if (!score) return [64, 59, 55, 50, 45, 40]; // standard guitar
+    const staff = score.tracks[activeTrackIndex]?.staves[0];
     return staff?.stringTuning?.tunings ?? [64, 59, 55, 50, 45, 40];
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isReady, activeTrackIndex]);
@@ -711,17 +743,17 @@ export default function TabEditorPage() {
   }, [cursor, moveTo, getApi, staveMode]);
 
   const handleAddTrack = useCallback((instrument: InstrumentType, stringCount: number) => {
-    const s = scoreRef.current;
-    if (!s) return;
+    const score = scoreRef.current;
+    if (!score) return;
     const tuningPreset = instrument !== 'drums' ? getDefaultTuningPreset(instrument, stringCount) : null;
-    addTrack(s, {
+    addTrack(score, {
       name: instrument === 'drums' ? 'Drums' : instrument === 'bass' ? 'Bass' : 'Guitar',
       instrument,
       stringCount,
       tuning: tuningPreset?.values ?? [],
     });
     // Auto-switch to the newly added track
-    const newIndex = s.tracks.length - 1;
+    const newIndex = score.tracks.length - 1;
     setActiveTrackIndex(newIndex);
     setTrackVersion(v => v + 1);
 
@@ -733,18 +765,18 @@ export default function TabEditorPage() {
         : staveMode === 'notation' ? StaveProfile.Score
         : StaveProfile.Default;
       api.updateSettings();
-      api.renderScore(s, [newIndex]);
+      api.renderScore(score, [newIndex]);
       try { api.loadMidiForScore(); } catch {}
     }
     moveTo({...cursor, trackIndex: newIndex, barIndex: 0, beatIndex: 0, stringNumber: 1});
   }, [cursor, moveTo, getApi, staveMode]);
 
   const handleRemoveTrack = useCallback((index: number) => {
-    const s = scoreRef.current;
-    if (!s) return;
-    removeTrack(s, index);
-    if (activeTrackIndex >= s.tracks.length) {
-      setActiveTrackIndex(Math.max(0, s.tracks.length - 1));
+    const score = scoreRef.current;
+    if (!score) return;
+    removeTrack(score, index);
+    if (activeTrackIndex >= score.tracks.length) {
+      setActiveTrackIndex(Math.max(0, score.tracks.length - 1));
     }
     setTrackVersion(v => v + 1);
     reRender();
@@ -752,9 +784,9 @@ export default function TabEditorPage() {
 
   const handleToggleMute = useCallback((trackIndex: number) => {
     const api = getApi();
-    const s = scoreRef.current;
-    if (!api || !s) return;
-    const track = s.tracks[trackIndex];
+    const score = scoreRef.current;
+    if (!api || !score) return;
+    const track = score.tracks[trackIndex];
     if (!track) return;
 
     setMutedTracks(prev => {
@@ -774,17 +806,17 @@ export default function TabEditorPage() {
   }, [getApi]);
 
   const handleTuningChange = useCallback((trackIndex: number, tuning: number[]) => {
-    const s = scoreRef.current;
-    if (!s) return;
-    setTrackTuning(s, trackIndex, tuning);
+    const score = scoreRef.current;
+    if (!score) return;
+    setTrackTuning(score, trackIndex, tuning);
     reRender();
   }, [reRender]);
 
   const handleTempoChange = useCallback((bpm: number) => {
     setTempoState(bpm);
-    const s = scoreRef.current;
-    if (!s) return;
-    setTempo(s, bpm);
+    const score = scoreRef.current;
+    if (!score) return;
+    setTempo(score, bpm);
     reRender();
   }, [reRender]);
 
@@ -795,7 +827,7 @@ export default function TabEditorPage() {
     setPendingPreviewImage(null);
     setTitle('Untitled');
     setArtist('');
-    setTempoState(120);
+    setTempoState(DEFAULT_TEMPO_BPM);
     setActiveTrackIndex(0);
     markClean();
     setResetKey(k => k + 1);
@@ -815,14 +847,14 @@ export default function TabEditorPage() {
 
   const handleTitleChange = useCallback((newTitle: string) => {
     setTitle(newTitle);
-    const s = scoreRef.current;
-    if (s) s.title = newTitle;
+    const score = scoreRef.current;
+    if (score) score.title = newTitle;
   }, []);
 
   const handleArtistChange = useCallback((newArtist: string) => {
     setArtist(newArtist);
-    const s = scoreRef.current;
-    if (s) s.artist = newArtist;
+    const score = scoreRef.current;
+    if (score) score.artist = newArtist;
   }, []);
 
   const handleSaveComposition = useCallback(async (meta: CompositionMeta) => {
@@ -868,7 +900,7 @@ export default function TabEditorPage() {
       handleSaveComposition({
         title,
         artist,
-        album: (scoreRef.current as any)?.album ?? '',
+        album: (scoreRef.current as ScoreWithAlbum | null)?.album ?? '',
         tempo,
         instrument: tracks[activeTrackIndex]?.instrument ?? 'guitar',
         previewImage: pendingPreviewImage,
@@ -911,16 +943,18 @@ export default function TabEditorPage() {
   return (
     <div className="flex flex-col h-full">
       {/* Toolbar */}
-      <div className="flex items-center gap-3 px-4 py-2 bg-surface-container border-b border-outline-variant/20">
+      <div className="flex items-center gap-3 px-4 py-2 bg-surface-container border-b border-outline-variant/20"
+        style={{paddingTop: 'max(env(safe-area-inset-top, 0px), 0.5rem)'}}
+      >
         <button
-          onClick={() => navigate((location.state as any)?.from ?? '/guitar', {state: {activeTab: (location.state as any)?.activeTab}})}
+          onClick={() => navigate((location.state as LocationState | null)?.from ?? '/guitar', {state: {activeTab: (location.state as LocationState | null)?.activeTab}})}
           className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
         <div className="flex items-center gap-2">
           <Music className="h-4 w-4 text-primary" />
-          <h1 className="text-sm font-bold text-on-surface">Tab Editor</h1>
+          <h1 className="text-sm font-bold text-on-surface hidden lg:block">Tab Editor</h1>
         </div>
 
         <div className="w-px h-6 bg-outline-variant/30" />
@@ -931,9 +965,7 @@ export default function TabEditorPage() {
             onClick={handlePlayPause}
             className={cn(
               'p-2 rounded-lg transition-colors',
-              isPlaying
-                ? 'bg-primary/10 text-primary'
-                : 'text-on-surface-variant hover:bg-surface-container-high',
+              isPlaying ? 'bg-primary/10 text-primary' : 'text-on-surface-variant hover:bg-surface-container-high',
             )}
             title={isPlaying ? 'Pause (Space)' : 'Play (Space)'}
             disabled={!isPlayerReady}
@@ -949,231 +981,204 @@ export default function TabEditorPage() {
           </button>
         </div>
 
-        <div className="w-px h-6 bg-outline-variant/30" />
-
-        {/* Position */}
-        <div className="text-xs text-on-surface-variant font-mono">
+        {/* Position — hidden on mobile to save space */}
+        <div className="hidden lg:block w-px h-6 bg-outline-variant/30" />
+        <div className="hidden lg:block text-xs text-on-surface-variant font-mono">
           Bar {cursor.barIndex + 1} | Beat {cursor.beatIndex + 1} | {stringLabel}
         </div>
 
         <div className="flex-1" />
 
-        {/* New tab */}
-        <button
-          onClick={handleNewTab}
-          className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
-          title="New tab"
-        >
-          <Plus className="h-4 w-4" />
-        </button>
-
-        {/* View mode toggle — disabled for percussion (score only) */}
-        <button
-          onClick={handleStaveModeToggle}
-          disabled={activeTrackIsDrums}
-          className={cn(
-            'px-2 py-1 rounded text-[10px] font-medium transition-colors',
-            activeTrackIsDrums
-              ? 'text-on-surface-variant/30 cursor-not-allowed'
-              : 'text-on-surface-variant hover:bg-surface-container-high',
-          )}
-          title={activeTrackIsDrums ? 'Percussion tracks use score notation only' : 'Toggle view: Tab / Notation / Both'}
-        >
-          <Eye className="h-3.5 w-3.5 inline mr-1" />
-          {activeTrackIsDrums ? 'Score' : staveMode === 'tab' ? 'Tab' : staveMode === 'notation' ? 'Score' : 'Both'}
-        </button>
-
-        {/* Chord Finder */}
-        {!activeTrackIsDrums && (
-          <button
-            onClick={() => setShowChordFinder(true)}
-            className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
-            title="Chord Finder (Cmd+K)"
-          >
-            <Search className="h-4 w-4" />
-          </button>
-        )}
-
-        {/* Fretboard / Drum pad toggle */}
-        <button
-          onClick={() => setShowFretboard(!showFretboard)}
-          className={cn(
-            'p-2 rounded-lg transition-colors',
-            showFretboard
-              ? 'bg-primary/10 text-primary'
-              : 'text-on-surface-variant hover:bg-surface-container-high',
-          )}
-          title={activeTrackIsDrums ? 'Toggle Drum Pad' : 'Toggle Fretboard'}
-        >
-          <Piano className="h-4 w-4" />
-        </button>
-
-        {/* Demos dropdown — only shown on blank new tabs */}
-        {!compositionId && !isDirty && <div className="relative">
-          <button
-            onClick={() => { setShowDemoMenu(!showDemoMenu); setShowExportMenu(false); }}
-            className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium text-on-surface-variant hover:bg-surface-container-high transition-colors"
-            title="Load demo tabs"
-          >
-            <BookOpen className="h-3.5 w-3.5" />
-            Demos
-            <ChevronDown className="h-3 w-3" />
-          </button>
-          {showDemoMenu && (
-            <>
-              <div className="fixed inset-0 z-30" onClick={() => setShowDemoMenu(false)} />
-              <div className="absolute right-0 top-full mt-1 z-40 bg-surface-container-high border border-outline-variant/30 rounded-lg shadow-lg py-1 min-w-[140px]">
-                <button
-                  onClick={() => { handleLoadGuitarDemo(); setShowDemoMenu(false); }}
-                  className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors"
-                >
-                  Guitar Demo
-                </button>
-                <button
-                  onClick={() => { handleLoadBassDemo(); setShowDemoMenu(false); }}
-                  className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors"
-                >
-                  Bass Demo
-                </button>
-                <button
-                  onClick={() => { handleLoadDrumsDemo(); setShowDemoMenu(false); }}
-                  className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors"
-                >
-                  Drums Demo
-                </button>
-              </div>
-            </>
-          )}
-        </div>}
-
-        {/* Save to Library */}
+        {/* Save — always visible */}
         <button
           onClick={handleSave}
           className={cn(
             'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors',
-            isDirty
-              ? 'bg-primary text-on-primary hover:bg-primary/90'
-              : 'text-on-surface-variant hover:bg-surface-container-high',
+            isDirty ? 'bg-primary text-on-primary hover:bg-primary/90' : 'text-on-surface-variant hover:bg-surface-container-high',
           )}
           title={compositionId && isDirty ? 'Save (⌘S)' : 'Save to library (⌘S)'}
         >
           <Save className="h-3.5 w-3.5" />
-          {isDirty ? 'Save*' : 'Saved'}
+          <span className="hidden lg:inline">{isDirty ? 'Save*' : 'Saved'}</span>
+          {isDirty && <span className="lg:hidden">*</span>}
         </button>
 
-        {/* Import */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".gp,.gp3,.gp4,.gp5,.gpx,.gp7,.alphatex,.tex"
-          className="hidden"
-          onChange={handleImportFile}
-        />
-        <input
-          ref={psarcFileInputRef}
-          type="file"
-          accept=".psarc"
-          className="hidden"
-          onChange={handleImportPsarc}
-        />
-        <div className="relative">
-          <button
-            onClick={() => { setShowImportMenu(!showImportMenu); setShowExportMenu(false); setShowDemoMenu(false); }}
-            className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
-            title="Import"
-          >
-            <Upload className="h-4 w-4" />
+        {/* Desktop-only secondary buttons */}
+        <div className="hidden lg:flex items-center gap-1">
+          <button onClick={handleNewTab} className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant" title="New tab">
+            <Plus className="h-4 w-4" />
           </button>
-          {showImportMenu && (
-            <>
-              <div className="fixed inset-0 z-30" onClick={() => setShowImportMenu(false)} />
-              <div className="absolute right-0 top-full mt-1 z-40 bg-surface-container-high border border-outline-variant/30 rounded-lg shadow-lg py-1 min-w-[180px]">
-                <button
-                  onClick={() => { fileInputRef.current?.click(); setShowImportMenu(false); }}
-                  className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors"
-                >
-                  GP / AlphaTex file...
-                </button>
-                <button
-                  onClick={() => { setShowAsciiImport(true); setShowImportMenu(false); }}
-                  className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors"
-                >
-                  ASCII Tab text...
-                </button>
-                <button
-                  onClick={() => { psarcFileInputRef.current?.click(); setShowImportMenu(false); }}
-                  className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors"
-                >
-                  PSARC file...
-                </button>
-              </div>
-            </>
+          <button
+            onClick={handleStaveModeToggle}
+            disabled={activeTrackIsDrums}
+            className={cn('px-2 py-1 rounded text-[10px] font-medium transition-colors', activeTrackIsDrums ? 'text-on-surface-variant/30 cursor-not-allowed' : 'text-on-surface-variant hover:bg-surface-container-high')}
+            title={activeTrackIsDrums ? 'Percussion tracks use score notation only' : 'Toggle view: Tab / Notation / Both'}
+          >
+            <Eye className="h-3.5 w-3.5 inline mr-1" />
+            {activeTrackIsDrums ? 'Score' : staveMode === 'tab' ? 'Tab' : staveMode === 'notation' ? 'Score' : 'Both'}
+          </button>
+          {!activeTrackIsDrums && (
+            <button onClick={() => setShowChordFinder(true)} className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant" title="Chord Finder (Cmd+K)">
+              <Search className="h-4 w-4" />
+            </button>
           )}
+          <button
+            onClick={() => setShowFretboard(!showFretboard)}
+            className={cn('p-2 rounded-lg transition-colors', showFretboard ? 'bg-primary/10 text-primary' : 'text-on-surface-variant hover:bg-surface-container-high')}
+            title={activeTrackIsDrums ? 'Toggle Drum Pad' : 'Toggle Fretboard'}
+          >
+            <Piano className="h-4 w-4" />
+          </button>
+          {!compositionId && !isDirty && (
+            <div className="relative">
+              <button onClick={() => { setShowDemoMenu(!showDemoMenu); setShowExportMenu(false); }} className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Load demo tabs">
+                <BookOpen className="h-3.5 w-3.5" />Demos<ChevronDown className="h-3 w-3" />
+              </button>
+              {showDemoMenu && (
+                <>
+                  <div className="fixed inset-0 z-30" onClick={() => setShowDemoMenu(false)} />
+                  <div className="absolute right-0 top-full mt-1 z-40 bg-surface-container-high border border-outline-variant/30 rounded-lg shadow-lg py-1 min-w-[140px]">
+                    <button onClick={() => { handleLoadGuitarDemo(); setShowDemoMenu(false); }} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">Guitar Demo</button>
+                    <button onClick={() => { handleLoadBassDemo(); setShowDemoMenu(false); }} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">Bass Demo</button>
+                    <button onClick={() => { handleLoadDrumsDemo(); setShowDemoMenu(false); }} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">Drums Demo</button>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+          <input ref={fileInputRef} type="file" accept=".gp,.gp3,.gp4,.gp5,.gpx,.gp7,.alphatex,.tex" className="hidden" onChange={handleImportFile} />
+          <input ref={psarcFileInputRef} type="file" accept=".psarc" className="hidden" onChange={handleImportPsarc} />
+          <div className="relative">
+            <button onClick={() => { setShowImportMenu(!showImportMenu); setShowExportMenu(false); setShowDemoMenu(false); }} className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant" title="Import">
+              <Upload className="h-4 w-4" />
+            </button>
+            {showImportMenu && (
+              <>
+                <div className="fixed inset-0 z-30" onClick={() => setShowImportMenu(false)} />
+                <div className="absolute right-0 top-full mt-1 z-40 bg-surface-container-high border border-outline-variant/30 rounded-lg shadow-lg py-1 min-w-[180px]">
+                  <button onClick={() => { fileInputRef.current?.click(); setShowImportMenu(false); }} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">GP / AlphaTex file...</button>
+                  <button onClick={() => { setShowAsciiImport(true); setShowImportMenu(false); }} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">ASCII Tab text...</button>
+                  <button onClick={() => { psarcFileInputRef.current?.click(); setShowImportMenu(false); }} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">PSARC file...</button>
+                </div>
+              </>
+            )}
+          </div>
+          <div className="relative">
+            <button onClick={() => { setShowExportMenu(!showExportMenu); setShowDemoMenu(false); }} className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant" title="Export">
+              <Download className="h-4 w-4" />
+            </button>
+            {showExportMenu && (
+              <>
+                <div className="fixed inset-0 z-30" onClick={() => setShowExportMenu(false)} />
+                <div className="absolute right-0 top-full mt-1 z-40 bg-surface-container-high border border-outline-variant/30 rounded-lg shadow-lg py-1 min-w-[160px]">
+                  <button onClick={handleExportGp7} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">Guitar Pro (.gp)</button>
+                  <button onClick={handleExportAlphaTex} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">AlphaTex (.alphatex)</button>
+                  <button onClick={handleExportAscii} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">ASCII Tab (.txt)</button>
+                </div>
+              </>
+            )}
+          </div>
+          <button onClick={handlePrint} disabled={!isReady} className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant disabled:opacity-40 disabled:cursor-not-allowed" title="Print / Save as PDF" data-print-hide>
+            <Printer className="h-4 w-4" />
+          </button>
+          <button onClick={() => setShowHelp(true)} className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant" title="Help (?)">
+            <HelpCircle className="h-4 w-4" />
+          </button>
+          <button
+            onClick={() => setShowYoutubePanel(v => !v)}
+            className={cn('p-2 rounded-lg transition-colors', (showYoutubePanel || youtubeVideoId) ? 'bg-primary/10 text-primary' : 'text-on-surface-variant hover:bg-surface-container-high')}
+            title="YouTube sync"
+          >
+            <Youtube className="h-4 w-4" />
+          </button>
         </div>
 
-        {/* Export dropdown */}
-        <div className="relative">
+        {/* Mobile: ⋮ overflow menu + sidebar toggle */}
+        <div className="lg:hidden flex items-center gap-1">
+          <input ref={fileInputRef} type="file" accept=".gp,.gp3,.gp4,.gp5,.gpx,.gp7,.alphatex,.tex" className="hidden" onChange={handleImportFile} />
+          <input ref={psarcFileInputRef} type="file" accept=".psarc" className="hidden" onChange={handleImportPsarc} />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant">
+                <MoreVertical className="h-4 w-4" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" side="bottom" className="min-w-[200px] max-h-[70vh] overflow-y-auto">
+              <DropdownMenuItem onClick={handleNewTab}><Plus className="h-4 w-4 mr-2" />New tab</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleStaveModeToggle} disabled={activeTrackIsDrums}>
+                <Eye className="h-4 w-4 mr-2" />View: {activeTrackIsDrums ? 'Score' : staveMode === 'tab' ? 'Tab' : staveMode === 'notation' ? 'Score' : 'Both'}
+              </DropdownMenuItem>
+              {!activeTrackIsDrums && (
+                <DropdownMenuItem onClick={() => setShowChordFinder(true)}><Search className="h-4 w-4 mr-2" />Chord Finder</DropdownMenuItem>
+              )}
+              <DropdownMenuItem onClick={() => setShowFretboard(!showFretboard)}>
+                <Piano className="h-4 w-4 mr-2" />{showFretboard ? 'Hide' : 'Show'} {activeTrackIsDrums ? 'Drum Pad' : 'Fretboard'}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              {!compositionId && !isDirty && (
+                <>
+                  <DropdownMenuItem onClick={handleLoadGuitarDemo}><BookOpen className="h-4 w-4 mr-2" />Guitar Demo</DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLoadBassDemo}><BookOpen className="h-4 w-4 mr-2" />Bass Demo</DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLoadDrumsDemo}><BookOpen className="h-4 w-4 mr-2" />Drums Demo</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                </>
+              )}
+              <DropdownMenuItem onClick={() => fileInputRef.current?.click()}><Upload className="h-4 w-4 mr-2" />Import GP/AlphaTex...</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setShowAsciiImport(true)}><Upload className="h-4 w-4 mr-2" />Import ASCII Tab...</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => psarcFileInputRef.current?.click()}><Upload className="h-4 w-4 mr-2" />Import PSARC...</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleExportGp7}><Download className="h-4 w-4 mr-2" />Export Guitar Pro</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportAlphaTex}><Download className="h-4 w-4 mr-2" />Export AlphaTex</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportAscii}><Download className="h-4 w-4 mr-2" />Export ASCII Tab</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setShowYoutubePanel(v => !v)}>
+                <Youtube className="h-4 w-4 mr-2" />YouTube sync
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setShowHelp(true)}><HelpCircle className="h-4 w-4 mr-2" />Help</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <button
-            onClick={() => { setShowExportMenu(!showExportMenu); setShowDemoMenu(false); }}
+            onClick={() => setIsSidebarOpen(v => !v)}
             className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
-            title="Export"
           >
-            <Download className="h-4 w-4" />
+            {isSidebarOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
-          {showExportMenu && (
-            <>
-              <div className="fixed inset-0 z-30" onClick={() => setShowExportMenu(false)} />
-              <div className="absolute right-0 top-full mt-1 z-40 bg-surface-container-high border border-outline-variant/30 rounded-lg shadow-lg py-1 min-w-[160px]">
-                <button
-                  onClick={handleExportGp7}
-                  className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors"
-                >
-                  Guitar Pro (.gp)
-                </button>
-                <button
-                  onClick={handleExportAlphaTex}
-                  className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors"
-                >
-                  AlphaTex (.alphatex)
-                </button>
-                <button
-                  onClick={handleExportAscii}
-                  className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors"
-                >
-                  ASCII Tab (.txt)
-                </button>
-              </div>
-            </>
-          )}
         </div>
-        <button
-          onClick={handlePrint}
-          disabled={!isReady}
-          className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant disabled:opacity-40 disabled:cursor-not-allowed"
-          title="Print / Save as PDF"
-          data-print-hide
-        >
-          <Printer className="h-4 w-4" />
-        </button>
-        <button
-          onClick={() => setShowHelp(true)}
-          className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
-          title="Help (?)"
-        >
-          <HelpCircle className="h-4 w-4" />
-        </button>
-        <button
-          onClick={() => setShowYoutubePanel(v => !v)}
-          className={cn(
-            'p-2 rounded-lg transition-colors',
-            (showYoutubePanel || youtubeVideoId)
-              ? 'bg-primary/10 text-primary'
-              : 'text-on-surface-variant hover:bg-surface-container-high',
-          )}
-          title="YouTube sync"
-        >
-          <Youtube className="h-4 w-4" />
-        </button>
+      </div>
+
+      {/* Mobile touch navigation bar */}
+      <div className="lg:hidden flex items-center justify-between px-2 py-1 bg-surface-container border-b border-outline-variant/20 shrink-0">
+        <div className="flex items-center gap-0.5">
+          <button onClick={moveToPrevMeasure} className="p-2 rounded-lg hover:bg-surface-container-high active:bg-surface-container-highest transition-colors text-on-surface-variant" title="Previous measure">
+            <ChevronsLeft className="h-4 w-4" />
+          </button>
+          <button onClick={moveLeft} className="p-2 rounded-lg hover:bg-surface-container-high active:bg-surface-container-highest transition-colors text-on-surface-variant" title="Previous beat">
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          <button onClick={moveRight} className="p-2 rounded-lg hover:bg-surface-container-high active:bg-surface-container-highest transition-colors text-on-surface-variant" title="Next beat">
+            <ChevronRight className="h-4 w-4" />
+          </button>
+          <button onClick={moveToNextMeasure} className="p-2 rounded-lg hover:bg-surface-container-high active:bg-surface-container-highest transition-colors text-on-surface-variant" title="Next measure">
+            <ChevronsRight className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="flex items-center gap-0.5">
+          <button onClick={moveUp} className="p-2 rounded-lg hover:bg-surface-container-high active:bg-surface-container-highest transition-colors text-on-surface-variant" title="String up">
+            <ChevronUp className="h-4 w-4" />
+          </button>
+          <button onClick={moveDown} className="p-2 rounded-lg hover:bg-surface-container-high active:bg-surface-container-highest transition-colors text-on-surface-variant" title="String down">
+            <ChevronDown className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="flex items-center gap-0.5">
+          <button onClick={handleUndo} className="p-2 rounded-lg hover:bg-surface-container-high active:bg-surface-container-highest transition-colors text-on-surface-variant" title="Undo">
+            <Undo2 className="h-4 w-4" />
+          </button>
+          <button onClick={handleRedo} className="p-2 rounded-lg hover:bg-surface-container-high active:bg-surface-container-highest transition-colors text-on-surface-variant" title="Redo">
+            <Redo2 className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       {/* YouTube Panel */}
@@ -1268,32 +1273,46 @@ export default function TabEditorPage() {
       )}
 
       {/* Main area */}
-      <div className="flex flex-1 min-h-0">
-        <TabEditorSidebar
-          tracks={tracks}
-          activeTrackIndex={activeTrackIndex}
-          onTrackSelect={handleTrackSelect}
-          onAddTrack={handleAddTrack}
-          onRemoveTrack={handleRemoveTrack}
-          onToggleMute={handleToggleMute}
-          mutedTracks={mutedTracks}
-          onTuningChange={handleTuningChange}
-          tempo={tempo}
-          onTempoChange={handleTempoChange}
-          title={title}
-          onTitleChange={handleTitleChange}
-          artist={artist}
-          onArtistChange={handleArtistChange}
-        />
+      <div className="flex flex-1 min-h-0 relative">
+        {/* Mobile overlay */}
+        {isSidebarOpen && (
+          <div className="fixed inset-0 bg-black/50 z-30 lg:hidden" onClick={() => setIsSidebarOpen(false)} />
+        )}
+
+        {/* Sidebar */}
+        <div className={cn(
+          'shrink-0 z-40 transition-transform duration-300 ease-in-out',
+          'fixed inset-y-0 left-0 lg:static lg:translate-x-0',
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
+        )}
+          style={{
+            paddingTop: 'max(env(safe-area-inset-top, 0px), 0px)',
+            paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 0px)',
+          }}
+        >
+          <TabEditorSidebar
+            tracks={tracks}
+            activeTrackIndex={activeTrackIndex}
+            onTrackSelect={(i) => { handleTrackSelect(i); setIsSidebarOpen(false); }}
+            onAddTrack={handleAddTrack}
+            onRemoveTrack={handleRemoveTrack}
+            onToggleMute={handleToggleMute}
+            mutedTracks={mutedTracks}
+            onTuningChange={handleTuningChange}
+            tempo={tempo}
+            onTempoChange={handleTempoChange}
+            title={title}
+            onTitleChange={handleTitleChange}
+            artist={artist}
+            onArtistChange={handleArtistChange}
+          />
+        </div>
 
         <div className="flex-1 min-h-0 min-w-0 flex flex-col">
-          {/* Score canvas — scrollable, with bottom padding for the overlay */}
+          {/* Score canvas — scrollable */}
           <div
             ref={canvasScrollRef}
-            className={cn(
-              'flex-1 min-h-0 overflow-y-auto p-4',
-              showFretboard && 'pb-[220px]',
-            )}
+            className="flex-1 min-h-0 overflow-y-auto p-4"
           >
             <TabEditorCanvas
               ref={canvasRef}
@@ -1312,9 +1331,9 @@ export default function TabEditorPage() {
             />
           </div>
 
-          {/* Fretboard / Drum pad — sticky at bottom */}
+          {/* Fretboard / Drum pad — normal flow at bottom of content area */}
           {showFretboard && (
-            <div className="absolute bottom-[76px] left-64 right-0 z-20 shadow-lg shadow-black/30">
+            <div className="shrink-0 shadow-lg shadow-black/30">
               {activeTrackIsDrums ? (
                 <DrumPadGrid
                   onDrumHit={handleDrumHit}
@@ -1327,7 +1346,7 @@ export default function TabEditorPage() {
                   activeString={cursor.stringNumber}
                   onFretClick={handleFretClick}
                   onClose={() => setShowFretboard(false)}
-                  maxFret={24}
+                  maxFret={MAX_FRET}
                 />
               )}
             </div>
@@ -1346,8 +1365,8 @@ export default function TabEditorPage() {
         onDeleteMeasure={handleDeleteMeasure}
       />
 
-      {/* Status bar */}
-      <div className="flex items-center gap-4 px-4 py-1.5 bg-surface-container-low border-t border-outline-variant/20 text-xs text-on-surface-variant">
+      {/* Status bar — desktop only */}
+      <div className="hidden lg:flex items-center gap-4 px-4 py-1.5 bg-surface-container-low border-t border-outline-variant/20 text-xs text-on-surface-variant">
         <span>{tracks[activeTrackIndex]?.name ?? 'Guitar'} — {tracks[activeTrackIndex]?.tuningName ?? 'Standard'}</span>
         <div className="flex-1" />
         <button
@@ -1370,7 +1389,7 @@ export default function TabEditorPage() {
         initialMeta={{
           title,
           artist,
-          album: (scoreRef.current as any)?.album ?? '',
+          album: (scoreRef.current as ScoreWithAlbum | null)?.album ?? '',
           tempo,
           instrument: tracks[activeTrackIndex]?.instrument ?? 'guitar',
           previewImage: pendingPreviewImage,

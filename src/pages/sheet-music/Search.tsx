@@ -175,27 +175,27 @@ export default function Search() {
 
   return (
     <main className="min-h-screen w-full">
-      <div className="mx-auto max-w-6xl px-6 py-8 md:px-12 md:py-12">
+      <div className="mx-auto max-w-6xl px-4 py-4 lg:px-6 lg:py-8 md:px-12 md:py-12">
         {/* Header */}
-        <header className="mb-10">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-tertiary-container/20 px-3 py-1">
+        <header className="mb-10 max-lg:mb-4">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-tertiary-container/20 px-3 py-1 hidden lg:inline-flex">
             <Music className="h-3.5 w-3.5 text-tertiary" />
             <span className="font-mono text-xs uppercase tracking-widest text-tertiary">
               Drums
             </span>
           </div>
 
-          <h1 className="font-headline text-4xl font-extrabold text-on-surface md:text-5xl">
+          <h1 className="font-headline text-4xl font-extrabold text-on-surface md:text-5xl hidden lg:block">
             Drum Practice{' '}
             <span className="text-tertiary">Charts</span>
           </h1>
-          <p className="mt-3 max-w-xl text-lg text-on-surface-variant">
+          <p className="mt-3 max-w-xl text-lg text-on-surface-variant hidden lg:block">
             Search thousands of community charts and convert them to readable
             drum sheet music for your practice sessions.
           </p>
 
           {/* Search bar */}
-          <div className="mt-8 flex flex-col gap-4">
+          <div className="mt-8 lg:mt-8 flex flex-col gap-4">
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
                 <SearchIcon className="h-5 w-5 text-on-surface-variant" />
@@ -271,15 +271,15 @@ export default function Search() {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
                 {displaySongs.map(song => (
                   <Link
                     to={`/sheet-music/${song.md5}`}
                     key={song.md5}
-                    className="group relative flex flex-col overflow-hidden rounded-2xl bg-surface-container-low transition-all duration-200 hover:-translate-y-0.5 hover:bg-surface-container"
+                    className="group relative flex flex-col overflow-hidden rounded-xl lg:rounded-2xl bg-surface-container-low transition-all duration-200 hover:-translate-y-0.5 hover:bg-surface-container"
                   >
                     {/* Notation preview area */}
-                    <div className="relative flex h-36 items-center justify-center overflow-hidden bg-surface-container">
+                    <div className="relative flex h-24 lg:h-36 items-center justify-center overflow-hidden bg-surface-container">
                       <img
                         src={`https://files.enchor.us/${song.albumArtMd5}.jpg`}
                         alt={`${song.name} album art`}
@@ -313,7 +313,7 @@ export default function Search() {
                     </div>
 
                     {/* Card body */}
-                    <div className="flex flex-1 flex-col gap-2 p-4">
+                    <div className="flex flex-1 flex-col gap-1.5 p-3 lg:p-4">
                       <div className="min-w-0">
                         <h3 className="truncate text-sm font-bold text-on-surface">
                           {song.name}

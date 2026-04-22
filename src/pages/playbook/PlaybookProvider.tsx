@@ -9,6 +9,7 @@ import {
 } from 'react';
 import type {Setlist, SetlistItem} from '@/lib/local-db/setlists';
 import {updateSetlistItemSpeed} from '@/lib/local-db/setlists';
+import {loadComposition} from '@/lib/local-db/tab-compositions';
 import {
   type ProgressStatus,
   type SongSection,
@@ -43,8 +44,10 @@ interface PlaybookState {
   speed: number;
   loopSectionId: number | null;
   sidebarExpanded: boolean;
+  mobileSidebarOpen: boolean;
   sessionId: number | null;
   songStatus: ProgressStatus;
+  compositionScoreData: ArrayBuffer | null;
 }
 
 interface PlaybookActions {
@@ -57,6 +60,7 @@ interface PlaybookActions {
   setLoopSectionId: (id: number | null) => void;
   toggleSidebar: () => void;
   setSidebarExpanded: (expanded: boolean) => void;
+  setMobileSidebarOpen: (open: boolean) => void;
   addSection: (name: string, startPos: number, endPos: number, pdfPage?: number, pdfYOffset?: number) => Promise<void>;
   removeSection: (sectionId: number) => Promise<void>;
   editSection: (sectionId: number, updates: Partial<Pick<SongSection, 'name' | 'startPosition' | 'endPosition' | 'sortOrder'>>) => Promise<void>;
@@ -89,32 +93,46 @@ export function PlaybookProvider({
   const [speed, setSpeedState] = useState(() => items[0]?.speed ?? 100);
   const [loopSectionId, setLoopSectionId] = useState<number | null>(null);
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [sessionId, setSessionId] = useState<number | null>(null);
+  const [compositionScoreData, setCompositionScoreData] = useState<ArrayBuffer | null>(null);
 
   const activeItem = items[activeIndex] ?? null;
 
-  // Load per-song data when active item changes
+  // Load per-item data when active item changes
   useEffect(() => {
     if (!activeItem) return;
     let cancelled = false;
 
     const load = async () => {
-      const [secs, progress, annots] = await Promise.all([
-        getSectionsForChart(activeItem.chartMd5),
-        getSectionProgress(activeItem.id),
-        getAnnotations(activeItem.chartMd5),
-      ]);
-      if (cancelled) return;
-      setSections(secs);
-      setSectionProgress(progress);
-      setAnnotations(annots);
       setSpeedState(activeItem.speed);
       setLoopSectionId(null);
+      // Always reset per-item data; each branch below only fills in what applies.
+      setSections([]);
+      setSectionProgress([]);
+      setAnnotations([]);
+      setCompositionScoreData(null);
+
+      if (activeItem.itemType === 'chart' && activeItem.chartMd5) {
+        const [secs, progress, annots] = await Promise.all([
+          getSectionsForChart(activeItem.chartMd5),
+          getSectionProgress(activeItem.id),
+          getAnnotations(activeItem.chartMd5),
+        ]);
+        if (cancelled) return;
+        setSections(secs);
+        setSectionProgress(progress);
+        setAnnotations(annots);
+      } else if (activeItem.itemType === 'composition' && activeItem.compositionId) {
+        const result = await loadComposition(activeItem.compositionId);
+        if (cancelled) return;
+        setCompositionScoreData(result?.scoreData ?? null);
+      }
     };
 
     load();
     return () => { cancelled = true; };
-  }, [activeItem?.id, activeItem?.chartMd5]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [activeItem?.id, activeItem?.itemType, activeItem?.chartMd5, activeItem?.compositionId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Manage practice session lifecycle
   useEffect(() => {
@@ -170,7 +188,7 @@ export function PlaybookProvider({
   // ── Section CRUD ─────────────────────────────────────────────────
 
   const reloadSections = useCallback(async () => {
-    if (!activeItem) return;
+    if (!activeItem || !activeItem.chartMd5) return;
     const secs = await getSectionsForChart(activeItem.chartMd5);
     setSections(secs);
   }, [activeItem]);
@@ -182,7 +200,7 @@ export function PlaybookProvider({
   }, [activeItem]);
 
   const reloadAnnotations = useCallback(async () => {
-    if (!activeItem) return;
+    if (!activeItem || !activeItem.chartMd5) return;
     const annots = await getAnnotations(activeItem.chartMd5);
     setAnnotations(annots);
   }, [activeItem]);
@@ -194,7 +212,7 @@ export function PlaybookProvider({
     pdfPage?: number,
     pdfYOffset?: number,
   ) => {
-    if (!activeItem) return;
+    if (!activeItem || !activeItem.chartMd5) return;
     await createSection(activeItem.chartMd5, name, startPos, endPos, pdfPage, pdfYOffset);
     await reloadSections();
   }, [activeItem, reloadSections]);
@@ -251,6 +269,7 @@ export function PlaybookProvider({
     sidebarExpanded,
     sessionId,
     songStatus,
+    compositionScoreData,
     goToSong,
     nextSong,
     prevSong,
@@ -260,6 +279,8 @@ export function PlaybookProvider({
     setLoopSectionId,
     toggleSidebar,
     setSidebarExpanded,
+    mobileSidebarOpen,
+    setMobileSidebarOpen,
     addSection: addSectionAction,
     removeSection: removeSectionAction,
     editSection: editSectionAction,
@@ -270,10 +291,10 @@ export function PlaybookProvider({
   }), [
     setlist, items, activeIndex, activeItem, sections, sectionProgress,
     annotations, isPlaying, speed, loopSectionId, sidebarExpanded, sessionId,
-    songStatus, goToSong, nextSong, prevSong, setSpeed, togglePlay,
-    addSectionAction, removeSectionAction, editSectionAction,
+    songStatus, compositionScoreData, goToSong, nextSong, prevSong, setSpeed,
+    togglePlay, addSectionAction, removeSectionAction, editSectionAction,
     setSectionStatusAction, addAnnotationAction, editAnnotationAction,
-    removeAnnotationAction, toggleSidebar,
+    removeAnnotationAction, toggleSidebar, mobileSidebarOpen, setMobileSidebarOpen,
   ]);
 
   return (

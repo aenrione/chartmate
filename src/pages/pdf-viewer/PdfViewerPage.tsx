@@ -3,7 +3,7 @@ import {join} from '@tauri-apps/api/path';
 import {Loader2, AlertCircle, FileX, PanelRight} from 'lucide-react';
 import type {PDFPageProxy} from 'pdfjs-dist';
 import {storeGet, STORE_KEYS} from '@/lib/store';
-import {getPrimaryPdfForChart} from '@/lib/local-db/pdf-library';
+import {getPrimaryPdfForChart, getPdfLibraryEntry} from '@/lib/local-db/pdf-library';
 import {usePdfViewer} from '@/hooks/usePdfViewer';
 import PdfPageCanvas from './PdfPageCanvas';
 import PdfControls from './PdfControls';
@@ -16,22 +16,26 @@ import type {
 } from '@/lib/local-db/playbook';
 
 type Props = {
-  chartMd5: string;
-  sections: SongSection[];
-  annotations: SongAnnotation[];
-  sectionProgress: SectionProgressRecord[];
-  onAddSection: (name: string, page: number, yOffset: number) => Promise<void>;
-  onRemoveSection: (id: number) => Promise<void>;
-  onSetSectionStatus: (id: number, status: ProgressStatus) => Promise<void>;
-  onAddAnnotation: (sectionId: number, content: string) => Promise<void>;
-  onRemoveAnnotation: (id: number) => Promise<void>;
+  /** Resolve PDF via chart's primary PDF link. Mutually exclusive with pdfLibraryId. */
+  chartMd5?: string;
+  /** Resolve PDF directly by pdf_library.id. Mutually exclusive with chartMd5. */
+  pdfLibraryId?: number;
+  sections?: SongSection[];
+  annotations?: SongAnnotation[];
+  sectionProgress?: SectionProgressRecord[];
+  onAddSection?: (name: string, page: number, yOffset: number) => Promise<void>;
+  onRemoveSection?: (id: number) => Promise<void>;
+  onSetSectionStatus?: (id: number, status: ProgressStatus) => Promise<void>;
+  onAddAnnotation?: (sectionId: number, content: string) => Promise<void>;
+  onRemoveAnnotation?: (id: number) => Promise<void>;
 };
 
 export default function PdfViewerPage({
   chartMd5,
-  sections,
-  annotations,
-  sectionProgress,
+  pdfLibraryId,
+  sections = [],
+  annotations = [],
+  sectionProgress = [],
   onAddSection,
   onRemoveSection,
   onSetSectionStatus,
@@ -40,12 +44,13 @@ export default function PdfViewerPage({
 }: Props) {
   const [absolutePath, setAbsolutePath] = useState<string | null>(null);
   const [pathLoading, setPathLoading] = useState(true);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const hasSections = !!onAddSection;
+  const [sidebarOpen, setSidebarOpen] = useState(hasSections);
   const [renderedPages, setRenderedPages] = useState<PDFPageProxy[]>([]);
 
   const viewer = usePdfViewer(absolutePath);
 
-  // Resolve absolute PDF path from library root + relative path
+  // Resolve absolute PDF path — either via chart link or direct library entry
   useEffect(() => {
     let cancelled = false;
     setPathLoading(true);
@@ -56,12 +61,23 @@ export default function PdfViewerPage({
         if (!cancelled) setPathLoading(false);
         return;
       }
-      const link = await getPrimaryPdfForChart(chartMd5);
-      if (!link) {
+
+      let relativePath: string | null = null;
+
+      if (pdfLibraryId != null) {
+        const entry = await getPdfLibraryEntry(pdfLibraryId);
+        relativePath = entry?.relativePath ?? null;
+      } else if (chartMd5) {
+        const link = await getPrimaryPdfForChart(chartMd5);
+        relativePath = link?.relativePath ?? null;
+      }
+
+      if (!relativePath) {
         if (!cancelled) setPathLoading(false);
         return;
       }
-      const abs = await join(root, link.relativePath);
+
+      const abs = await join(root, relativePath);
       if (!cancelled) {
         setAbsolutePath(abs);
         setPathLoading(false);
@@ -72,7 +88,7 @@ export default function PdfViewerPage({
     return () => {
       cancelled = true;
     };
-  }, [chartMd5]);
+  }, [chartMd5, pdfLibraryId]);
 
   // Load all page proxies when document is ready
   useEffect(() => {
@@ -201,8 +217,8 @@ export default function PdfViewerPage({
               )}
         </div>
 
-        {/* Section sidebar */}
-        {sidebarOpen && (
+        {/* Section sidebar — only when sections are enabled */}
+        {hasSections && sidebarOpen && (
           <div className="w-56 border-l border-outline-variant flex flex-col min-h-0 bg-surface">
             <PdfSectionPanel
               sections={sections}
@@ -210,11 +226,11 @@ export default function PdfViewerPage({
               sectionProgress={sectionProgress}
               currentPage={viewer.currentPage}
               onGoToSection={handleGoToSection}
-              onAddSection={onAddSection}
-              onRemoveSection={onRemoveSection}
-              onSetSectionStatus={onSetSectionStatus}
-              onAddAnnotation={onAddAnnotation}
-              onRemoveAnnotation={onRemoveAnnotation}
+              onAddSection={onAddSection!}
+              onRemoveSection={onRemoveSection!}
+              onSetSectionStatus={onSetSectionStatus!}
+              onAddAnnotation={onAddAnnotation!}
+              onRemoveAnnotation={onRemoveAnnotation!}
             />
           </div>
         )}
@@ -222,13 +238,15 @@ export default function PdfViewerPage({
 
       {/* Controls bar */}
       <div className="flex items-center gap-1 border-t border-outline-variant">
-        <button
-          onClick={() => setSidebarOpen(p => !p)}
-          className="p-2 hover:bg-surface-variant transition-colors flex-shrink-0"
-          title="Toggle sections panel"
-        >
-          <PanelRight className="h-4 w-4" />
-        </button>
+        {hasSections && (
+          <button
+            onClick={() => setSidebarOpen(p => !p)}
+            className="p-2 hover:bg-surface-variant transition-colors flex-shrink-0"
+            title="Toggle sections panel"
+          >
+            <PanelRight className="h-4 w-4" />
+          </button>
+        )}
         <div className="flex-1">
           <PdfControls
             currentPage={viewer.currentPage}

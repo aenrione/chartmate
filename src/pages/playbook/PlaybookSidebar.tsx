@@ -1,4 +1,4 @@
-import {useState, useRef, useEffect} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {
   ListMusic,
   LayoutList,
@@ -10,6 +10,7 @@ import {
   Play,
   Pause,
   Repeat,
+  X,
 } from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {Slider} from '@/components/ui/slider';
@@ -33,15 +34,25 @@ const STATUS_OPTIONS: {value: ProgressStatus; label: string}[] = [
   {value: 'nailed_it', label: 'Nailed It'},
 ];
 
-type PanelId = 'songs' | 'sections' | 'controls' | 'audio' | 'annotations';
-
-const PANELS: {id: PanelId; icon: typeof ListMusic; label: string}[] = [
+const PANELS = [
   {id: 'songs', icon: ListMusic, label: 'Songs'},
   {id: 'sections', icon: LayoutList, label: 'Sections'},
   {id: 'controls', icon: Gauge, label: 'Controls'},
   {id: 'audio', icon: Volume2, label: 'Audio'},
   {id: 'annotations', icon: StickyNote, label: 'Notes'},
-];
+] as const;
+
+type PanelId = typeof PANELS[number]['id'];
+
+function renderPanel(id: PanelId): React.ReactNode {
+  switch (id) {
+    case 'songs': return <SongNavigatorPanel />;
+    case 'sections': return <SectionsPanel />;
+    case 'controls': return <ControlsPanel />;
+    case 'audio': return <AudioPanel />;
+    case 'annotations': return <AnnotationsPanel />;
+  }
+}
 
 // ── Song Navigator Panel ─────────────────────────────────────────────
 
@@ -414,30 +425,28 @@ function AnnotationsPanel() {
 // ── Main Sidebar ─────────────────────────────────────────────────────
 
 export default function PlaybookSidebar() {
-  const {sidebarExpanded} = usePlaybook();
+  const {sidebarExpanded, activeItem, mobileSidebarOpen, setMobileSidebarOpen} = usePlaybook();
   const [activePanel, setActivePanel] = useState<PanelId>('songs');
 
-  const panelComponents: Record<PanelId, React.ReactNode> = {
-    songs: <SongNavigatorPanel />,
-    sections: <SectionsPanel />,
-    controls: <ControlsPanel />,
-    audio: <AudioPanel />,
-    annotations: <AnnotationsPanel />,
-  };
+  const isChart = !activeItem || activeItem.itemType === 'chart';
 
-  return (
-    <aside
-      className={cn(
-        'shrink-0 flex flex-col bg-surface-container-low border-r border-white/5 transition-all duration-200',
-        sidebarExpanded ? 'w-[280px]' : 'w-16',
-      )}
-    >
+  const visiblePanels = useMemo(
+    () => (isChart ? PANELS : PANELS.filter(p => p.id !== 'sections' && p.id !== 'annotations')),
+    [isChart],
+  );
+
+  // Reset to a valid panel when the active one is hidden (e.g. after item type change).
+  useEffect(() => {
+    if (!visiblePanels.some(p => p.id === activePanel)) {
+      setActivePanel(visiblePanels[0]?.id ?? 'songs');
+    }
+  }, [visiblePanels, activePanel]);
+
+  const sidebarContent = (
+    <>
       {/* Panel tabs */}
-      <div className={cn(
-        'flex border-b border-white/5 shrink-0',
-        sidebarExpanded ? 'px-2 gap-1 py-1' : 'flex-col items-center py-1 gap-1',
-      )}>
-        {PANELS.map(panel => {
+      <div className="flex border-b border-white/5 shrink-0 px-2 gap-1 py-1">
+        {visiblePanels.map(panel => {
           const Icon = panel.icon;
           const isActive = activePanel === panel.id;
           return (
@@ -457,13 +466,82 @@ export default function PlaybookSidebar() {
           );
         })}
       </div>
+      {/* Panel content */}
+      <div className="flex-1 min-h-0 flex flex-col">
+        {renderPanel(activePanel)}
+      </div>
+    </>
+  );
 
-      {/* Panel content -- only shown when expanded */}
-      {sidebarExpanded && (
-        <div className="flex-1 min-h-0 flex flex-col">
-          {panelComponents[activePanel]}
-        </div>
+  return (
+    <>
+      {/* Mobile overlay drawer */}
+      {mobileSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 z-[199] lg:hidden"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
       )}
-    </aside>
+      <div
+        className={cn(
+          'fixed inset-y-0 left-0 z-[200] w-[280px] flex flex-col bg-surface-container-low border-r border-white/5 transition-transform duration-300 ease-in-out',
+          'lg:hidden',
+          mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full',
+        )}
+        style={{
+          paddingTop: 'max(env(safe-area-inset-top, 0px), 0px)',
+          paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 0px)',
+        }}
+      >
+        <div className="flex items-center justify-between px-3 py-2 border-b border-white/5 shrink-0">
+          <span className="text-xs font-bold font-mono uppercase tracking-widest text-on-surface-variant">Setlist</span>
+          <button
+            onClick={() => setMobileSidebarOpen(false)}
+            className="p-1.5 rounded-lg hover:bg-surface-container-high text-on-surface-variant"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        {sidebarContent}
+      </div>
+
+      {/* Desktop sidebar */}
+      <aside
+        className={cn(
+          'hidden lg:flex shrink-0 flex-col bg-surface-container-low border-r border-white/5 transition-all duration-200',
+          sidebarExpanded ? 'w-[280px]' : 'w-16',
+        )}
+      >
+        <div className={cn(
+          'flex border-b border-white/5 shrink-0',
+          sidebarExpanded ? 'px-2 gap-1 py-1' : 'flex-col items-center py-1 gap-1',
+        )}>
+          {visiblePanels.map(panel => {
+            const Icon = panel.icon;
+            const isActive = activePanel === panel.id;
+            return (
+              <button
+                key={panel.id}
+                onClick={() => setActivePanel(panel.id)}
+                className={cn(
+                  'p-2 rounded-lg transition-colors',
+                  isActive
+                    ? 'bg-surface-container text-primary'
+                    : 'text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface',
+                )}
+                title={panel.label}
+              >
+                <Icon className="h-4 w-4" />
+              </button>
+            );
+          })}
+        </div>
+        {sidebarExpanded && (
+          <div className="flex-1 min-h-0 flex flex-col">
+            {renderPanel(activePanel)}
+          </div>
+        )}
+      </aside>
+    </>
   );
 }

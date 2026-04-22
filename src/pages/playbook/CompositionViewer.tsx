@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {Play, Pause, Square, Minus, Plus, Repeat, Printer} from 'lucide-react';
+import {Play, Pause, Square, Minus, Plus, Repeat, Printer, SlidersHorizontal, X} from 'lucide-react';
 import {useAlphaTabPrint} from '@/hooks/usePrint';
 import {LayoutMode, StaveProfile, model} from '@coderline/alphatab';
 import {Button} from '@/components/ui/button';
@@ -19,6 +19,7 @@ import {useLocalStorage} from '@/lib/useLocalStorage';
 import {usePlaybook} from './PlaybookProvider';
 
 type Score = InstanceType<typeof model.Score>;
+type DisplaySettings = NonNullable<ReturnType<AlphaTabHandle['getApi']>>['settings']['display'];
 
 interface Settings {
   layoutMode: LayoutMode;
@@ -60,6 +61,7 @@ export default function CompositionViewer({scoreData}: {scoreData: ArrayBuffer})
     'guitar.songView.settings.v1',
     DEFAULT_SETTINGS,
   );
+  const [mobilePanelOpen, setMobilePanelOpen] = useState(false);
 
   // Sync playbook speed → AlphaTab (speed is 25–200, AlphaTab wants 0.25–2.0)
   useEffect(() => {
@@ -102,13 +104,19 @@ export default function CompositionViewer({scoreData}: {scoreData: ArrayBuffer})
   const getApiForPrint = useCallback(() => alphaTabRef.current?.getApi() ?? null, []);
   const handlePrint = useAlphaTabPrint(getApiForPrint);
 
+  // Mutate AlphaTab's display settings in place, then re-apply and re-render.
+  const applyDisplaySetting = useCallback((apply: (display: DisplaySettings) => void) => {
+    const api = alphaTabRef.current?.getApi();
+    if (!api) return;
+    apply(api.settings.display);
+    api.updateSettings();
+    api.render();
+  }, []);
+
   const tracks: InstanceType<typeof model.Track>[] = score?.tracks ?? [];
 
-  return (
-    <div className="flex-1 flex min-h-0">
-      {/* ── Sidebar ─────────────────────────────────────────────── */}
-      <div className="w-52 shrink-0 border-r border-white/5 overflow-y-auto bg-surface-container-low" data-print-hide>
-        <div className="p-3 space-y-4">
+  const sidebarBody = (
+    <div className="p-3 space-y-4">
 
           {/* Track selector */}
           {tracks.length > 1 && (
@@ -120,7 +128,7 @@ export default function CompositionViewer({scoreData}: {scoreData: ArrayBuffer})
                 <SelectTrigger className="h-7 text-xs">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="z-[300]">
                   {tracks.map((t, i) => (
                     <SelectItem key={i} value={String(i)}>
                       {t.name || `Track ${i + 1}`}
@@ -211,12 +219,16 @@ export default function CompositionViewer({scoreData}: {scoreData: ArrayBuffer})
               <span className="text-xs text-on-surface-variant">Layout</span>
               <Select
                 value={String(settings.layoutMode)}
-                onValueChange={v => setSettings(prev => ({...prev, layoutMode: Number(v) as LayoutMode}))}
+                onValueChange={v => {
+                  const next = Number(v) as LayoutMode;
+                  setSettings(prev => ({...prev, layoutMode: next}));
+                  applyDisplaySetting(display => { display.layoutMode = next; });
+                }}
               >
-                <SelectTrigger className="h-6 w-24 text-xs">
+                <SelectTrigger className="h-6 w-28 text-xs">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="z-[300]">
                   <SelectItem value={String(LayoutMode.Page)}>Page</SelectItem>
                   <SelectItem value={String(LayoutMode.Horizontal)}>Horizontal</SelectItem>
                 </SelectContent>
@@ -227,12 +239,16 @@ export default function CompositionViewer({scoreData}: {scoreData: ArrayBuffer})
               <span className="text-xs text-on-surface-variant">Notation</span>
               <Select
                 value={String(settings.staveProfile)}
-                onValueChange={v => setSettings(prev => ({...prev, staveProfile: Number(v) as StaveProfile}))}
+                onValueChange={v => {
+                  const next = Number(v) as StaveProfile;
+                  setSettings(prev => ({...prev, staveProfile: next}));
+                  applyDisplaySetting(display => { display.staveProfile = next; });
+                }}
               >
-                <SelectTrigger className="h-6 w-24 text-xs">
+                <SelectTrigger className="h-6 w-28 text-xs">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="z-[300]">
                   <SelectItem value={String(StaveProfile.Default)}>Auto</SelectItem>
                   <SelectItem value={String(StaveProfile.ScoreTab)}>Score + Tab</SelectItem>
                   <SelectItem value={String(StaveProfile.Score)}>Score Only</SelectItem>
@@ -271,10 +287,40 @@ export default function CompositionViewer({scoreData}: {scoreData: ArrayBuffer})
             </div>
           )}
         </div>
+  );
+
+  return (
+    <div className="flex-1 flex min-h-0">
+      {/* Mobile overlay */}
+      {mobilePanelOpen && (
+        <div className="fixed inset-0 bg-black/60 z-[199] lg:hidden" onClick={() => setMobilePanelOpen(false)} />
+      )}
+
+      {/* Mobile drawer */}
+      <div
+        className={`fixed inset-y-0 right-0 z-[200] w-64 flex flex-col bg-surface-container-low border-l border-white/5 transition-transform duration-300 ease-in-out lg:hidden ${mobilePanelOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        style={{
+          paddingTop: 'max(env(safe-area-inset-top, 0px), 0px)',
+          paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 0px)',
+        }}
+        data-print-hide
+      >
+        <div className="flex items-center justify-between px-3 py-2 border-b border-white/5 shrink-0">
+          <span className="text-xs font-bold font-mono uppercase tracking-widest text-on-surface-variant">Controls</span>
+          <button onClick={() => setMobilePanelOpen(false)} className="p-1.5 rounded-lg hover:bg-surface-container-high text-on-surface-variant">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto">{sidebarBody}</div>
       </div>
 
-      {/* ── Main content ─────────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col min-w-0">
+      {/* ── Desktop Sidebar ──────────────────────────────────────── */}
+      <div className="hidden lg:flex w-52 shrink-0 border-r border-white/5 overflow-y-auto bg-surface-container-low flex-col" data-print-hide>
+        {sidebarBody}
+      </div>
+
+      {/* ── Main content — isolate scopes AlphaTab's compositing layer ── */}
+      <div className="flex-1 flex flex-col min-w-0 isolate">
         {/* Transport bar */}
         <div className="border-b border-white/5 px-3 py-1.5 flex items-center gap-2 shrink-0 bg-surface-container-low" data-print-hide>
           <Button
@@ -322,7 +368,16 @@ export default function CompositionViewer({scoreData}: {scoreData: ArrayBuffer})
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7 ml-auto"
+            className="h-7 w-7 ml-auto lg:hidden"
+            onClick={() => setMobilePanelOpen(true)}
+            title="Controls"
+          >
+            <SlidersHorizontal className="h-3.5 w-3.5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 hidden lg:flex"
             onClick={handlePrint}
             title="Print / Save as PDF"
           >

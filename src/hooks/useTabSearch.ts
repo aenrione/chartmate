@@ -7,21 +7,26 @@ type SearchState = {
   error: string | null;
 };
 
+const _stateCache = new Map<string, SearchState>();
+
 export function useTabSearch(enabledSources: TabSource[] = TAB_SOURCES) {
   const sourceKey = enabledSources.map(s => s.sourceId).join(',');
-  const [state, setState] = useState<SearchState>({
-    results: [],
-    loading: false,
-    error: null,
-  });
+  const [state, setState] = useState<SearchState>(
+    () => _stateCache.get(sourceKey) ?? {results: [], loading: false, error: null},
+  );
+
+  const updateState = useCallback((next: SearchState) => {
+    _stateCache.set(sourceKey, next);
+    setState(next);
+  }, [sourceKey]);
 
   const search = useCallback(async (query: string) => {
     if (!query.trim()) {
-      setState({results: [], loading: false, error: null});
+      updateState({results: [], loading: false, error: null});
       return;
     }
     if (enabledSources.length === 0) {
-      setState({results: [], loading: false, error: null});
+      updateState({results: [], loading: false, error: null});
       return;
     }
     setState(s => ({...s, loading: true, error: null}));
@@ -45,15 +50,15 @@ export function useTabSearch(enabledSources: TabSource[] = TAB_SOURCES) {
           errors.push(`${enabledSources[i].name}: ${msg}`);
         }
       });
-      setState({
+      updateState({
         results,
         loading: false,
         error: errors.length ? errors.join('; ') : null,
       });
     } catch (err) {
-      setState({results: [], loading: false, error: String(err)});
+      updateState({results: [], loading: false, error: String(err)});
     }
-  }, [sourceKey]);
+  }, [sourceKey, updateState]);
 
   return {...state, search};
 }

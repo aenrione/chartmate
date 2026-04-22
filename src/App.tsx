@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import { SpotifyAuthProvider } from '@/contexts/SpotifyAuthContext';
 import { SyncProvider } from '@/contexts/SyncContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
+import { LayoutProvider } from '@/contexts/LayoutContext';
 import { Toaster } from 'sonner';
 import Layout from '@/components/Layout';
 import FirstLaunchSetup from '@/components/FirstLaunchSetup';
@@ -24,6 +25,7 @@ import PlaybookPage from '@/pages/playbook/PlaybookPage';
 import LibraryPage from '@/pages/LibraryPage';
 import SavedChartsPage from '@/pages/library/SavedChartsPage';
 import PdfLibraryTab from '@/pages/library/PdfLibraryTab';
+import ExplorerListsPage from '@/pages/library/ExplorerListsPage';
 import DrumsHubPage from '@/pages/DrumsHubPage';
 import TabEditorPage from '@/pages/tab-editor/TabEditorPage';
 import FretboardIQPage from '@/pages/guitar/fretboard/FretboardIQPage';
@@ -48,9 +50,11 @@ function RootLayout() {
     <SpotifyAuthProvider>
       <SyncProvider>
         <SidebarProvider>
+          <LayoutProvider>
           <Layout>
             <Outlet />
           </Layout>
+          </LayoutProvider>
           {!setupComplete && (
             <FirstLaunchSetup onComplete={() => setSetupComplete(true)} />
           )}
@@ -94,6 +98,7 @@ const router = createBrowserRouter([
       { path: '/library/setlists', element: <SetlistsPage /> },
       { path: '/library/saved-charts', element: <SavedChartsPage /> },
       { path: '/library/pdf', element: <PdfLibraryTab /> },
+      { path: '/library/explorer-lists', element: <ExplorerListsPage /> },
       { path: '/spotify', element: <SpotifyPage /> },
       { path: '/updates', element: <UpdatesPage /> },
       { path: '/setlists', element: <SetlistsPage /> },

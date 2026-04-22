@@ -112,6 +112,15 @@ export interface SpotifyHistory {
   name: string;
   name_normalized: string;
   play_count: number;
+  last_played: string | null;
+  ms_played: Generated<number>;
+}
+
+export interface SpotifyHistoryImports {
+  id: Generated<number>;
+  filename: string;
+  file_size: number;
+  imported_at: string;
 }
 
 export interface SavedCharts {
@@ -146,10 +155,13 @@ export interface Setlists {
 export interface SetlistItems {
   id: Generated<number>;
   setlist_id: number;
-  chart_md5: string;
+  item_type: Generated<string>;
+  chart_md5: string | null;
+  composition_id: number | null;
+  pdf_library_id: number | null;
   name: string;
   artist: string;
-  charter: string;
+  charter: string | null;
   position: number;
   speed: Generated<number>;
   added_at: string;
@@ -344,8 +356,21 @@ export interface RepertoireReviews {
   created_at: string;
 }
 
+export interface ExplorerSaves {
+  id: Generated<number>;
+  list_name: Generated<string>;
+  artist: string;
+  name: string;
+  artist_normalized: string;
+  name_normalized: string;
+  spotify_track_uri: string | null;
+  added_at: string;
+}
+
 export interface DB {
+  explorer_saves: ExplorerSaves;
   chorus_charts: ChorusCharts;
+  spotify_history_imports: SpotifyHistoryImports;
   chorus_metadata: ChorusMetadata;
   chorus_scan_sessions: ChorusScanSessions;
   local_charts: LocalCharts;

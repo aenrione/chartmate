@@ -3,7 +3,7 @@ import { fetch as tauriFetch } from '@tauri-apps/plugin-http';
 
 const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID as string;
 const REDIRECT_URI = 'chartmate://auth/callback';
-const SCOPES = 'user-read-email user-library-read playlist-read-private playlist-read-collaborative';
+const SCOPES = 'user-read-email user-library-read playlist-read-private playlist-read-collaborative user-read-recently-played';
 
 export type SpotifyTokens = {
   access_token: string;

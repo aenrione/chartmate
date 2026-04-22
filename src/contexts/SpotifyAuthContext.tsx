@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { isSpotifyConnected, handleSpotifyCallback } from '@/lib/spotify-auth';
 import { invalidateSpotifySdkCache } from '@/lib/spotify-sdk/ClientInstance';
+import { syncRecentlyPlayed } from '@/lib/spotify-sdk/SpotifyHistorySync';
 
 type SpotifyAuthContextType = {
   isConnected: boolean;
@@ -14,13 +15,33 @@ const SpotifyAuthContext = createContext<SpotifyAuthContextType>({
 
 export function SpotifyAuthProvider({ children }: { children: React.ReactNode }) {
   const [isConnected, setIsConnected] = useState(false);
+  // Track whether we've already kicked off a recently-played sync this session
+  const hasSyncedRef = useRef(false);
 
-  const refresh = async () => {
-    setIsConnected(await isSpotifyConnected());
+  const checkAndSetConnected = async (): Promise<boolean> => {
+    const connected = await isSpotifyConnected();
+    setIsConnected(connected);
+    return connected;
+  };
+
+  /** Public refresh: returns void for context consumers */
+  const refresh = async (): Promise<void> => {
+    await checkAndSetConnected();
+  };
+
+  /** Run Phase 2 sync once per session after auth is confirmed */
+  const triggerRecentlyPlayedSync = () => {
+    if (hasSyncedRef.current) return;
+    hasSyncedRef.current = true;
+    syncRecentlyPlayed().catch(err => {
+      console.warn('[SpotifyHistorySync] Sync error:', err);
+    });
   };
 
   useEffect(() => {
-    refresh();
+    checkAndSetConnected().then(connected => {
+      if (connected) triggerRecentlyPlayedSync();
+    });
 
     const handler = async (e: Event) => {
       const url = (e as CustomEvent<string>).detail;
@@ -29,7 +50,8 @@ export function SpotifyAuthProvider({ children }: { children: React.ReactNode })
         await handleSpotifyCallback(url);
         console.log('[spotify-auth] token exchange succeeded');
         invalidateSpotifySdkCache();
-        await refresh();
+        const connected = await checkAndSetConnected();
+        if (connected) triggerRecentlyPlayedSync();
       } catch (err) {
         console.error('[spotify-auth] callback failed:', err);
       }

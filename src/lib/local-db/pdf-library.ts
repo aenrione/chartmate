@@ -42,28 +42,14 @@ export async function getAllPdfLibraryEntries(): Promise<PdfLibraryEntry[]> {
   return rows.map(rowToPdfEntry);
 }
 
+export async function getPdfLibraryEntry(id: number): Promise<PdfLibraryEntry | null> {
+  const db = await getLocalDb();
+  const row = await db.selectFrom('pdf_library').selectAll().where('id', '=', id).executeTakeFirst();
+  return row ? rowToPdfEntry(row) : null;
+}
+
 export async function upsertPdfLibraryEntry(entry: Omit<PdfLibraryEntry, 'id'>): Promise<number> {
   const db = await getLocalDb();
-  const existing = await db
-    .selectFrom('pdf_library')
-    .select('id')
-    .where('relative_path', '=', entry.relativePath)
-    .executeTakeFirst();
-
-  if (existing) {
-    await db
-      .updateTable('pdf_library')
-      .set({
-        filename: entry.filename,
-        file_size_bytes: entry.fileSizeBytes,
-        detected_title: entry.detectedTitle,
-        detected_artist: entry.detectedArtist,
-      })
-      .where('id', '=', existing.id)
-      .execute();
-    return existing.id;
-  }
-
   const result = await db
     .insertInto('pdf_library')
     .values({
@@ -74,9 +60,17 @@ export async function upsertPdfLibraryEntry(entry: Omit<PdfLibraryEntry, 'id'>):
       detected_artist: entry.detectedArtist,
       added_at: entry.addedAt,
     })
+    .onConflict(oc =>
+      oc.column('relative_path').doUpdateSet({
+        filename: eb => eb.ref('excluded.filename'),
+        file_size_bytes: eb => eb.ref('excluded.file_size_bytes'),
+        detected_title: eb => eb.ref('excluded.detected_title'),
+        detected_artist: eb => eb.ref('excluded.detected_artist'),
+      }),
+    )
+    .returning('id')
     .executeTakeFirstOrThrow();
-
-  return Number(result.insertId);
+  return result.id;
 }
 
 export async function deletePdfLibraryEntry(id: number): Promise<void> {
@@ -85,18 +79,14 @@ export async function deletePdfLibraryEntry(id: number): Promise<void> {
 }
 
 /** Delete all pdf_library entries that have no chart_pdfs links. */
-export async function deleteUnmatchedPdfLibraryEntries(): Promise<number> {
+export async function deleteUnmatchedPdfLibraryEntries(): Promise<void> {
   const db = await getLocalDb();
-  const linked = await db.selectFrom('chart_pdfs').select('pdf_library_id').execute();
-  const linkedIds = new Set(linked.map(r => r.pdf_library_id));
-
-  const all = await db.selectFrom('pdf_library').select('id').execute();
-  const toDelete = all.map(r => r.id).filter(id => !linkedIds.has(id));
-
-  if (toDelete.length === 0) return 0;
-
-  await db.deleteFrom('pdf_library').where('id', 'in', toDelete).execute();
-  return toDelete.length;
+  await db
+    .deleteFrom('pdf_library')
+    .where('id', 'not in',
+      db.selectFrom('chart_pdfs').select('pdf_library_id'),
+    )
+    .execute();
 }
 
 // ── chart_pdfs operations ─────────────────────────────────────────────
@@ -137,31 +127,33 @@ export async function linkChartPdf(
 ): Promise<void> {
   const db = await getLocalDb();
 
-  if (isPrimary) {
-    await db
-      .updateTable('chart_pdfs')
-      .set({is_primary: 0})
-      .where('chart_md5', '=', chartMd5)
-      .execute();
-  }
+  await db.transaction().execute(async trx => {
+    if (isPrimary) {
+      await trx
+        .updateTable('chart_pdfs')
+        .set({is_primary: 0})
+        .where('chart_md5', '=', chartMd5)
+        .execute();
+    }
 
-  await db
-    .insertInto('chart_pdfs')
-    .values({
-      chart_md5: chartMd5,
-      pdf_library_id: pdfLibraryId,
-      label: label,
-      is_primary: isPrimary ? 1 : 0,
-      linked_at: new Date().toISOString(),
-    })
-    .onConflict(oc =>
-      oc.columns(['chart_md5', 'pdf_library_id']).doUpdateSet({
+    await trx
+      .insertInto('chart_pdfs')
+      .values({
+        chart_md5: chartMd5,
+        pdf_library_id: pdfLibraryId,
         label: label,
         is_primary: isPrimary ? 1 : 0,
         linked_at: new Date().toISOString(),
-      }),
-    )
-    .execute();
+      })
+      .onConflict(oc =>
+        oc.columns(['chart_md5', 'pdf_library_id']).doUpdateSet({
+          label: label,
+          is_primary: isPrimary ? 1 : 0,
+          linked_at: new Date().toISOString(),
+        }),
+      )
+      .execute();
+  });
 }
 
 export async function unlinkChartPdf(chartMd5: string, pdfLibraryId: number): Promise<void> {
@@ -175,18 +167,20 @@ export async function unlinkChartPdf(chartMd5: string, pdfLibraryId: number): Pr
 
 export async function setPrimaryPdf(chartMd5: string, pdfLibraryId: number): Promise<void> {
   const db = await getLocalDb();
-  await db
-    .updateTable('chart_pdfs')
-    .set({is_primary: 0})
-    .where('chart_md5', '=', chartMd5)
-    .execute();
+  await db.transaction().execute(async trx => {
+    await trx
+      .updateTable('chart_pdfs')
+      .set({is_primary: 0})
+      .where('chart_md5', '=', chartMd5)
+      .execute();
 
-  await db
-    .updateTable('chart_pdfs')
-    .set({is_primary: 1})
-    .where('chart_md5', '=', chartMd5)
-    .where('pdf_library_id', '=', pdfLibraryId)
-    .execute();
+    await trx
+      .updateTable('chart_pdfs')
+      .set({is_primary: 1})
+      .where('chart_md5', '=', chartMd5)
+      .where('pdf_library_id', '=', pdfLibraryId)
+      .execute();
+  });
 }
 
 export async function getLinkedChartMd5sForPdf(pdfLibraryId: number): Promise<string[]> {

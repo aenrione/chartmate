@@ -191,6 +191,8 @@ export async function createItem(data: {
       artist: data.artist ?? null,
       notes: data.notes ?? null,
       target_bpm: data.targetBpm ?? null,
+      reference_type: null,
+      reference_id: null,
       saved_chart_md5: data.savedChartMd5 ?? null,
       composition_id: data.compositionId ?? null,
       song_section_id: data.songSectionId ?? null,
@@ -201,7 +203,7 @@ export async function createItem(data: {
       last_reviewed_at: null,
       created_at: now,
       updated_at: now,
-    } as any)
+    })
     .executeTakeFirstOrThrow();
   return Number(result.insertId);
 }
@@ -279,19 +281,28 @@ export async function updateItem(
 ): Promise<void> {
   const db = await getLocalDb();
   const now = getCurrentTimestamp();
+  const patch: {
+    collection_id?: number;
+    title?: string;
+    artist?: string | null;
+    notes?: string | null;
+    target_bpm?: number | null;
+    saved_chart_md5?: string | null;
+    composition_id?: number | null;
+    song_section_id?: number | null;
+    updated_at: string;
+  } = {updated_at: now};
+  if (data.collectionId !== undefined) patch.collection_id = data.collectionId;
+  if (data.title !== undefined) patch.title = data.title;
+  if (data.artist !== undefined) patch.artist = data.artist;
+  if (data.notes !== undefined) patch.notes = data.notes;
+  if (data.targetBpm !== undefined) patch.target_bpm = data.targetBpm;
+  if (data.savedChartMd5 !== undefined) patch.saved_chart_md5 = data.savedChartMd5;
+  if (data.compositionId !== undefined) patch.composition_id = data.compositionId;
+  if (data.songSectionId !== undefined) patch.song_section_id = data.songSectionId;
   await db
     .updateTable('repertoire_items')
-    .set({
-      ...(data.collectionId !== undefined && {collection_id: data.collectionId}),
-      ...(data.title !== undefined && {title: data.title}),
-      ...(data.artist !== undefined && {artist: data.artist}),
-      ...(data.notes !== undefined && {notes: data.notes}),
-      ...(data.targetBpm !== undefined && {target_bpm: data.targetBpm}),
-      ...(data.savedChartMd5 !== undefined && {saved_chart_md5: data.savedChartMd5}),
-      ...(data.compositionId !== undefined && {composition_id: data.compositionId}),
-      ...(data.songSectionId !== undefined && {song_section_id: data.songSectionId}),
-      updated_at: now,
-    } as any)
+    .set(patch)
     .where('id', '=', id)
     .execute();
 }
@@ -420,33 +431,35 @@ export async function recordReview(
     item.interval,
   );
 
-  await db
-    .insertInto('repertoire_reviews')
-    .values({
-      item_id: itemId,
-      quality,
-      interval_before: item.interval,
-      interval_after: newInterval,
-      ease_factor_before: item.easeFactor,
-      ease_factor_after: newEaseFactor,
-      duration_ms: durationMs ?? null,
-      session_notes: sessionNotes ?? null,
-      created_at: now,
-    })
-    .execute();
+  await db.transaction().execute(async trx => {
+    await trx
+      .insertInto('repertoire_reviews')
+      .values({
+        item_id: itemId,
+        quality,
+        interval_before: item.interval,
+        interval_after: newInterval,
+        ease_factor_before: item.easeFactor,
+        ease_factor_after: newEaseFactor,
+        duration_ms: durationMs ?? null,
+        session_notes: sessionNotes ?? null,
+        created_at: now,
+      })
+      .execute();
 
-  await db
-    .updateTable('repertoire_items')
-    .set({
-      interval: newInterval,
-      ease_factor: newEaseFactor,
-      repetitions: newRepetitions,
-      next_review_date: nextReviewDate,
-      last_reviewed_at: now,
-      updated_at: now,
-    })
-    .where('id', '=', itemId)
-    .execute();
+    await trx
+      .updateTable('repertoire_items')
+      .set({
+        interval: newInterval,
+        ease_factor: newEaseFactor,
+        repetitions: newRepetitions,
+        next_review_date: nextReviewDate,
+        last_reviewed_at: now,
+        updated_at: now,
+      })
+      .where('id', '=', itemId)
+      .execute();
+  });
 }
 
 export async function getItemReviewHistory(itemId: number): Promise<RepertoireReview[]> {
@@ -537,6 +550,57 @@ export async function getRepertoireStats(): Promise<RepertoireStats> {
     longestStreak,
     lastReviewDate: lastDate,
   };
+}
+
+export interface SongSectionWithChart {
+  id: number;
+  name: string;
+  chartMd5: string;
+  chartName: string;
+  chartArtist: string;
+  albumArtMd5: string | null;
+}
+
+/**
+ * Returns all song sections joined with their parent chart info.
+ * Optional query filters by section name, chart name, or artist.
+ */
+export async function searchSongSectionsWithChart(query?: string): Promise<SongSectionWithChart[]> {
+  const db = await getLocalDb();
+  let q = db
+    .selectFrom('song_sections')
+    .innerJoin('saved_charts', 'saved_charts.md5', 'song_sections.chart_md5')
+    .select([
+      'song_sections.id',
+      'song_sections.name',
+      'song_sections.chart_md5 as chartMd5',
+      'saved_charts.name as chartName',
+      'saved_charts.artist as chartArtist',
+      'saved_charts.album_art_md5 as albumArtMd5',
+    ])
+    .orderBy('saved_charts.name', 'asc')
+    .orderBy('song_sections.sort_order', 'asc');
+
+  if (query) {
+    const like = `%${query}%`;
+    q = q.where(eb =>
+      eb.or([
+        eb('song_sections.name', 'like', like),
+        eb('saved_charts.name', 'like', like),
+        eb('saved_charts.artist', 'like', like),
+      ])
+    );
+  }
+
+  const rows = await q.limit(30).execute();
+  return rows.map(r => ({
+    id: r.id,
+    name: r.name,
+    chartMd5: r.chartMd5,
+    chartName: r.chartName,
+    chartArtist: r.chartArtist,
+    albumArtMd5: r.albumArtMd5 ?? null,
+  }));
 }
 
 export async function getStreakData(): Promise<{date: string; count: number}[]> {

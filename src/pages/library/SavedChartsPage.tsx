@@ -337,7 +337,7 @@ export default function SavedChartsPage() {
               <button
                 onClick={() => dirInputRef.current?.click()}
                 disabled={bulkImporting}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-50"
+                className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-50"
                 title="Import files from a folder"
               >
                 {bulkImporting

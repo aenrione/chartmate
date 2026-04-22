@@ -2,7 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useInterval from 'use-interval';
 import { parseChartFile } from '@eliwhite/scan-chart';
-import { ArrowLeft, Play, Pause } from 'lucide-react';
+import { ArrowLeft, Play, Pause, Menu } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useHideHeaderOnMobile } from '@/contexts/LayoutContext';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
@@ -83,7 +85,10 @@ export default function RudimentPracticeView({
 }: {
   rudiment: Rudiment;
 }) {
+  useHideHeaderOnMobile();
+
   // Settings state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [bpm, setBpm] = useState(120);
   const [playClickTrack, setPlayClickTrack] = useState(true);
   const [masterClickVolume, setMasterClickVolume] = useState(0.7);
@@ -311,8 +316,26 @@ export default function RudimentPracticeView({
       </div>
 
       <div className="flex gap-6 flex-1 min-h-0">
+        {/* Mobile overlay */}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+
         {/* Sidebar */}
-        <div className="w-64 shrink-0 space-y-4 overflow-y-auto">
+        <div
+          className={cn(
+            'w-64 shrink-0 space-y-4 overflow-y-auto bg-background',
+            'fixed inset-y-0 left-0 z-[1100] transition-transform px-4 lg:static lg:translate-x-0 lg:px-0',
+            isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
+          )}
+          style={{
+            paddingTop: 'max(env(safe-area-inset-top, 0px), 1rem)',
+            paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 1rem)',
+          }}
+        >
           {/* BPM */}
           <div className="rounded-xl border p-4">
             <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Tempo</div>
@@ -398,6 +421,18 @@ export default function RudimentPracticeView({
 
         {/* Main content */}
         <div className="flex-1 flex flex-col min-h-0">
+          {/* Mobile transport bar */}
+          <div className="lg:hidden flex items-center gap-2 pb-2 mb-2 border-b shrink-0">
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setIsSidebarOpen(true)}>
+              <Menu className="h-4 w-4" />
+            </Button>
+            <Button size="sm" onClick={handlePlay}>
+              {isPlaying ? <Pause className="h-3 w-3 mr-1" /> : <Play className="h-3 w-3 mr-1" />}
+              {isPlaying ? 'Pause' : 'Play'}
+            </Button>
+            <span className="text-sm font-mono font-bold ml-auto">{bpm} BPM</span>
+          </div>
+
           <div className="flex-1 overflow-hidden rounded-xl border p-4">
             <AlphaTabSheetMusic
               chart={chart}

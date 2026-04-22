@@ -1,15 +1,7 @@
-import {useState, useCallback, useEffect} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {open} from '@tauri-apps/plugin-dialog';
-import {readFile} from '@tauri-apps/plugin-fs';
-import {invoke} from '@tauri-apps/api/core';
-import {useLocalStorage} from '@/lib/useLocalStorage';
+import {useState, useEffect} from 'react';
+import {useNavigate, Link} from 'react-router-dom';
 import {
-  Guitar,
   FileMusic,
-  Clock,
-  Trash2,
-  Play,
   Grid3X3,
   Dumbbell,
   Speaker,
@@ -17,35 +9,18 @@ import {
   Waves,
   ChevronRight,
   BookMarked,
+  Library,
+  PenTool,
 } from 'lucide-react';
 import {getRepertoireStats} from '@/lib/local-db/repertoire';
-
-import type {RocksmithArrangement} from '@/lib/rocksmith/types';
-
-interface RecentFile {
-  path: string;
-  name: string;
-  type: 'guitarpro' | 'rocksmith';
-  openedAt: number;
-}
-
-/** Shape of the Rust PsarcResult returned by invoke('parse_psarc') */
-interface PsarcResult {
-  arrangements: RocksmithArrangement[];
-}
-
-const GP_EXTENSIONS = ['gp', 'gp3', 'gp4', 'gp5', 'gpx', 'gp7'];
-const RS_EXTENSIONS = ['xml', 'psarc'];
+import {getRecentCompositions, type TabComposition} from '@/lib/local-db/tab-compositions';
+import {useMobilePageTitle} from '@/contexts/LayoutContext';
 
 export default function GuitarPage() {
+  useMobilePageTitle('Guitar');
   const navigate = useNavigate();
-  const [recentFiles, setRecentFiles] = useLocalStorage<RecentFile[]>(
-    'guitar.recentFiles',
-    [],
-  );
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [repertoireDue, setRepertoireDue] = useState<number | null>(null);
+  const [recentCompositions, setRecentCompositions] = useState<TabComposition[]>([]);
 
   useEffect(() => {
     getRepertoireStats()
@@ -53,146 +28,26 @@ export default function GuitarPage() {
       .catch(() => setRepertoireDue(null));
   }, []);
 
-  const navigateWithPsarc = useCallback(
-    async (filePath: string, fileName: string) => {
-      const result = await invoke<PsarcResult>('parse_psarc', {path: filePath});
-      if (result.arrangements.length === 0) {
-        throw new Error('No arrangements found in PSARC file');
-      }
-      navigate('/guitar/song', {
-        state: {
-          fileData: null,
-          fileName,
-          filePath,
-          fileType: 'psarc' as const,
-          psarcArrangement: result.arrangements[0],
-          psarcArrangements: result.arrangements,
-        },
-      });
-    },
-    [navigate],
-  );
+  useEffect(() => {
+    getRecentCompositions('guitar', 5)
+      .then(setRecentCompositions)
+      .catch(() => setRecentCompositions([]));
+  }, []);
 
-  const openFile = useCallback(
-    async (fileType: 'guitarpro' | 'rocksmith') => {
-      setError(null);
-      const extensions = fileType === 'guitarpro' ? GP_EXTENSIONS : RS_EXTENSIONS;
-
-      const selected = await open({
-        multiple: false,
-        title: fileType === 'guitarpro' ? 'Open Guitar Pro File' : 'Open Rocksmith File',
-        filters: [{
-          name: fileType === 'guitarpro' ? 'Guitar Pro Files' : 'Rocksmith Files',
-          extensions,
-        }],
-      });
-
-      if (!selected || typeof selected !== 'string') return;
-
-      setLoading(true);
-      try {
-        const fileName = selected.split(/[\\/]/).pop() ?? selected;
-        const isPsarc = selected.toLowerCase().endsWith('.psarc');
-
-        if (isPsarc) {
-          await navigateWithPsarc(selected, fileName);
-        } else {
-          const data = await readFile(selected);
-          navigate('/guitar/song', {
-            state: {
-              fileData: Array.from(data),
-              fileName,
-              filePath: selected,
-              fileType,
-            },
-          });
-        }
-
-        setRecentFiles(prev => {
-          const filtered = prev.filter(f => f.path !== selected);
-          return [
-            {path: selected, name: fileName, type: fileType, openedAt: Date.now()},
-            ...filtered,
-          ].slice(0, 20);
-        });
-      } catch (err) {
-        setError(
-          `Failed to read file: ${err instanceof Error ? err.message : String(err)}`,
-        );
-      } finally {
-        setLoading(false);
-      }
-    },
-    [navigate, setRecentFiles, navigateWithPsarc],
-  );
-
-  const openRecentFile = useCallback(
-    async (recent: RecentFile) => {
-      setError(null);
-      setLoading(true);
-      try {
-        setRecentFiles(prev => {
-          const filtered = prev.filter(f => f.path !== recent.path);
-          return [{...recent, openedAt: Date.now()}, ...filtered].slice(0, 20);
-        });
-
-        const isPsarc = recent.path.toLowerCase().endsWith('.psarc');
-
-        if (isPsarc) {
-          await navigateWithPsarc(recent.path, recent.name);
-        } else {
-          const data = await readFile(recent.path);
-          navigate('/guitar/song', {
-            state: {
-              fileData: Array.from(data),
-              fileName: recent.name,
-              filePath: recent.path,
-              fileType: recent.type,
-            },
-          });
-        }
-      } catch (err) {
-        setError(
-          `Failed to open file: ${err instanceof Error ? err.message : String(err)}`,
-        );
-      } finally {
-        setLoading(false);
-      }
-    },
-    [navigate, setRecentFiles, navigateWithPsarc],
-  );
-
-  const removeRecent = useCallback(
-    (path: string) => {
-      setRecentFiles(prev => prev.filter(f => f.path !== path));
-    },
-    [setRecentFiles],
-  );
-
-  const formatTimeAgo = (timestamp: number) => {
-    const seconds = Math.floor((Date.now() - timestamp) / 1000);
-    if (seconds < 60) return 'just now';
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return `${minutes}m ago`;
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours}h ago`;
-    const days = Math.floor(hours / 24);
-    return `${days}d ago`;
-  };
 
   return (
     <div className="flex-1 overflow-y-auto bg-surface">
-      <div className="max-w-5xl mx-auto px-6 py-8 space-y-10">
+      <div className="max-w-5xl mx-auto px-6 py-8 max-lg:landscape:py-4 space-y-10 max-lg:landscape:space-y-5">
 
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-1.5 text-sm">
+        <nav className="hidden lg:flex items-center gap-1.5 text-sm">
           <span className="text-on-surface-variant">Practice</span>
           <ChevronRight className="h-3.5 w-3.5 text-on-surface-variant" />
           <span className="text-secondary font-medium">Guitar</span>
         </nav>
 
         {/* Hero */}
-        <header className="space-y-2">
+        <header className="space-y-2 hidden lg:block">
           <h1 className="font-headline font-extrabold text-4xl text-on-surface tracking-tight">
             Guitar Hub
           </h1>
@@ -201,63 +56,37 @@ export default function GuitarPage() {
           </p>
         </header>
 
-        {/* Error */}
-        {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm px-4 py-3 rounded-lg">
-            {error}
-          </div>
-        )}
-
-        {/* Loading */}
-        {loading && (
-          <div className="flex items-center gap-3 text-on-surface-variant text-sm py-4">
-            <div className="h-4 w-4 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
-            Loading file...
-          </div>
-        )}
-
         {/* Tools Section */}
         <section className="space-y-4">
-          <p className="text-xs font-mono font-semibold tracking-[0.2em] uppercase text-outline">
+          <p className="text-xs font-mono font-semibold tracking-[0.2em] uppercase text-outline hidden lg:block">
             Guitarist Toolbox
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {/* Tab Viewer -- primary tool, spans 2 cols */}
-            <div className="md:col-span-2 bg-surface-container-low rounded-xl p-6 border border-white/[0.04] group">
-              <div className="flex flex-col sm:flex-row sm:items-start gap-5">
-                <div className="flex-shrink-0 h-12 w-12 rounded-lg bg-secondary/10 flex items-center justify-center">
-                  <FileMusic className="h-6 w-6 text-secondary" />
+            {/* Tab Editor -- primary tool, spans 2 cols */}
+            <Link
+              to="/tab-editor"
+              className="md:col-span-2 bg-surface-container-low rounded-xl p-4 lg:p-6 border border-secondary-container/20 hover:bg-surface-container transition-all cursor-pointer hover:scale-[1.02] group"
+            >
+              <div className="flex flex-row items-center gap-3 lg:flex-col lg:items-start lg:gap-5">
+                <div className="flex-shrink-0 h-9 w-9 lg:h-12 lg:w-12 rounded-lg bg-secondary/10 flex items-center justify-center">
+                  <PenTool className="h-5 w-5 lg:h-6 lg:w-6 text-secondary" />
                 </div>
                 <div className="flex-1 space-y-3">
                   <div>
-                    <h3 className="font-headline font-bold text-lg text-on-surface">Tab Viewer</h3>
-                    <p className="text-on-surface-variant text-sm mt-1 leading-relaxed">
-                      Open Guitar Pro (.gp, .gp3-.gp7, .gpx) and Rocksmith (.psarc, .xml) files.
-                      Follow along with scrolling tablature and synchronized audio playback.
+                    <h3 className="font-headline font-bold text-base lg:text-lg text-on-surface">Tab Editor</h3>
+                    <p className="text-on-surface-variant text-xs mt-0.5 lg:hidden">Create & edit guitar tabs</p>
+                    <p className="text-on-surface-variant text-sm mt-1 leading-relaxed hidden lg:block">
+                      Create and edit guitar tablature. Open tabs from Browse, import ASCII, or start from scratch.
                     </p>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      onClick={() => !loading && openFile('guitarpro')}
-                      disabled={loading}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary text-black text-sm font-semibold hover:bg-secondary/90 transition-colors disabled:opacity-50 cursor-pointer"
-                    >
-                      <Play className="h-4 w-4" />
-                      Launch Studio
-                    </button>
-                    <button
-                      onClick={() => !loading && openFile('rocksmith')}
-                      disabled={loading}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-container-high text-on-surface text-sm font-medium hover:bg-surface-container-high/80 transition-colors disabled:opacity-50 cursor-pointer"
-                    >
-                      <Guitar className="h-4 w-4" />
-                      Open Rocksmith
-                    </button>
-                  </div>
+                  <span className="hidden lg:inline-flex items-center gap-1.5 text-xs font-medium text-secondary">
+                    Open Editor
+                    <ChevronRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </span>
                 </div>
               </div>
-            </div>
+            </Link>
 
             {/* Fretboard IQ -- Active */}
             <button
@@ -337,6 +166,23 @@ export default function GuitarPage() {
               </div>
             </button>
 
+            {/* Saved Charts */}
+            <Link
+              to="/library/saved-charts"
+              state={{activeTab: 'guitar'}}
+              className="bg-surface-container-low rounded-xl p-5 border border-secondary-container/20 hover:bg-surface-container transition-all cursor-pointer hover:scale-[1.02]"
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 h-10 w-10 rounded-lg bg-secondary/10 flex items-center justify-center">
+                  <Library className="h-5 w-5 text-secondary" />
+                </div>
+                <div>
+                  <h3 className="font-headline font-semibold text-sm text-on-surface">Saved Charts</h3>
+                  <p className="text-on-surface-variant text-xs mt-0.5">Your offline guitar tab collection</p>
+                </div>
+              </div>
+            </Link>
+
             {/* Placeholder cards -- future tools */}
             {[
               {icon: Dumbbell, name: 'Technique Drills', desc: 'Speed & accuracy exercises'},
@@ -363,49 +209,51 @@ export default function GuitarPage() {
           </div>
         </section>
 
-        {/* Recently Opened */}
-        {recentFiles.length > 0 && (
+
+        {/* Recent Saved Charts */}
+        {recentCompositions.length > 0 && (
           <section className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-on-surface-variant" />
-              <h2 className="font-headline font-bold text-on-surface text-base">
-                Recently Opened
-              </h2>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Library className="h-4 w-4 text-on-surface-variant" />
+                <h2 className="font-headline font-bold text-on-surface text-base">
+                  Recent Saved Charts
+                </h2>
+              </div>
+              <Link
+                to="/library/saved-charts"
+                state={{activeTab: 'guitar'}}
+                className="text-xs text-secondary hover:text-secondary/80 transition-colors"
+              >
+                View all
+              </Link>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-              {recentFiles.map(file => (
-                <div
-                  key={file.path}
+              {recentCompositions.map(comp => (
+                <Link
+                  key={comp.id}
+                  to={`/tab-editor/${comp.id}`}
                   className="bg-surface-container rounded-lg px-4 py-3 border border-white/[0.04] group hover:border-secondary/30 transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <FileMusic className="h-4 w-4 flex-shrink-0 text-on-surface-variant" />
-                    <button
-                      className="flex-1 min-w-0 text-left cursor-pointer"
-                      onClick={() => openRecentFile(file)}
-                      disabled={loading}
-                    >
+                    <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-on-surface truncate">
-                        {file.name}
+                        {comp.title || 'Untitled'}
                       </p>
-                      <p className="text-xs text-on-surface-variant mt-0.5">
-                        <span>{file.type === 'guitarpro' ? 'Guitar Pro' : 'Rocksmith'}</span>
-                        <span className="mx-1.5 text-outline">|</span>
-                        <span className="text-outline">{formatTimeAgo(file.openedAt)}</span>
+                      <p className="text-xs text-on-surface-variant mt-0.5 truncate">
+                        {comp.artist || 'Unknown Artist'}
+                        {comp.tempo ? (
+                          <>
+                            <span className="mx-1.5 text-outline">|</span>
+                            <span className="text-outline">{comp.tempo} bpm</span>
+                          </>
+                        ) : null}
                       </p>
-                    </button>
-                    <button
-                      className="flex-shrink-0 h-7 w-7 rounded-md flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-white/[0.06] transition-all cursor-pointer"
-                      onClick={e => {
-                        e.stopPropagation();
-                        removeRecent(file.path);
-                      }}
-                    >
-                      <Trash2 className="h-3.5 w-3.5 text-on-surface-variant" />
-                    </button>
+                    </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </section>

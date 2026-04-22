@@ -11,6 +11,7 @@ import { downloadSong } from '@/lib/local-songs-folder';
 import { removeStyleTags, formatDuration } from '@/lib/ui-utils';
 import { getLocalDb } from '@/lib/local-db/client';
 import { toast } from 'sonner';
+import { SlidersHorizontal, X, Search, Loader2 } from 'lucide-react';
 
 const INSTRUMENTS = [
   { value: '__all__', label: 'All Instruments' },
@@ -166,6 +167,7 @@ function buildAdvancedPayload(
 }
 
 export default function BrowseCharts() {
+  const [filterOpen, setFilterOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [instrument, setInstrument] = useState<string>('__all__');
   const [difficulty, setDifficulty] = useState<string>('__all__');
@@ -187,7 +189,6 @@ export default function BrowseCharts() {
   const lastAdvPayloadRef = useRef<ReturnType<typeof buildAdvancedPayload> | null>(null);
 
   const tableRef = useRef<HTMLDivElement>(null);
-  const searchRef = useRef<HTMLInputElement>(null);
 
   // Load local chart keys for "in library" detection
   useEffect(() => {
@@ -322,67 +323,115 @@ export default function BrowseCharts() {
     setAdvFilters(defaultAdvancedFilters());
   }, []);
 
+  const handleToggleAdvanced = () => setShowAdvanced(v => !v);
+
   const hasMore = results.length < totalFound;
+
+  const filterSelects = (
+    <>
+      <Select value={instrument} onValueChange={v => setInstrument(v)}>
+        <SelectTrigger className="w-full lg:w-[170px]">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {INSTRUMENTS.map(inst => (
+            <SelectItem key={inst.value} value={inst.value}>{inst.label}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <Select value={difficulty} onValueChange={v => setDifficulty(v)}>
+        <SelectTrigger className="w-full lg:w-[160px]">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {DIFFICULTIES.map(d => (
+            <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      {instrument === 'drums' && (
+        <Select value={drumType} onValueChange={v => setDrumType(v)}>
+          <SelectTrigger className="w-full lg:w-[160px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {DRUM_TYPES.map(dt => (
+              <SelectItem key={dt.value} value={dt.value}>{dt.label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
+    </>
+  );
 
   return (
     <div className="flex h-full gap-0">
+      {/* Mobile filter sidebar */}
+      {filterOpen && (
+        <div className="fixed inset-0 bg-black/50 z-30 lg:hidden" onClick={() => setFilterOpen(false)} />
+      )}
+      <div className={`fixed inset-y-0 left-0 z-40 w-72 bg-surface-container flex flex-col lg:hidden transition-transform duration-200 ${filterOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        style={{paddingTop: 'env(safe-area-inset-top, 0px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)'}}>
+        <div className="flex items-center justify-between px-4 py-3 border-b border-outline-variant/20">
+          <span className="font-headline font-semibold text-sm">Filters</span>
+          <button onClick={() => setFilterOpen(false)} className="p-1 text-on-surface-variant hover:text-on-surface">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          {filterSelects}
+          <Button
+            variant={showAdvanced ? 'default' : 'outline'}
+            className="w-full"
+            onClick={() => { handleToggleAdvanced(); setFilterOpen(false); }}
+          >
+            Advanced {showAdvanced ? '▲' : '▼'}
+          </Button>
+          <Button className="w-full" onClick={() => { handleSearch(); setFilterOpen(false); }} disabled={loading}>
+            {loading ? 'Searching...' : 'Search'}
+          </Button>
+        </div>
+      </div>
+
       {/* Main content area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Search bar row */}
-        <div className="flex gap-2 p-4 pb-2 flex-wrap">
-          {!showAdvanced && (
-            <Input
-              ref={searchRef}
-              placeholder="Search songs, artists, or charters..."
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleSearch()}
-              className="flex-1 min-w-[200px]"
-            />
-          )}
-          <Select value={instrument} onValueChange={v => setInstrument(v)}>
-            <SelectTrigger className="w-[170px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {INSTRUMENTS.map(inst => (
-                <SelectItem key={inst.value} value={inst.value}>{inst.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={difficulty} onValueChange={v => setDifficulty(v)}>
-            <SelectTrigger className="w-[160px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {DIFFICULTIES.map(d => (
-                <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {instrument === 'drums' && (
-            <Select value={drumType} onValueChange={v => setDrumType(v)}>
-              <SelectTrigger className="w-[160px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {DRUM_TYPES.map(dt => (
-                  <SelectItem key={dt.value} value={dt.value}>{dt.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-          {!showAdvanced && (
-            <Button onClick={handleSearch} disabled={loading}>
-              {loading ? 'Searching...' : 'Search'}
+        <div className="px-6 pt-2 pb-3 max-lg:landscape:pt-1 max-lg:landscape:pb-1 shrink-0">
+          <form onSubmit={e => { e.preventDefault(); handleSearch(); }} className="flex gap-2 flex-wrap">
+            {!showAdvanced && (
+              <Input
+                placeholder="Search songs, artists, or charters..."
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                className="flex-1 min-w-[180px]"
+              />
+            )}
+            {/* Desktop: inline selects + Advanced toggle */}
+            <div className="hidden lg:contents">
+              {filterSelects}
+            </div>
+            <Button
+              type="button"
+              variant={showAdvanced ? 'default' : 'outline'}
+              onClick={handleToggleAdvanced}
+              className="hidden lg:inline-flex"
+            >
+              Advanced {showAdvanced ? '▲' : '▼'}
             </Button>
-          )}
-          <Button
-            variant={showAdvanced ? 'default' : 'outline'}
-            onClick={() => setShowAdvanced(v => !v)}
-          >
-            Advanced {showAdvanced ? '\u25B2' : '\u25BC'}
-          </Button>
+            {/* Mobile: filter icon button */}
+            <button
+              type="button"
+              onClick={() => setFilterOpen(true)}
+              className="lg:hidden flex items-center justify-center h-9 w-9 rounded-md border border-input bg-background hover:bg-accent shrink-0"
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+            </button>
+            {/* Search button */}
+            <Button type="submit" disabled={loading}>
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+              <span className="ml-2 hidden sm:inline">Search</span>
+            </Button>
+          </form>
         </div>
 
         {/* Advanced search panel */}

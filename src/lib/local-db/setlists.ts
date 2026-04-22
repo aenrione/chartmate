@@ -1,6 +1,8 @@
 import {getLocalDb} from './client';
 import {getCurrentTimestamp} from './db-utils';
 import {ChartResponseEncore} from '@/lib/chartSelection';
+import type {TabComposition} from './tab-compositions';
+import type {PdfLibraryEntry} from './pdf-library';
 
 export type Setlist = {
   id: number;
@@ -16,10 +18,13 @@ export type Setlist = {
 export type SetlistItem = {
   id: number;
   setlistId: number;
-  chartMd5: string;
+  itemType: 'chart' | 'composition' | 'pdf';
+  chartMd5: string | null;
+  compositionId: number | null;
+  pdfLibraryId: number | null;
   name: string;
   artist: string;
-  charter: string;
+  charter: string | null;
   position: number;
   speed: number;
   addedAt: string;
@@ -110,10 +115,13 @@ export async function getSetlistItems(setlistId: number): Promise<SetlistItem[]>
   return rows.map(r => ({
     id: r.id,
     setlistId: r.setlist_id,
-    chartMd5: r.chart_md5,
+    itemType: (r.item_type ?? 'chart') as SetlistItem['itemType'],
+    chartMd5: r.chart_md5 ?? null,
+    compositionId: r.composition_id ?? null,
+    pdfLibraryId: r.pdf_library_id ?? null,
     name: r.name,
     artist: r.artist,
-    charter: r.charter,
+    charter: r.charter ?? null,
     position: r.position,
     speed: r.speed,
     addedAt: r.added_at,
@@ -128,34 +136,37 @@ export async function addSetlistItem(
   const db = await getLocalDb();
   const now = getCurrentTimestamp();
 
-  // Get the current max position
-  const last = await db
-    .selectFrom('setlist_items')
-    .select(db.fn.max<number>('position').as('max_pos'))
-    .where('setlist_id', '=', setlistId)
-    .executeTakeFirst();
+  await db.transaction().execute(async trx => {
+    const last = await trx
+      .selectFrom('setlist_items')
+      .select(trx.fn.max<number>('position').as('max_pos'))
+      .where('setlist_id', '=', setlistId)
+      .executeTakeFirst();
+    const nextPos = (last?.max_pos ?? -1) + 1;
 
-  const nextPos = (last?.max_pos ?? -1) + 1;
+    await trx
+      .insertInto('setlist_items')
+      .values({
+        setlist_id: setlistId,
+        item_type: 'chart',
+        chart_md5: chart.md5,
+        composition_id: null,
+        pdf_library_id: null,
+        name: chart.name,
+        artist: chart.artist,
+        charter: chart.charter,
+        position: nextPos,
+        speed,
+        added_at: now,
+      })
+      .execute();
 
-  await db
-    .insertInto('setlist_items')
-    .values({
-      setlist_id: setlistId,
-      chart_md5: chart.md5,
-      name: chart.name,
-      artist: chart.artist,
-      charter: chart.charter,
-      position: nextPos,
-      speed,
-      added_at: now,
-    })
-    .execute();
-
-  await db
-    .updateTable('setlists')
-    .set({updated_at: now})
-    .where('id', '=', setlistId)
-    .execute();
+    await trx
+      .updateTable('setlists')
+      .set({updated_at: now})
+      .where('id', '=', setlistId)
+      .execute();
+  });
 }
 
 export async function removeSetlistItem(itemId: number): Promise<void> {
@@ -258,33 +269,119 @@ export async function addChartsToSetlist(
   const db = await getLocalDb();
   const now = getCurrentTimestamp();
 
-  const last = await db
-    .selectFrom('setlist_items')
-    .select(db.fn.max<number>('position').as('max_pos'))
-    .where('setlist_id', '=', setlistId)
-    .executeTakeFirst();
+  await db.transaction().execute(async trx => {
+    const last = await trx
+      .selectFrom('setlist_items')
+      .select(trx.fn.max<number>('position').as('max_pos'))
+      .where('setlist_id', '=', setlistId)
+      .executeTakeFirst();
+    let nextPos = (last?.max_pos ?? -1) + 1;
 
-  let nextPos = (last?.max_pos ?? -1) + 1;
+    await trx
+      .insertInto('setlist_items')
+      .values(
+        charts.map(chart => ({
+          setlist_id: setlistId,
+          item_type: 'chart',
+          chart_md5: chart.md5,
+          composition_id: null,
+          pdf_library_id: null,
+          name: chart.name,
+          artist: chart.artist,
+          charter: chart.charter,
+          position: nextPos++,
+          speed: 100,
+          added_at: now,
+        })),
+      )
+      .execute();
 
-  await db
-    .insertInto('setlist_items')
-    .values(
-      charts.map(chart => ({
+    await trx
+      .updateTable('setlists')
+      .set({updated_at: now})
+      .where('id', '=', setlistId)
+      .execute();
+  });
+}
+
+export async function addCompositionsToSetlist(
+  setlistId: number,
+  comps: Array<Pick<TabComposition, 'id' | 'title' | 'artist'>>,
+): Promise<void> {
+  if (comps.length === 0) return;
+  const db = await getLocalDb();
+  const now = getCurrentTimestamp();
+
+  await db.transaction().execute(async trx => {
+    const last = await trx
+      .selectFrom('setlist_items')
+      .select(trx.fn.max<number>('position').as('max_pos'))
+      .where('setlist_id', '=', setlistId)
+      .executeTakeFirst();
+    let nextPos = (last?.max_pos ?? -1) + 1;
+
+    await trx
+      .insertInto('setlist_items')
+      .values(comps.map(c => ({
         setlist_id: setlistId,
-        chart_md5: chart.md5,
-        name: chart.name,
-        artist: chart.artist,
-        charter: chart.charter,
+        item_type: 'composition',
+        chart_md5: null,
+        composition_id: c.id,
+        pdf_library_id: null,
+        name: c.title,
+        artist: c.artist,
+        charter: null,
         position: nextPos++,
         speed: 100,
         added_at: now,
-      })),
-    )
-    .execute();
+      })))
+      .execute();
 
-  await db
-    .updateTable('setlists')
-    .set({updated_at: now})
-    .where('id', '=', setlistId)
-    .execute();
+    await trx
+      .updateTable('setlists')
+      .set({updated_at: now})
+      .where('id', '=', setlistId)
+      .execute();
+  });
+}
+
+export async function addPdfsToSetlist(
+  setlistId: number,
+  pdfs: Array<Pick<PdfLibraryEntry, 'id' | 'filename' | 'detectedTitle' | 'detectedArtist'>>,
+): Promise<void> {
+  if (pdfs.length === 0) return;
+  const db = await getLocalDb();
+  const now = getCurrentTimestamp();
+
+  await db.transaction().execute(async trx => {
+    const last = await trx
+      .selectFrom('setlist_items')
+      .select(trx.fn.max<number>('position').as('max_pos'))
+      .where('setlist_id', '=', setlistId)
+      .executeTakeFirst();
+    let nextPos = (last?.max_pos ?? -1) + 1;
+
+    await trx
+      .insertInto('setlist_items')
+      .values(pdfs.map(p => ({
+        setlist_id: setlistId,
+        item_type: 'pdf',
+        chart_md5: null,
+        composition_id: null,
+        pdf_library_id: p.id,
+        name: p.detectedTitle ?? p.filename,
+        artist: p.detectedArtist ?? '',
+        charter: null,
+        position: nextPos++,
+        speed: 100,
+        added_at: now,
+      })))
+      .execute();
+
+    await trx
+      .updateTable('setlists')
+      .set({updated_at: now})
+      .where('id', '=', setlistId)
+      .execute();
+  });
 }

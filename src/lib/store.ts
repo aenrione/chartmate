@@ -34,4 +34,6 @@ export const STORE_KEYS = {
   PDF_LIBRARY_LAST_SCAN: 'pdf_library_last_scan',
   CUSTOMSFORGE_SESSION_COOKIE: 'customsforge_session_cookie',
   CUSTOMSFORGE_PSARC_PATH: 'customsforge_psarc_path',
+  /** ISO timestamp of the last successfully synced recently-played item */
+  SPOTIFY_HISTORY_LAST_SYNCED_AT: 'spotify_history_last_synced_at',
 } as const;

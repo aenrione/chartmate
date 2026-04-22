@@ -11,7 +11,7 @@ export interface EditorCursor {
   barIndex: number;
   voiceIndex: number;
   beatIndex: number;
-  stringNumber: number; // 1-based (alphaTab: 1 = highest string)
+  stringNumber: number; // 1-based (alphaTab: 1 = bottom line = lowest pitch, N = top line = highest pitch)
 }
 
 export interface CursorBounds {
@@ -176,9 +176,10 @@ export function useEditorCursor(apiRef: React.RefObject<AlphaTabApi | null>) {
     if (!staff) return;
     const stringCount = staff.stringTuning?.tunings?.length ?? 6;
 
-    // In alphaTab, string 1 = highest, so "up" means lower string number
-    if (cursor.stringNumber > 1) {
-      moveTo({...cursor, stringNumber: cursor.stringNumber - 1});
+    // In alphaTab, string N = top (highest pitch), string 1 = bottom (lowest pitch).
+    // "Up" on screen = toward higher string number (higher pitch).
+    if (cursor.stringNumber < stringCount) {
+      moveTo({...cursor, stringNumber: cursor.stringNumber + 1});
     }
   }, [cursor, moveTo]);
 
@@ -187,10 +188,10 @@ export function useEditorCursor(apiRef: React.RefObject<AlphaTabApi | null>) {
     if (!score) return;
     const staff = score.tracks[cursor.trackIndex]?.staves[0];
     if (!staff) return;
-    const stringCount = staff.stringTuning?.tunings?.length ?? 6;
 
-    if (cursor.stringNumber < stringCount) {
-      moveTo({...cursor, stringNumber: cursor.stringNumber + 1});
+    // "Down" on screen = toward lower string number (lower pitch).
+    if (cursor.stringNumber > 1) {
+      moveTo({...cursor, stringNumber: cursor.stringNumber - 1});
     }
   }, [cursor, moveTo]);
 

@@ -1,5 +1,6 @@
 import {useState, useRef, useEffect, useCallback, useMemo} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {invoke} from '@tauri-apps/api/core';
 import {fetch as tauriFetch} from '@tauri-apps/plugin-http';
 import {Input} from '@/components/ui/input';
 import {Button} from '@/components/ui/button';
@@ -9,39 +10,76 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/c
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip';
 import {useTabSearch} from '@/hooks/useTabSearch';
 import {TAB_SOURCES, getSource, isGpSource, isPdfSource, isTextTabSource, type TabSearchResult} from '@/lib/tab-sources';
-import {downloadPsarcBytes} from '@/lib/tab-sources/ignition4';
+import {downloadPsarcBytes, invalidateDtTokenCache} from '@/lib/tab-sources/ignition4';
+import IgnitionLoginDialog from '@/components/IgnitionLoginDialog';
 import {saveComposition, markCompositionSaved} from '@/lib/local-db/tab-compositions';
 import {exportToGp7} from '@/lib/tab-editor/exporters';
 import {importFromAsciiTab} from '@/lib/tab-editor/asciiTabImporter';
+import {convertToAlphaTab} from '@/lib/rocksmith/convertToAlphaTab';
 import {getSavedCharts, linkChartTabUrl, type SavedChartEntry} from '@/lib/local-db/saved-charts';
 import {upsertPdfLibraryEntry, linkChartPdf} from '@/lib/local-db/pdf-library';
 import {storeGet, STORE_KEYS} from '@/lib/store';
 import {writeFile} from '@tauri-apps/plugin-fs';
-import {join} from '@tauri-apps/api/path';
+import {join, appCacheDir} from '@tauri-apps/api/path';
+import type {RocksmithArrangement} from '@/lib/rocksmith/types';
 import {toast} from 'sonner';
-import {Search, BookOpen, Loader2, ExternalLink, Library, FileText, Music2, AlignLeft, Download} from 'lucide-react';
+import {Search, BookOpen, Loader2, ExternalLink, Library, FileText, Music2, AlignLeft, Download, Settings2, MoreVertical, SlidersHorizontal, X} from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {isMobileDevice} from '@/lib/platform';
 
 function normalize(s: string): string {
   return s.toLowerCase().replace(/[^a-z0-9]/g, '');
 }
 
+type BrowseTabCache = {
+  query: string;
+  enabledSourceIds: Set<string>;
+  filterGp: boolean;
+  filterPdf: boolean;
+  filterInLibrary: boolean;
+};
+
+const AVAILABLE_SOURCES = isMobileDevice
+  ? TAB_SOURCES.filter(s => s.sourceId !== 'ignition4')
+  : TAB_SOURCES;
+
+let _browseTabStateCache: BrowseTabCache = {
+  query: '',
+  enabledSourceIds: new Set(AVAILABLE_SOURCES.map(s => s.sourceId)),
+  filterGp: false,
+  filterPdf: false,
+  filterInLibrary: false,
+};
+
 export default function TabsBrowseTab() {
-  const [query, setQuery] = useState('');
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [query, setQuery] = useState(_browseTabStateCache.query);
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
+  const [showIgnitionLogin, setShowIgnitionLogin] = useState(false);
   const [savedCharts, setSavedCharts] = useState<SavedChartEntry[]>([]);
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [enabledSourceIds, setEnabledSourceIds] = useState<Set<string>>(
-    () => new Set(TAB_SOURCES.map(s => s.sourceId)),
+    () => new Set(_browseTabStateCache.enabledSourceIds),
   );
 
   const enabledSources = useMemo(
-    () => TAB_SOURCES.filter(s => enabledSourceIds.has(s.sourceId)),
+    () => AVAILABLE_SOURCES.filter(s => enabledSourceIds.has(s.sourceId)),
     [enabledSourceIds],
   );
 
   function toggleSource(id: string) {
+    if (id === 'ignition4' && !enabledSourceIds.has(id)) {
+      // Show login dialog; onSuccess enables the source.
+      setShowIgnitionLogin(true);
+      return;
+    }
     setEnabledSourceIds(prev => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
@@ -51,16 +89,21 @@ export default function TabsBrowseTab() {
   }
 
   function selectAllSources() {
-    setEnabledSourceIds(new Set(TAB_SOURCES.map(s => s.sourceId)));
+    setEnabledSourceIds(new Set(AVAILABLE_SOURCES.map(s => s.sourceId)));
   }
 
   function clearAllSources() {
     setEnabledSourceIds(new Set());
   }
 
-  const [filterGp, setFilterGp] = useState(false);
-  const [filterPdf, setFilterPdf] = useState(false);
-  const [filterInLibrary, setFilterInLibrary] = useState(false);
+  const [filterGp, setFilterGp] = useState(_browseTabStateCache.filterGp);
+  const [filterPdf, setFilterPdf] = useState(_browseTabStateCache.filterPdf);
+  const [filterInLibrary, setFilterInLibrary] = useState(_browseTabStateCache.filterInLibrary);
+
+  // Persist state to module-level cache on every change
+  useEffect(() => {
+    _browseTabStateCache = {query, enabledSourceIds, filterGp, filterPdf, filterInLibrary};
+  }, [query, enabledSourceIds, filterGp, filterPdf, filterInLibrary]);
 
   const {results, loading, error, search} = useTabSearch(enabledSources);
 
@@ -253,12 +296,102 @@ export default function TabsBrowseTab() {
     });
   }
 
+  async function handleOpenPsarcInViewer(result: TabSearchResult) {
+    await withAction(`psarc-open-${result.sourceId}-${result.id}`, 'Failed to open PSARC', async () => {
+      const bytes = await downloadPsarcBytes(Number(result.id));
+      const cacheDir = await appCacheDir();
+      const tempPath = await join(cacheDir, `ignition-${result.id}.psarc`);
+      await writeFile(tempPath, new Uint8Array(bytes));
+
+      const {arrangements} = await invoke<{arrangements: RocksmithArrangement[]}>(
+        'parse_psarc',
+        {path: tempPath},
+      );
+      if (arrangements.length === 0) throw new Error('No arrangements found in PSARC');
+
+      // Prefer Lead, fall back to first arrangement.
+      const arr = arrangements.find(a => a.arrangementType === 'Lead') ?? arrangements[0];
+      const instrument = arr.arrangementType === 'Bass' ? 'bass' : 'guitar';
+
+      const score = convertToAlphaTab(arr);
+      const gp7Bytes = exportToGp7(score);
+
+      const id = await saveComposition(gp7Bytes.buffer as ArrayBuffer, {
+        title: result.title,
+        artist: result.artist,
+        album: '',
+        tempo: Math.round(arr.averageTempo ?? 120),
+        instrument,
+      });
+
+      navigate(`/tab-editor/${id}`);
+    });
+  }
+
   const sourceName = (sourceId: string) => getSource(sourceId)?.name ?? sourceId;
 
   return (
+    <>
+    <IgnitionLoginDialog
+      open={showIgnitionLogin}
+      onOpenChange={setShowIgnitionLogin}
+      onSuccess={() => {
+        invalidateDtTokenCache();
+        setEnabledSourceIds(prev => new Set([...prev, 'ignition4']));
+      }}
+    />
+
+    {/* Mobile filter sidebar */}
+    {filterOpen && (
+      <div className="fixed inset-0 bg-black/50 z-30 lg:hidden" onClick={() => setFilterOpen(false)} />
+    )}
+    <div className={`fixed inset-y-0 left-0 z-40 w-72 bg-surface-container flex flex-col lg:hidden transition-transform duration-200 ${filterOpen ? 'translate-x-0' : '-translate-x-full'}`}
+      style={{paddingTop: 'env(safe-area-inset-top, 0px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)'}}>
+      <div className="flex items-center justify-between px-4 py-3 border-b border-outline-variant/20">
+        <span className="font-headline font-semibold text-sm">Filters</span>
+        <button onClick={() => setFilterOpen(false)} className="p-1 text-on-surface-variant hover:text-on-surface">
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+      <div className="flex-1 overflow-y-auto p-4 space-y-5">
+        {/* Sources */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="text-on-surface-variant/60 text-xs uppercase tracking-wide">Sources</span>
+            <button onClick={selectAllSources} className="text-xs text-primary/70 hover:text-primary transition-colors">All</button>
+            <span className="text-outline/40 text-xs">·</span>
+            <button onClick={clearAllSources} className="text-xs text-primary/70 hover:text-primary transition-colors">None</button>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {AVAILABLE_SOURCES.map(source => (
+              <div key={source.sourceId} className="flex items-center">
+                <Toggle size="sm" pressed={enabledSourceIds.has(source.sourceId)} onPressedChange={() => toggleSource(source.sourceId)} className="h-7 px-2.5 text-xs">
+                  {source.name}
+                </Toggle>
+                {source.sourceId === 'ignition4' && (
+                  <button onClick={() => setShowIgnitionLogin(true)} className="ml-0.5 text-muted-foreground hover:text-foreground transition-colors" title="Update CustomsForge session">
+                    <Settings2 className="h-3 w-3" />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* Format */}
+        <div className="space-y-2">
+          <span className="text-on-surface-variant/60 text-xs uppercase tracking-wide block">Format</span>
+          <div className="flex flex-wrap gap-1.5">
+            <Toggle size="sm" pressed={filterGp} onPressedChange={setFilterGp} className="h-7 px-2.5 text-xs gap-1"><Music2 className="h-3 w-3" />GP</Toggle>
+            <Toggle size="sm" pressed={filterPdf} onPressedChange={setFilterPdf} className="h-7 px-2.5 text-xs gap-1"><FileText className="h-3 w-3" />PDF</Toggle>
+            <Toggle size="sm" pressed={filterInLibrary} onPressedChange={setFilterInLibrary} className="h-7 px-2.5 text-xs gap-1"><Library className="h-3 w-3" />In Library</Toggle>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <TooltipProvider>
       <div className="flex flex-col h-full overflow-hidden">
-        <div className="px-6 pt-2 pb-3 shrink-0 space-y-3">
+        <div className="px-6 pt-2 pb-3 max-lg:landscape:pt-1 max-lg:landscape:pb-1 shrink-0 space-y-3 max-lg:landscape:space-y-1.5">
           {/* Search bar */}
           <form onSubmit={handleSearch} className="flex gap-2 max-w-xl">
             <Input
@@ -268,82 +401,51 @@ export default function TabsBrowseTab() {
               placeholder="Search by song or artist…"
               className="flex-1"
             />
+            <button
+              type="button"
+              onClick={() => setFilterOpen(true)}
+              className="lg:hidden flex items-center justify-center h-9 w-9 rounded-md border border-input bg-background hover:bg-accent shrink-0"
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+            </button>
             <Button type="submit" disabled={loading}>
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <Search className="h-4 w-4" />
               )}
-              <span className="ml-2">Search</span>
+              <span className="ml-2 hidden sm:inline">Search</span>
             </Button>
           </form>
 
-          {/* Filter toolbar */}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-            {/* Source toggles */}
-            <div className="flex items-center gap-1.5">
+          {/* Desktop filter toolbar */}
+          <div className="hidden lg:flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <div className="flex flex-wrap items-center gap-1.5">
               <span className="text-on-surface-variant/60 text-xs uppercase tracking-wide">Sources</span>
-              <button
-                onClick={selectAllSources}
-                className="text-xs text-primary/70 hover:text-primary transition-colors leading-none"
-              >All</button>
+              <button onClick={selectAllSources} className="text-xs text-primary/70 hover:text-primary transition-colors leading-none">All</button>
               <span className="text-outline/40 text-xs leading-none">·</span>
-              <button
-                onClick={clearAllSources}
-                className="text-xs text-primary/70 hover:text-primary transition-colors leading-none"
-              >None</button>
-              {TAB_SOURCES.map(source => (
-                <Toggle
-                  key={source.sourceId}
-                  size="sm"
-                  pressed={enabledSourceIds.has(source.sourceId)}
-                  onPressedChange={() => toggleSource(source.sourceId)}
-                  className="h-7 px-2.5 text-xs"
-                >
-                  {source.name}
-                </Toggle>
+              <button onClick={clearAllSources} className="text-xs text-primary/70 hover:text-primary transition-colors leading-none">None</button>
+              {AVAILABLE_SOURCES.map(source => (
+                <div key={source.sourceId} className="flex items-center">
+                  <Toggle size="sm" pressed={enabledSourceIds.has(source.sourceId)} onPressedChange={() => toggleSource(source.sourceId)} className="h-7 px-2.5 text-xs">
+                    {source.name}
+                  </Toggle>
+                  {source.sourceId === 'ignition4' && (
+                    <button onClick={() => setShowIgnitionLogin(true)} className="ml-0.5 text-muted-foreground hover:text-foreground transition-colors" title="Update CustomsForge session">
+                      <Settings2 className="h-3 w-3" />
+                    </button>
+                  )}
+                </div>
               ))}
             </div>
-
-            <div className="w-px h-4 bg-border hidden sm:block" />
-
-            {/* Format filters */}
+            <div className="w-px h-4 bg-border" />
             <div className="flex items-center gap-1.5">
               <span className="text-on-surface-variant/60 text-xs uppercase tracking-wide">Format</span>
-              <Toggle
-                size="sm"
-                pressed={filterGp}
-                onPressedChange={setFilterGp}
-                className="h-7 px-2.5 text-xs gap-1"
-              >
-                <Music2 className="h-3 w-3" />
-                GP
-              </Toggle>
-              <Toggle
-                size="sm"
-                pressed={filterPdf}
-                onPressedChange={setFilterPdf}
-                className="h-7 px-2.5 text-xs gap-1"
-              >
-                <FileText className="h-3 w-3" />
-                PDF
-              </Toggle>
+              <Toggle size="sm" pressed={filterGp} onPressedChange={setFilterGp} className="h-7 px-2.5 text-xs gap-1"><Music2 className="h-3 w-3" />GP</Toggle>
+              <Toggle size="sm" pressed={filterPdf} onPressedChange={setFilterPdf} className="h-7 px-2.5 text-xs gap-1"><FileText className="h-3 w-3" />PDF</Toggle>
             </div>
-
-            <div className="w-px h-4 bg-border hidden sm:block" />
-
-            {/* Library filter */}
-            <Toggle
-              size="sm"
-              pressed={filterInLibrary}
-              onPressedChange={setFilterInLibrary}
-              className="h-7 px-2.5 text-xs gap-1"
-            >
-              <Library className="h-3 w-3" />
-              In Library
-            </Toggle>
-
-            {/* Result count */}
+            <div className="w-px h-4 bg-border" />
+            <Toggle size="sm" pressed={filterInLibrary} onPressedChange={setFilterInLibrary} className="h-7 px-2.5 text-xs gap-1"><Library className="h-3 w-3" />In Library</Toggle>
             {results.length > 0 && (
               <span className="ml-auto text-xs text-on-surface-variant/50">
                 {filteredResults.length === results.length
@@ -352,6 +454,15 @@ export default function TabsBrowseTab() {
               </span>
             )}
           </div>
+
+          {/* Mobile: result count */}
+          {results.length > 0 && (
+            <div className="lg:hidden text-xs text-on-surface-variant/50">
+              {filteredResults.length === results.length
+                ? `${results.length} results`
+                : `${filteredResults.length} of ${results.length}`}
+            </div>
+          )}
 
           {error && (
             <p className="text-sm text-destructive">{error}</p>
@@ -375,9 +486,9 @@ export default function TabsBrowseTab() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Title</TableHead>
-                  <TableHead>Artist</TableHead>
-                  <TableHead>Source</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="hidden lg:table-cell">Artist</TableHead>
+                  <TableHead className="hidden lg:table-cell">Source</TableHead>
+                  <TableHead className="text-right w-10 lg:w-auto"><span className="hidden lg:inline">Actions</span></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -388,13 +499,21 @@ export default function TabsBrowseTab() {
                   const isPdfLoading = actionLoadingId === `pdf-${rowKey}`;
                   const isTextLoading = actionLoadingId === `text-${rowKey}`;
                   const isPsarcLoading = actionLoadingId === `psarc-${rowKey}`;
-                  const isAnyLoading = isOpenLoading || isSaveLoading || isPdfLoading || isTextLoading || isPsarcLoading;
+                  const isPsarcOpenLoading = actionLoadingId === `psarc-open-${rowKey}`;
+                  const isAnyLoading = isOpenLoading || isSaveLoading || isPdfLoading || isTextLoading || isPsarcLoading || isPsarcOpenLoading;
                   const savedMatch = findMatchingSavedChart(result);
                   return (
                     <TableRow key={rowKey}>
-                      <TableCell className="font-medium">{result.title}</TableCell>
-                      <TableCell className="text-on-surface-variant">{result.artist}</TableCell>
-                      <TableCell>
+                      <TableCell className="font-medium">
+                        <div>{result.title}</div>
+                        <div className="lg:hidden flex items-center gap-1.5 mt-0.5 flex-wrap">
+                          <span className="text-xs text-on-surface-variant">{result.artist}</span>
+                          <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{sourceName(result.sourceId)}</Badge>
+                          {savedMatch && <Badge variant="outline" className="gap-1 text-[10px] px-1.5 py-0"><Library className="h-2.5 w-2.5" />Library</Badge>}
+                        </div>
+                      </TableCell>
+                      <TableCell className="hidden lg:table-cell text-on-surface-variant">{result.artist}</TableCell>
+                      <TableCell className="hidden lg:table-cell">
                         <div className="flex gap-1.5 flex-wrap">
                           <Badge variant="secondary">{sourceName(result.sourceId)}</Badge>
                           {savedMatch && (
@@ -406,116 +525,95 @@ export default function TabsBrowseTab() {
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
-                        <div className="flex gap-2 justify-end">
+                        {/* Desktop: full action buttons */}
+                        <div className="hidden lg:flex gap-2 justify-end">
                           {result.viewUrl && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              disabled={isAnyLoading}
-                              onClick={() => openInBrowser(result.viewUrl!)}
-                            >
-                              <ExternalLink className="h-3 w-3" />
-                              <span className="ml-1.5">View</span>
+                            <Button size="sm" variant="outline" disabled={isAnyLoading} onClick={() => openInBrowser(result.viewUrl!)}>
+                              <ExternalLink className="h-3 w-3" /><span className="ml-1.5">View</span>
                             </Button>
                           )}
                           {result.textTabUrl && !result.hasGp && (
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  disabled={isAnyLoading}
-                                  onClick={() => handleOpenTextTab(result)}
-                                >
-                                  {isTextLoading ? (
-                                    <Loader2 className="h-3 w-3 animate-spin" />
-                                  ) : (
-                                    <AlignLeft className="h-3 w-3" />
-                                  )}
-                                  <span className="ml-1.5">Open</span>
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>Import ASCII tab and open in editor</TooltipContent>
-                            </Tooltip>
+                            <Button size="sm" variant="outline" disabled={isAnyLoading} onClick={() => handleOpenTextTab(result)}>
+                              {isTextLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <AlignLeft className="h-3 w-3" />}
+                              <span className="ml-1.5">Open</span>
+                            </Button>
                           )}
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <span>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  disabled={isAnyLoading || !result.hasGp}
-                                  onClick={() => handleOpenInEditor(result)}
-                                >
-                                  {isOpenLoading ? (
-                                    <Loader2 className="h-3 w-3 animate-spin" />
-                                  ) : (
-                                    <BookOpen className="h-3 w-3" />
-                                  )}
-                                  <span className="ml-1.5">Open</span>
-                                </Button>
-                              </span>
-                            </TooltipTrigger>
-                            {!result.hasGp && (
-                              <TooltipContent>
-                                No GP file available for this result
-                              </TooltipContent>
-                            )}
-                          </Tooltip>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <span>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  disabled={isAnyLoading || !result.hasGp}
-                                  onClick={() => handleSaveFile(result)}
-                                >
-                                  {isSaveLoading ? (
-                                    <Loader2 className="h-3 w-3 animate-spin" />
-                                  ) : (
-                                    <Library className="h-3 w-3" />
-                                  )}
-                                  <span className="ml-1.5">Save GP</span>
-                                </Button>
-                              </span>
-                            </TooltipTrigger>
-                            {!result.hasGp && (
-                              <TooltipContent>
-                                No GP file available for this result
-                              </TooltipContent>
-                            )}
-                          </Tooltip>
+                          <Button size="sm" variant="outline" disabled={isAnyLoading || !result.hasGp} onClick={() => handleOpenInEditor(result)}>
+                            {isOpenLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <BookOpen className="h-3 w-3" />}
+                            <span className="ml-1.5">Open</span>
+                          </Button>
+                          <Button size="sm" variant="outline" disabled={isAnyLoading || !result.hasGp} onClick={() => handleSaveFile(result)}>
+                            {isSaveLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Library className="h-3 w-3" />}
+                            <span className="ml-1.5">Save GP</span>
+                          </Button>
                           {result.hasPdf && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              disabled={isAnyLoading}
-                              onClick={() => handleSavePdf(result)}
-                            >
-                              {isPdfLoading ? (
-                                <Loader2 className="h-3 w-3 animate-spin" />
-                              ) : (
-                                <FileText className="h-3 w-3" />
-                              )}
+                            <Button size="sm" variant="outline" disabled={isAnyLoading} onClick={() => handleSavePdf(result)}>
+                              {isPdfLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <FileText className="h-3 w-3" />}
                               <span className="ml-1.5">PDF</span>
                             </Button>
                           )}
                           {result.hasPsarc && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              disabled={isAnyLoading}
-                              onClick={() => handleSavePsarc(result)}
-                            >
-                              {isPsarcLoading ? (
-                                <Loader2 className="h-3 w-3 animate-spin" />
-                              ) : (
-                                <Download className="h-3 w-3" />
-                              )}
-                              <span className="ml-1.5">PSARC</span>
-                            </Button>
+                            <>
+                              <Button size="sm" variant="outline" disabled={isAnyLoading} onClick={() => handleOpenPsarcInViewer(result)}>
+                                {isPsarcOpenLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Music2 className="h-3 w-3" />}
+                                <span className="ml-1.5">Open</span>
+                              </Button>
+                              <Button size="sm" variant="outline" disabled={isAnyLoading} onClick={() => handleSavePsarc(result)}>
+                                {isPsarcLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Download className="h-3 w-3" />}
+                                <span className="ml-1.5">PSARC</span>
+                              </Button>
+                            </>
                           )}
+                        </div>
+
+                        {/* Mobile: single ⋮ dropdown */}
+                        <div className="lg:hidden flex justify-end">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button size="icon" variant="ghost" className="h-8 w-8" disabled={isAnyLoading}>
+                                {isAnyLoading
+                                  ? <Loader2 className="h-4 w-4 animate-spin" />
+                                  : <MoreVertical className="h-4 w-4" />}
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              {result.viewUrl && (
+                                <DropdownMenuItem onClick={() => openInBrowser(result.viewUrl!)}>
+                                  <ExternalLink className="h-4 w-4 mr-2" />View online
+                                </DropdownMenuItem>
+                              )}
+                              {result.textTabUrl && !result.hasGp && (
+                                <DropdownMenuItem onClick={() => handleOpenTextTab(result)}>
+                                  <AlignLeft className="h-4 w-4 mr-2" />Open ASCII tab
+                                </DropdownMenuItem>
+                              )}
+                              {result.hasGp && (
+                                <DropdownMenuItem onClick={() => handleOpenInEditor(result)}>
+                                  <BookOpen className="h-4 w-4 mr-2" />Open in editor
+                                </DropdownMenuItem>
+                              )}
+                              {result.hasGp && (
+                                <DropdownMenuItem onClick={() => handleSaveFile(result)}>
+                                  <Library className="h-4 w-4 mr-2" />Save GP to library
+                                </DropdownMenuItem>
+                              )}
+                              {result.hasPdf && (
+                                <DropdownMenuItem onClick={() => handleSavePdf(result)}>
+                                  <FileText className="h-4 w-4 mr-2" />Save PDF
+                                </DropdownMenuItem>
+                              )}
+                              {result.hasPsarc && (
+                                <>
+                                  <DropdownMenuItem onClick={() => handleOpenPsarcInViewer(result)}>
+                                    <Music2 className="h-4 w-4 mr-2" />Open PSARC
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleSavePsarc(result)}>
+                                    <Download className="h-4 w-4 mr-2" />Download PSARC
+                                  </DropdownMenuItem>
+                                </>
+                              )}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -528,5 +626,6 @@ export default function TabsBrowseTab() {
       </div>
 
     </TooltipProvider>
+    </>
   );
 }

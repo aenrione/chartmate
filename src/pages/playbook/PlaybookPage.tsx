@@ -9,10 +9,12 @@ import SongHeader from './SongHeader';
 import PlaybookSidebar from './PlaybookSidebar';
 import ChartViewer from './ChartViewer';
 import PlaybackControls from './PlaybackControls';
+import {useHideHeaderOnMobile} from '@/contexts/LayoutContext';
 
 // ── Keyboard Shell ───────────────────────────────────────────────────
 
 function PlaybookShell() {
+  useHideHeaderOnMobile();
   const navigate = useNavigate();
   const {
     prevSong,

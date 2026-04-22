@@ -1,9 +1,12 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {
+  FileMusic,
+  FileText,
   GripVertical,
   ListMusic,
   Music,
+  Music2,
   Pencil,
   Play,
   Plus,
@@ -44,8 +47,12 @@ import {
   removeSetlistItem,
   reorderSetlistItem,
   updateSetlistItemSpeed,
+  addCompositionsToSetlist,
+  addPdfsToSetlist,
 } from '@/lib/local-db/setlists';
 import {getSavedCharts} from '@/lib/local-db/saved-charts';
+import {listCompositions, type TabComposition} from '@/lib/local-db/tab-compositions';
+import {getAllPdfLibraryEntries, type PdfLibraryEntry} from '@/lib/local-db/pdf-library';
 import {ChartResponseEncore} from '@/lib/chartSelection';
 import {useSidebar} from '@/contexts/SidebarContext';
 
@@ -167,132 +174,269 @@ function SetlistSidebar({
   );
 }
 
-// ── Add Songs Dialog ─────────────────────────────────────────────────
+// ── Add Items Dialog (tabbed) ────────────────────────────────────────
 
-function AddSongsDialog({
+type AddTab = 'charts' | 'tabs' | 'pdfs';
+
+type AddItemsResult =
+  | {type: 'charts'; items: ChartResponseEncore[]}
+  | {type: 'compositions'; items: TabComposition[]}
+  | {type: 'pdfs'; items: PdfLibraryEntry[]};
+
+function AddItemsDialog({
   open,
   onOpenChange,
   onAdd,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAdd: (charts: ChartResponseEncore[]) => void;
+  onAdd: (result: AddItemsResult) => void;
 }) {
+  const [activeTab, setActiveTab] = useState<AddTab>('charts');
   const [search, setSearch] = useState('');
+
+  // Charts tab
   const [charts, setCharts] = useState<ChartResponseEncore[]>([]);
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [loading, setLoading] = useState(false);
+  const [chartsLoading, setChartsLoading] = useState(false);
+  const [selectedCharts, setSelectedCharts] = useState<Set<string>>(new Set());
+
+  // Tabs tab
+  const [compositions, setCompositions] = useState<TabComposition[]>([]);
+  const [selectedCompositions, setSelectedCompositions] = useState<Set<number>>(new Set());
+
+  // PDFs tab
+  const [pdfs, setPdfs] = useState<PdfLibraryEntry[]>([]);
+  const [selectedPdfs, setSelectedPdfs] = useState<Set<number>>(new Set());
 
   const loadCharts = useCallback(async (q?: string) => {
-    setLoading(true);
+    setChartsLoading(true);
     try {
-      const results = await getSavedCharts(q);
-      setCharts(results);
+      setCharts(await getSavedCharts(q));
     } finally {
-      setLoading(false);
+      setChartsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    if (open) {
-      loadCharts();
-      setSelected(new Set());
-      setSearch('');
-    }
+    if (!open) return;
+    setSearch('');
+    setSelectedCharts(new Set());
+    setSelectedCompositions(new Set());
+    setSelectedPdfs(new Set());
+    loadCharts().then(() =>
+      Promise.all([listCompositions(), getAllPdfLibraryEntries()])
+        .then(([comps, pdfs]) => {
+          setCompositions(comps);
+          setPdfs(pdfs);
+        }),
+    );
   }, [open, loadCharts]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (open) loadCharts(search || undefined);
-    }, 200);
-    return () => clearTimeout(timer);
-  }, [search, open, loadCharts]);
+    if (!open || activeTab !== 'charts') return;
+    const searchTimer = setTimeout(() => loadCharts(search || undefined), 200);
+    return () => clearTimeout(searchTimer);
+  }, [search, open, activeTab, loadCharts]);
 
-  const toggleSelect = (md5: string) => {
-    setSelected(prev => {
-      const next = new Set(prev);
-      if (next.has(md5)) next.delete(md5);
-      else next.add(md5);
-      return next;
-    });
-  };
+  const filteredCompositions = useMemo(() =>
+    search
+      ? compositions.filter(c =>
+          c.title.toLowerCase().includes(search.toLowerCase()) ||
+          c.artist.toLowerCase().includes(search.toLowerCase()),
+        )
+      : compositions,
+  [compositions, search]);
+
+  const filteredPdfs = useMemo(() =>
+    search
+      ? pdfs.filter(p =>
+          p.filename.toLowerCase().includes(search.toLowerCase()) ||
+          (p.detectedTitle ?? '').toLowerCase().includes(search.toLowerCase()) ||
+          (p.detectedArtist ?? '').toLowerCase().includes(search.toLowerCase()),
+        )
+      : pdfs,
+  [pdfs, search]);
+
+  const selectedCount =
+    activeTab === 'charts' ? selectedCharts.size :
+    activeTab === 'tabs' ? selectedCompositions.size :
+    selectedPdfs.size;
 
   const handleAdd = () => {
-    const toAdd = charts.filter(c => selected.has(c.md5));
-    onAdd(toAdd);
+    if (activeTab === 'charts') {
+      onAdd({type: 'charts', items: charts.filter(c => selectedCharts.has(c.md5))});
+    } else if (activeTab === 'tabs') {
+      onAdd({type: 'compositions', items: compositions.filter(c => selectedCompositions.has(c.id))});
+    } else {
+      onAdd({type: 'pdfs', items: pdfs.filter(p => selectedPdfs.has(p.id))});
+    }
     onOpenChange(false);
   };
+
+  const TABS: {id: AddTab; label: string}[] = [
+    {id: 'charts', label: 'Charts'},
+    {id: 'tabs', label: 'Guitar Tabs'},
+    {id: 'pdfs', label: 'PDFs'},
+  ];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[80vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>Add Songs from Saved Charts</DialogTitle>
+          <DialogTitle>Add to Setlist</DialogTitle>
         </DialogHeader>
+
+        {/* Tab bar */}
+        <div className="flex border-b border-outline-variant/20 -mx-1 mt-1">
+          {TABS.map(tabDef => (
+            <button
+              key={tabDef.id}
+              onClick={() => { setActiveTab(tabDef.id); setSearch(''); }}
+              className={cn(
+                'px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px',
+                activeTab === tabDef.id
+                  ? 'border-primary text-on-surface'
+                  : 'border-transparent text-on-surface-variant hover:text-on-surface',
+              )}
+            >
+              {tabDef.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Search */}
         <div className="relative mt-2">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-outline" />
           <Input
-            placeholder="Search saved charts..."
+            placeholder={
+              activeTab === 'charts' ? 'Search saved charts…' :
+              activeTab === 'tabs' ? 'Search compositions…' :
+              'Search PDFs…'
+            }
             className="pl-9"
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
         </div>
+
+        {/* List */}
         <div className="flex-1 min-h-0 overflow-y-auto mt-3 border border-outline-variant/20 rounded-lg">
-          {loading ? (
-            <div className="p-6 text-center text-sm text-outline">Loading...</div>
-          ) : charts.length === 0 ? (
-            <div className="p-6 text-center text-sm text-outline">
-              {search ? 'No charts match your search.' : 'No saved charts. Save some charts first from Browse or Sheet Music.'}
-            </div>
-          ) : (
-            <div>
-              {charts.map(chart => (
-                <label
-                  key={chart.md5}
-                  className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 cursor-pointer border-b border-white/5 last:border-b-0 transition-colors',
-                    selected.has(chart.md5) ? 'bg-surface-container' : 'hover:bg-surface-container-high',
+          {/* Charts */}
+          {activeTab === 'charts' && (
+            chartsLoading ? (
+              <div className="p-6 text-center text-sm text-outline">Loading…</div>
+            ) : charts.length === 0 ? (
+              <div className="p-6 text-center text-sm text-outline">
+                {search ? 'No charts match.' : 'No saved charts.'}
+              </div>
+            ) : charts.map(chart => (
+              <label
+                key={chart.md5}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2.5 cursor-pointer border-b border-white/5 last:border-b-0 transition-colors',
+                  selectedCharts.has(chart.md5) ? 'bg-surface-container' : 'hover:bg-surface-container-high',
+                )}
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedCharts.has(chart.md5)}
+                  onChange={() => setSelectedCharts(prev => {
+                    const next = new Set(prev);
+                    next.has(chart.md5) ? next.delete(chart.md5) : next.add(chart.md5);
+                    return next;
+                  })}
+                  className="rounded border-outline-variant/20"
+                />
+                <Music2 className="h-4 w-4 text-on-surface-variant shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium text-on-surface truncate">{chart.name}</div>
+                  <div className="text-xs text-on-surface-variant truncate">
+                    {chart.artist} &middot; {chart.charter}
+                  </div>
+                </div>
+              </label>
+            ))
+          )}
+
+          {/* Guitar Tabs */}
+          {activeTab === 'tabs' && (
+            filteredCompositions.length === 0 ? (
+              <div className="p-6 text-center text-sm text-outline">
+                {search ? 'No compositions match.' : 'No saved compositions.'}
+              </div>
+            ) : filteredCompositions.map(comp => (
+              <label
+                key={comp.id}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2.5 cursor-pointer border-b border-white/5 last:border-b-0 transition-colors',
+                  selectedCompositions.has(comp.id) ? 'bg-surface-container' : 'hover:bg-surface-container-high',
+                )}
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedCompositions.has(comp.id)}
+                  onChange={() => setSelectedCompositions(prev => {
+                    const next = new Set(prev);
+                    next.has(comp.id) ? next.delete(comp.id) : next.add(comp.id);
+                    return next;
+                  })}
+                  className="rounded border-outline-variant/20"
+                />
+                <FileMusic className="h-4 w-4 text-secondary shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium text-on-surface truncate">{comp.title}</div>
+                  <div className="text-xs text-on-surface-variant truncate">
+                    {comp.artist} &middot; {comp.tempo} BPM &middot; {comp.instrument}
+                  </div>
+                </div>
+              </label>
+            ))
+          )}
+
+          {/* PDFs */}
+          {activeTab === 'pdfs' && (
+            filteredPdfs.length === 0 ? (
+              <div className="p-6 text-center text-sm text-outline">
+                {search ? 'No PDFs match.' : 'No PDFs in library.'}
+              </div>
+            ) : filteredPdfs.map(pdf => (
+              <label
+                key={pdf.id}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2.5 cursor-pointer border-b border-white/5 last:border-b-0 transition-colors',
+                  selectedPdfs.has(pdf.id) ? 'bg-surface-container' : 'hover:bg-surface-container-high',
+                )}
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedPdfs.has(pdf.id)}
+                  onChange={() => setSelectedPdfs(prev => {
+                    const next = new Set(prev);
+                    next.has(pdf.id) ? next.delete(pdf.id) : next.add(pdf.id);
+                    return next;
+                  })}
+                  className="rounded border-outline-variant/20"
+                />
+                <FileText className="h-4 w-4 text-tertiary shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium text-on-surface truncate">
+                    {pdf.detectedTitle ?? pdf.filename}
+                  </div>
+                  {pdf.detectedArtist && (
+                    <div className="text-xs text-on-surface-variant truncate">{pdf.detectedArtist}</div>
                   )}
-                >
-                  <input
-                    type="checkbox"
-                    checked={selected.has(chart.md5)}
-                    onChange={() => toggleSelect(chart.md5)}
-                    className="rounded border-outline-variant/20 text-on-surface focus:ring-outline"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-on-surface truncate">{chart.name}</div>
-                    <div className="text-xs text-on-surface-variant truncate">
-                      {chart.artist} &middot; {chart.charter}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1 text-xs text-outline shrink-0">
-                    {chart.diff_guitar != null && chart.diff_guitar >= 0 && (
-                      <span className="px-1.5 py-0.5 rounded bg-surface-container">Guitar</span>
-                    )}
-                    {chart.diff_drums != null && chart.diff_drums >= 0 && (
-                      <span className="px-1.5 py-0.5 rounded bg-surface-container">Drums</span>
-                    )}
-                    {chart.diff_bass != null && chart.diff_bass >= 0 && (
-                      <span className="px-1.5 py-0.5 rounded bg-surface-container">Bass</span>
-                    )}
-                  </div>
-                </label>
-              ))}
-            </div>
+                </div>
+              </label>
+            ))
           )}
         </div>
+
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
-          <span className="text-sm text-on-surface-variant">
-            {selected.size} selected
-          </span>
+          <span className="text-sm text-on-surface-variant">{selectedCount} selected</span>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
-            </Button>
-            <Button disabled={selected.size === 0} onClick={handleAdd}>
-              Add {selected.size > 0 ? `(${selected.size})` : ''}
+            <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+            <Button disabled={selectedCount === 0} onClick={handleAdd}>
+              Add {selectedCount > 0 ? `(${selectedCount})` : ''}
             </Button>
           </div>
         </div>
@@ -365,9 +509,17 @@ function SpeedEditor({
   );
 }
 
-// ── Draggable Song Row ───────────────────────────────────────────────
+// ── Item type icon ────────────────────────────────────────────────────
 
-function SongRow({
+function ItemTypeIcon({itemType}: {itemType: SetlistItem['itemType']}) {
+  if (itemType === 'composition') return <FileMusic className="h-3.5 w-3.5 text-secondary shrink-0" />;
+  if (itemType === 'pdf') return <FileText className="h-3.5 w-3.5 text-tertiary shrink-0" />;
+  return <Music2 className="h-3.5 w-3.5 text-outline shrink-0" />;
+}
+
+// ── Draggable Setlist Item Row ───────────────────────────────────────
+
+function SetlistItemRow({
   item,
   index,
   onRemove,
@@ -386,6 +538,11 @@ function SongRow({
   onDrop: (e: React.DragEvent) => void;
   isDragTarget: boolean;
 }) {
+  const subtitle =
+    item.itemType === 'chart' ? `${item.artist} · ${item.charter ?? ''}` :
+    item.itemType === 'composition' ? item.artist :
+    item.artist || null;
+
   return (
     <div
       draggable
@@ -403,11 +560,12 @@ function SongRow({
       <span className="text-xs text-outline w-6 text-right tabular-nums shrink-0">
         {index + 1}
       </span>
+      <ItemTypeIcon itemType={item.itemType} />
       <div className="flex-1 min-w-0">
         <div className="text-sm font-medium text-on-surface truncate">{item.name}</div>
-        <div className="text-xs text-on-surface-variant truncate">
-          {item.artist} &middot; {item.charter}
-        </div>
+        {subtitle && (
+          <div className="text-xs text-on-surface-variant truncate">{subtitle}</div>
+        )}
       </div>
       <SpeedEditor speed={item.speed} onChangeSpeed={onChangeSpeed} />
       <button
@@ -426,14 +584,14 @@ function SongRow({
 function SetlistEditor({
   setlist,
   items,
-  onAddSongs,
+  onAddItems,
   onRemoveItem,
   onReorder,
   onChangeSpeed,
 }: {
   setlist: Setlist;
   items: SetlistItem[];
-  onAddSongs: () => void;
+  onAddItems: () => void;
   onRemoveItem: (itemId: number) => void;
   onReorder: (itemId: number, newPosition: number) => void;
   onChangeSpeed: (itemId: number, speed: number) => void;
@@ -463,11 +621,6 @@ function SetlistEditor({
     setDragOverIndex(null);
   };
 
-  const totalDuration = useMemo(() => {
-    // We don't have song_length in setlist_items, so skip for now
-    return null;
-  }, []);
-
   return (
     <div className="flex-1 min-w-0 flex flex-col">
       {/* Header */}
@@ -475,7 +628,7 @@ function SetlistEditor({
         <div className="min-w-0">
           <h1 className="text-lg font-semibold text-on-surface truncate">{setlist.name}</h1>
           <div className="flex items-center gap-3 mt-0.5 text-xs text-on-surface-variant">
-            <span>{items.length} {items.length === 1 ? 'song' : 'songs'}</span>
+            <span>{items.length} {items.length === 1 ? 'item' : 'items'}</span>
             {setlist.description && (
               <span className="truncate">{setlist.description}</span>
             )}
@@ -488,9 +641,9 @@ function SetlistEditor({
               Practice
             </Button>
           )}
-          <Button size="sm" onClick={onAddSongs}>
+          <Button size="sm" onClick={onAddItems}>
             <Plus className="h-4 w-4 mr-1.5" />
-            Add Songs
+            Add Items
           </Button>
         </div>
       </div>
@@ -506,13 +659,13 @@ function SetlistEditor({
                 </EmptyMedia>
                 <EmptyTitle>Empty Setlist</EmptyTitle>
                 <EmptyDescription>
-                  Add songs from your saved charts to build this setlist.
+                  Add charts, guitar tabs, or PDFs to build this setlist.
                 </EmptyDescription>
               </EmptyHeader>
               <EmptyContent>
-                <Button size="sm" onClick={onAddSongs}>
+                <Button size="sm" onClick={onAddItems}>
                   <Plus className="h-4 w-4 mr-1.5" />
-                  Add Songs
+                  Add Items
                 </Button>
               </EmptyContent>
             </Empty>
@@ -520,7 +673,7 @@ function SetlistEditor({
         ) : (
           <div>
             {items.map((item, i) => (
-              <SongRow
+              <SetlistItemRow
                 key={item.id}
                 item={item}
                 index={i}
@@ -603,19 +756,29 @@ export default function SetlistsPage() {
     await loadSetlists();
   }, [loadSetlists]);
 
-  const handleAddSongs = async (charts: ChartResponseEncore[]) => {
+  const handleAddItems = async (result: AddItemsResult) => {
     if (!selectedId) return;
-    for (const chart of charts) {
-      await addSetlistItem(selectedId, {
-        md5: chart.md5,
-        name: chart.name,
-        artist: chart.artist,
-        charter: chart.charter,
-      });
+
+    if (result.type === 'charts') {
+      for (const chart of result.items) {
+        await addSetlistItem(selectedId, {
+          md5: chart.md5,
+          name: chart.name,
+          artist: chart.artist,
+          charter: chart.charter,
+        });
+      }
+      toast.success(`Added ${result.items.length} chart${result.items.length !== 1 ? 's' : ''}`);
+    } else if (result.type === 'compositions') {
+      await addCompositionsToSetlist(selectedId, result.items);
+      toast.success(`Added ${result.items.length} tab${result.items.length !== 1 ? 's' : ''}`);
+    } else {
+      await addPdfsToSetlist(selectedId, result.items);
+      toast.success(`Added ${result.items.length} PDF${result.items.length !== 1 ? 's' : ''}`);
     }
+
     await loadItems(selectedId);
     await loadSetlists();
-    toast.success(`Added ${charts.length} song${charts.length > 1 ? 's' : ''}`);
   };
 
   const handleRemoveItem = async (itemId: number) => {
@@ -670,7 +833,7 @@ export default function SetlistsPage() {
         <SetlistEditor
           setlist={selectedSetlist}
           items={items}
-          onAddSongs={() => setAddDialogOpen(true)}
+          onAddItems={() => setAddDialogOpen(true)}
           onRemoveItem={handleRemoveItem}
           onReorder={handleReorder}
           onChangeSpeed={handleChangeSpeed}
@@ -684,7 +847,7 @@ export default function SetlistsPage() {
               </EmptyMedia>
               <EmptyTitle>No Setlists</EmptyTitle>
               <EmptyDescription>
-                Create a setlist to organize your charts into ordered playlists for Clone Hero, YARG, or ScoreSpy.
+                Create a setlist to organize your charts, tabs, and PDFs.
               </EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
@@ -697,10 +860,10 @@ export default function SetlistsPage() {
         </div>
       )}
 
-      <AddSongsDialog
+      <AddItemsDialog
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
-        onAdd={handleAddSongs}
+        onAdd={handleAddItems}
       />
     </div>
   );

@@ -56,6 +56,7 @@ import {useYoutubeSync} from '@/hooks/useYoutubeSync';
 
 import {getBasename} from '@/lib/src-shared/utils';
 import {cn} from '@/lib/utils';
+import {useHideHeaderOnMobile, useHideBottomNavOnMobile} from '@/contexts/LayoutContext';
 import AlphaTabSheetMusic from './AlphaTabSheetMusic';
 import {Files, ParsedChart} from '@/lib/preview/chorus-chart-processing';
 import {AudioManager, PracticeModeConfig} from '@/lib/preview/audioManager';
@@ -158,6 +159,9 @@ export default function Renderer({
     tripletNote: 0,
   });
 
+  useHideHeaderOnMobile();
+  useHideBottomNavOnMobile();
+
   const [showBarNumbers, setShowBarNumbers] = useState(false);
   const [enableColors, setEnableColors] = useState(true);
   const [showLyrics, setShowLyrics] = useState(true);
@@ -167,6 +171,7 @@ export default function Renderer({
   const [volumeControls, setVolumeControls] = useState<VolumeControl[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobileMode, setIsMobileMode] = useState(false);
+  const [cloneHeroFullscreen, setCloneHeroFullscreen] = useState(false);
 
   // Saved chart state
   const [isSaved, setIsSaved] = useState(false);
@@ -999,7 +1004,7 @@ export default function Renderer({
         className={cn(
           'rounded-full',
           isMobileMode && 'inline-flex',
-          !isMobileMode && 'md:inline-flex hidden',
+          !isMobileMode && 'lg:inline-flex hidden',
         )}
         onClick={() => setIsMobileMode(!isMobileMode)}>
         {isMobileMode ? (
@@ -1028,15 +1033,15 @@ export default function Renderer({
     <div
       className={cn(
         'flex flex-col w-full flex-1 min-h-0',
-        !isMobileMode && 'md:overflow-hidden',
+        !isMobileMode && 'lg:overflow-hidden',
       )}>
       <div
         className={cn(
           'flex flex-col flex-1 min-h-0 bg-background relative',
           // Normal desktop behavior
-          'md:flex-row md:overflow-hidden',
+          'lg:flex-row lg:overflow-hidden',
           // Mobile mode on desktop - allow scrolling
-          isMobileMode && 'md:overflow-visible',
+          isMobileMode && 'lg:overflow-visible',
         )}>
         {/* Mobile overlay */}
         {isSidebarOpen && (
@@ -1044,8 +1049,8 @@ export default function Renderer({
             className={cn(
               'fixed inset-0 bg-black/50 z-30',
               // Show on mobile OR when in mobile mode
-              'md:hidden',
-              isMobileMode && 'md:block',
+              'lg:hidden',
+              isMobileMode && 'lg:block',
             )}
             onClick={() => setIsSidebarOpen(false)}
           />
@@ -1054,18 +1059,24 @@ export default function Renderer({
         {/* Left Sidebar */}
         <div
           className={cn(
-            'w-64 border-r p-4 flex flex-col gap-6 bg-background z-40',
+            'w-64 border-r flex flex-col gap-6 bg-background z-40',
             'transition-transform duration-300 ease-in-out',
             // Mobile behavior (always)
             'fixed inset-y-0 left-0',
             // Desktop behavior - static unless in mobile mode
-            !isMobileMode && 'md:static md:translate-x-0 md:h-full',
+            !isMobileMode && 'lg:static lg:translate-x-0 lg:h-full',
             // Mobile mode on desktop - use mobile behavior
-            isMobileMode && 'md:fixed md:inset-y-0 md:left-0',
+            isMobileMode && 'lg:fixed lg:inset-y-0 lg:left-0',
             // Show/hide logic
             isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
-          )}>
-          <div className="md:flex hidden items-center gap-2">
+          )}
+          style={{
+            paddingTop: 'max(env(safe-area-inset-top, 0px), 1rem)',
+            paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 1rem)',
+            paddingLeft: '1rem',
+            paddingRight: '1rem',
+          }}>
+          <div className="lg:flex hidden items-center gap-2">
             {backButton}
             {playPauseButton}
             {maximizeButton}
@@ -1492,32 +1503,38 @@ export default function Renderer({
           className={cn(
             'flex-1 flex flex-col min-h-0',
             // Normal desktop behavior - hide overflow
-            'md:overflow-hidden',
+            'lg:overflow-hidden',
             // Mobile mode on desktop - allow scrolling
-            isMobileMode && 'md:overflow-visible',
+            isMobileMode && 'lg:overflow-visible',
           )}>
           {/* Mobile controls - sticky on scroll */}
           <div
             className={cn(
-              'sticky top-0 z-30 flex items-center gap-2 md:px-4 py-3 border-b bg-background/95 backdrop-blur-sm',
+              'sticky top-0 z-30 flex items-center gap-2 lg:px-4 border-b bg-background/95 backdrop-blur-sm',
               // Show on mobile OR when in mobile mode
-              'md:hidden',
-              isMobileMode && 'md:flex',
-            )}>
+              'lg:hidden',
+              isMobileMode && 'lg:flex',
+            )}
+            style={{paddingTop: 'max(env(safe-area-inset-top, 0px), 0.75rem)', paddingBottom: '0.75rem'}}>
             {backButton}
             {playPauseButton}
-            {maximizeButton}
             {saveButton}
-            <div className="ml-auto">{menuToggleButton}</div>
+            <div className="flex-1 min-w-0 px-1">
+              <div className="text-sm font-semibold truncate leading-tight">
+                {metadata.name} <span className="text-muted-foreground font-normal">by</span> {metadata.artist}
+              </div>
+              <div className="text-xs text-muted-foreground truncate">Charted by {metadata.charter}</div>
+            </div>
+            {menuToggleButton}
           </div>
 
           <div
             className={cn(
-              'h-12 border-b flex items-center md:px-4 gap-4 bg-background/95 backdrop-blur-sm',
+              'h-12 border-b flex items-center lg:px-4 gap-4 bg-background/95 backdrop-blur-sm',
               // Normal behavior: static on desktop, sticky on mobile
               'sticky top-[60px] z-30',
               // If not in mobile mode, then it's just static, otherwise it's sticky
-              !isMobileMode && 'md:static',
+              !isMobileMode && 'lg:static',
             )}>
             <div className="flex-1 relative">
               {practiceMode && songDuration > 0 && (
@@ -1554,9 +1571,9 @@ export default function Renderer({
             )}
           </div>
 
-          <div className="md:pt-4 md:px-4 pt-2 flex-1 flex flex-col min-h-0 overflow-hidden">
-            <div className="flex items-center justify-between mb-2 md:mb-4">
-              <h1 className="text-3xl md:text-3xl font-bold">
+          <div className="lg:pt-4 lg:px-4 pt-2 flex-1 flex flex-col min-h-0 overflow-hidden">
+            <div className="hidden lg:flex items-center justify-between mb-4">
+              <h1 className="text-3xl font-bold">
                 {metadata.name}{' '}
                 <span className="text-muted-foreground">by</span>{' '}
                 {metadata.artist}
@@ -1579,7 +1596,7 @@ export default function Renderer({
             <div className="flex flex-1 gap-2 overflow-hidden">
               <div
                 className={cn(
-                  viewCloneHero ? 'hidden md:flex' : 'flex',
+                  viewCloneHero ? 'hidden lg:flex' : 'flex',
                   'flex-1 min-w-0 overflow-hidden',
                 )}>
                 <AlphaTabSheetMusic
@@ -1599,12 +1616,40 @@ export default function Renderer({
                 />
               </div>
               {viewCloneHero && (
-                <CloneHeroRenderer
-                  metadata={metadata}
-                  chart={chart}
-                  track={track}
-                  audioManager={audioManagerRef.current!}
-                />
+                <div
+                  className={cn(
+                    'flex-1 flex flex-col relative min-w-0',
+                    cloneHeroFullscreen && 'fixed inset-0 z-[200] flex flex-col',
+                  )}
+                  style={cloneHeroFullscreen ? {
+                    paddingTop: 'env(safe-area-inset-top, 0px)',
+                    paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+                    paddingLeft: 'env(safe-area-inset-left, 0px)',
+                    paddingRight: 'env(safe-area-inset-right, 0px)',
+                  } : undefined}
+                >
+                  <CloneHeroRenderer
+                    key={String(cloneHeroFullscreen)}
+                    metadata={metadata}
+                    chart={chart}
+                    track={track}
+                    audioManager={audioManagerRef.current!}
+                  />
+                  <button
+                    className="absolute bg-black/50 hover:bg-black/70 text-white rounded-full p-1.5 z-10"
+                    style={{
+                      top: cloneHeroFullscreen ? 'max(env(safe-area-inset-top, 0px), 0.5rem)' : '0.5rem',
+                      right: cloneHeroFullscreen ? 'max(env(safe-area-inset-right, 0px), 0.5rem)' : '0.5rem',
+                    }}
+                    onClick={() => setCloneHeroFullscreen(f => !f)}
+                    aria-label={cloneHeroFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+                  >
+                    {cloneHeroFullscreen
+                      ? <Minimize2 className="h-4 w-4" />
+                      : <Maximize2 className="h-4 w-4" />
+                    }
+                  </button>
+                </div>
               )}
             </div>
           </div>

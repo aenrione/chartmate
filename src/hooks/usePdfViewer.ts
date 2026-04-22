@@ -1,5 +1,5 @@
 import {useState, useEffect, useCallback, useRef} from 'react';
-import {convertFileSrc} from '@tauri-apps/api/core';
+import {readFile} from '@tauri-apps/plugin-fs';
 import {pdfjsLib} from '@/lib/pdf/pdfjs-init';
 import type {PDFDocumentProxy, PDFPageProxy} from 'pdfjs-dist';
 
@@ -55,8 +55,9 @@ export function usePdfViewer(absolutePath: string | null): PdfViewerHandle {
 
     const load = async () => {
       try {
-        const url = convertFileSrc(absolutePath);
-        const loadingTask = pdfjsLib.getDocument(url);
+        // Read bytes directly — avoids asset:// CORS issues entirely.
+        const bytes = await readFile(absolutePath);
+        const loadingTask = pdfjsLib.getDocument({data: bytes});
         const loaded = await loadingTask.promise;
         if (cancelled) {
           loaded.destroy();

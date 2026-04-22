@@ -79,7 +79,14 @@ export async function loadComposition(id: number): Promise<{meta: TabComposition
 
   if (!row) return null;
 
-  return {meta: rowToComposition(row), scoreData: row.score_data};
+  // Tauri SQL plugin deserializes SQLite blobs as number[], not ArrayBuffer.
+  // Convert to Uint8Array so AlphaTab (and any other consumer) can load it.
+  const raw = row.score_data as unknown;
+  const scoreData: Uint8Array = raw instanceof Uint8Array
+    ? raw
+    : new Uint8Array(raw as ArrayLike<number>);
+
+  return {meta: rowToComposition(row), scoreData: scoreData.buffer as ArrayBuffer};
 }
 
 export async function saveComposition(
@@ -203,6 +210,19 @@ export async function deleteCompositionBatch(ids: number[]): Promise<void> {
     .deleteFrom('tab_compositions')
     .where('id', 'in', ids)
     .execute();
+}
+
+export async function getRecentCompositions(instrument: string, limit = 5): Promise<TabComposition[]> {
+  const db = await getLocalDb();
+  const rows = await db
+    .selectFrom('tab_compositions')
+    .select(['id', 'title', 'artist', 'album', 'tempo', 'instrument', 'preview_image', 'youtube_url', 'is_saved', 'saved_at', 'created_at', 'updated_at'])
+    .where('is_saved', '=', 1)
+    .where('instrument', '=', instrument)
+    .orderBy('updated_at', 'desc')
+    .limit(limit)
+    .execute();
+  return rows.map(rowToComposition);
 }
 
 export async function markCompositionSaved(id: number): Promise<void> {

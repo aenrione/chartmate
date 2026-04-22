@@ -1,0 +1,9 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "ignition-auth",
+  "description": "Capability for the CustomsForge auth WebView window",
+  "windows": ["ignition-auth"],
+  "permissions": [
+    "core:default"
+  ]
+}

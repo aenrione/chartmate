@@ -596,6 +596,10 @@ export function setTrackTuning(score: Score, trackIndex: number, tuning: number[
   finishScore(score);
 }
 
+export function getScoreTempo(score: Score): number {
+  return (score.masterBars as any[])[0]?.tempoAutomations?.[0]?.value ?? 120;
+}
+
 export function setTempo(score: Score, bpm: number): void {
   const {Automation, AutomationType} = model;
   if (score.masterBars.length === 0) return;

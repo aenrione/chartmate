@@ -13,7 +13,9 @@ import {
   PenTool,
 } from 'lucide-react';
 import {useSidebar} from '@/contexts/SidebarContext';
+import {useLayout} from '@/contexts/LayoutContext';
 import SettingsDialog from '@/components/SettingsDialog';
+import BottomNav from '@/components/BottomNav';
 
 const TOP_NAV_SECTIONS = [
   {label: 'Practice', prefix: ['/sheet-music', '/guitar', '/rudiments', '/tab-editor', '/fills', '/']},
@@ -61,6 +63,7 @@ function TopNav({pathname}: {pathname: string}) {
   const {isConnected} = useSpotifyAuth();
   const {isDark, toggle} = useDarkMode();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const {hideHeaderOnMobile, mobilePageTitle} = useLayout();
 
   useEffect(() => {
     const handler = () => setSettingsOpen(true);
@@ -69,12 +72,25 @@ function TopNav({pathname}: {pathname: string}) {
   }, []);
 
   return (
-    <header className="bg-surface flex justify-between items-center w-full px-6 h-16 shrink-0 z-40">
+    <header
+      className={cn('bg-surface shrink-0 z-40', hideHeaderOnMobile && 'lg:block hidden')}
+      style={{
+        paddingTop: 'env(safe-area-inset-top, 0px)',
+        paddingLeft: 'env(safe-area-inset-left, 0px)',
+        paddingRight: 'env(safe-area-inset-right, 0px)',
+      }}
+    >
+    <div className="flex justify-between items-center w-full px-6 h-16">
       <Link to="/" className="text-xl font-bold tracking-tighter text-primary font-headline">
-        Chartmate
+        {mobilePageTitle ? (
+          <>
+            <span className="lg:hidden">{mobilePageTitle}</span>
+            <span className="hidden lg:inline">Chartmate</span>
+          </>
+        ) : 'Chartmate'}
       </Link>
 
-      <nav className="hidden md:flex items-center gap-8 h-full">
+      <nav className="hidden lg:flex items-center gap-8 h-full">
         {TOP_NAV_SECTIONS.map(section => {
           const active = isActive(pathname, section.prefix);
           return (
@@ -117,10 +133,11 @@ function TopNav({pathname}: {pathname: string}) {
         </button>
         <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
         <div className={cn(
-          'h-2 w-2 rounded-full',
+          'h-2 w-2 rounded-full hidden lg:block',
           isConnected ? 'bg-emerald-500' : 'bg-outline',
         )} title={isConnected ? 'Spotify Connected' : 'Spotify Disconnected'} />
       </div>
+    </div>
     </header>
   );
 }
@@ -146,11 +163,13 @@ function DefaultSidebarContent({pathname}: {pathname: string}) {
                   {label: 'Chord Finder', href: '/guitar/chords', prefix: '/guitar/chords'},
                   {label: 'EarIQ', href: '/guitar/ear', prefix: '/guitar/ear'},
                   {label: 'RepertoireIQ', href: '/guitar/repertoire', prefix: '/guitar/repertoire'},
+                  {label: 'Saved Charts', href: '/library/saved-charts', prefix: '/library/saved-charts', state: {activeTab: 'guitar'}},
                 ]
               : item.href === '/sheet-music'
               ? [
                   {label: 'Rudiments', href: '/rudiments', prefix: '/rudiments'},
                   {label: 'Fills', href: '/fills', prefix: '/fills'},
+                  {label: 'Saved Charts', href: '/library/saved-charts', prefix: '/library/saved-charts', state: {activeTab: 'chorus'}},
                 ]
               : [];
 
@@ -175,6 +194,7 @@ function DefaultSidebarContent({pathname}: {pathname: string}) {
                     <Link
                       key={sub.label}
                       to={sub.href}
+                      state={'state' in sub ? sub.state : undefined}
                       className={cn(
                         'block px-3 py-1.5 rounded-md text-sm transition-all duration-150',
                         pathname.startsWith(sub.prefix)
@@ -224,7 +244,7 @@ function Sidebar({pathname}: {pathname: string}) {
 
   return (
     <aside className={cn(
-      'hidden md:flex flex-col h-full bg-surface-container-low w-64 border-r border-outline-variant/20 shrink-0',
+      'hidden lg:flex flex-col h-full bg-surface-container-low w-64 border-r border-outline-variant/20 shrink-0',
       !sidebarContent && 'py-4',
     )}>
       {sidebarContent ?? <DefaultSidebarContent pathname={pathname} />}
@@ -236,14 +256,28 @@ export default function Layout({children}: {children: ReactNode}) {
   const location = useLocation();
   const pathname = location.pathname;
   const isPlaybook = pathname.startsWith('/playbook');
+  const {hideBottomNavOnMobile} = useLayout();
+
+  const showBottomNav = !hideBottomNavOnMobile;
+  // Bottom padding accounts for nav height (hidden in landscape, so use safe area only there)
+  const contentPaddingClass = showBottomNav
+    ? 'pb-[var(--bottom-nav-safe-height)] max-lg:landscape:pb-[env(safe-area-inset-bottom,0px)]'
+    : 'pb-[env(safe-area-inset-bottom,0px)]';
 
   if (isPlaybook) {
     return (
       <div className="h-screen flex flex-col overflow-hidden bg-surface">
         <TopNav pathname={pathname} />
-        <main className="flex-1 min-h-0 flex flex-col overflow-hidden">
+        <main
+          className={cn('flex-1 min-h-0 flex flex-col overflow-hidden', contentPaddingClass)}
+          style={{
+            paddingLeft: 'env(safe-area-inset-left, 0px)',
+            paddingRight: 'env(safe-area-inset-right, 0px)',
+          }}
+        >
           {children}
         </main>
+        {showBottomNav && <div className="max-lg:landscape:hidden"><BottomNav /></div>}
       </div>
     );
   }
@@ -251,12 +285,19 @@ export default function Layout({children}: {children: ReactNode}) {
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-surface">
       <TopNav pathname={pathname} />
-      <div className="flex flex-1 min-h-0 overflow-hidden">
+      <div
+        className={cn('flex flex-1 min-h-0 overflow-hidden', contentPaddingClass)}
+        style={{
+          paddingLeft: 'env(safe-area-inset-left, 0px)',
+          paddingRight: 'env(safe-area-inset-right, 0px)',
+        }}
+      >
         <Sidebar pathname={pathname} />
         <main className="flex-1 min-h-0 flex flex-col overflow-hidden">
           {children}
         </main>
       </div>
+      {showBottomNav && <div className="max-lg:landscape:hidden"><BottomNav /></div>}
     </div>
   );
 }

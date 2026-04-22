@@ -24,6 +24,10 @@ import {migration_022_repertoire_iq} from './022_repertoire_iq';
 import {migration_023_repertoire_typed_refs} from './023_repertoire_typed_refs';
 import {migration_024_tab_compositions_preview_image} from './024_tab_compositions_preview_image';
 import {migration_025_tab_compositions_youtube_url} from './025_tab_compositions_youtube_url';
+import {migration_026_spotify_history_v2} from './026_spotify_history_v2';
+import {migration_027_explorer_saves} from './027_explorer_saves';
+import {migration_028_setlist_item_types} from './028_setlist_item_types';
+import {migration_029_setlist_item_indexes} from './029_setlist_item_indexes';
 
 export const migrations: Record<string, Migration> = {
   '001_initial': InitialMigration,
@@ -51,4 +55,8 @@ export const migrations: Record<string, Migration> = {
   '023_repertoire_typed_refs': migration_023_repertoire_typed_refs,
   '024_tab_compositions_preview_image': migration_024_tab_compositions_preview_image,
   '025_tab_compositions_youtube_url': migration_025_tab_compositions_youtube_url,
+  '026_spotify_history_v2': migration_026_spotify_history_v2,
+  '027_explorer_saves': migration_027_explorer_saves,
+  '028_setlist_item_types': migration_028_setlist_item_types,
+  '029_setlist_item_indexes': migration_029_setlist_item_indexes,
 };

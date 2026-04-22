@@ -21,6 +21,8 @@ export default function GuitarPracticeControls({
 }: Props) {
   const [startBar, setStartBar] = useState(1);
   const [endBar, setEndBar] = useState(1);
+  const [startBarInput, setStartBarInput] = useState('1');
+  const [endBarInput, setEndBarInput] = useState('1');
   const [isLooping, setIsLooping] = useState(false);
 
   const totalBars = score?.masterBars?.length ?? 1;
@@ -69,21 +71,39 @@ export default function GuitarPracticeControls({
         <div className="flex items-center gap-2 text-xs">
           <span>Bars:</span>
           <input
-            type="number"
+            type="text"
+            inputMode="numeric"
             className="w-14 h-6 text-xs text-center border rounded bg-background"
-            min={1}
-            max={totalBars}
-            value={startBar}
-            onChange={e => setStartBar(Math.max(1, Math.min(totalBars, Number(e.target.value))))}
+            value={startBarInput}
+            onChange={e => {
+              const raw = e.target.value.replace(/[^0-9]/g, '');
+              setStartBarInput(raw);
+              const n = parseInt(raw, 10);
+              if (!isNaN(n)) setStartBar(Math.max(1, Math.min(totalBars, n)));
+            }}
+            onBlur={() => {
+              const clamped = Math.max(1, Math.min(totalBars, startBar));
+              setStartBar(clamped);
+              setStartBarInput(String(clamped));
+            }}
           />
           <span>to</span>
           <input
-            type="number"
+            type="text"
+            inputMode="numeric"
             className="w-14 h-6 text-xs text-center border rounded bg-background"
-            min={1}
-            max={totalBars}
-            value={endBar}
-            onChange={e => setEndBar(Math.max(1, Math.min(totalBars, Number(e.target.value))))}
+            value={endBarInput}
+            onChange={e => {
+              const raw = e.target.value.replace(/[^0-9]/g, '');
+              setEndBarInput(raw);
+              const n = parseInt(raw, 10);
+              if (!isNaN(n)) setEndBar(Math.max(1, Math.min(totalBars, n)));
+            }}
+            onBlur={() => {
+              const clamped = Math.max(1, Math.min(totalBars, endBar));
+              setEndBar(clamped);
+              setEndBarInput(String(clamped));
+            }}
           />
           <span className="text-muted-foreground">/ {totalBars}</span>
         </div>
@@ -130,6 +150,8 @@ export default function GuitarPracticeControls({
                   onClick={() => {
                     setStartBar(s.bar);
                     setEndBar(sectionEndBar);
+                    setStartBarInput(String(s.bar));
+                    setEndBarInput(String(sectionEndBar));
                     setLoopRange(s.bar, sectionEndBar);
                   }}
                 >
