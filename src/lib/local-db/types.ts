@@ -367,6 +367,11 @@ export interface ExplorerSaves {
   added_at: string;
 }
 
+export interface SyncMeta {
+  key: string;
+  value: string;
+}
+
 export interface DB {
   explorer_saves: ExplorerSaves;
   chorus_charts: ChorusCharts;
@@ -400,4 +405,5 @@ export interface DB {
   repertoire_collections: RepertoireCollections;
   repertoire_items: RepertoireItems;
   repertoire_reviews: RepertoireReviews;
+  sync_meta: SyncMeta;
 }

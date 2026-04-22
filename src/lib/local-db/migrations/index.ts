@@ -28,6 +28,7 @@ import {migration_026_spotify_history_v2} from './026_spotify_history_v2';
 import {migration_027_explorer_saves} from './027_explorer_saves';
 import {migration_028_setlist_item_types} from './028_setlist_item_types';
 import {migration_029_setlist_item_indexes} from './029_setlist_item_indexes';
+import {migration_030_webdav_sync} from './030_webdav_sync';
 
 export const migrations: Record<string, Migration> = {
   '001_initial': InitialMigration,
@@ -59,4 +60,5 @@ export const migrations: Record<string, Migration> = {
   '027_explorer_saves': migration_027_explorer_saves,
   '028_setlist_item_types': migration_028_setlist_item_types,
   '029_setlist_item_indexes': migration_029_setlist_item_indexes,
+  '030_webdav_sync': migration_030_webdav_sync,
 };
