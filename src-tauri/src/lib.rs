@@ -1,6 +1,7 @@
 #[cfg(desktop)]
 mod ignition;
 mod psarc;
+mod webdav;
 
 #[cfg(desktop)]
 use tauri::Emitter;
@@ -22,6 +23,13 @@ pub fn run() {
             ignition::ignition_callback,
             ignition::ignition_search,
             ignition::ignition_download,
+            webdav::webdav_test_connection,
+            webdav::webdav_get_remote_manifest,
+            webdav::webdav_upload_export,
+            webdav::webdav_download_export,
+            webdav::webdav_list_remote_pdfs,
+            webdav::webdav_push_pdf,
+            webdav::webdav_pull_pdf,
         ]);
 
     #[cfg(not(desktop))]

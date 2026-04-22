@@ -38,8 +38,11 @@ ww2ogg = "0.1.0"
 symphonia = { version = "0.5.5", features = ["ogg", "vorbis"] }
 url = "2"
 tokio = { version = "1", features = ["rt", "time"] }
-reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "stream"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "stream", "json"] }
 base64 = "0.22"
+quick-xml = { version = "0.36" }
+uuid = { version = "1", features = ["v4"] }
+sha2 = { version = "0.10" }
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-single-instance = { version = "2.4.0", features = ["deep-link"] }
