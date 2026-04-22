@@ -25,6 +25,7 @@ import {
   downloadSoundfont,
 } from '@/lib/soundfont-store';
 import {formatSize} from '@/lib/format-utils';
+import WebDavSyncPanel from './WebDavSyncPanel';
 
 interface SettingsDialogProps {
   open: boolean;
@@ -244,6 +245,8 @@ export default function SettingsDialog({open, onOpenChange}: SettingsDialogProps
               </div>
             </section>
           )}
+
+          <WebDavSyncPanel />
         </div>
       </DialogContent>
     </Dialog>

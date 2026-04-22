@@ -31,3 +31,4 @@ ignore/ExternalSetlistCreator
 .playwright-mcp
 .worktrees/
 src-tauri/gen/apple/
+.claude/worktrees

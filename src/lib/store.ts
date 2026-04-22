@@ -36,4 +36,7 @@ export const STORE_KEYS = {
   CUSTOMSFORGE_PSARC_PATH: 'customsforge_psarc_path',
   /** ISO timestamp of the last successfully synced recently-played item */
   SPOTIFY_HISTORY_LAST_SYNCED_AT: 'spotify_history_last_synced_at',
+  WEBDAV_URL: 'webdav_url',
+  WEBDAV_USERNAME: 'webdav_username',
+  WEBDAV_PASSWORD: 'webdav_password',
 } as const;
