@@ -4,6 +4,8 @@ use tauri::{AppHandle, Emitter};
 use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::process::Command;
 
+const DEMUCS_MODEL: &str = "htdemucs";
+
 // ─── Public types ─────────────────────────────────────────────────────────────
 
 #[derive(Debug, Serialize)]
@@ -57,9 +59,13 @@ pub async fn separate_stems(
     input_path: String,
     output_dir: String,
 ) -> Result<Vec<StemFile>, String> {
+    if !std::path::Path::new(&input_path).exists() {
+        return Err(format!("Input file not found: {}", input_path));
+    }
+
     let mut child = Command::new("demucs")
         .arg("-n")
-        .arg("htdemucs")
+        .arg(DEMUCS_MODEL)
         .arg("-o")
         .arg(&output_dir)
         .arg(&input_path)
@@ -86,11 +92,13 @@ pub async fn separate_stems(
         }
     });
 
-    // Collect stderr so we can return it on failure
+    // Collect stderr and emit progress events (demucs writes tqdm to stderr)
+    let app_stderr = app.clone();
     let stderr_task = tokio::spawn(async move {
         let mut lines = BufReader::new(stderr).lines();
         let mut collected = Vec::new();
         while let Ok(Some(line)) = lines.next_line().await {
+            let _ = app_stderr.emit("stems:progress", line.clone());
             collected.push(line);
         }
         collected
@@ -108,14 +116,15 @@ pub async fn separate_stems(
     }
 
     // Derive the song name from the input file stem (no extension, no dirs)
-    let song_name = Path::new(&input_path)
+    let input_path_buf = std::path::PathBuf::from(&input_path);
+    let song_name = input_path_buf
         .file_stem()
         .and_then(|s| s.to_str())
-        .unwrap_or("unknown");
+        .ok_or_else(|| "Input file path contains non-UTF-8 characters".to_string())?;
 
     // Demucs outputs to: <output_dir>/htdemucs/<song_name>/
     let stems_dir = Path::new(&output_dir)
-        .join("htdemucs")
+        .join(DEMUCS_MODEL)
         .join(song_name);
 
     // Collect the expected stem files
@@ -130,6 +139,14 @@ pub async fn separate_stems(
                 path: wav_path.to_string_lossy().into_owned(),
             });
         }
+    }
+
+    if results.is_empty() {
+        return Err(
+            "demucs exited successfully but produced no stem files. \
+             Ensure the htdemucs model is downloaded."
+                .to_string(),
+        );
     }
 
     Ok(results)
