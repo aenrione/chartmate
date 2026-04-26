@@ -7,7 +7,7 @@ use tokio::process::Command;
 const DEMUCS_MODEL: &str = "htdemucs";
 
 // macOS GUI apps don't inherit the user's shell PATH, so common Python bin
-// directories (where `demucs` lives after `pip install demucs`) are invisible.
+// directories (where `demucs` lives after `pip3 install demucs`) are invisible.
 // Prepend the most common installation locations so Tauri can find the binary.
 fn augmented_path() -> String {
     let extra = [
@@ -45,7 +45,7 @@ pub async fn check_demucs() -> Result<String, String> {
         .await
         .map_err(|_| {
             "Demucs is not installed or not on your PATH.\n\
-             Install it with: pip install demucs\n\
+             Install it with: pip3 install demucs\n\
              (Python 3.8+ required — see https://github.com/adefossez/demucs)"
                 .to_string()
         })?;
@@ -94,7 +94,7 @@ pub async fn separate_stems(
         .map_err(|e| {
             format!(
                 "Failed to launch demucs: {}.\n\
-                 Make sure it is installed: pip install demucs",
+                 Make sure it is installed: pip3 install demucs",
                 e
             )
         })?;

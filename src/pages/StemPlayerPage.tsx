@@ -271,7 +271,7 @@ export default function StemPlayerPage() {
               <p className="text-yellow-400">
                 Install it with:{' '}
                 <code className="rounded bg-yellow-500/20 px-1 py-0.5 font-mono text-xs text-yellow-200">
-                  pip install demucs
+                  pip3 install demucs
                 </code>
               </p>
               <p className="text-yellow-400 text-xs">
