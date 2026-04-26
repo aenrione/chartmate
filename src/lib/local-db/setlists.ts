@@ -1,3 +1,4 @@
+import {sql} from 'kysely';
 import {getLocalDb} from './client';
 import {getCurrentTimestamp} from './db-utils';
 import {ChartResponseEncore} from '@/lib/chartSelection';
@@ -28,6 +29,8 @@ export type SetlistItem = {
   position: number;
   speed: number;
   addedAt: string;
+  songLength: number | null;
+  instrument: string | null;
 };
 
 export async function getSetlists(): Promise<Setlist[]> {
@@ -107,7 +110,24 @@ export async function getSetlistItems(setlistId: number): Promise<SetlistItem[]>
   const db = await getLocalDb();
   const rows = await db
     .selectFrom('setlist_items')
-    .selectAll()
+    .leftJoin('saved_charts', 'saved_charts.md5', 'setlist_items.chart_md5')
+    .leftJoin('tab_compositions', 'tab_compositions.id', 'setlist_items.composition_id')
+    .select([
+      'setlist_items.id',
+      'setlist_items.setlist_id',
+      'setlist_items.item_type',
+      'setlist_items.chart_md5',
+      'setlist_items.composition_id',
+      'setlist_items.pdf_library_id',
+      'setlist_items.name',
+      'setlist_items.artist',
+      'setlist_items.charter',
+      'setlist_items.position',
+      'setlist_items.speed',
+      'setlist_items.added_at',
+      'saved_charts.song_length',
+      'tab_compositions.instrument',
+    ])
     .where('setlist_id', '=', setlistId)
     .orderBy('position', 'asc')
     .execute();
@@ -125,6 +145,8 @@ export async function getSetlistItems(setlistId: number): Promise<SetlistItem[]>
     position: r.position,
     speed: r.speed,
     addedAt: r.added_at,
+    songLength: r.song_length ?? null,
+    instrument: r.instrument ?? (r.item_type === 'chart' ? 'drums' : null),
   }));
 }
 
@@ -200,53 +222,36 @@ export async function removeSetlistItem(itemId: number): Promise<void> {
 export async function reorderSetlistItem(
   setlistId: number,
   itemId: number,
-  newPosition: number,
+  toIndex: number,
 ): Promise<void> {
   const db = await getLocalDb();
 
-  const item = await db
+  // No explicit transaction: BEGIN/COMMIT across JS awaits routes through
+  // different pool connections on the Rust side (tauri-plugin-sql), and only
+  // the connection that ran PRAGMA busy_timeout has the timeout set — the
+  // others fail instantly on any lock. The CASE UPDATE below is itself atomic.
+  const rows = await db
     .selectFrom('setlist_items')
-    .select('position')
-    .where('id', '=', itemId)
-    .executeTakeFirst();
-  if (!item) return;
+    .select(['id', 'position'])
+    .where('setlist_id', '=', setlistId)
+    .orderBy('position', 'asc')
+    .execute();
 
-  const oldPos = item.position;
-  if (oldPos === newPosition) return;
+  const fromIndex = rows.findIndex(r => r.id === itemId);
+  if (fromIndex === -1 || fromIndex === toIndex) return;
 
-  return db.transaction().execute(async trx => {
-    if (newPosition < oldPos) {
-      // Moving up: shift items in [newPos, oldPos-1] down by 1
-      await trx
-        .updateTable('setlist_items')
-        .set(eb => ({position: eb('position', '+', 1)}))
-        .where('setlist_id', '=', setlistId)
-        .where('position', '>=', newPosition)
-        .where('position', '<', oldPos)
-        .execute();
-    } else {
-      // Moving down: shift items in [oldPos+1, newPos] up by 1
-      await trx
-        .updateTable('setlist_items')
-        .set(eb => ({position: eb('position', '-', 1)}))
-        .where('setlist_id', '=', setlistId)
-        .where('position', '>', oldPos)
-        .where('position', '<=', newPosition)
-        .execute();
-    }
+  const ids = rows.map(r => r.id);
+  const [moved] = ids.splice(fromIndex, 1);
+  ids.splice(toIndex, 0, moved);
 
-    await trx
-      .updateTable('setlist_items')
-      .set({position: newPosition})
-      .where('id', '=', itemId)
-      .execute();
+  const whenClauses = ids.map((id, i) => sql`WHEN ${id} THEN ${i}`);
+  await sql`UPDATE setlist_items SET position = CASE id ${sql.join(whenClauses, sql` `)} ELSE position END WHERE setlist_id = ${setlistId}`.execute(db);
 
-    await trx
-      .updateTable('setlists')
-      .set({updated_at: getCurrentTimestamp()})
-      .where('id', '=', setlistId)
-      .execute();
-  });
+  await db
+    .updateTable('setlists')
+    .set({updated_at: getCurrentTimestamp()})
+    .where('id', '=', setlistId)
+    .execute();
 }
 
 export async function updateSetlistItemSpeed(

@@ -34,6 +34,32 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty';
 import {cn} from '@/lib/utils';
+
+function formatDuration(ms: number): string {
+  const totalSec = Math.round(ms / 1000);
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+import {reorderItems} from '@/lib/setlist-order';
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  KeyboardSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import {CSS} from '@dnd-kit/utilities';
 import {toast} from 'sonner';
 import {
   type Setlist,
@@ -54,6 +80,7 @@ import {getSavedCharts} from '@/lib/local-db/saved-charts';
 import {listCompositions, type TabComposition} from '@/lib/local-db/tab-compositions';
 import {getAllPdfLibraryEntries, type PdfLibraryEntry} from '@/lib/local-db/pdf-library';
 import {ChartResponseEncore} from '@/lib/chartSelection';
+import {InstrumentImage, RENDERED_INSTRUMENTS, type AllowedInstrument} from '@/components/ChartInstruments';
 import {useSidebar} from '@/contexts/SidebarContext';
 
 // ── Setlist Sidebar ──────────────────────────────────────────────────
@@ -517,44 +544,54 @@ function ItemTypeIcon({itemType}: {itemType: SetlistItem['itemType']}) {
   return <Music2 className="h-3.5 w-3.5 text-outline shrink-0" />;
 }
 
-// ── Draggable Setlist Item Row ───────────────────────────────────────
+// ── Setlist Item Row (sortable) ──────────────────────────────────────
+
+function itemSubtitle(item: SetlistItem): string | null {
+  if (item.itemType === 'chart') return `${item.artist} · ${item.charter ?? ''}`;
+  if (item.itemType === 'composition') return item.artist;
+  return item.artist || null;
+}
 
 function SetlistItemRow({
   item,
   index,
   onRemove,
   onChangeSpeed,
-  onDragStart,
-  onDragOver,
-  onDrop,
-  isDragTarget,
 }: {
   item: SetlistItem;
   index: number;
   onRemove: () => void;
   onChangeSpeed: (speed: number) => void;
-  onDragStart: (e: React.DragEvent) => void;
-  onDragOver: (e: React.DragEvent) => void;
-  onDrop: (e: React.DragEvent) => void;
-  isDragTarget: boolean;
 }) {
-  const subtitle =
-    item.itemType === 'chart' ? `${item.artist} · ${item.charter ?? ''}` :
-    item.itemType === 'composition' ? item.artist :
-    item.artist || null;
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({id: item.id});
+
+  const subtitle = itemSubtitle(item);
 
   return (
     <div
-      draggable
-      onDragStart={onDragStart}
-      onDragOver={onDragOver}
-      onDrop={onDrop}
+      ref={setNodeRef}
+      style={{transform: CSS.Transform.toString(transform), transition}}
+      {...attributes}
+      {...listeners}
+      data-testid={`setlist-item-${index}`}
       className={cn(
-        'group flex items-center gap-2 px-3 py-2 border-b border-white/5 last:border-b-0 transition-colors',
-        isDragTarget ? 'bg-primary-container/10 border-primary-container/20' : 'hover:bg-surface-container-high',
+        'group flex items-center gap-2 px-3 py-2 transition-colors select-none touch-none',
+        isDragging
+          ? 'opacity-30 bg-surface-container z-10 cursor-grabbing'
+          : 'cursor-grab hover:bg-surface-container-high',
       )}
     >
-      <div className="cursor-grab active:cursor-grabbing text-outline hover:text-on-surface-variant shrink-0">
+      <div
+        data-testid="grip"
+        className="text-outline hover:text-on-surface-variant shrink-0"
+      >
         <GripVertical className="h-4 w-4" />
       </div>
       <span className="text-xs text-outline w-6 text-right tabular-nums shrink-0">
@@ -567,6 +604,14 @@ function SetlistItemRow({
           <div className="text-xs text-on-surface-variant truncate">{subtitle}</div>
         )}
       </div>
+      {item.songLength != null && (
+        <span className="text-xs text-outline tabular-nums shrink-0 w-10 text-right">
+          {formatDuration(item.songLength)}
+        </span>
+      )}
+      {item.instrument != null && (RENDERED_INSTRUMENTS as readonly string[]).includes(item.instrument) && (
+        <InstrumentImage instrument={item.instrument as AllowedInstrument} size="sm" classNames="shrink-0 opacity-70" />
+      )}
       <SpeedEditor speed={item.speed} onChangeSpeed={onChangeSpeed} />
       <button
         className="p-1 rounded opacity-0 group-hover:opacity-100 hover:bg-error/10 transition-opacity shrink-0"
@@ -579,9 +624,31 @@ function SetlistItemRow({
   );
 }
 
+// Plain row used inside DragOverlay (no useSortable hook).
+function SetlistItemRowOverlay({item, index}: {item: SetlistItem; index: number}) {
+  const subtitle = itemSubtitle(item);
+  return (
+    <div className="flex items-center gap-2 px-3 py-2 bg-surface-container-high rounded-lg shadow-lg border border-outline-variant/20 select-none opacity-95 cursor-grabbing">
+      <div className="text-outline shrink-0">
+        <GripVertical className="h-4 w-4" />
+      </div>
+      <span className="text-xs text-outline w-6 text-right tabular-nums shrink-0">
+        {index + 1}
+      </span>
+      <ItemTypeIcon itemType={item.itemType} />
+      <div className="flex-1 min-w-0">
+        <div className="text-sm font-medium text-on-surface truncate">{item.name}</div>
+        {subtitle && (
+          <div className="text-xs text-on-surface-variant truncate">{subtitle}</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── Setlist Editor (main area) ───────────────────────────────────────
 
-function SetlistEditor({
+export function SetlistEditor({
   setlist,
   items,
   onAddItems,
@@ -597,28 +664,33 @@ function SetlistEditor({
   onChangeSpeed: (itemId: number, speed: number) => void;
 }) {
   const navigate = useNavigate();
-  const [dragIndex, setDragIndex] = useState<number | null>(null);
-  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const [activeId, setActiveId] = useState<number | null>(null);
 
-  const handleDragStart = (index: number) => (e: React.DragEvent) => {
-    setDragIndex(index);
-    e.dataTransfer.effectAllowed = 'move';
+  const totalDurationMs = useMemo(
+    () => items.reduce((sum, item) => sum + (item.songLength ?? 0), 0),
+    [items],
+  );
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {activationConstraint: {distance: 5}}),
+    useSensor(KeyboardSensor, {coordinateGetter: sortableKeyboardCoordinates}),
+  );
+
+  const activeItem = activeId !== null ? items.find(i => i.id === activeId) ?? null : null;
+  const activeIndex = activeItem ? items.indexOf(activeItem) : -1;
+
+  const handleDragStart = ({active}: DragStartEvent) => {
+    setActiveId(active.id as number);
   };
 
-  const handleDragOver = (index: number) => (e: React.DragEvent) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-    setDragOverIndex(index);
-  };
-
-  const handleDrop = (targetIndex: number) => (e: React.DragEvent) => {
-    e.preventDefault();
-    if (dragIndex !== null && dragIndex !== targetIndex) {
-      const item = items[dragIndex];
-      if (item) onReorder(item.id, targetIndex);
+  const handleDragEnd = ({active, over}: DragEndEvent) => {
+    setActiveId(null);
+    if (!over || active.id === over.id) return;
+    const fromIndex = items.findIndex(i => i.id === active.id);
+    const toIndex = items.findIndex(i => i.id === over.id);
+    if (fromIndex !== -1 && toIndex !== -1 && fromIndex !== toIndex) {
+      onReorder(active.id as number, toIndex);
     }
-    setDragIndex(null);
-    setDragOverIndex(null);
   };
 
   return (
@@ -629,6 +701,9 @@ function SetlistEditor({
           <h1 className="text-lg font-semibold text-on-surface truncate">{setlist.name}</h1>
           <div className="flex items-center gap-3 mt-0.5 text-xs text-on-surface-variant">
             <span>{items.length} {items.length === 1 ? 'item' : 'items'}</span>
+            {totalDurationMs > 0 && (
+              <span className="tabular-nums">{formatDuration(totalDurationMs)}</span>
+            )}
             {setlist.description && (
               <span className="truncate">{setlist.description}</span>
             )}
@@ -649,7 +724,7 @@ function SetlistEditor({
       </div>
 
       {/* Song List */}
-      <div className="flex-1 min-h-0 overflow-y-auto" onDragEnd={() => { setDragIndex(null); setDragOverIndex(null); }}>
+      <div className="flex-1 min-h-0 overflow-y-auto">
         {items.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <Empty>
@@ -671,21 +746,33 @@ function SetlistEditor({
             </Empty>
           </div>
         ) : (
-          <div>
-            {items.map((item, i) => (
-              <SetlistItemRow
-                key={item.id}
-                item={item}
-                index={i}
-                onRemove={() => onRemoveItem(item.id)}
-                onChangeSpeed={speed => onChangeSpeed(item.id, speed)}
-                onDragStart={handleDragStart(i)}
-                onDragOver={handleDragOver(i)}
-                onDrop={handleDrop(i)}
-                isDragTarget={dragOverIndex === i && dragIndex !== i}
-              />
-            ))}
-          </div>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDragCancel={() => setActiveId(null)}
+          >
+            <SortableContext
+              items={items.map(i => i.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              {items.map((item, i) => (
+                <SetlistItemRow
+                  key={item.id}
+                  item={item}
+                  index={i}
+                  onRemove={() => onRemoveItem(item.id)}
+                  onChangeSpeed={speed => onChangeSpeed(item.id, speed)}
+                />
+              ))}
+            </SortableContext>
+            <DragOverlay dropAnimation={null}>
+              {activeItem && (
+                <SetlistItemRowOverlay item={activeItem} index={activeIndex} />
+              )}
+            </DragOverlay>
+          </DndContext>
         )}
       </div>
     </div>
@@ -791,8 +878,17 @@ export default function SetlistsPage() {
 
   const handleReorder = async (itemId: number, newPosition: number) => {
     if (!selectedId) return;
-    await reorderSetlistItem(selectedId, itemId, newPosition);
-    await loadItems(selectedId);
+    const fromIndex = items.findIndex(item => item.id === itemId);
+    if (fromIndex !== -1 && fromIndex !== newPosition) {
+      setItems(prev => reorderItems(prev, fromIndex, newPosition));
+    }
+    try {
+      await reorderSetlistItem(selectedId, itemId, newPosition);
+    } catch (err) {
+      console.error('Failed to reorder:', err);
+      await loadItems(selectedId);
+      toast.error('Failed to reorder');
+    }
   };
 
   const handleChangeSpeed = async (itemId: number, speed: number) => {
