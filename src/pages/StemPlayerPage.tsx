@@ -1,7 +1,7 @@
 import {Music2} from 'lucide-react';
 import {useMobilePageTitle} from '@/contexts/LayoutContext';
 import {useStemPlayer} from '@/hooks/useStemPlayer';
-import {StemMixerPanel} from '@/components/StemMixerPanel';
+import StemMixerPanel from '@/components/StemMixerPanel';
 
 export default function StemPlayerPage() {
   useMobilePageTitle('Stem Player');

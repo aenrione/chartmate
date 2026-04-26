@@ -171,6 +171,8 @@ export default function GuitarSongView() {
     handleSeek: handleYoutubeSeek,
   } = useYoutubeSync({songKey, clockRef, tempo: settings.playbackSpeed});
 
+  const stemPlayer = useStemPlayer(songKey);
+
   // Dev mode: load from URL query param ?file=/path/to/file.gp5
   const [devFileData, setDevFileData] = useState<Uint8Array | null>(null);
   const devFile = useMemo(() => new URLSearchParams(location.search).get('file'), [location.search]);
@@ -297,6 +299,10 @@ export default function GuitarSongView() {
   useEffect(() => {
     if (youtubeVideoId) setShowYoutubePanel(true);
   }, [youtubeVideoId]);
+
+  useEffect(() => {
+    if (stemPlayer.isLinked) setShowStemPanel(true);
+  }, [stemPlayer.isLinked]);
 
   const onPlayerReady = useCallback(() => {
     setIsPlayerReady(true);
@@ -831,6 +837,43 @@ export default function GuitarSongView() {
                 </Button>
               </div>
             )}
+          </div>
+
+          {/* Stems */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                <Music2 className="h-3.5 w-3.5" />
+                Stems
+              </label>
+              {stemPlayer.isLinked && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-5 w-5 shrink-0"
+                  onClick={() => setShowStemPanel(v => !v)}
+                  title={showStemPanel ? 'Hide stems' : 'Show stems'}
+                >
+                  {showStemPanel ? <EyeOff className="h-3 w-3" /> : <Music2 className="h-3 w-3" />}
+                </Button>
+              )}
+            </div>
+            <div>
+              {stemPlayer.isLinked ? (
+                <span className="text-xs text-muted-foreground">
+                  {stemPlayer.loadedStems.length} stems linked
+                </span>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 text-xs px-2 w-full justify-start"
+                  onClick={stemPlayer.promptAndLink}
+                >
+                  <Music2 className="h-3 w-3 mr-1" /> Link stems folder
+                </Button>
+              )}
+            </div>
           </div>
 
           {/* Score info */}
