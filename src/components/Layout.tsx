@@ -15,7 +15,9 @@ import {
 import {useSidebar} from '@/contexts/SidebarContext';
 import {useLayout} from '@/contexts/LayoutContext';
 import SettingsDialog from '@/components/SettingsDialog';
+import SpotifyStatusDialog from '@/components/SpotifyStatusDialog';
 import BottomNav from '@/components/BottomNav';
+import {isMobileDevice} from '@/lib/platform';
 
 const TOP_NAV_SECTIONS = [
   {label: 'Practice', prefix: ['/sheet-music', '/guitar', '/rudiments', '/tab-editor', '/fills', '/']},
@@ -63,6 +65,7 @@ function TopNav({pathname}: {pathname: string}) {
   const {isConnected} = useSpotifyAuth();
   const {isDark, toggle} = useDarkMode();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [spotifyOpen, setSpotifyOpen] = useState(false);
   const {hideHeaderOnMobile, mobilePageTitle} = useLayout();
 
   useEffect(() => {
@@ -132,17 +135,28 @@ function TopNav({pathname}: {pathname: string}) {
           <Settings className="h-4 w-4" />
         </button>
         <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
-        <div className={cn(
-          'h-2 w-2 rounded-full hidden lg:block',
-          isConnected ? 'bg-emerald-500' : 'bg-outline',
-        )} title={isConnected ? 'Spotify Connected' : 'Spotify Disconnected'} />
+        <SpotifyStatusDialog open={spotifyOpen} onOpenChange={setSpotifyOpen} />
+        {!isMobileDevice && (
+          <button
+            onClick={() => setSpotifyOpen(true)}
+            className="p-1.5 rounded-full hover:bg-surface-container transition-all duration-200"
+            title={isConnected ? 'Spotify Connected' : 'Spotify Disconnected'}
+          >
+            <div className={cn(
+              'h-2 w-2 rounded-full',
+              isConnected ? 'bg-emerald-500' : 'bg-outline',
+            )} />
+          </button>
+        )}
       </div>
     </div>
     </header>
   );
 }
 
-function DefaultSidebarContent({pathname}: {pathname: string}) {
+function DefaultSidebarContent({pathname, locationState}: {pathname: string; locationState: unknown}) {
+  const state = locationState as {activeTab?: string} | null;
+
   return (
     <>
       <div className="px-6 mb-8">
@@ -153,7 +167,11 @@ function DefaultSidebarContent({pathname}: {pathname: string}) {
 
       <nav className="flex-1 space-y-1">
         {INSTRUMENTS.map(item => {
-          const active = isActive(pathname, item.prefix);
+          const savedChartsActive = pathname === '/library/saved-charts' && (
+            (item.href === '/guitar' && state?.activeTab === 'guitar') ||
+            (item.href === '/sheet-music' && state?.activeTab === 'chorus')
+          );
+          const active = isActive(pathname, item.prefix) || savedChartsActive;
           const Icon = item.icon;
 
           const subItems =
@@ -239,7 +257,7 @@ function DefaultSidebarContent({pathname}: {pathname: string}) {
   );
 }
 
-function Sidebar({pathname}: {pathname: string}) {
+function Sidebar({pathname, locationState}: {pathname: string; locationState: unknown}) {
   const {sidebarContent} = useSidebar();
 
   return (
@@ -247,7 +265,7 @@ function Sidebar({pathname}: {pathname: string}) {
       'hidden lg:flex flex-col h-full bg-surface-container-low w-64 border-r border-outline-variant/20 shrink-0',
       !sidebarContent && 'py-4',
     )}>
-      {sidebarContent ?? <DefaultSidebarContent pathname={pathname} />}
+      {sidebarContent ?? <DefaultSidebarContent pathname={pathname} locationState={locationState} />}
     </aside>
   );
 }
@@ -292,7 +310,7 @@ export default function Layout({children}: {children: ReactNode}) {
           paddingRight: 'env(safe-area-inset-right, 0px)',
         }}
       >
-        <Sidebar pathname={pathname} />
+        <Sidebar pathname={pathname} locationState={location.state} />
         <main className="flex-1 min-h-0 flex flex-col overflow-hidden">
           {children}
         </main>

@@ -39,4 +39,5 @@ export const STORE_KEYS = {
   WEBDAV_URL: 'webdav_url',
   WEBDAV_USERNAME: 'webdav_username',
   WEBDAV_PASSWORD: 'webdav_password',
+  SPOTIFY_USER_PROFILE: 'spotify_user_profile',
 } as const;
