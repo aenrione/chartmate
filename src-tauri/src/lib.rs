@@ -1,6 +1,8 @@
 #[cfg(desktop)]
 mod ignition;
 mod psarc;
+#[cfg(desktop)]
+mod stems;
 mod webdav;
 
 #[cfg(desktop)]
@@ -30,6 +32,8 @@ pub fn run() {
             webdav::webdav_list_remote_pdfs,
             webdav::webdav_push_pdf,
             webdav::webdav_pull_pdf,
+            stems::check_demucs,
+            stems::separate_stems,
         ]);
 
     #[cfg(not(desktop))]
