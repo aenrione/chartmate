@@ -2,12 +2,17 @@ import { useEffect, useState } from 'react';
 import { getSongsFolderPath, promptForSongsFolder } from '@/lib/songs-folder';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { isMobileDevice } from '@/lib/platform';
 
 export default function FirstLaunchSetup({ onComplete }: { onComplete: () => void }) {
   const [checking, setChecking] = useState(true);
   const [show, setShow] = useState(false);
 
   useEffect(() => {
+    if (isMobileDevice) {
+      onComplete();
+      return;
+    }
     getSongsFolderPath().then(path => {
       if (path) {
         onComplete();

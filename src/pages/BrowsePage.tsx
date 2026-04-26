@@ -6,15 +6,18 @@ import SpotifyLibraryExplorer from '@/components/SpotifyLibraryExplorer';
 import CompareChartsToLocal from '@/components/CompareChartsToLocal';
 import TabsBrowseTab from '@/components/TabsBrowseTab';
 import {testSameCharter} from '@/lib/chartSelection/comparisonTests';
+import {isMobileDevice} from '@/lib/platform';
 
 type Tab = 'charts' | 'spotify' | 'updates' | 'guitar-tabs';
 
-const TABS: {key: Tab; label: string; mobileHidden?: boolean}[] = [
+const ALL_TABS: {key: Tab; label: string; mobileHidden?: boolean}[] = [
   {key: 'charts', label: 'Rhythm Charts'},
   {key: 'spotify', label: 'Spotify Explorer', mobileHidden: true},
   {key: 'updates', label: 'Updates', mobileHidden: true},
   {key: 'guitar-tabs', label: 'Guitar Tabs'},
 ];
+
+const TABS = isMobileDevice ? ALL_TABS.filter(t => !t.mobileHidden) : ALL_TABS;
 
 const RANKING_GROUPS = [[testSameCharter]];
 
@@ -44,7 +47,6 @@ export default function BrowsePage() {
                 onClick={() => handleTabChange(tab.key)}
                 className={cn(
                   'px-4 py-2 max-lg:landscape:py-1.5 rounded-xl text-sm transition-colors',
-                  tab.mobileHidden && 'hidden lg:block',
                   activeTab === tab.key
                     ? 'bg-surface-container-high text-primary font-bold'
                     : 'text-on-surface-variant/50 hover:text-on-surface',

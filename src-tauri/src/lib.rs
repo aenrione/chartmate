@@ -36,6 +36,13 @@ pub fn run() {
     let builder = builder.invoke_handler(tauri::generate_handler![
         psarc::parse_psarc,
         psarc::extract_psarc_audio,
+        webdav::webdav_test_connection,
+        webdav::webdav_get_remote_manifest,
+        webdav::webdav_upload_export,
+        webdav::webdav_download_export,
+        webdav::webdav_list_remote_pdfs,
+        webdav::webdav_push_pdf,
+        webdav::webdav_pull_pdf,
     ]);
 
     let builder = builder
