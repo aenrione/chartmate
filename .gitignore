@@ -32,3 +32,5 @@ ignore/ExternalSetlistCreator
 .worktrees/
 src-tauri/gen/apple/
 .claude/worktrees
+playwright/.cache
+test-results
