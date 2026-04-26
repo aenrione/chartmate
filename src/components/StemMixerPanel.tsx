@@ -1,162 +1,168 @@
-import {useMemo} from 'react';
-import {FolderOpen, Play, Pause, Volume2} from 'lucide-react';
-import {cn} from '@/lib/utils';
-import {STEM_NAMES, type StemName} from '@/hooks/useStemPlayer';
+import {useState} from 'react';
+import {Play, Pause, Volume2, FolderOpen, Unlink, Loader2} from 'lucide-react';
+import {Button} from '@/components/ui/button';
+import type {useStemPlayer, StemName} from '@/hooks/useStemPlayer';
 
-type StemPlayerState = {
-  isLinked: boolean;
-  stemsReady: boolean;
-  loadedStems: StemName[];
-  isCopying: boolean;
-  isLoading: boolean;
-  linkError: string | null;
-  isPlaying: boolean;
-  currentTime: number;
-  duration: number;
-  volumes: Record<StemName, number>;
-  promptAndLink: () => Promise<void>;
-  setVolume: (name: StemName, value: number) => void;
-  togglePlayPause: () => Promise<void>;
-  seek: (timeSeconds: number) => Promise<void>;
-};
+type StemPlayerResult = ReturnType<typeof useStemPlayer>;
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+interface StemMixerPanelProps extends StemPlayerResult {}
 
 function formatTime(s: number): string {
   if (!isFinite(s) || s < 0) return '0:00';
-  const m = Math.floor(s / 60);
-  const sec = Math.floor(s % 60);
-  return `${m}:${sec.toString().padStart(2, '0')}`;
+  return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 }
 
-export function StemMixerPanel({
-  isLinked,
-  stemsReady,
-  loadedStems,
-  isCopying,
-  isLoading,
-  linkError,
-  isPlaying,
-  currentTime,
-  duration,
-  volumes,
-  promptAndLink,
-  setVolume,
-  togglePlayPause,
-  seek,
-}: StemPlayerState) {
-  const folderLabel = useMemo(() => {
-    if (isCopying) return 'Copying stems…';
-    if (isLoading) return 'Loading…';
-    if (isLinked) return 'Stems linked';
-    return 'Link Stems';
-  }, [isCopying, isLoading, isLinked]);
+export default function StemMixerPanel(props: StemMixerPanelProps) {
+  const {
+    isLinked,
+    stemsReady,
+    loadedStems,
+    isCopying,
+    isLoading,
+    linkError,
+    isPlaying,
+    currentTime,
+    duration,
+    volumes,
+    promptAndLink,
+    unlink,
+    setVolume,
+    togglePlayPause,
+  } = props;
 
-  return (
-    <>
-      {/* Folder link section */}
-      <div className="mb-6">
-        <p className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">
-          Stem Folder
+  // Track per-stem "was muted" previous volume for toggle
+  const [premuteVolumes, setPremuteVolumes] = useState<Partial<Record<StemName, number>>>({});
+
+  function handleMuteToggle(name: StemName) {
+    const current = volumes[name];
+    if (current === 0) {
+      // Unmute: restore previous volume or default to 100
+      const restored = premuteVolumes[name] ?? 100;
+      setVolume(name, restored);
+      setPremuteVolumes(prev => {
+        const next = {...prev};
+        delete next[name];
+        return next;
+      });
+    } else {
+      // Mute: save current volume then set to 0
+      setPremuteVolumes(prev => ({...prev, [name]: current}));
+      setVolume(name, 0);
+    }
+  }
+
+  // State 2: Copying / Loading
+  if (isCopying || isLoading) {
+    return (
+      <div className="flex items-center gap-2 text-on-surface-variant text-sm py-2">
+        <Loader2 className="h-4 w-4 animate-spin text-primary" />
+        <span>{isCopying ? 'Copying stems…' : 'Loading stems…'}</span>
+      </div>
+    );
+  }
+
+  // State 1: Not linked
+  if (!isLinked) {
+    return (
+      <div className="space-y-2">
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-full text-xs gap-1.5"
+          onClick={() => void promptAndLink()}
+        >
+          <FolderOpen className="h-3.5 w-3.5" />
+          Link Stems
+        </Button>
+        <p className="text-xs text-on-surface-variant">
+          Pick the folder Demucs created (e.g. separated/htdemucs/song_name/)
         </p>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={promptAndLink}
-            disabled={isCopying || isLoading}
-            className={cn(
-              'flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-on-primary font-medium text-sm transition-opacity',
-              (isCopying || isLoading) && 'opacity-50 cursor-not-allowed'
-            )}
-          >
-            <FolderOpen className="h-4 w-4" />
-            {folderLabel}
-          </button>
-          {isLinked && !isCopying && !isLoading && (
-            <span className="text-on-surface-variant text-sm">Ready to play</span>
-          )}
-        </div>
         {linkError && (
-          <p className="mt-2 text-sm text-red-400 bg-red-400/10 rounded px-3 py-2">
-            {linkError}
-          </p>
+          <p className="text-xs text-red-500">{linkError}</p>
         )}
       </div>
+    );
+  }
 
-      {/* Copy progress feedback */}
-      {isCopying && (
-        <div className="mb-6 p-4 rounded-lg bg-primary/10 text-primary text-sm font-medium">
-          Copying stem files to local storage…
-        </div>
-      )}
+  // State 3b: Linked but not yet ready
+  if (!stemsReady) {
+    return (
+      <div className="flex items-center gap-2 text-on-surface-variant text-sm py-2">
+        <Loader2 className="h-4 w-4 animate-spin text-primary" />
+        <span>Loading audio…</span>
+      </div>
+    );
+  }
 
-      {/* Player UI — only show when ready */}
-      {stemsReady && (
-        <>
-          {/* Transport controls */}
-          <div className="mb-6 flex items-center gap-4">
-            <button
-              onClick={togglePlayPause}
-              className="flex items-center justify-center h-10 w-10 rounded-full bg-primary text-on-primary shadow-md hover:shadow-lg transition-shadow"
-            >
-              {isPlaying ? (
-                <Pause className="h-5 w-5" />
-              ) : (
-                <Play className="h-5 w-5 translate-x-0.5" />
-              )}
-            </button>
-            <div className="flex-1 flex items-center gap-2 text-xs text-on-surface-variant font-mono">
-              <span>{formatTime(currentTime)}</span>
+  // State 3: Linked + ready
+  return (
+    <div className="space-y-3">
+      {/* Transport bar */}
+      <div className="flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-7 w-7 shrink-0"
+          onClick={() => void togglePlayPause()}
+        >
+          {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+        </Button>
+        <span className="text-xs font-mono text-on-surface-variant tabular-nums">
+          {formatTime(currentTime)} / {formatTime(duration)}
+        </span>
+      </div>
+
+      {/* Per-track faders */}
+      <div className="space-y-2">
+        {loadedStems.map(name => {
+          const vol = volumes[name];
+          const isMuted = vol === 0;
+          return (
+            <div key={name} className="space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-on-surface capitalize">{name}</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs text-on-surface-variant tabular-nums w-7 text-right">
+                    {vol}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`h-5 w-5 shrink-0 ${isMuted ? 'opacity-40' : ''}`}
+                    onClick={() => handleMuteToggle(name)}
+                    title={isMuted ? 'Unmute' : 'Mute'}
+                  >
+                    <Volume2 className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
               <input
                 type="range"
                 min={0}
-                max={duration || 1}
-                step={0.1}
-                value={currentTime}
-                onChange={e => seek(parseFloat(e.target.value))}
-                className="flex-1 accent-primary"
+                max={100}
+                value={vol}
+                onChange={e => setVolume(name, Number(e.target.value))}
+                className="w-full h-1.5 rounded-full appearance-none cursor-pointer accent-primary bg-surface-container"
+                style={{accentColor: 'var(--color-accent-primary, hsl(var(--primary)))'}}
               />
-              <span>{formatTime(duration)}</span>
             </div>
-          </div>
+          );
+        })}
+      </div>
 
-          {/* Stem volume faders */}
-          <div className="space-y-4">
-            <p className="text-xs font-bold uppercase tracking-widest text-on-surface-variant flex items-center gap-2">
-              <Volume2 className="h-3.5 w-3.5" /> Mix
-            </p>
-            {loadedStems.map(name => (
-              <div key={name} className="flex items-center gap-4">
-                <span className="w-16 text-sm font-medium text-on-surface capitalize">
-                  {name}
-                </span>
-                <input
-                  type="range"
-                  min={0}
-                  max={100}
-                  value={volumes[name] ?? 100}
-                  onChange={e => setVolume(name, Number(e.target.value))}
-                  className="flex-1 accent-primary"
-                />
-                <span className="w-8 text-right text-xs text-on-surface-variant font-mono">
-                  {volumes[name] ?? 100}
-                </span>
-                <button
-                  onClick={() => {
-                    const current = volumes[name] ?? 100;
-                    setVolume(name, current === 0 ? 100 : 0);
-                  }}
-                  className={cn(
-                    'text-xs px-2 py-0.5 rounded font-medium transition-colors',
-                    (volumes[name] ?? 100) === 0
-                      ? 'bg-primary/20 text-primary'
-                      : 'text-on-surface-variant/50 hover:text-on-surface'
-                  )}
-                >
-                  {(volumes[name] ?? 100) === 0 ? 'muted' : 'mute'}
-                </button>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-    </>
+      {/* Unlink button */}
+      <div className="pt-1 border-t">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-6 text-xs px-2 text-destructive hover:text-destructive hover:bg-destructive/10 gap-1"
+          onClick={() => void unlink()}
+        >
+          <Unlink className="h-3 w-3" />
+          Unlink stems
+        </Button>
+      </div>
+    </div>
   );
 }

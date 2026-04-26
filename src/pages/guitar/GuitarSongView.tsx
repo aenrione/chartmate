@@ -42,6 +42,9 @@ import YouTubePlayer from '@/components/YouTubePlayer';
 import {useYoutubeSync} from '@/hooks/useYoutubeSync';
 import {snapToYouTubeRate} from '@/lib/youtube-utils';
 import type {PlaybackClock} from '@/lib/youtube-sync';
+import {useStemPlayer} from '@/hooks/useStemPlayer';
+import StemMixerPanel from '@/components/StemMixerPanel';
+import {Music2} from 'lucide-react';
 import Tip from '@/components/shared/Tip';
 import {TooltipProvider} from '@/components/ui/tooltip';
 
@@ -111,6 +114,7 @@ export default function GuitarSongView() {
   const [masterVolume, setMasterVolume] = useState(1.0);
   const [showPracticeMode, setShowPracticeMode] = useState(false);
   const [showYoutubePanel, setShowYoutubePanel] = useState(false);
+  const [showStemPanel, setShowStemPanel] = useState(false);
   const [youtubeFullscreen, setYoutubeFullscreen] = useState(false);
   // Suppress YouTube→AlphaTab state feedback after AlphaTab-initiated commands
   const ytSyncSuppressRef = useRef(false);
