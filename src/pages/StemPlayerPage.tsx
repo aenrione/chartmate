@@ -66,6 +66,11 @@ export default function StemPlayerPage() {
     guitar: 100,
     other: 100,
   });
+  const volumesRef = useRef(volumes);
+  useEffect(() => { volumesRef.current = volumes; }, [volumes]);
+
+  // Separation error
+  const [separationError, setSeparationError] = useState<string | null>(null);
 
   // Transport
   const [isPlaying, setIsPlaying] = useState(false);
@@ -106,14 +111,19 @@ export default function StemPlayerPage() {
       const parts = result.split(/[\\/]/);
       setSelectedFileName(parts[parts.length - 1] ?? result);
       // Reset previous session
+      audioManagerRef.current?.destroy();
+      audioManagerRef.current = null;
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
       setStems(null);
       setStemsReady(false);
       setProgressLines([]);
+      setSeparationError(null);
       setIsPlaying(false);
       setCurrentTime(0);
       setDuration(0);
-      audioManagerRef.current?.destroy();
-      audioManagerRef.current = null;
     }
   }, []);
 
@@ -121,6 +131,7 @@ export default function StemPlayerPage() {
   const handleSeparate = useCallback(async () => {
     if (!selectedFile || !demucsAvailable || isSeparating) return;
 
+    setSeparationError(null);
     setIsSeparating(true);
     setProgressLines([]);
     setStems(null);
@@ -164,33 +175,25 @@ export default function StemPlayerPage() {
       await manager.ready;
 
       audioManagerRef.current = manager;
-
-      // AudioManager doesn't expose a public `duration` getter, so we compute
-      // an approximation by decoding one of the stem files.
-      try {
-        const ctx = new AudioContext();
-        const buf = await ctx.decodeAudioData(files[0].data.slice(0).buffer as ArrayBuffer);
-        setDuration(buf.duration);
-        await ctx.close();
-      } catch {
-        // duration will remain 0 — acceptable
-      }
+      setDuration(manager.duration);
 
       setStemsReady(true);
 
       // Apply current volume state
       for (const name of STEM_NAMES) {
         try {
-          manager.setVolume(name, volumes[name] / 100);
+          manager.setVolume(name, volumesRef.current[name] / 100);
         } catch {
           // stem may not exist in the output — ignore
         }
       }
+    } catch (err) {
+      setSeparationError(err instanceof Error ? err.message : String(err));
     } finally {
       unlisten();
       setIsSeparating(false);
     }
-  }, [selectedFile, demucsAvailable, isSeparating, volumes]);
+  }, [selectedFile, demucsAvailable, isSeparating]);
 
   // ── Transport ────────────────────────────────────────────────────────────
   const startTimeInterval = useCallback(() => {
@@ -287,7 +290,11 @@ export default function StemPlayerPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={handlePickFile}
-              className="flex items-center gap-2 bg-primary text-on-primary px-4 py-2 rounded-lg font-medium text-sm hover:opacity-90 transition-opacity"
+              disabled={isSeparating}
+              className={cn(
+                'flex items-center gap-2 bg-primary text-on-primary px-4 py-2 rounded-lg font-medium text-sm hover:opacity-90 transition-opacity',
+                isSeparating && 'opacity-50 cursor-not-allowed',
+              )}
             >
               <FolderOpen className="h-4 w-4" />
               Choose File
@@ -324,6 +331,11 @@ export default function StemPlayerPage() {
               </>
             )}
           </button>
+          {separationError && (
+            <div className="text-red-400 text-sm mt-2 p-2 bg-red-400/10 rounded">
+              {separationError}
+            </div>
+          )}
         </section>
 
         {/* Progress log */}
@@ -361,6 +373,7 @@ export default function StemPlayerPage() {
             </p>
             <div className="rounded-xl bg-surface-container border border-outline-variant/20 divide-y divide-outline-variant/10">
               {stems.map(stem => {
+                if (!STEM_NAMES.includes(stem.name as StemName)) return null;
                 const name = stem.name as StemName;
                 const vol = volumes[name] ?? 100;
                 return (

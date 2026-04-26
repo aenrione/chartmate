@@ -331,6 +331,10 @@ export class AudioManager {
     this.#onSongEnded?.();
   }
 
+  get duration() {
+    return this.#duration;
+  }
+
   // Check if we need to loop in practice mode
   checkPracticeModeLoop() {
     if (!this.#practiceModeConfig || !this.#isInitialized) {
