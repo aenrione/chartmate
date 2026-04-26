@@ -6,21 +6,40 @@ use tokio::process::Command;
 
 const DEMUCS_MODEL: &str = "htdemucs";
 
-// macOS GUI apps don't inherit the user's shell PATH, so common Python bin
-// directories (where `demucs` lives after `pip3 install demucs`) are invisible.
-// Prepend the most common installation locations so Tauri can find the binary.
-fn augmented_path() -> String {
-    let extra = [
-        "/Library/Frameworks/Python.framework/Versions/3.13/bin",
-        "/Library/Frameworks/Python.framework/Versions/3.12/bin",
-        "/Library/Frameworks/Python.framework/Versions/3.11/bin",
-        "/Library/Frameworks/Python.framework/Versions/3.10/bin",
-        "/usr/local/bin",
-        "/opt/homebrew/bin",
-        "/opt/homebrew/sbin",
+// macOS GUI apps don't inherit the user's shell PATH, so `demucs` (installed
+// via pip3) is invisible to a plain Command::new("demucs"). Probe known
+// installation locations and return the first real path found.
+fn find_demucs() -> Option<std::path::PathBuf> {
+    let home = std::env::var("HOME").unwrap_or_default();
+    let candidates: &[&str] = &[
+        // Python.org framework installs (most common on macOS)
+        "/Library/Frameworks/Python.framework/Versions/3.13/bin/demucs",
+        "/Library/Frameworks/Python.framework/Versions/3.12/bin/demucs",
+        "/Library/Frameworks/Python.framework/Versions/3.11/bin/demucs",
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin/demucs",
+        // Homebrew Python
+        "/opt/homebrew/bin/demucs",
+        "/usr/local/bin/demucs",
     ];
-    let current = std::env::var("PATH").unwrap_or_default();
-    format!("{}:{}", extra.join(":"), current)
+
+    // User-local installs (pipx, --user)
+    let user_candidates = [
+        format!("{home}/.local/bin/demucs"),
+        format!("{home}/Library/Python/3.13/bin/demucs"),
+        format!("{home}/Library/Python/3.12/bin/demucs"),
+        format!("{home}/Library/Python/3.11/bin/demucs"),
+    ];
+
+    for path in candidates
+        .iter()
+        .map(|s| s.to_string())
+        .chain(user_candidates)
+    {
+        if std::path::Path::new(&path).exists() {
+            return Some(std::path::PathBuf::from(path));
+        }
+    }
+    None
 }
 
 // ─── Public types ─────────────────────────────────────────────────────────────
@@ -38,17 +57,17 @@ pub struct StemFile {
 /// instructions if the binary is not found.
 #[tauri::command]
 pub async fn check_demucs() -> Result<String, String> {
-    let output = Command::new("demucs")
+    let binary = find_demucs().ok_or_else(|| {
+        "Demucs not found. Install it with: pip3 install demucs\n\
+         (Python 3.9+ required — see https://github.com/adefossez/demucs)"
+            .to_string()
+    })?;
+
+    let output = Command::new(&binary)
         .arg("--version")
-        .env("PATH", augmented_path())
         .output()
         .await
-        .map_err(|_| {
-            "Demucs is not installed or not on your PATH.\n\
-             Install it with: pip3 install demucs\n\
-             (Python 3.8+ required — see https://github.com/adefossez/demucs)"
-                .to_string()
-        })?;
+        .map_err(|e| format!("Failed to run demucs at {}: {}", binary.display(), e))?;
 
     if output.status.success() {
         Ok("installed".to_string())
@@ -56,7 +75,7 @@ pub async fn check_demucs() -> Result<String, String> {
         let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
         Err(format!(
             "Demucs returned a non-zero exit code.\n\
-             Try reinstalling: pip install -U demucs\n\
+             Try reinstalling: pip3 install -U demucs\n\
              Details: {}",
             stderr
         ))
@@ -81,20 +100,24 @@ pub async fn separate_stems(
         return Err(format!("Input file not found: {}", input_path));
     }
 
-    let mut child = Command::new("demucs")
+    let binary = find_demucs().ok_or_else(|| {
+        "Demucs not found. Install it with: pip3 install demucs".to_string()
+    })?;
+
+    let mut child = Command::new(&binary)
         .arg("-n")
         .arg(DEMUCS_MODEL)
         .arg("-o")
         .arg(&output_dir)
         .arg(&input_path)
-        .env("PATH", augmented_path())
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::piped())
         .spawn()
         .map_err(|e| {
             format!(
-                "Failed to launch demucs: {}.\n\
+                "Failed to launch demucs at {}: {}.\n\
                  Make sure it is installed: pip3 install demucs",
+                binary.display(),
                 e
             )
         })?;
