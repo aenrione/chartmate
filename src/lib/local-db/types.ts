@@ -372,6 +372,12 @@ export interface SyncMeta {
   value: string;
 }
 
+export interface StemAssociations {
+  song_key: string;
+  stem_folder_path: string;
+  created_at: string;
+}
+
 export interface DB {
   explorer_saves: ExplorerSaves;
   chorus_charts: ChorusCharts;
@@ -406,4 +412,5 @@ export interface DB {
   repertoire_items: RepertoireItems;
   repertoire_reviews: RepertoireReviews;
   sync_meta: SyncMeta;
+  stem_associations: StemAssociations;
 }
