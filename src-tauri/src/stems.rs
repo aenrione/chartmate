@@ -6,6 +6,23 @@ use tokio::process::Command;
 
 const DEMUCS_MODEL: &str = "htdemucs";
 
+// macOS GUI apps don't inherit the user's shell PATH, so common Python bin
+// directories (where `demucs` lives after `pip install demucs`) are invisible.
+// Prepend the most common installation locations so Tauri can find the binary.
+fn augmented_path() -> String {
+    let extra = [
+        "/Library/Frameworks/Python.framework/Versions/3.13/bin",
+        "/Library/Frameworks/Python.framework/Versions/3.12/bin",
+        "/Library/Frameworks/Python.framework/Versions/3.11/bin",
+        "/Library/Frameworks/Python.framework/Versions/3.10/bin",
+        "/usr/local/bin",
+        "/opt/homebrew/bin",
+        "/opt/homebrew/sbin",
+    ];
+    let current = std::env::var("PATH").unwrap_or_default();
+    format!("{}:{}", extra.join(":"), current)
+}
+
 // ─── Public types ─────────────────────────────────────────────────────────────
 
 #[derive(Debug, Serialize)]
@@ -23,6 +40,7 @@ pub struct StemFile {
 pub async fn check_demucs() -> Result<String, String> {
     let output = Command::new("demucs")
         .arg("--version")
+        .env("PATH", augmented_path())
         .output()
         .await
         .map_err(|_| {
@@ -69,6 +87,7 @@ pub async fn separate_stems(
         .arg("-o")
         .arg(&output_dir)
         .arg(&input_path)
+        .env("PATH", augmented_path())
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::piped())
         .spawn()
