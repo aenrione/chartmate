@@ -28,10 +28,10 @@ function generateLabel(index: number): string {
 
 function hashNote(note: NoteInstance): string {
   // string is 1-based for fretted; percussion notes leave string at 0
-  if ((note as {string: number}).string > 0) {
-    return `s${(note as {string: number}).string}:f${(note as {fret: number}).fret}`;
+  if (note.string > 0) {
+    return `s${note.string}:f${note.fret}`;
   }
-  return `p${(note as {percussionArticulation: number}).percussionArticulation}`;
+  return `p${note.percussionArticulation}`;
 }
 
 function hashBeat(beat: BeatInstance): string {
@@ -72,7 +72,7 @@ export function detectPatterns(score: Score): DetectedPattern[] {
 
   return repeating.map(([, indices], i) => ({
     label: generateLabel(i),
-    barLength: 1,
+    barLength: 1, // single-bar fingerprints only; multi-bar detection is out of scope
     instances: indices,
     color: PATTERN_COLORS[i % PATTERN_COLORS.length],
   }));
