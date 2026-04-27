@@ -17,8 +17,8 @@ function ChordDiagramSVG({
   frets: ChordDiagramActivity['frets'];
   fingers?: ChordDiagramActivity['fingers'];
 }) {
-  const minFret = Math.max(1, Math.min(...frets.filter(f => f > 0)));
-  const startFret = minFret > 1 ? minFret : 1;
+  const nonZeroFrets = frets.filter(f => f > 0);
+  const startFret = nonZeroFrets.length > 0 ? Math.min(...nonZeroFrets) : 1;
 
   const W = 220;
   const H = 200;
