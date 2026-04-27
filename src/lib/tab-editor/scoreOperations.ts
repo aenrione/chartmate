@@ -15,6 +15,8 @@ const {
   AccentuationType,
   BendType,
   BendPoint,
+  Chord,
+  Section,
 } = model;
 
 type Score = InstanceType<typeof model.Score>;
@@ -46,6 +48,9 @@ function findNoteOnString(beat: BeatInstance, stringNumber: number): NoteInstanc
 
 function finishScore(score: Score) {
   score.finish(new Settings());
+  // GP loader calls rebuildRepeatGroups() after finish(); we must too — new bars
+  // get repeatGroup=undefined otherwise, crashing AlphaTab's MIDI generator.
+  (score as unknown as {rebuildRepeatGroups(): void}).rebuildRepeatGroups();
 }
 
 // --- Duration helpers ---
@@ -394,6 +399,8 @@ function repairMasterBarLinks(score: Score) {
     mb.index = i;
     mb.previousMasterBar = i > 0 ? score.masterBars[i - 1] : null;
     mb.nextMasterBar = i < score.masterBars.length - 1 ? score.masterBars[i + 1] : null;
+    // GP7 exporter requires masterBar.score — score.finish() may not set it for new bars
+    (mb as {score?: Score}).score = score;
   }
 }
 
@@ -810,3 +817,103 @@ export function cutBeat(score: Score, cursor: EditorCursor): ClipboardBeat | nul
 }
 
 export { Duration };
+
+// --- Section operations ---
+
+export type TabSection = {
+  name: string;
+  startBar: number;
+  endBar: number;
+};
+
+export function setBarSection(score: Score, startBar: number, name: string): void {
+  const mb = score.masterBars[startBar];
+  if (!mb) return;
+  const sec = new Section();
+  sec.text = name;
+  sec.marker = name.substring(0, 1).toUpperCase();
+  mb.section = sec;
+  finishScore(score);
+}
+
+export function removeBarSection(score: Score, startBar: number): void {
+  const mb = score.masterBars[startBar];
+  if (!mb) return;
+  mb.section = null;
+  finishScore(score);
+}
+
+export function getSections(score: Score): TabSection[] {
+  const total = score.masterBars.length;
+  const sections: TabSection[] = [];
+  for (let i = 0; i < total; i++) {
+    const mb = score.masterBars[i];
+    if (mb.section && mb.section.text) {
+      sections.push({name: mb.section.text, startBar: i, endBar: total - 1});
+    }
+  }
+  for (let j = 0; j < sections.length; j++) {
+    sections[j].endBar = j + 1 < sections.length
+      ? sections[j + 1].startBar - 1
+      : total - 1;
+  }
+  return sections;
+}
+
+// --- Chord annotation operations ---
+
+/**
+ * Attach a chord name (and optional fret diagram) to the beat at the cursor.
+ * AlphaTab renders the name above the beat and shows the diagram at page top.
+ *
+ * @param chordName  Display name, e.g. "Bm", "G7M"
+ * @param strings    Optional fret positions per string, high-E first, -1 = muted.
+ *                   Pass undefined to register a name-only chord with no diagram.
+ */
+export function setBeatChord(
+  score: Score,
+  cursor: EditorCursor,
+  chordName: string,
+  strings?: number[],
+): void {
+  const track = score.tracks[cursor.trackIndex];
+  if (!track) return;
+  const staff = track.staves[0];
+  if (!staff) return;
+  const beat = getBeat(score, cursor);
+  if (!beat) return;
+
+  // Use the chord name itself as the ID (deduplicates identical chords).
+  const chordId = chordName;
+
+  if (!staff.hasChord(chordId)) {
+    const chord = new Chord();
+    chord.name = chordName;
+    chord.showName = true;
+    if (strings && strings.length > 0) {
+      for (const f of strings) chord.strings.push(f);
+      chord.showDiagram = true;
+    }
+    staff.addChord(chordId, chord);
+  }
+
+  beat.chordId = chordId;
+  finishScore(score);
+}
+
+/** Remove the chord annotation from the beat at the cursor. */
+export function clearBeatChord(score: Score, cursor: EditorCursor): void {
+  const beat = getBeat(score, cursor);
+  if (!beat) return;
+  beat.chordId = null;
+  finishScore(score);
+}
+
+/** Return the chord name on the beat at the cursor, or null if none. */
+export function getBeatChordName(score: Score, cursor: EditorCursor): string | null {
+  const beat = getBeat(score, cursor);
+  if (!beat || !beat.chordId) return null;
+  const track = score.tracks[cursor.trackIndex];
+  const staff = track?.staves[0];
+  return staff?.getChord(beat.chordId)?.name ?? null;
+}
