@@ -816,8 +816,6 @@ export function cutBeat(score: Score, cursor: EditorCursor): ClipboardBeat | nul
   return beatData;
 }
 
-export { Duration };
-
 // --- Section operations ---
 
 export type TabSection = {
@@ -917,3 +915,5 @@ export function getBeatChordName(score: Score, cursor: EditorCursor): string | n
   const staff = track?.staves[0];
   return staff?.getChord(beat.chordId)?.name ?? null;
 }
+
+export { Duration };

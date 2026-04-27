@@ -1,6 +1,5 @@
 import {describe, it, expect} from 'vitest';
-import {computeSeekTick, tickToSeconds} from '../seekUtils';
-import {barIndexToTick} from '../seekUtils';
+import {computeSeekTick, tickToSeconds, barIndexToTick} from '../seekUtils';
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
