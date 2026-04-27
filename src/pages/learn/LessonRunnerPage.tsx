@@ -41,6 +41,10 @@ export default function LessonRunnerPage() {
   const [completionData, setCompletionData] = useState<CompletionData | null>(null);
 
   useEffect(() => {
+    if (hearts === 0) setLessonFailed(true);
+  }, [hearts]);
+
+  useEffect(() => {
     if (instrument && unitId && lessonId) {
       loadLesson(instrument, unitId, lessonId)
         .then(setLesson)
@@ -69,11 +73,7 @@ export default function LessonRunnerPage() {
 
   function handleFail() {
     setHeartsLost(prev => prev + 1);
-    setHearts(prev => {
-      const next = prev - 1;
-      if (next <= 0) setLessonFailed(true);
-      return Math.max(0, next);
-    });
+    setHearts(prev => Math.max(0, prev - 1));
   }
 
   function handleRestart() {
@@ -85,18 +85,17 @@ export default function LessonRunnerPage() {
   }
 
   async function handleContinue() {
-    if (!lesson) return;
     const next = activityIndex + 1;
     if (next >= totalActivities) {
       const noHeartsLost = heartsLost === 0;
       await markLessonCompleted(instrument!, unitId!, lessonId!);
-      await recordXp(lesson.xp, 'lesson', instrument!, lessonId!);
+      await recordXp(lesson!.xp, 'lesson', instrument!, lessonId!);
       if (noHeartsLost) {
         await recordXp(3, 'heart_bonus', instrument!, lessonId!);
       }
       const syncResult = await syncStreakAfterXp();
       setCompletionData({
-        xpEarned: lesson.xp + (noHeartsLost ? 3 : 0),
+        xpEarned: lesson!.xp + (noHeartsLost ? 3 : 0),
         heartBonus: noHeartsLost,
         streak: syncResult.newStreak,
         todayXp: syncResult.todayXp,
