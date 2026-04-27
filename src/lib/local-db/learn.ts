@@ -106,11 +106,17 @@ export async function syncStreakAfterXp(): Promise<{
   const db = await getLocalDb();
   const today = todayIso();
 
-  // Sum today's XP from ledger
+  // Sum today's XP from ledger using ISO string range (avoids SQLite date() function)
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+  const startOfTomorrow = new Date(startOfToday);
+  startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
+
   const xpResult = await db
     .selectFrom('learn_xp_ledger' as any)
     .select((eb: any) => eb.fn.sum('amount').as('total'))
-    .where((eb: any) => eb(eb.fn('date', [eb.ref('earned_at')]), '=', today))
+    .where('earned_at', '>=', startOfToday.toISOString())
+    .where('earned_at', '<', startOfTomorrow.toISOString())
     .executeTakeFirst() as any;
   const todayXp = Number(xpResult?.total ?? 0);
 

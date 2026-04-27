@@ -1,9 +1,9 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {cn} from '@/lib/utils';
 import {
   Plus, Trash2, Guitar, Drum, Volume2, VolumeOff,
-  RefreshCw, Play, Navigation2, ChevronDown, ChevronRight, X,
-  BookOpen, Layers,
+  RefreshCw, Play, ChevronDown, ChevronRight, X,
+  BookOpen, Layers, Palette,
 } from 'lucide-react';
 import {getTuningsForInstrument, getDefaultTuningPreset, type TuningPreset} from '@/lib/tab-editor/tunings';
 import type {InstrumentType} from '@/lib/tab-editor/newScore';
@@ -45,6 +45,8 @@ interface TabEditorSidebarProps {
   onRemoveSection: (startBar: number) => void;
   onPracticeRange: (startBar: number, endBar: number) => void;
   onJumpToBar: (barIndex: number) => void;
+  showPatternColors: boolean;
+  onTogglePatternColors: () => void;
 }
 
 export default function TabEditorSidebar({
@@ -72,9 +74,14 @@ export default function TabEditorSidebar({
   onRemoveSection,
   onPracticeRange,
   onJumpToBar,
+  showPatternColors,
+  onTogglePatternColors,
 }: TabEditorSidebarProps) {
   const [showAddTrack, setShowAddTrack] = useState(false);
   const [sectionsOpen, setSectionsOpen] = useState(true);
+  const [tempoInput, setTempoInput] = useState(String(tempo));
+
+  useEffect(() => { setTempoInput(String(tempo)); }, [tempo]);
   const [patternsOpen, setPatternsOpen] = useState(false);
   const [expandedPattern, setExpandedPattern] = useState<string | null>(null);
   const [addSectionOpen, setAddSectionOpen] = useState(false);
@@ -106,10 +113,20 @@ export default function TabEditorSidebar({
           <label className="text-xs text-on-surface-variant">BPM:</label>
           <input
             type="number"
-            value={tempo}
-            onChange={e => {
-              const v = parseInt(e.target.value, 10);
+            value={tempoInput}
+            onChange={e => setTempoInput(e.target.value)}
+            onBlur={() => {
+              const v = parseInt(tempoInput, 10);
               if (v > 0 && v <= 300) onTempoChange(v);
+              else setTempoInput(String(tempo));
+            }}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                const v = parseInt(tempoInput, 10);
+                if (v > 0 && v <= 300) onTempoChange(v);
+                else setTempoInput(String(tempo));
+                e.currentTarget.blur();
+              }
             }}
             min={20}
             max={300}
@@ -245,8 +262,9 @@ export default function TabEditorSidebar({
                 {sections.map(sec => (
                   <div
                     key={sec.startBar}
+                    onClick={() => onJumpToBar(sec.startBar)}
                     className={cn(
-                      'flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs',
+                      'flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs cursor-pointer',
                       practiceRange?.startBar === sec.startBar
                         ? 'bg-primary/10 text-primary'
                         : 'text-on-surface-variant hover:bg-surface-container-high',
@@ -257,21 +275,14 @@ export default function TabEditorSidebar({
                       {sec.startBar + 1}–{sec.endBar + 1}
                     </span>
                     <button
-                      onClick={() => onJumpToBar(sec.startBar)}
-                      className="p-0.5 rounded hover:bg-surface-container-highest transition-colors shrink-0"
-                      title="Jump to section"
-                    >
-                      <Navigation2 className="h-3 w-3" />
-                    </button>
-                    <button
-                      onClick={() => onPracticeRange(sec.startBar, sec.endBar)}
+                      onClick={e => { e.stopPropagation(); onPracticeRange(sec.startBar, sec.endBar); }}
                       className="p-0.5 rounded hover:bg-surface-container-highest transition-colors shrink-0"
                       title="Practice this section (loop)"
                     >
                       <Play className="h-3 w-3" />
                     </button>
                     <button
-                      onClick={() => onRemoveSection(sec.startBar)}
+                      onClick={e => { e.stopPropagation(); onRemoveSection(sec.startBar); }}
                       className="p-0.5 rounded hover:bg-error/20 text-on-surface-variant hover:text-error transition-colors shrink-0"
                       title="Remove section"
                     >
@@ -344,7 +355,7 @@ export default function TabEditorSidebar({
 
           {/* Detected Patterns sub-section */}
           <div>
-            <button
+            <div
               className="w-full flex items-center gap-2 px-4 py-2 text-xs font-bold text-on-surface-variant uppercase tracking-wider hover:bg-surface-container-high transition-colors"
               onClick={() => setPatternsOpen(v => !v)}
             >
@@ -355,19 +366,66 @@ export default function TabEditorSidebar({
                   {detectedPatterns.length}
                 </span>
               )}
+              {detectedPatterns.length > 0 && (
+                <button
+                  onClick={e => { e.stopPropagation(); onTogglePatternColors(); }}
+                  className={cn(
+                    'p-0.5 rounded transition-colors',
+                    showPatternColors
+                      ? 'text-primary bg-primary/10'
+                      : 'text-on-surface-variant/50 hover:text-on-surface-variant hover:bg-surface-container-high',
+                  )}
+                  title={showPatternColors ? 'Hide pattern colors' : 'Show pattern colors'}
+                >
+                  <Palette className="h-3 w-3" />
+                </button>
+              )}
               {patternsOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
-            </button>
+            </div>
             {patternsOpen && (
               <div className="px-2 pb-2 space-y-1">
-                <button
-                  onClick={onDetectPatterns}
-                  className="w-full flex items-center gap-1 px-2 py-1 text-[10px] text-on-surface-variant hover:bg-surface-container-high rounded transition-colors"
-                >
-                  <RefreshCw className="h-3 w-3" /> Detect patterns
-                </button>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={onDetectPatterns}
+                    className="flex-1 flex items-center gap-1 px-2 py-1 text-[10px] text-on-surface-variant hover:bg-surface-container-high rounded transition-colors"
+                  >
+                    <RefreshCw className="h-3 w-3" /> Detect
+                  </button>
+                  {detectedPatterns.length > 0 && (
+                    <button
+                      onClick={onTogglePatternColors}
+                      className={cn(
+                        'flex items-center gap-1 px-2 py-1 text-[10px] rounded transition-colors',
+                        showPatternColors
+                          ? 'bg-primary/10 text-primary'
+                          : 'text-on-surface-variant hover:bg-surface-container-high',
+                      )}
+                      title="Toggle bar color overlays"
+                    >
+                      <Palette className="h-3 w-3" />
+                      Colors
+                    </button>
+                  )}
+                </div>
+                {detectedPatterns.length > 0 && (() => {
+                  const coveredBarSet = new Set<number>();
+                  for (const p of detectedPatterns) {
+                    for (const start of p.instances) {
+                      for (let b = start; b < start + p.barLength; b++) coveredBarSet.add(b);
+                    }
+                  }
+                  const pct = totalBars > 0 ? Math.round((coveredBarSet.size / totalBars) * 100) : 0;
+                  return (
+                    <div className="px-2 text-[10px] text-on-surface-variant/60 flex items-center gap-1.5">
+                      <span>{detectedPatterns.length} pattern{detectedPatterns.length !== 1 ? 's' : ''}</span>
+                      <span>·</span>
+                      <span>{pct}% coverage</span>
+                    </div>
+                  );
+                })()}
                 {detectedPatterns.length === 0 && (
                   <p className="px-2 text-[10px] text-on-surface-variant/50 italic">
-                    Click "Detect patterns" to find repeating bars
+                    Click "Detect" to find repeating bars
                   </p>
                 )}
                 {detectedPatterns.map(pattern => (
@@ -381,6 +439,9 @@ export default function TabEditorSidebar({
                         style={{background: pattern.color}}
                       />
                       <span className="font-medium">Pattern {pattern.label}</span>
+                      {pattern.barLength > 1 && (
+                        <span className="text-[10px] text-on-surface-variant/40">{pattern.barLength}b</span>
+                      )}
                       <span className="text-[10px] text-on-surface-variant/60">×{pattern.instances.length}</span>
                       <span className="flex-1" />
                       {expandedPattern === pattern.label
@@ -390,24 +451,26 @@ export default function TabEditorSidebar({
                     {expandedPattern === pattern.label && (
                       <div className="pl-4 pr-2 pb-1 space-y-0.5">
                         {pattern.instances.map(barIdx => (
-                          <div key={barIdx} className="flex items-center gap-1 text-[10px] text-on-surface-variant">
-                            <span className="flex-1">Bar {barIdx + 1}</span>
+                          <div
+                            key={barIdx}
+                            onClick={() => onJumpToBar(barIdx)}
+                            className="flex items-center gap-1 text-[10px] text-on-surface-variant cursor-pointer rounded px-0.5 hover:bg-surface-container-high transition-colors"
+                          >
+                            <span className="flex-1">
+                              {pattern.barLength > 1
+                                ? `Bars ${barIdx + 1}–${barIdx + pattern.barLength}`
+                                : `Bar ${barIdx + 1}`}
+                            </span>
                             <button
-                              onClick={() => onJumpToBar(barIdx)}
-                              className="p-0.5 rounded hover:bg-surface-container-highest transition-colors"
-                              title="Jump to bar"
-                            >
-                              <Navigation2 className="h-3 w-3" />
-                            </button>
-                            <button
-                              onClick={() => onPracticeRange(barIdx, barIdx + pattern.barLength - 1)}
+                              onClick={e => { e.stopPropagation(); onPracticeRange(barIdx, barIdx + pattern.barLength - 1); }}
                               className="p-0.5 rounded hover:bg-surface-container-highest transition-colors"
                               title="Practice this instance"
                             >
                               <Play className="h-3 w-3" />
                             </button>
                             <button
-                              onClick={() => {
+                              onClick={e => {
+                                e.stopPropagation();
                                 const name = `Pattern ${pattern.label}`;
                                 setNewSectionName(name);
                                 setNewSectionBar(barIdx);
