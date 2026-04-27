@@ -1,5 +1,5 @@
 // src/pages/learn/LessonRunnerPage.tsx
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {useParams, useNavigate} from 'react-router-dom';
 import {X, Heart, HeartCrack} from 'lucide-react';
 import {cn} from '@/lib/utils';
@@ -20,6 +20,49 @@ interface CompletionData {
   dailyGoalCompleted: boolean;
 }
 
+// ---------------------------------------------------------------------------
+// useLessonCompletion hook
+// ---------------------------------------------------------------------------
+
+function useLessonCompletion(instrument: string, unitId: string, lessonId: string) {
+  const [saving, setSaving] = useState(false);
+  const [completionData, setCompletionData] = useState<CompletionData | null>(null);
+
+  const complete = useCallback(
+    async (heartsLost: number, lessonXp: number) => {
+      if (saving) return;
+      setSaving(true);
+      try {
+        const noHeartsLost = heartsLost === 0;
+        await markLessonCompleted(instrument, unitId, lessonId);
+        await recordXp(lessonXp, 'lesson', instrument, lessonId);
+        if (noHeartsLost) {
+          await recordXp(3, 'heart_bonus', instrument, lessonId);
+        }
+        const syncResult = await syncStreakAfterXp();
+        setCompletionData({
+          xpEarned: lessonXp + (noHeartsLost ? 3 : 0),
+          heartBonus: noHeartsLost,
+          streak: syncResult.newStreak,
+          todayXp: syncResult.todayXp,
+          dailyGoalTarget: syncResult.dailyGoalTarget,
+          dailyGoalCompleted: syncResult.dailyGoalMet,
+        });
+      } finally {
+        setSaving(false);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [saving, instrument, unitId, lessonId],
+  );
+
+  return {saving, completionData, complete};
+}
+
+// ---------------------------------------------------------------------------
+// LessonRunnerPage
+// ---------------------------------------------------------------------------
+
 export default function LessonRunnerPage() {
   const {instrument, unitId, lessonId} = useParams<{
     instrument: Instrument;
@@ -38,8 +81,11 @@ export default function LessonRunnerPage() {
   const [heartsLost, setHeartsLost] = useState(0);
   const [lessonFailed, setLessonFailed] = useState(false);
 
-  const [completionData, setCompletionData] = useState<CompletionData | null>(null);
-  const [saving, setSaving] = useState(false);
+  const {saving, completionData, complete} = useLessonCompletion(
+    instrument ?? '',
+    unitId ?? '',
+    lessonId ?? '',
+  );
 
   useEffect(() => {
     if (hearts === 0) setLessonFailed(true);
@@ -89,27 +135,8 @@ export default function LessonRunnerPage() {
     if (!lesson || saving) return;
     const next = activityIndex + 1;
     if (next >= totalActivities) {
-      setSaving(true);
-      try {
-        const noHeartsLost = heartsLost === 0;
-        await markLessonCompleted(instrument!, unitId!, lessonId!);
-        await recordXp(lesson.xp, 'lesson', instrument!, lessonId!);
-        if (noHeartsLost) {
-          await recordXp(3, 'heart_bonus', instrument!, lessonId!);
-        }
-        const syncResult = await syncStreakAfterXp();
-        setCompletionData({
-          xpEarned: lesson.xp + (noHeartsLost ? 3 : 0),
-          heartBonus: noHeartsLost,
-          streak: syncResult.newStreak,
-          todayXp: syncResult.todayXp,
-          dailyGoalTarget: syncResult.dailyGoalTarget,
-          dailyGoalCompleted: syncResult.todayXp >= syncResult.dailyGoalTarget,
-        });
-        setCompleted(true);
-      } finally {
-        setSaving(false);
-      }
+      await complete(heartsLost, lesson.xp);
+      setCompleted(true);
     } else {
       setActivityIndex(next);
       setCanContinue(false);

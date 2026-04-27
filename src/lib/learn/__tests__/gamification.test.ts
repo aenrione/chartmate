@@ -1,10 +1,19 @@
-import {describe, it, expect} from 'vitest';
+import {vi, describe, it, expect, beforeEach, afterEach} from 'vitest';
 import {todayIso, shouldIncrementStreak, shouldResetStreak} from '../gamification';
 
 describe('todayIso', () => {
-  it('returns a YYYY-MM-DD string', () => {
-    const result = todayIso();
-    expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => vi.useRealTimers());
+
+  it('returns local calendar date in YYYY-MM-DD format', () => {
+    vi.setSystemTime(new Date('2026-04-26T12:00:00.000Z'));
+    expect(todayIso()).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
+
+  it('returns the correct local date', () => {
+    // Midday UTC so local date matches UTC date in any timezone
+    vi.setSystemTime(new Date('2026-04-26T12:00:00.000Z'));
+    expect(todayIso()).toBe('2026-04-26');
   });
 });
 

@@ -10,6 +10,9 @@
     "tauri": "tauri",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:ct": "playwright test -c playwright-ct.config.ts",
+    "test:ct:headed": "playwright test -c playwright-ct.config.ts --project=chromium --headed --workers=1",
+    "test:ct:debug": "playwright test -c playwright-ct.config.ts --project=chromium --debug --workers=1",
     "ios:build": "tauri ios build --export-method debugging",
     "ios:install": "bash scripts/install-ios.sh"
   },

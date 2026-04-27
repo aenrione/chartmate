@@ -10,6 +10,8 @@ import {
   LayoutMode,
   StaveProfile,
   PlayerMode,
+  PlayerOutputMode,
+  NotationElement,
   model,
 } from '@coderline/alphatab';
 import {loadActiveSoundfont, soundfontToUrl} from '@/lib/soundfont-store';
@@ -55,12 +57,16 @@ export interface AlphaTabWrapperProps {
   onPositionChanged?: (currentTime: number, endTime: number, currentTick: number, endTick: number) => void;
   /** Called when player state changes (playing/paused/stopped) */
   onPlayerStateChanged?: (state: number) => void;
-  /** Called when rendering is finished */
+  /** Called when rendering is finished (boundsLookup may still be stale — use onPostRenderFinished to read it) */
   onRenderFinished?: () => void;
+  /** Called after boundsLookup is updated — safe to read api.boundsLookup here */
+  onPostRenderFinished?: () => void;
   /** Called when player is ready */
   onPlayerReady?: () => void;
+  /** Called when playback reaches the end of the score */
+  onPlayerFinished?: () => void;
   /** Called when the AlphaTab API has been initialized (before any score is loaded) */
-  onApiReady?: () => void;
+  onApiReady?: (api: AlphaTabApi) => void;
   /** Called when user clicks on a beat */
   onBeatMouseDown?: (beat: Beat) => void;
   /** Called when user releases mouse on a beat */
@@ -75,6 +81,23 @@ export interface AlphaTabWrapperProps {
   className?: string;
   /** Disable AlphaTab's internal scroll/resize tracking */
   disableAutoResize?: boolean;
+  /**
+   * Replace AlphaTab's built-in section marker effect band with HTML overlays.
+   * Pass true in the tab editor so section labels don't collide with chord names.
+   */
+  hideBuiltInSectionLabels?: boolean;
+  /**
+   * Use AlphaTab's legacy ScriptProcessor output instead of AudioWorklet output.
+   * Tauri/WebKit can race AudioWorklet startup and throw `this.source.connect`
+   * when tab-editor playback is restarted by sync/seek behavior.
+   */
+  useScriptProcessorOutput?: boolean;
+  /**
+   * Show AlphaTab's built-in playback cursor. The tab editor supplies its own
+   * cursor overlay and disables this to avoid AlphaTab's deferred cursor update
+   * racing against re-render/stop state.
+   */
+  enablePlaybackCursor?: boolean;
 }
 
 const DARK_RESOURCES = {
@@ -119,7 +142,9 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       onPositionChanged,
       onPlayerStateChanged,
       onRenderFinished,
+      onPostRenderFinished,
       onPlayerReady,
+      onPlayerFinished,
       onApiReady,
       onBeatMouseDown,
       onBeatMouseUp,
@@ -128,6 +153,9 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       onActiveBeatsChanged,
       className,
       disableAutoResize = false,
+      hideBuiltInSectionLabels = false,
+      useScriptProcessorOutput = false,
+      enablePlaybackCursor = true,
     },
     ref,
   ) => {
@@ -144,7 +172,9 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       onPositionChanged,
       onPlayerStateChanged,
       onRenderFinished,
+      onPostRenderFinished,
       onPlayerReady,
+      onPlayerFinished,
       onApiReady,
       onBeatMouseDown,
       onBeatMouseUp,
@@ -159,7 +189,9 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       onPositionChanged,
       onPlayerStateChanged,
       onRenderFinished,
+      onPostRenderFinished,
       onPlayerReady,
+      onPlayerFinished,
       onApiReady,
       onBeatMouseDown,
       onBeatMouseUp,
@@ -211,18 +243,27 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
           },
           player: {
             enablePlayer,
-            enableCursor: enablePlayer,
-            enableAnimatedBeatCursor: enablePlayer,
+            enableCursor: enablePlayer && enablePlaybackCursor,
+            enableAnimatedBeatCursor: enablePlayer && enablePlaybackCursor,
             enableUserInteraction: true,
             scrollElement: disableAutoResize ? null : el,
             scrollMode: disableAutoResize ? 0 : 2,
             scrollOffsetY: -50,
             soundFont: soundFontSetting,
+            outputMode: useScriptProcessorOutput
+              ? PlayerOutputMode.WebAudioScriptProcessor
+              : PlayerOutputMode.WebAudioAudioWorklets,
           },
         };
 
         api = new AlphaTabApi(el, settings);
         apiRef.current = api;
+
+        // Suppress AlphaTab's built-in section labels so our HTML overlays
+        // can replace them without the band-sharing overlap bug.
+        if (hideBuiltInSectionLabels) {
+          api.settings.notation.elements.set(NotationElement.EffectMarker, false);
+        }
 
         // Apply theme colors on init (without re-render since first render hasn't happened)
         const isDark = document.documentElement.classList.contains('dark');
@@ -262,6 +303,11 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
           callbacksRef.current.onRenderFinished?.();
         });
 
+        // postRenderFinished fires AFTER boundsLookup is updated (worker sends bounds JSON back)
+        api.postRenderFinished.on(() => {
+          callbacksRef.current.onPostRenderFinished?.();
+        });
+
         if (enablePlayer) {
           api.playerReady.on(() => {
             callbacksRef.current.onPlayerReady?.();
@@ -278,6 +324,10 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
 
           api.playerStateChanged.on((e) => {
             callbacksRef.current.onPlayerStateChanged?.(e.state);
+          });
+
+          api.playerFinished.on(() => {
+            callbacksRef.current.onPlayerFinished?.();
           });
 
           api.activeBeatsChanged.on((e) => {
@@ -302,7 +352,7 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
         }
 
         if (!destroyed) {
-          callbacksRef.current.onApiReady?.();
+          callbacksRef.current.onApiReady?.(api);
           // Load any fileData that was set before init() completed. The
           // fileData effect won't re-run because the ref change doesn't
           // trigger React effects, so we must load it here.

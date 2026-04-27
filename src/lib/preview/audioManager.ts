@@ -1,6 +1,21 @@
 import {getBasename} from '../src-shared/utils';
 import {Files} from './chorus-chart-processing';
 
+// AlphaTab's audio worklet output (and WebKit) throw InvalidStateError when
+// stop() is called on a source that was never started or already ended naturally.
+// This happens inside AlphaTab's own handleWorkerMessage; if uncaught it kills
+// the audio worker message loop. Patch globally so all callers are safe.
+if (typeof AudioBufferSourceNode !== 'undefined') {
+  const _origStop = AudioBufferSourceNode.prototype.stop;
+  AudioBufferSourceNode.prototype.stop = function (when?: number): void {
+    try {
+      _origStop.call(this, when);
+    } catch (e) {
+      if (!(e instanceof DOMException) || e.name !== 'InvalidStateError') throw e;
+    }
+  };
+}
+
 type GroupedFile = {
   fileName: string;
   datas: Uint8Array[];
@@ -248,10 +263,6 @@ export class AudioManager {
 
     this.#tracks[trackName].volume = volume > 1 ? 1 : volume < 0 ? 0 : volume;
   }
-  // get tracks() {
-  //   return Object.values(this.#tracks);
-  // }
-
   get delay() {
     return this.#context.baseLatency + (this.#context.outputLatency || 0);
   }
@@ -323,7 +334,8 @@ export class AudioManager {
 
     // If in practice mode, loop back to start of practice section
     if (this.#practiceModeConfig !== null) {
-      this.play({time: this.#practiceModeConfig.startTimeMs / 1000});
+      const startTime = this.#practiceModeConfig.startTimeMs / 1000;
+      Promise.resolve().then(() => this.play({time: startTime}));
       return;
     }
 
@@ -472,7 +484,12 @@ class AudioTrack {
   }
 
   #stopSource(source: AudioBufferSourceNode) {
-    source.stop();
+    try {
+      source.stop();
+    } catch {
+      // WebKit throws InvalidStateError if stop() is called on a source that was
+      // never started or has already ended naturally — safe to ignore.
+    }
     source.removeEventListener('ended', this.#endedEventListener);
     source.disconnect();
   }

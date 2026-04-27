@@ -11,7 +11,6 @@ import {
   Moon,
   Sun,
   PenTool,
-  Music2,
 } from 'lucide-react';
 import {useSidebar} from '@/contexts/SidebarContext';
 import {useLayout} from '@/contexts/LayoutContext';
@@ -21,7 +20,7 @@ import BottomNav from '@/components/BottomNav';
 import {isMobileDevice} from '@/lib/platform';
 
 const TOP_NAV_SECTIONS = [
-  {label: 'Practice', prefix: ['/sheet-music', '/guitar', '/rudiments', '/tab-editor', '/fills', '/', '/stem-player']},
+  {label: 'Practice', prefix: ['/sheet-music', '/guitar', '/rudiments', '/tab-editor', '/fills', '/']},
   {label: 'Library', prefix: ['/library', '/library/setlists']},
   {label: 'Browse', prefix: ['/browse', '/spotify', '/updates']},
   {label: 'Learn', prefix: ['/learn']},
@@ -31,7 +30,6 @@ const INSTRUMENTS = [
   {label: 'Drums', icon: Drum, href: '/sheet-music', prefix: ['/sheet-music', '/rudiments', '/fills']},
   {label: 'Guitar', icon: Guitar, href: '/guitar', prefix: ['/guitar']},
   {label: 'Tab Editor', icon: PenTool, href: '/tab-editor', prefix: ['/tab-editor']},
-  {label: 'Stem Player', icon: Music2, href: '/stem-player', prefix: ['/stem-player']},
 ] as const;
 
 function isActive(pathname: string, prefixes: readonly string[]) {

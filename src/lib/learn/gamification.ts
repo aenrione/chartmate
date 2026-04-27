@@ -1,4 +1,5 @@
 export function todayIso(): string {
+  // Returns local calendar date (not UTC); earned_at timestamps use UTC-equivalent ISO strings aligned to local midnight.
   return new Date().toLocaleDateString('sv'); // returns YYYY-MM-DD in local time
 }
 

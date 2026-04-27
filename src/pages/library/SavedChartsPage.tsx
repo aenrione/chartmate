@@ -1,5 +1,5 @@
 import {useState, useEffect, useCallback, useRef} from 'react';
-import {Link, useLocation} from 'react-router-dom';
+import {Link, useLocation, useNavigate, useSearchParams} from 'react-router-dom';
 import {
   FolderHeart, Loader2, Search, Play, Bookmark, HardDrive, Wifi,
   Music2, BookMarked, Trash2, Pencil, FolderOpen,
@@ -33,11 +33,13 @@ const TABS: {id: Tab; label: string}[] = [
 
 export default function SavedChartsPage() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>(() => {
     const fromState = (location.state as any)?.activeTab as Tab | undefined;
     return TABS.some(t => t.id === fromState) ? fromState! : 'chorus';
   });
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(() => searchParams.get('q') ?? '');
   const [addToRepertoire, setAddToRepertoire] = useState<SavedChartEntry | null>(null);
 
   // Delete confirmation
@@ -129,7 +131,8 @@ export default function SavedChartsPage() {
     loaders[tab](q, s);
   }, [loadChorus, loadDrums, loadCompositions]);
 
-  useEffect(() => { loadTab(activeTab, undefined, sort); }, [activeTab, loadTab, sort]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { loadTab(activeTab, search || undefined, sort); }, [activeTab, loadTab, sort]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSearch = useCallback(
@@ -140,6 +143,7 @@ export default function SavedChartsPage() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const q = e.target.value;
     setSearch(q);
+    navigate({search: q ? `?q=${encodeURIComponent(q)}` : ''}, {replace: true, state: location.state});
     debouncedSearch(q, sort);
   };
 
@@ -147,6 +151,7 @@ export default function SavedChartsPage() {
     setActiveTab(tab);
     setSearch('');
     setSort('saved_at_desc');
+    navigate({search: ''}, {replace: true, state: location.state});
     exitSelectionMode();
   };
 
@@ -711,6 +716,7 @@ function CompositionCard({
   selectionMode,
   isSelected,
   onToggleSelect,
+  search,
 }: {
   comp: TabComposition;
   removing: Set<number>;
@@ -722,6 +728,7 @@ function CompositionCard({
   selectionMode?: boolean;
   isSelected?: boolean;
   onToggleSelect?: (id: number) => void;
+  search: string;
 }) {
   const handleCardClick = (e: React.MouseEvent) => {
     if (selectionMode) {
@@ -733,7 +740,7 @@ function CompositionCard({
   return (
     <Link
       to={`/tab-editor/${comp.id}`}
-      state={{from: '/library/saved-charts', activeTab}}
+      state={{from: `/library/saved-charts${search ? `?q=${encodeURIComponent(search)}` : ''}`, activeTab}}
       onClick={handleCardClick}
       className={cn(
         'group relative flex flex-col overflow-hidden rounded-2xl bg-surface-container-low transition-all duration-200 hover:-translate-y-0.5 hover:bg-surface-container',
@@ -860,6 +867,7 @@ function CompositionsSection({
             selectionMode={selectionMode}
             isSelected={selectedIds?.has(comp.id)}
             onToggleSelect={onToggleSelect}
+            search={search}
           />
         ))}
       </div>
@@ -926,6 +934,7 @@ function DrumsSection({
                 selectionMode={selectionMode}
                 isSelected={selectedCompIds?.has(comp.id)}
                 onToggleSelect={onToggleSelectComp}
+                search={search}
               />
             );
           }

@@ -28,7 +28,6 @@ import PdfLibraryTab from '@/pages/library/PdfLibraryTab';
 import ExplorerListsPage from '@/pages/library/ExplorerListsPage';
 import DrumsHubPage from '@/pages/DrumsHubPage';
 import TabEditorPage from '@/pages/tab-editor/TabEditorPage';
-import StemPlayerPage from '@/pages/StemPlayerPage';
 import FretboardIQPage from '@/pages/guitar/fretboard/FretboardIQPage';
 import FretboardDrillPage from '@/pages/guitar/fretboard/FretboardDrillPage';
 import FretboardProgressPage from '@/pages/guitar/fretboard/FretboardProgressPage';
@@ -110,7 +109,6 @@ const router = createBrowserRouter([
       { path: '/library', element: <LibraryPage /> },
       { path: '/tab-editor', element: <TabEditorPage /> },
       { path: '/tab-editor/:id', element: <TabEditorPage /> },
-      { path: '/stem-player', element: <StemPlayerPage /> },
       { path: '/learn', element: <LearnPage /> },
       { path: '/learn/lesson/:instrument/:unitId/:lessonId', element: <LessonRunnerPage /> },
     ],
