@@ -39,6 +39,7 @@ export default function LessonRunnerPage() {
   const [lessonFailed, setLessonFailed] = useState(false);
 
   const [completionData, setCompletionData] = useState<CompletionData | null>(null);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (hearts === 0) setLessonFailed(true);
@@ -85,24 +86,30 @@ export default function LessonRunnerPage() {
   }
 
   async function handleContinue() {
+    if (!lesson || saving) return;
     const next = activityIndex + 1;
     if (next >= totalActivities) {
-      const noHeartsLost = heartsLost === 0;
-      await markLessonCompleted(instrument!, unitId!, lessonId!);
-      await recordXp(lesson!.xp, 'lesson', instrument!, lessonId!);
-      if (noHeartsLost) {
-        await recordXp(3, 'heart_bonus', instrument!, lessonId!);
+      setSaving(true);
+      try {
+        const noHeartsLost = heartsLost === 0;
+        await markLessonCompleted(instrument!, unitId!, lessonId!);
+        await recordXp(lesson.xp, 'lesson', instrument!, lessonId!);
+        if (noHeartsLost) {
+          await recordXp(3, 'heart_bonus', instrument!, lessonId!);
+        }
+        const syncResult = await syncStreakAfterXp();
+        setCompletionData({
+          xpEarned: lesson.xp + (noHeartsLost ? 3 : 0),
+          heartBonus: noHeartsLost,
+          streak: syncResult.newStreak,
+          todayXp: syncResult.todayXp,
+          dailyGoalTarget: syncResult.dailyGoalTarget,
+          dailyGoalCompleted: syncResult.todayXp >= syncResult.dailyGoalTarget,
+        });
+        setCompleted(true);
+      } finally {
+        setSaving(false);
       }
-      const syncResult = await syncStreakAfterXp();
-      setCompletionData({
-        xpEarned: lesson!.xp + (noHeartsLost ? 3 : 0),
-        heartBonus: noHeartsLost,
-        streak: syncResult.newStreak,
-        todayXp: syncResult.todayXp,
-        dailyGoalTarget: syncResult.dailyGoalTarget,
-        dailyGoalCompleted: syncResult.dailyGoalMet,
-      });
-      setCompleted(true);
     } else {
       setActivityIndex(next);
       setCanContinue(false);
@@ -209,7 +216,7 @@ export default function LessonRunnerPage() {
       <div className="shrink-0 px-6 py-4 border-t border-outline-variant/20">
         <button
           onClick={handleContinue}
-          disabled={!canContinue}
+          disabled={!canContinue || saving}
           className="w-full py-3 rounded-xl font-semibold transition-all text-sm
             bg-primary text-on-primary
             disabled:opacity-40 disabled:cursor-not-allowed

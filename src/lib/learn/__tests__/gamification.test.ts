@@ -48,4 +48,7 @@ describe('shouldResetStreak', () => {
   it('returns false across month boundary (consecutive days)', () => {
     expect(shouldResetStreak('2026-04-30', '2026-05-01')).toBe(false);
   });
+  it('returns true across year boundary gap (2025-12-30 → 2026-01-01)', () => {
+    expect(shouldResetStreak('2025-12-30', '2026-01-01')).toBe(true);
+  });
 });
