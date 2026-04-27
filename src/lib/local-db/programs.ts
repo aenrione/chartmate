@@ -199,6 +199,22 @@ export async function archiveProgram(id: number): Promise<void> {
     .execute();
 }
 
+export async function deleteProgram(id: number): Promise<void> {
+  const db = await getLocalDb();
+  const units = await db
+    .selectFrom('program_units')
+    .select('id')
+    .where('program_id', '=', id)
+    .execute();
+  const unitIds = units.map(u => u.id);
+  if (unitIds.length > 0) {
+    await (db as any).deleteFrom('lesson_sessions').where('unit_id', 'in', unitIds).execute();
+    await (db as any).deleteFrom('unit_goals').where('unit_id', 'in', unitIds).execute();
+    await (db as any).deleteFrom('program_units').where('program_id', '=', id).execute();
+  }
+  await (db as any).deleteFrom('practice_programs').where('id', '=', id).execute();
+}
+
 // ── Units ─────────────────────────────────────────────────────────────────────
 
 export async function getUnitsForProgram(programId: number): Promise<Unit[]> {
