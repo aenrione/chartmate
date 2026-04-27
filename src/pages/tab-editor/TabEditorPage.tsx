@@ -94,7 +94,7 @@ import YouTubePlayer from '@/components/YouTubePlayer';
 import {snapToYouTubeRate} from '@/lib/youtube-utils';
 import {exportToAlphaTex, exportToAsciiTab, exportToGp7} from '@/lib/tab-editor/exporters';
 import {UndoManager} from '@/lib/tab-editor/undoManager';
-import {computeSeekTick, tickToSeconds} from '@/lib/tab-editor/seekUtils';
+import {computeSeekTick, tickToSeconds, barIndexToTick} from '@/lib/tab-editor/seekUtils';
 import {importFromAsciiTabWithMeta, extractAsciiTabMeta} from '@/lib/tab-editor/asciiTabImporter';
 import {cn, sanitizeFilename} from '@/lib/utils';
 import {toast} from 'sonner';
@@ -467,6 +467,7 @@ export default function TabEditorPage() {
     api.renderScore(score, [0]);
     api.loadMidiForScore();
     setIsReady(true);
+    setDetectedPatterns(detectPatterns(score));
     undoManagerRef.current.clear();
   }, [getApi, setScore]);
 
@@ -620,6 +621,8 @@ export default function TabEditorPage() {
     setIsPlaying(false);
     youtubeSyncRef.current.onPause();
     void stemPlayer.stopAndReset();
+    canvasRef.current?.alphaTab?.clearPlaybackRange();
+    setPracticeRange(null);
     if (midiReloadNeeded.current) {
       midiReloadNeeded.current = false;
       try { getApi()?.loadMidiForScore(); } catch { }
@@ -1028,16 +1031,18 @@ export default function TabEditorPage() {
   const handleAddSection = useCallback((startBar: number, name: string) => {
     const score = scoreRef.current;
     if (!score) return;
+    handleBeforeMutation();
     setBarSection(score, startBar, name);
     reRender();
-  }, [reRender]);
+  }, [handleBeforeMutation, reRender]);
 
   const handleRemoveSection = useCallback((startBar: number) => {
     const score = scoreRef.current;
     if (!score) return;
+    handleBeforeMutation();
     removeBarSection(score, startBar);
     reRender();
-  }, [reRender]);
+  }, [handleBeforeMutation, reRender]);
 
   const handleDetectPatterns = useCallback(() => {
     const score = scoreRef.current;
@@ -1046,21 +1051,26 @@ export default function TabEditorPage() {
   }, []);
 
   const handlePracticeRange = useCallback((startBar: number, endBar: number) => {
+    const score = scoreRef.current;
+    if (!score) return;
+    const totalBars = score.masterBars.length;
+    const {endTick} = tickMappingRef.current;
+    const startTick = barIndexToTick(score, startBar, totalBars, endTick);
+    const rangeEndTick = barIndexToTick(score, endBar + 1, totalBars, endTick);
+    canvasRef.current?.alphaTab?.setPlaybackRange(startTick, rangeEndTick);
     setPracticeRange({startBar, endBar});
-  }, []);
+    if (!isPlayingRef.current) {
+      const api = getApi();
+      if (api) {
+        api.tickPosition = startTick;
+        api.play();
+      }
+    }
+  }, [getApi]);
 
   const handleJumpToBar = useCallback((barIndex: number) => {
-    const api = getApi();
-    const score = scoreRef.current;
-    if (!api || !score) return;
-    const mb = score.masterBars[barIndex];
-    if (!mb) return;
-    // Use the first beat's playback start tick to seek
-    const track = score.tracks[activeTrackIndex];
-    const bar = track?.staves[0]?.bars[barIndex];
-    const tick = bar?.voices[0]?.beats[0]?.absolutePlaybackStart ?? 0;
-    api.tickPosition = tick;
-  }, [getApi, activeTrackIndex]);
+    moveTo({...cursor, barIndex, beatIndex: 0});
+  }, [cursor, moveTo]);
   // ── End Sections & Patterns ────────────────────────────────────────────────
 
   const doNewTab = useCallback(() => {
