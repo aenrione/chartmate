@@ -2,9 +2,10 @@
 import {useEffect} from 'react';
 import type {ChordDiagramActivity} from '@/lib/curriculum/types';
 
-// Data arrays are high-e-first (index 0 = high e). Standard chord diagrams
-// display low-E on the left, so we render strings in reversed order.
+// Data arrays are high-e-first (index 0 = high e, index 5 = low E).
+// Display top-to-bottom: high e at top, low E at bottom — matches standard TAB.
 const STRING_LABELS = ['e', 'B', 'G', 'D', 'A', 'E'];
+const STRING_COUNT = 6;
 const FRET_COUNT = 5;
 
 interface Props {
@@ -22,96 +23,137 @@ function ChordDiagramSVG({
   const nonZeroFrets = frets.filter(f => f > 0);
   const startFret = nonZeroFrets.length > 0 ? Math.min(...nonZeroFrets) : 1;
 
-  // Reverse to display low-E on the left (standard chord diagram orientation)
-  const displayFrets = [...frets].reverse();
-  const displayFingers = fingers ? [...fingers].reverse() : undefined;
-  const displayLabels = [...STRING_LABELS].reverse();
+  // Layout
+  const W = 240;
+  const H = 210;
+  const PAD_TOP = 24;
+  const PAD_BOTTOM = 24;
+  const NUT_X = 56;        // x of the nut (thick vertical bar)
+  const PAD_RIGHT = 16;
 
-  const W = 220;
-  const H = 200;
-  const TOP = 36;
-  const LEFT = 32;
-  const STRING_GAP = (W - LEFT - 16) / 5;
-  const FRET_GAP = (H - TOP - 20) / FRET_COUNT;
-  const R = 11;
+  const STRING_GAP = (H - PAD_TOP - PAD_BOTTOM) / (STRING_COUNT - 1);
+  const FRET_GAP = (W - NUT_X - PAD_RIGHT) / FRET_COUNT;
+  const R = 10;
 
   return (
     <svg width={W} height={H} className="mx-auto">
-      {/* Nut */}
-      <line x1={LEFT} y1={TOP} x2={W - 16} y2={TOP} stroke="currentColor" strokeWidth={3} className="text-on-surface" />
+      {/* Horizontal string lines + labels */}
+      {STRING_LABELS.map((label, stringIdx) => {
+        const y = PAD_TOP + stringIdx * STRING_GAP;
+        return (
+          <g key={stringIdx}>
+            <text
+              x={14}
+              y={y + 4}
+              textAnchor="middle"
+              fontSize={11}
+              className="fill-on-surface-variant"
+            >
+              {label}
+            </text>
+            <line
+              x1={NUT_X}
+              y1={y}
+              x2={W - PAD_RIGHT}
+              y2={y}
+              stroke="currentColor"
+              strokeWidth={1.5}
+              className="text-outline-variant"
+            />
+          </g>
+        );
+      })}
 
-      {/* Strings */}
-      {[0, 1, 2, 3, 4, 5].map(i => (
-        <line
-          key={i}
-          x1={LEFT + i * STRING_GAP}
-          y1={TOP}
-          x2={LEFT + i * STRING_GAP}
-          y2={H - 20}
-          stroke="currentColor"
-          strokeWidth={1.5}
-          className="text-outline-variant"
-        />
-      ))}
+      {/* Nut — thick vertical line on the left */}
+      <line
+        x1={NUT_X}
+        y1={PAD_TOP}
+        x2={NUT_X}
+        y2={H - PAD_BOTTOM}
+        stroke="currentColor"
+        strokeWidth={4}
+        className="text-on-surface"
+      />
 
-      {/* Frets */}
-      {[1, 2, 3, 4, 5].map(f => (
+      {/* Fret lines — thin vertical lines */}
+      {Array.from({length: FRET_COUNT}, (_, i) => i + 1).map(f => (
         <line
           key={f}
-          x1={LEFT}
-          y1={TOP + f * FRET_GAP}
-          x2={W - 16}
-          y2={TOP + f * FRET_GAP}
+          x1={NUT_X + f * FRET_GAP}
+          y1={PAD_TOP}
+          x2={NUT_X + f * FRET_GAP}
+          y2={H - PAD_BOTTOM}
           stroke="currentColor"
           strokeWidth={1}
           className="text-outline-variant"
         />
       ))}
 
-      {/* Start fret label */}
+      {/* Start fret label (shown when chord is not at nut) */}
       {startFret > 1 && (
-        <text x={4} y={TOP + FRET_GAP * 0.7} fontSize={11} className="fill-on-surface-variant">
-          {startFret}fr
-        </text>
-      )}
-
-      {/* String labels — E A D G B e (low to high, left to right) */}
-      {displayLabels.map((label, col) => (
         <text
-          key={col}
-          x={LEFT + col * STRING_GAP}
-          y={14}
+          x={NUT_X + FRET_GAP * 0.5}
+          y={PAD_TOP - 8}
           textAnchor="middle"
           fontSize={10}
           className="fill-on-surface-variant"
         >
-          {label}
+          {startFret}fr
         </text>
-      ))}
+      )}
 
-      {/* Finger dots */}
-      {displayFrets.map((fret, col) => {
-        const x = LEFT + col * STRING_GAP;
+      {/* Open (○) and muted (×) markers — just left of the nut */}
+      {frets.map((fret, stringIdx) => {
+        const y = PAD_TOP + stringIdx * STRING_GAP;
         if (fret === -1) {
           return (
-            <text key={col} x={x} y={TOP - 6} textAnchor="middle" fontSize={13} className="fill-on-surface-variant">
-              ✕
+            <text
+              key={stringIdx}
+              x={NUT_X - 10}
+              y={y + 4}
+              textAnchor="middle"
+              fontSize={12}
+              className="fill-on-surface-variant"
+            >
+              ×
             </text>
           );
         }
         if (fret === 0) {
           return (
-            <circle key={col} cx={x} cy={TOP - 8} r={5} fill="none" stroke="currentColor" strokeWidth={1.5} className="text-on-surface" />
+            <circle
+              key={stringIdx}
+              cx={NUT_X - 10}
+              cy={y}
+              r={5}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.5}
+              className="text-on-surface"
+            />
           );
         }
+        return null;
+      })}
+
+      {/* Finger dots */}
+      {frets.map((fret, stringIdx) => {
+        if (fret <= 0) return null;
+        const y = PAD_TOP + stringIdx * STRING_GAP;
         const adjustedFret = fret - startFret + 1;
-        const y = TOP + (adjustedFret - 0.5) * FRET_GAP;
-        const finger = displayFingers?.[col];
+        const x = NUT_X + (adjustedFret - 0.5) * FRET_GAP;
+        const finger = fingers?.[stringIdx];
         return (
-          <g key={col}>
+          <g key={stringIdx}>
             <circle cx={x} cy={y} r={R} className="fill-primary" />
             {finger && finger > 0 && (
-              <text x={x} y={y + 4} textAnchor="middle" fontSize={11} className="fill-on-primary font-bold">
+              <text
+                x={x}
+                y={y + 4}
+                textAnchor="middle"
+                fontSize={11}
+                className="fill-on-primary font-bold"
+              >
                 {finger}
               </text>
             )}
