@@ -11,7 +11,6 @@ import {
   Moon,
   Sun,
   PenTool,
-  Music2,
 } from 'lucide-react';
 import {useSidebar} from '@/contexts/SidebarContext';
 import {useLayout} from '@/contexts/LayoutContext';
@@ -21,17 +20,16 @@ import BottomNav from '@/components/BottomNav';
 import {isMobileDevice} from '@/lib/platform';
 
 const TOP_NAV_SECTIONS = [
-  {label: 'Practice', prefix: ['/sheet-music', '/guitar', '/rudiments', '/tab-editor', '/fills', '/', '/stem-player']},
+  {label: 'Practice', prefix: ['/sheet-music', '/guitar', '/rudiments', '/tab-editor', '/fills', '/']},
   {label: 'Library', prefix: ['/library', '/library/setlists']},
   {label: 'Browse', prefix: ['/browse', '/spotify', '/updates']},
-  {label: 'Learn', prefix: []},
+  {label: 'Learn', prefix: ['/learn']},
 ] as const;
 
 const INSTRUMENTS = [
   {label: 'Drums', icon: Drum, href: '/sheet-music', prefix: ['/sheet-music', '/rudiments', '/fills']},
   {label: 'Guitar', icon: Guitar, href: '/guitar', prefix: ['/guitar']},
   {label: 'Tab Editor', icon: PenTool, href: '/tab-editor', prefix: ['/tab-editor']},
-  {label: 'Stem Player', icon: Music2, href: '/stem-player', prefix: ['/stem-player']},
 ] as const;
 
 function isActive(pathname: string, prefixes: readonly string[]) {
@@ -105,6 +103,7 @@ function TopNav({pathname}: {pathname: string}) {
                 section.label === 'Practice' ? '/'
                 : section.label === 'Library' ? '/library'
                 : section.label === 'Browse' ? '/browse'
+                : section.label === 'Learn' ? '/learn'
                 : '#'
               }
               className={cn(
@@ -112,7 +111,6 @@ function TopNav({pathname}: {pathname: string}) {
                 active
                   ? 'text-primary font-bold border-b-2 border-primary-container'
                   : 'text-on-surface-variant/50 hover:text-on-surface',
-                section.prefix.length === 0 && 'opacity-40 pointer-events-none',
               )}
             >
               {section.label}

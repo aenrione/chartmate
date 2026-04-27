@@ -44,6 +44,8 @@ import RepertoireSessionPage from '@/pages/guitar/repertoire/RepertoireSessionPa
 import RepertoireSummaryPage from '@/pages/guitar/repertoire/RepertoireSummaryPage';
 import RepertoireProgressPage from '@/pages/guitar/repertoire/RepertoireProgressPage';
 import RepertoireManagePage from '@/pages/guitar/repertoire/RepertoireManagePage';
+import LearnPage from '@/pages/learn/LearnPage';
+import LessonRunnerPage from '@/pages/learn/LessonRunnerPage';
 
 function RootLayout() {
   const [setupComplete, setSetupComplete] = useState(false);
@@ -109,6 +111,8 @@ const router = createBrowserRouter([
       { path: '/tab-editor', element: <TabEditorPage /> },
       { path: '/tab-editor/:id', element: <TabEditorPage /> },
       { path: '/stem-player', element: <StemPlayerPage /> },
+      { path: '/learn', element: <LearnPage /> },
+      { path: '/learn/lesson/:instrument/:unitId/:lessonId', element: <LessonRunnerPage /> },
     ],
   },
 ]);
