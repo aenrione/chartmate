@@ -2,6 +2,8 @@
 import {useEffect} from 'react';
 import type {ChordDiagramActivity} from '@/lib/curriculum/types';
 
+// Data arrays are high-e-first (index 0 = high e). Standard chord diagrams
+// display low-E on the left, so we render strings in reversed order.
 const STRING_LABELS = ['e', 'B', 'G', 'D', 'A', 'E'];
 const FRET_COUNT = 5;
 
@@ -19,6 +21,11 @@ function ChordDiagramSVG({
 }) {
   const nonZeroFrets = frets.filter(f => f > 0);
   const startFret = nonZeroFrets.length > 0 ? Math.min(...nonZeroFrets) : 1;
+
+  // Reverse to display low-E on the left (standard chord diagram orientation)
+  const displayFrets = [...frets].reverse();
+  const displayFingers = fingers ? [...fingers].reverse() : undefined;
+  const displayLabels = [...STRING_LABELS].reverse();
 
   const W = 220;
   const H = 200;
@@ -68,11 +75,11 @@ function ChordDiagramSVG({
         </text>
       )}
 
-      {/* String labels */}
-      {STRING_LABELS.map((label, i) => (
+      {/* String labels — E A D G B e (low to high, left to right) */}
+      {displayLabels.map((label, col) => (
         <text
-          key={i}
-          x={LEFT + i * STRING_GAP}
+          key={col}
+          x={LEFT + col * STRING_GAP}
           y={14}
           textAnchor="middle"
           fontSize={10}
@@ -83,25 +90,25 @@ function ChordDiagramSVG({
       ))}
 
       {/* Finger dots */}
-      {frets.map((fret, stringIdx) => {
-        const x = LEFT + stringIdx * STRING_GAP;
+      {displayFrets.map((fret, col) => {
+        const x = LEFT + col * STRING_GAP;
         if (fret === -1) {
           return (
-            <text key={stringIdx} x={x} y={TOP - 6} textAnchor="middle" fontSize={13} className="fill-on-surface-variant">
+            <text key={col} x={x} y={TOP - 6} textAnchor="middle" fontSize={13} className="fill-on-surface-variant">
               ✕
             </text>
           );
         }
         if (fret === 0) {
           return (
-            <circle key={stringIdx} cx={x} cy={TOP - 8} r={5} fill="none" stroke="currentColor" strokeWidth={1.5} className="text-on-surface" />
+            <circle key={col} cx={x} cy={TOP - 8} r={5} fill="none" stroke="currentColor" strokeWidth={1.5} className="text-on-surface" />
           );
         }
         const adjustedFret = fret - startFret + 1;
         const y = TOP + (adjustedFret - 0.5) * FRET_GAP;
-        const finger = fingers?.[stringIdx];
+        const finger = displayFingers?.[col];
         return (
-          <g key={stringIdx}>
+          <g key={col}>
             <circle cx={x} cy={y} r={R} className="fill-primary" />
             {finger && finger > 0 && (
               <text x={x} y={y + 4} textAnchor="middle" fontSize={11} className="fill-on-primary font-bold">
