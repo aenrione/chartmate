@@ -20,12 +20,23 @@ export default function LessonRunnerPage() {
   const [activityIndex, setActivityIndex] = useState(0);
   const [canContinue, setCanContinue] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     if (instrument && unitId && lessonId) {
-      loadLesson(instrument, unitId, lessonId).then(setLesson);
+      loadLesson(instrument, unitId, lessonId)
+        .then(setLesson)
+        .catch(err => setLoadError(String(err)));
     }
   }, [instrument, unitId, lessonId]);
+
+  if (loadError) {
+    return (
+      <div className="flex-1 flex items-center justify-center bg-surface">
+        <p className="text-red-500 text-sm">Failed to load lesson: {loadError}</p>
+      </div>
+    );
+  }
 
   if (!lesson || !instrument || !unitId || !lessonId) {
     return (

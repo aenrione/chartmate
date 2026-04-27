@@ -11,8 +11,8 @@
     {
       "type": "chord-diagram",
       "chord": "G",
-      "frets": [3, 2, 0, 0, 0, 3],
-      "fingers": [3, 2, 0, 0, 0, 4],
+      "frets": [3, 0, 0, 0, 2, 3],
+      "fingers": [3, 0, 0, 0, 1, 2],
       "srs": true
     },
     {

@@ -25,10 +25,10 @@ export default function SkillTree({instrument}: SkillTreeProps) {
       getCompletedLessons(instrument),
     ]).then(([loadedUnits, progress]) => {
       setUnits(loadedUnits);
-      setCompletedLessonIds(new Set(progress.map(p => p.lessonId)));
+      setCompletedLessonIds(new Set(progress.map(p => `${p.unitId}/${p.lessonId}`)));
       // Auto-expand first incomplete unit
       const firstIncomplete = loadedUnits.find(u =>
-        u.lessons.some(l => !progress.find(p => p.lessonId === l)),
+        u.lessons.some(l => !progress.find(p => p.unitId === u.id && p.lessonId === l)),
       );
       setExpandedUnitId(firstIncomplete?.id ?? loadedUnits[0]?.id ?? null);
     }).catch(err => setError(String(err))).finally(() => setLoading(false));
@@ -36,7 +36,7 @@ export default function SkillTree({instrument}: SkillTreeProps) {
 
   const completedUnitIds = new Set(
     units
-      .filter(u => u.lessons.every(l => completedLessonIds.has(l)))
+      .filter(u => u.lessons.every(l => completedLessonIds.has(`${u.id}/${l}`)))
       .map(u => u.id),
   );
 

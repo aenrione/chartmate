@@ -13,7 +13,7 @@ function getUnitStatus(
 ): UnitStatus {
   const prereqsMet = unit.prerequisites.every(p => completedUnitIds.has(p));
   if (!prereqsMet) return 'locked';
-  const completed = unit.lessons.filter(id => completedLessonIds.has(id));
+  const completed = unit.lessons.filter(id => completedLessonIds.has(`${unit.id}/${id}`));
   if (completed.length === 0) return 'available';
   if (completed.length === unit.lessons.length) return 'completed';
   return 'in_progress';
@@ -38,7 +38,7 @@ export default function UnitNode({
 }: UnitNodeProps) {
   const navigate = useNavigate();
   const status = getUnitStatus(unit, completedLessonIds, completedUnitIds);
-  const completedCount = unit.lessons.filter(id => completedLessonIds.has(id)).length;
+  const completedCount = unit.lessons.filter(id => completedLessonIds.has(`${unit.id}/${id}`)).length;
   const isLocked = status === 'locked';
 
   return (
@@ -101,7 +101,7 @@ export default function UnitNode({
       {isExpanded && !isLocked && (
         <div className="mt-2 pl-4 space-y-1">
           {unit.loadedLessons.map(lesson => {
-            const done = completedLessonIds.has(lesson.id);
+            const done = completedLessonIds.has(`${unit.id}/${lesson.id}`);
             return (
               <button
                 key={lesson.id}
