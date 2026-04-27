@@ -32,6 +32,7 @@ import {migration_030_webdav_sync} from './030_webdav_sync';
 import {migration_031_playbook_setlist_cascade} from './031_playbook_setlist_cascade';
 import {migration_032_stem_associations} from './032_stem_associations';
 import {migration_033_learn_tables} from './033_learn_tables';
+import {migration_034_learn_gamification} from './034_learn_gamification';
 
 export const migrations: Record<string, Migration> = {
   '001_initial': InitialMigration,
@@ -67,4 +68,5 @@ export const migrations: Record<string, Migration> = {
   '031_playbook_setlist_cascade': migration_031_playbook_setlist_cascade,
   '032_stem_associations': migration_032_stem_associations,
   '033_learn_tables': migration_033_learn_tables,
+  '034_learn_gamification': migration_034_learn_gamification,
 };
