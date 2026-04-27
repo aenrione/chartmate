@@ -11,9 +11,13 @@ import {
 } from '@/components/ui/select';
 import {createGoal} from '@/lib/local-db/programs';
 import type {Goal} from '@/lib/local-db/programs';
+import TabPicker from './ref-pickers/TabPicker';
+import LessonPicker from './ref-pickers/LessonPicker';
+import SongPicker from './ref-pickers/SongPicker';
 
 const GOAL_TYPES: {value: Goal['type']; label: string}[] = [
   {value: 'custom', label: 'Custom'},
+  {value: 'song', label: 'Song / Chart'},
   {value: 'tab', label: 'Tab composition'},
   {value: 'learn_lesson', label: 'Curriculum lesson'},
   {value: 'exercise', label: 'Built-in exercise'},
@@ -30,10 +34,11 @@ const EXERCISE_ROUTES: {value: string; label: string}[] = [
 
 interface AddGoalFormProps {
   unitId: number;
+  instrument?: string;
   onAdded: () => void;
 }
 
-export default function AddGoalForm({unitId, onAdded}: AddGoalFormProps) {
+export default function AddGoalForm({unitId, instrument, onAdded}: AddGoalFormProps) {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [type, setType] = useState<Goal['type']>('custom');
@@ -49,6 +54,11 @@ export default function AddGoalForm({unitId, onAdded}: AddGoalFormProps) {
     setTarget('');
     setNotes('');
     setOpen(false);
+  }
+
+  function handleRefSelect(value: string, label: string) {
+    setRefId(value);
+    if (!title.trim() && label) setTitle(label);
   }
 
   async function handleAdd() {
@@ -70,6 +80,9 @@ export default function AddGoalForm({unitId, onAdded}: AddGoalFormProps) {
     }
   }
 
+  const refRequired = type === 'song' || type === 'tab' || type === 'learn_lesson' || type === 'exercise';
+  const canSubmit = !saving && title.trim().length > 0 && (!refRequired || refId.length > 0);
+
   if (!open) {
     return (
       <Button variant="ghost" size="sm" onClick={() => setOpen(true)} className="w-full border border-dashed border-outline-variant/40">
@@ -82,7 +95,7 @@ export default function AddGoalForm({unitId, onAdded}: AddGoalFormProps) {
     <div className="rounded-xl border border-outline-variant/20 bg-surface-container p-4 space-y-3">
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium text-on-surface">New goal</span>
-        <button onClick={reset} className="text-on-surface-variant hover:text-on-surface">
+        <button type="button" onClick={reset} className="text-on-surface-variant hover:text-on-surface">
           <X className="h-4 w-4" />
         </button>
       </div>
@@ -106,23 +119,19 @@ export default function AddGoalForm({unitId, onAdded}: AddGoalFormProps) {
       </Select>
 
       {type === 'tab' && (
-        <Input
-          placeholder="Tab composition ID"
-          value={refId}
-          onChange={e => setRefId(e.target.value)}
-        />
+        <TabPicker value={refId} onSelect={handleRefSelect} />
       )}
 
       {type === 'learn_lesson' && (
-        <Input
-          placeholder="e.g. guitar/01-open-chords/02-g-chord"
-          value={refId}
-          onChange={e => setRefId(e.target.value)}
-        />
+        <LessonPicker value={refId} onSelect={handleRefSelect} instrument={instrument} />
+      )}
+
+      {type === 'song' && (
+        <SongPicker value={refId} onSelect={handleRefSelect} />
       )}
 
       {type === 'exercise' && (
-        <Select value={refId} onValueChange={setRefId}>
+        <Select value={refId} onValueChange={v => setRefId(v)}>
           <SelectTrigger>
             <SelectValue placeholder="Choose exercise" />
           </SelectTrigger>
@@ -148,7 +157,7 @@ export default function AddGoalForm({unitId, onAdded}: AddGoalFormProps) {
 
       <div className="flex justify-end gap-2">
         <Button variant="secondary" size="sm" onClick={reset}>Cancel</Button>
-        <Button size="sm" onClick={handleAdd} disabled={saving || !title.trim() || (type === 'exercise' && !refId)}>
+        <Button size="sm" onClick={handleAdd} disabled={!canSubmit}>
           Add goal
         </Button>
       </div>

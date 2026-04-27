@@ -19,7 +19,8 @@ function resolveLink(goal: Goal): string | null {
       return `/learn/lesson/${instrument}/${unitId}/${lessonId}`;
   }
   if (goal.type === 'exercise' && goal.refId) return goal.refId;
-  // 'song' and 'custom' types have no navigable route yet
+  if (goal.type === 'song' && goal.refId) return '/library/saved-charts';
+  // 'custom' type has no navigable route
   return null;
 }
 

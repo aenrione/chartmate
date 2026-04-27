@@ -122,7 +122,7 @@ export default function UnitDetailPage() {
           {goals.map(goal => (
             <GoalItem key={goal.id} goal={goal} onRefresh={load} />
           ))}
-          <AddGoalForm unitId={unit.id} onAdded={load} />
+          <AddGoalForm unitId={unit.id} instrument={program?.instrument ?? undefined} onAdded={load} />
         </div>
       </div>
 
