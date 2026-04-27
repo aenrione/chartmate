@@ -14,7 +14,7 @@ interface WidgetData {
 
 export default function UpcomingSessionsWidget() {
   const [data, setData] = useState<WidgetData | null>(null);
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   useEffect(() => {
     async function load() {
@@ -38,7 +38,7 @@ export default function UpcomingSessionsWidget() {
 
       setData({todaySessions, upcomingSessions, activeProgram, currentUnit});
     }
-    load();
+    load().catch(() => {});
   }, []);
 
   if (!data) return null;

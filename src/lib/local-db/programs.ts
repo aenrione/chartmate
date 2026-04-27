@@ -389,7 +389,8 @@ export async function getSessionsForDate(date: string): Promise<Session[]> {
 
 export async function getUpcomingSessions(limit = 5): Promise<Session[]> {
   const db = await getLocalDb();
-  const today = new Date().toISOString().slice(0, 10);
+  const d = new Date();
+  const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   const rows = await db
     .selectFrom('lesson_sessions')
     .selectAll()
