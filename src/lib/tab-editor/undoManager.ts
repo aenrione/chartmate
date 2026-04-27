@@ -8,6 +8,8 @@ const MAX_HISTORY = 50;
 export class UndoManager {
   private undoStack: Uint8Array[] = [];
   private redoStack: Uint8Array[] = [];
+  // Stack depth at the last save/load — used to detect "back to clean state"
+  private cleanDepth = 0;
 
   /**
    * Take a snapshot of the current score state.
@@ -18,6 +20,8 @@ export class UndoManager {
     this.undoStack.push(snapshot);
     if (this.undoStack.length > MAX_HISTORY) {
       this.undoStack.shift();
+      // cleanDepth tracks an absolute position; clamp so it never goes negative
+      if (this.cleanDepth > 0) this.cleanDepth--;
     }
     this.redoStack.length = 0;
   }
@@ -42,9 +46,20 @@ export class UndoManager {
     return this.redoStack.length > 0;
   }
 
+  /** True when the current state matches the last save/load point. */
+  get isAtCleanState(): boolean {
+    return this.undoStack.length === this.cleanDepth;
+  }
+
+  /** Call after saving or loading to record the current clean point. */
+  markClean(): void {
+    this.cleanDepth = this.undoStack.length;
+  }
+
   clear(): void {
     this.undoStack.length = 0;
     this.redoStack.length = 0;
+    this.cleanDepth = 0;
   }
 
   private deserialize(data: Uint8Array): Score | null {

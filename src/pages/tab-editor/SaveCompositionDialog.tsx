@@ -2,6 +2,7 @@ import {useState, useEffect, useRef} from 'react';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -142,6 +143,9 @@ export default function SaveCompositionDialog({
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Save to Library</DialogTitle>
+          <DialogDescription className="sr-only">
+            Enter composition metadata before saving this tab to the local library.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="mt-4 space-y-4">
 

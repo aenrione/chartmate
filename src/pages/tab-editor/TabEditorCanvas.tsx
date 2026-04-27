@@ -2,7 +2,7 @@ import {useRef, useImperativeHandle, forwardRef} from 'react';
 import {LayoutMode, StaveProfile} from '@coderline/alphatab';
 import AlphaTabWrapper, {type AlphaTabHandle} from '@/pages/guitar/AlphaTabWrapper';
 import type {CursorBounds} from '@/lib/tab-editor/useEditorCursor';
-import {model} from '@coderline/alphatab';
+import {AlphaTabApi, model} from '@coderline/alphatab';
 
 type Score = InstanceType<typeof model.Score>;
 type Beat = InstanceType<typeof model.Beat>;
@@ -12,18 +12,40 @@ export interface TabEditorCanvasHandle {
   alphaTab: AlphaTabHandle | null;
 }
 
+export interface SectionLabel {
+  text: string;
+  x: number;
+  y: number;
+}
+
+export interface PatternOverlay {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  color: string;
+  label: string;
+}
+
 interface TabEditorCanvasProps {
   cursorBounds: CursorBounds | null;
   /** 1-based string number (1 = lowest/bottom string) */
   cursorStringNumber?: number;
   /** Total number of strings on the instrument */
   cursorStringCount?: number;
+  /** Section labels rendered as HTML overlays to avoid AlphaTab band-sharing overlap */
+  sectionLabels?: SectionLabel[];
+  /** Colored bar overlays for detected patterns */
+  patternOverlays?: PatternOverlay[];
   onScoreLoaded?: (score: Score) => void;
   onRenderFinished?: () => void;
+  onPostRenderFinished?: () => void;
+  onApiReady?: (api: AlphaTabApi) => void;
   onBeatMouseDown?: (beat: Beat) => void;
   onNoteMouseDown?: (note: Note) => void;
   onPlayerStateChanged?: (state: number) => void;
   onPlayerReady?: () => void;
+  onPlayerFinished?: () => void;
   onPositionChanged?: (currentTime: number, endTime: number, currentTick: number, endTick: number) => void;
   onActiveBeatsChanged?: (beats: Beat[]) => void;
   staveMode?: 'tab' | 'notation' | 'both';
@@ -40,12 +62,17 @@ const TabEditorCanvas = forwardRef<TabEditorCanvasHandle, TabEditorCanvasProps>(
     cursorBounds,
     cursorStringNumber = 1,
     cursorStringCount = 6,
+    sectionLabels,
+    patternOverlays,
     onScoreLoaded,
     onRenderFinished,
+    onPostRenderFinished,
+    onApiReady,
     onBeatMouseDown,
     onNoteMouseDown,
     onPlayerStateChanged,
     onPlayerReady,
+    onPlayerFinished,
     onPositionChanged,
     onActiveBeatsChanged,
     staveMode = 'tab',
@@ -94,6 +121,35 @@ const TabEditorCanvas = forwardRef<TabEditorCanvasHandle, TabEditorCanvasProps>(
           />
         )}
 
+        {patternOverlays?.map((ov, i) => (
+          <div
+            key={i}
+            className="absolute pointer-events-none z-[5]"
+            style={{
+              left: ov.x,
+              top: ov.y,
+              width: ov.w,
+              height: ov.h,
+              background: `${ov.color}20`,
+              borderLeft: `3px solid ${ov.color}`,
+            }}
+          >
+            <span style={{fontSize: 9, color: ov.color, fontWeight: 'bold', paddingLeft: 3, opacity: 0.8}}>
+              {ov.label}
+            </span>
+          </div>
+        ))}
+
+        {sectionLabels?.map((label, i) => (
+          <div
+            key={i}
+            className="absolute pointer-events-none z-10 text-[11px] font-bold text-on-surface/70 dark:text-zinc-300/80 tracking-wide uppercase"
+            style={{left: label.x, top: label.y}}
+          >
+            {label.text}
+          </div>
+        ))}
+
         <AlphaTabWrapper
           ref={alphaTabRef}
           layoutMode={LayoutMode.Page}
@@ -101,12 +157,17 @@ const TabEditorCanvas = forwardRef<TabEditorCanvasHandle, TabEditorCanvasProps>(
           scale={1.0}
           enablePlayer={true}
           includeNoteBounds={true}
+          hideBuiltInSectionLabels={true}
+          useScriptProcessorOutput={true}
           onScoreLoaded={onScoreLoaded}
           onRenderFinished={onRenderFinished}
+          onPostRenderFinished={onPostRenderFinished}
+          onApiReady={onApiReady}
           onBeatMouseDown={onBeatMouseDown}
           onNoteMouseDown={onNoteMouseDown}
           onPlayerStateChanged={onPlayerStateChanged}
           onPlayerReady={onPlayerReady}
+          onPlayerFinished={onPlayerFinished}
           onPositionChanged={onPositionChanged}
           onActiveBeatsChanged={onActiveBeatsChanged}
           className="w-full h-full"

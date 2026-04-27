@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {appDataDir, join} from '@tauri-apps/api/path';
-import {readDir, readFile, writeFile, mkdir, remove, exists} from '@tauri-apps/plugin-fs';
+import {readDir, readFile, remove, exists} from '@tauri-apps/plugin-fs';
 import {open} from '@tauri-apps/plugin-dialog';
 import {AudioManager} from '@/lib/preview/audioManager';
 import {
@@ -36,9 +36,34 @@ function isStemName(name: string): name is StemName {
   return (STEM_NAMES as readonly string[]).includes(name);
 }
 
-async function getDestDir(songKey: string): Promise<string> {
-  const base = await appDataDir();
-  return join(base, 'stems', songKey);
+function normalizePath(path: string): string {
+  return path.replace(/\\/g, '/').replace(/\/+$/, '');
+}
+
+async function getManagedStemRoot(): Promise<string> {
+  return join(await appDataDir(), 'stems');
+}
+
+async function isManagedStemDir(path: string): Promise<boolean> {
+  const root = normalizePath(await getManagedStemRoot());
+  const target = normalizePath(path);
+  return target === root || target.startsWith(`${root}/`);
+}
+
+function scanStemEntries(
+  entries: Awaited<ReturnType<typeof readDir>>,
+): Array<{stem: StemName; name: string}> {
+  const found = entries
+    .filter(e => !e.isDirectory)
+    .flatMap(e => {
+      const nameWithoutExt = e.name.replace(AUDIO_EXTENSIONS, '');
+      return isStemName(nameWithoutExt) && AUDIO_EXTENSIONS.test(e.name)
+        ? [{stem: nameWithoutExt as StemName, name: e.name}]
+        : [];
+    });
+  if (found.length === 0)
+    throw new Error('No stem files found (drums/bass/guitar/other/vocals)');
+  return found;
 }
 
 // ---------------------------------------------------------------------------
@@ -50,7 +75,7 @@ export function useStemPlayer(songKey: string) {
   const [isLinked, setIsLinked] = useState(false);
   const [stemsReady, setStemsReady] = useState(false);
   const [loadedStems, setLoadedStems] = useState<StemName[]>([]);
-  const [isCopying, setIsCopying] = useState(false);
+  const isCopying = false;
   const [isLoading, setIsLoading] = useState(false);
   const [linkError, setLinkError] = useState<string | null>(null);
 
@@ -111,23 +136,7 @@ export function useStemPlayer(songKey: string) {
       setIsLoading(true);
       try {
         const entries = await readDir(folderPath);
-
-        // Find matching stem entries
-        const stemEntries: {stem: StemName; name: string}[] = [];
-        for (const entry of entries) {
-          if (!entry.name) continue;
-          const nameWithoutExt = entry.name.replace(AUDIO_EXTENSIONS, '');
-          if (isStemName(nameWithoutExt) && AUDIO_EXTENSIONS.test(entry.name)) {
-            stemEntries.push({stem: nameWithoutExt, name: entry.name});
-          }
-        }
-
-        if (stemEntries.length === 0) {
-          throw new Error(
-            'No stem files found in stored folder. ' +
-              'Expected files named drums/bass/vocals/guitar/other with a .wav/.mp3/.ogg/.flac extension.',
-          );
-        }
+        const stemEntries = scanStemEntries(entries);
 
         // Read all files
         const files = await Promise.all(
@@ -199,51 +208,20 @@ export function useStemPlayer(songKey: string) {
   // --- linkFolder ---
   const linkFolder = useCallback(
     async (sourceFolderPath: string) => {
-      setIsCopying(true);
+      setIsLoading(true);
       setLinkError(null);
       destroyManager();
 
       try {
-        // Scan source for stem files
-        const entries = await readDir(sourceFolderPath);
-        const stemEntries: {stem: StemName; name: string}[] = [];
-        for (const entry of entries) {
-          if (!entry.name) continue;
-          const nameWithoutExt = entry.name.replace(AUDIO_EXTENSIONS, '');
-          if (isStemName(nameWithoutExt) && AUDIO_EXTENSIONS.test(entry.name)) {
-            stemEntries.push({stem: nameWithoutExt, name: entry.name});
-          }
-        }
-
-        if (stemEntries.length === 0) {
-          throw new Error(
-            'No stem files found (drums/bass/vocals/guitar/other). ' +
-              'Select the folder that Demucs created (e.g. separated/htdemucs/<song_name>/).',
-          );
-        }
-
-        // Create destination directory
-        const destDir = await getDestDir(songKey);
-        await mkdir(destDir, {recursive: true});
-
-        // Copy each file
-        for (const {name} of stemEntries) {
-          const srcPath = await join(sourceFolderPath, name);
-          const destPath = await join(destDir, name);
-          const data = await readFile(srcPath);
-          await writeFile(destPath, data);
-        }
-
-        // Persist to DB
-        await saveStemAssociation(songKey, destDir);
+        // Persist the selected folder directly. Copying multi-stem audio into
+        // app data makes linking feel blocked for large Demucs outputs.
+        await loadStems(sourceFolderPath);
+        await saveStemAssociation(songKey, sourceFolderPath);
         setIsLinked(true);
-
-        // Load AudioManager from copied files
-        await loadStems(destDir);
       } catch (err) {
         setLinkError(err instanceof Error ? err.message : String(err));
       } finally {
-        setIsCopying(false);
+        setIsLoading(false);
       }
     },
     [destroyManager, loadStems, songKey],
@@ -268,7 +246,7 @@ export function useStemPlayer(songKey: string) {
 
       if (assoc) {
         const folderExists = await exists(assoc.stem_folder_path);
-        if (folderExists) {
+        if (folderExists && await isManagedStemDir(assoc.stem_folder_path)) {
           await remove(assoc.stem_folder_path, {recursive: true});
         }
       }
@@ -287,35 +265,55 @@ export function useStemPlayer(songKey: string) {
     }
   }, []);
 
+  // --- stopAndReset: stop audio and reset position to 0 (for stop-button / song-end) ---
+  const stopAndReset = useCallback(async () => {
+    const mgr = audioManagerRef.current;
+    if (!mgr) return;
+    stopInterval();
+    await mgr.stop(); // sets isInitialized = false; position resets on next play()
+    setIsPlaying(false);
+    setCurrentTime(0);
+  }, [stopInterval]);
+
+  // --- play / pause (imperative, for external sync) ---
+  const play = useCallback(async () => {
+    const mgr = audioManagerRef.current;
+    if (!mgr || mgr.isPlaying) return;
+    if (mgr.isInitialized) {
+      await mgr.resume();
+    } else {
+      await mgr.play({percent: 0});
+    }
+    setIsPlaying(true);
+    startInterval();
+  }, [startInterval]);
+
+  const pause = useCallback(async () => {
+    const mgr = audioManagerRef.current;
+    if (!mgr || !mgr.isPlaying) return;
+    await mgr.pause();
+    stopInterval();
+    setIsPlaying(false);
+  }, [stopInterval]);
+
   // --- togglePlayPause ---
   const togglePlayPause = useCallback(async () => {
     const mgr = audioManagerRef.current;
     if (!mgr) return;
-
     if (mgr.isPlaying) {
-      await mgr.pause();
-      stopInterval();
-      setIsPlaying(false);
+      await pause();
     } else {
-      if (mgr.isInitialized) {
-        await mgr.resume();
-      } else {
-        await mgr.play({percent: 0});
-      }
-      setIsPlaying(true);
-      startInterval();
+      await play();
     }
-  }, [startInterval, stopInterval]);
+  }, [play, pause]);
 
   // --- seek ---
   const seek = useCallback(
     async (timeSeconds: number) => {
       const mgr = audioManagerRef.current;
       if (!mgr) return;
-
       stopInterval();
-      await mgr.stop();
-      await mgr.play({time: timeSeconds});
+      await mgr.play({time: timeSeconds}); // play() stops existing sources internally
       setIsPlaying(true);
       setCurrentTime(timeSeconds);
       startInterval();
@@ -343,6 +341,9 @@ export function useStemPlayer(songKey: string) {
     promptAndLink,
     unlink,
     setVolume,
+    play,
+    pause,
+    stopAndReset,
     togglePlayPause,
     seek,
   };

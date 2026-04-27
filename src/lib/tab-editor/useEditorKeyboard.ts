@@ -52,6 +52,8 @@ interface UseEditorKeyboardOptions {
   onBeforeMutation?: () => void;
   onUndo?: () => void;
   onRedo?: () => void;
+  onScrollUp?: () => void;
+  onScrollDown?: () => void;
 }
 
 const FRET_TIMEOUT = 500; // ms to wait for second digit
@@ -100,13 +102,15 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't capture if user is typing in an input
+      // Don't capture if user is typing in an input, except Space in number inputs
+      // (space is never valid in a number field, so let it through as play/pause)
       if (
         e.target instanceof HTMLInputElement ||
         e.target instanceof HTMLTextAreaElement ||
         e.target instanceof HTMLSelectElement
       ) {
-        return;
+        const isNumberInput = e.target instanceof HTMLInputElement && e.target.type === 'number';
+        if (!(isNumberInput && e.key === ' ')) return;
       }
 
       const s = optionsRef.current.score;
@@ -205,6 +209,22 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
           e.preventDefault();
           moveDown();
           return;
+        case 'u':
+        case 'U':
+          if (!e.ctrlKey && !e.metaKey && !e.altKey) {
+            e.preventDefault();
+            optionsRef.current.onScrollUp?.();
+            return;
+          }
+          break;
+        case 'd':
+        case 'D':
+          if (!e.ctrlKey && !e.metaKey && !e.altKey) {
+            e.preventDefault();
+            optionsRef.current.onScrollDown?.();
+            return;
+          }
+          break;
         case ' ':
           e.preventDefault();
           onPlayPause();
@@ -437,9 +457,9 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown, true);
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown, true);
       if (fretTimerRef.current) {
         clearTimeout(fretTimerRef.current);
       }

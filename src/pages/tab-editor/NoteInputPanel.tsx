@@ -1,6 +1,8 @@
+import {useState, useEffect} from 'react';
 import {model} from '@coderline/alphatab';
 import {cn} from '@/lib/utils';
 import type {NoteEffect} from '@/lib/tab-editor/scoreOperations';
+import {X} from 'lucide-react';
 
 const {Duration} = model;
 
@@ -12,6 +14,10 @@ interface NoteInputPanelProps {
   onRestInsert: () => void;
   onAddMeasure: () => void;
   onDeleteMeasure: () => void;
+  currentChordName?: string | null;
+  onChordNameCommit: (name: string) => void;
+  onChordClear: () => void;
+  onOpenChordFinder: () => void;
 }
 
 const DURATIONS = [
@@ -43,7 +49,27 @@ export default function NoteInputPanel({
   onRestInsert,
   onAddMeasure,
   onDeleteMeasure,
+  currentChordName,
+  onChordNameCommit,
+  onChordClear,
+  onOpenChordFinder,
 }: NoteInputPanelProps) {
+  const [chordInput, setChordInput] = useState('');
+
+  // Sync input field when cursor moves to a beat that already has a chord
+  useEffect(() => {
+    setChordInput(currentChordName ?? '');
+  }, [currentChordName]);
+
+  const commitChord = () => {
+    const name = chordInput.trim();
+    if (name) {
+      onChordNameCommit(name);
+    } else {
+      onChordClear();
+    }
+  };
+
   return (
     <div className="flex items-center gap-3 px-4 py-2 bg-surface-container border-t border-outline-variant/20 overflow-x-auto">
       {/* Duration buttons */}
@@ -95,6 +121,50 @@ export default function NoteInputPanel({
             {eff.label}
           </button>
         ))}
+      </div>
+
+      <div className="w-px h-5 bg-outline-variant/20 shrink-0" />
+
+      {/* Chord annotation */}
+      <div className="flex items-center gap-0.5 shrink-0">
+        <span className="text-[10px] text-on-surface-variant/60 font-medium mr-1.5 uppercase tracking-wider">Chord</span>
+        <div className="relative flex items-center">
+          <input
+            type="text"
+            value={chordInput}
+            onChange={e => setChordInput(e.target.value)}
+            onBlur={commitChord}
+            onKeyDown={e => {
+              if (e.key === 'Enter') { e.preventDefault(); commitChord(); (e.target as HTMLInputElement).blur(); }
+              if (e.key === 'Escape') { setChordInput(currentChordName ?? ''); (e.target as HTMLInputElement).blur(); }
+              // Prevent editor hotkeys from firing while typing
+              e.stopPropagation();
+            }}
+            placeholder="e.g. Bm"
+            className={cn(
+              'h-7 w-20 px-2 pr-5 rounded text-[11px] border transition-colors focus:outline-none focus:ring-1 focus:ring-primary/50',
+              currentChordName
+                ? 'bg-primary/10 border-primary/40 text-primary font-semibold'
+                : 'bg-surface-container-high border-outline-variant/30 text-on-surface-variant',
+            )}
+          />
+          {chordInput && (
+            <button
+              onMouseDown={e => { e.preventDefault(); setChordInput(''); onChordClear(); }}
+              className="absolute right-1 text-on-surface-variant/50 hover:text-on-surface-variant"
+              tabIndex={-1}
+            >
+              <X className="h-3 w-3" />
+            </button>
+          )}
+        </div>
+        <button
+          onClick={onOpenChordFinder}
+          title="Open Chord Finder (Cmd+K)"
+          className="px-1.5 h-7 flex items-center justify-center rounded text-[11px] font-medium text-on-surface-variant hover:bg-surface-container-high active:bg-primary/10 transition-colors"
+        >
+          Find
+        </button>
       </div>
 
       <div className="w-px h-5 bg-outline-variant/20 shrink-0" />

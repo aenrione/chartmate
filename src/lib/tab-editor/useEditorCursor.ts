@@ -1,4 +1,4 @@
-import {useState, useCallback, useRef} from 'react';
+import {useState, useCallback, useRef, useEffect} from 'react';
 import type {AlphaTabApi} from '@coderline/alphatab';
 import {model} from '@coderline/alphatab';
 
@@ -29,6 +29,20 @@ const DEFAULT_CURSOR: EditorCursor = {
   stringNumber: 1,
 };
 
+function isCursorDebugEnabled() {
+  return typeof window !== 'undefined' && window.localStorage.getItem('tabEditorDebug') === '1';
+}
+
+function writeCursorDebug(event: string, payload: Record<string, unknown>) {
+  if (!isCursorDebugEnabled()) return;
+  const target = window as unknown as {
+    __tabEditorCursorEvents?: Array<Record<string, unknown>>;
+  };
+  const entry = {event, at: Date.now(), ...payload};
+  target.__tabEditorCursorEvents = [...(target.__tabEditorCursorEvents ?? []).slice(-49), entry];
+  console.debug('[tab-editor:cursor]', entry);
+}
+
 function getBeatAt(score: Score, cursor: EditorCursor): Beat | null {
   const track = score.tracks[cursor.trackIndex];
   if (!track) return null;
@@ -45,35 +59,49 @@ export function useEditorCursor(apiRef: React.RefObject<AlphaTabApi | null>) {
   const [cursor, setCursor] = useState<EditorCursor>(DEFAULT_CURSOR);
   const [cursorBounds, setCursorBounds] = useState<CursorBounds | null>(null);
   const scoreRef = useRef<Score | null>(null);
+  const cursorRef = useRef<EditorCursor>(DEFAULT_CURSOR);
+
+  useEffect(() => {
+    cursorRef.current = cursor;
+  }, [cursor]);
 
   const setScore = useCallback((score: Score) => {
     scoreRef.current = score;
+    writeCursorDebug('setScore', {
+      title: score.title,
+      tracks: score.tracks.length,
+      bars: score.masterBars.length,
+    });
   }, []);
 
   const updateCursorBounds = useCallback((newCursor?: EditorCursor) => {
-    const c = newCursor ?? cursor;
+    const c = newCursor ?? cursorRef.current;
     const api = apiRef.current;
     const score = scoreRef.current;
     if (!api || !score) {
       setCursorBounds(null);
+      writeCursorDebug('bounds:missing-api-or-score', {cursor: c, hasApi: !!api, hasScore: !!score});
       return;
     }
 
     const beat = getBeatAt(score, c);
     if (!beat) {
       setCursorBounds(null);
+      writeCursorDebug('bounds:missing-beat', {cursor: c});
       return;
     }
 
     const lookup = api.boundsLookup;
     if (!lookup) {
       setCursorBounds(null);
+      writeCursorDebug('bounds:missing-lookup', {cursor: c});
       return;
     }
 
     const beatBounds = lookup.findBeat(beat);
     if (!beatBounds) {
       setCursorBounds(null);
+      writeCursorDebug('bounds:missing-beat-bounds', {cursor: c});
       return;
     }
 
@@ -83,9 +111,23 @@ export function useEditorCursor(apiRef: React.RefObject<AlphaTabApi | null>) {
       width: beatBounds.visualBounds.w,
       height: beatBounds.visualBounds.h,
     });
-  }, [cursor, apiRef]);
+    writeCursorDebug('bounds:updated', {
+      cursor: c,
+      bounds: {
+        x: beatBounds.visualBounds.x,
+        y: beatBounds.visualBounds.y,
+        width: beatBounds.visualBounds.w,
+        height: beatBounds.visualBounds.h,
+      },
+    });
+  }, [apiRef]);
 
   const moveTo = useCallback((newCursor: EditorCursor) => {
+    writeCursorDebug('moveTo', {
+      from: cursorRef.current,
+      to: newCursor,
+      stack: new Error().stack?.split('\n').slice(1, 5).join('\n'),
+    });
     setCursor(newCursor);
     updateCursorBounds(newCursor);
   }, [updateCursorBounds]);

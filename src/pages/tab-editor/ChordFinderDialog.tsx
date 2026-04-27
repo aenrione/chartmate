@@ -1,12 +1,12 @@
 import {useState, useMemo, useRef, useEffect} from 'react';
-import {Dialog, DialogContent, DialogHeader, DialogTitle} from '@/components/ui/dialog';
+import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from '@/components/ui/dialog';
 import {Search} from 'lucide-react';
 import {searchChords, type ChordDefinition, type ChordVoicing} from '@/lib/tab-editor/chordDb';
 
 interface ChordFinderDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSelectChord: (voicing: ChordVoicing) => void;
+  onSelectChord: (voicing: ChordVoicing, chordName: string) => void;
 }
 
 const STRING_LABELS = ['E', 'A', 'D', 'G', 'B', 'e'];
@@ -161,8 +161,8 @@ export default function ChordFinderDialog({open, onOpenChange, onSelectChord}: C
     return Array.from(map.values());
   }, [results]);
 
-  const handleSelect = (voicing: ChordVoicing) => {
-    onSelectChord(voicing);
+  const handleSelect = (voicing: ChordVoicing, chordName: string) => {
+    onSelectChord(voicing, chordName);
     onOpenChange(false);
   };
 
@@ -171,6 +171,9 @@ export default function ChordFinderDialog({open, onOpenChange, onSelectChord}: C
       <DialogContent className="max-w-2xl max-h-[80vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>Chord Finder</DialogTitle>
+          <DialogDescription className="sr-only">
+            Search chord shapes and insert a selected voicing at the current cursor position.
+          </DialogDescription>
         </DialogHeader>
 
         {/* Search */}
@@ -203,7 +206,7 @@ export default function ChordFinderDialog({open, onOpenChange, onSelectChord}: C
                         key={vi}
                         voicing={voicing}
                         chordName={chord.name}
-                        onClick={() => handleSelect(voicing)}
+                        onClick={() => handleSelect(voicing, chord.name)}
                       />
                     ))}
                   </div>

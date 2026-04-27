@@ -7,10 +7,10 @@ import {
 } from 'lucide-react';
 import {getTuningsForInstrument, getDefaultTuningPreset, type TuningPreset} from '@/lib/tab-editor/tunings';
 import type {InstrumentType} from '@/lib/tab-editor/newScore';
-import type {useStemPlayer} from '@/hooks/useStemPlayer';
-import StemMixerPanel from '@/components/StemMixerPanel';
+import StemMixerPanel, {type StemMixerPanelProps} from '@/components/StemMixerPanel';
 import type {DetectedPattern} from '@/lib/tab-editor/patternDetector';
 import type {TabSection} from '@/lib/tab-editor/scoreOperations';
+import {PATTERN_COLORS, MAX_TEMPO_BPM} from './patternColors';
 
 interface TrackInfo {
   name: string;
@@ -34,7 +34,7 @@ interface TabEditorSidebarProps {
   onTitleChange: (title: string) => void;
   artist: string;
   onArtistChange: (artist: string) => void;
-  stemPlayer: ReturnType<typeof useStemPlayer>;
+  stemPlayer: Omit<StemMixerPanelProps, 'compact'>;
   // sections & patterns
   sections: TabSection[];
   detectedPatterns: DetectedPattern[];
@@ -117,19 +117,19 @@ export default function TabEditorSidebar({
             onChange={e => setTempoInput(e.target.value)}
             onBlur={() => {
               const v = parseInt(tempoInput, 10);
-              if (v > 0 && v <= 300) onTempoChange(v);
+              if (v > 0 && v <= MAX_TEMPO_BPM) onTempoChange(v);
               else setTempoInput(String(tempo));
             }}
             onKeyDown={e => {
               if (e.key === 'Enter') {
                 const v = parseInt(tempoInput, 10);
-                if (v > 0 && v <= 300) onTempoChange(v);
+                if (v > 0 && v <= MAX_TEMPO_BPM) onTempoChange(v);
                 else setTempoInput(String(tempo));
                 e.currentTarget.blur();
               }
             }}
             min={20}
-            max={300}
+            max={MAX_TEMPO_BPM}
             className="w-16 bg-surface-container text-xs text-on-surface px-2 py-1 rounded outline-none focus:ring-1 focus:ring-primary"
           />
         </div>
@@ -361,12 +361,12 @@ export default function TabEditorSidebar({
             >
               <Layers className="h-3.5 w-3.5" />
               <span className="flex-1 text-left">Patterns</span>
-              {detectedPatterns.length > 0 && (
+              {detectedPatterns.filter(p => !p.unique).length > 0 && (
                 <span className="text-[10px] bg-surface-container-high px-1.5 py-0.5 rounded-full">
-                  {detectedPatterns.length}
+                  {detectedPatterns.filter(p => !p.unique).length}
                 </span>
               )}
-              {detectedPatterns.length > 0 && (
+              {detectedPatterns.filter(p => !p.unique).length > 0 && (
                 <button
                   onClick={e => { e.stopPropagation(); onTogglePatternColors(); }}
                   className={cn(
@@ -408,18 +408,21 @@ export default function TabEditorSidebar({
                   )}
                 </div>
                 {detectedPatterns.length > 0 && (() => {
+                  const repeating = detectedPatterns.filter(p => !p.unique);
                   const coveredBarSet = new Set<number>();
-                  for (const p of detectedPatterns) {
+                  for (const p of repeating) {
                     for (const start of p.instances) {
                       for (let b = start; b < start + p.barLength; b++) coveredBarSet.add(b);
                     }
                   }
                   const pct = totalBars > 0 ? Math.round((coveredBarSet.size / totalBars) * 100) : 0;
+                  const uniqueCount = detectedPatterns.filter(p => p.unique).length;
                   return (
                     <div className="px-2 text-[10px] text-on-surface-variant/60 flex items-center gap-1.5">
-                      <span>{detectedPatterns.length} pattern{detectedPatterns.length !== 1 ? 's' : ''}</span>
+                      <span>{repeating.length} repeating</span>
                       <span>·</span>
                       <span>{pct}% coverage</span>
+                      {uniqueCount > 0 && <><span>·</span><span>{uniqueCount} unique</span></>}
                     </div>
                   );
                 })()}
@@ -428,7 +431,9 @@ export default function TabEditorSidebar({
                     Click "Detect" to find repeating bars
                   </p>
                 )}
-                {detectedPatterns.map(pattern => (
+                {detectedPatterns.map((pattern, idx) => {
+                  const patternColor = pattern.unique ? '#6b7280' : PATTERN_COLORS[idx % PATTERN_COLORS.length];
+                  return (
                   <div key={pattern.label} className="rounded-lg overflow-hidden">
                     <button
                       className="w-full flex items-center gap-2 px-2 py-1.5 text-xs hover:bg-surface-container-high transition-colors"
@@ -436,13 +441,24 @@ export default function TabEditorSidebar({
                     >
                       <span
                         className="w-2 h-2 rounded-full shrink-0"
-                        style={{background: pattern.color}}
+                        style={{background: patternColor}}
                       />
-                      <span className="font-medium">Pattern {pattern.label}</span>
-                      {pattern.barLength > 1 && (
-                        <span className="text-[10px] text-on-surface-variant/40">{pattern.barLength}b</span>
+                      {pattern.unique ? (
+                        <>
+                          <span className="font-medium text-on-surface-variant/70">{pattern.label}</span>
+                          <span className="text-[10px] text-on-surface-variant/40">
+                            {pattern.barLength > 1 ? `${pattern.barLength} bars` : '1 bar'} · unique
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="font-medium">Pattern {pattern.label}</span>
+                          {pattern.barLength > 1 && (
+                            <span className="text-[10px] text-on-surface-variant/40">{pattern.barLength}b</span>
+                          )}
+                          <span className="text-[10px] text-on-surface-variant/60">×{pattern.instances.length}</span>
+                        </>
                       )}
-                      <span className="text-[10px] text-on-surface-variant/60">×{pattern.instances.length}</span>
                       <span className="flex-1" />
                       {expandedPattern === pattern.label
                         ? <ChevronDown className="h-3 w-3 text-on-surface-variant/60" />
@@ -471,7 +487,7 @@ export default function TabEditorSidebar({
                             <button
                               onClick={e => {
                                 e.stopPropagation();
-                                const name = `Pattern ${pattern.label}`;
+                                const name = pattern.unique ? `${pattern.label}` : `Pattern ${pattern.label}`;
                                 setNewSectionName(name);
                                 setNewSectionBar(barIdx);
                                 setAddSectionOpen(true);
@@ -487,7 +503,8 @@ export default function TabEditorSidebar({
                       </div>
                     )}
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

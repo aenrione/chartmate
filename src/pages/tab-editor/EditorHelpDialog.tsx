@@ -1,6 +1,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -33,6 +34,9 @@ export default function EditorHelpDialog({open, onOpenChange}: EditorHelpDialogP
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Tab Editor — Keyboard Shortcuts</DialogTitle>
+          <DialogDescription className="sr-only">
+            Reference for keyboard shortcuts and editing commands in the tab editor.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="mt-4 space-y-5 text-sm">
