@@ -1,0 +1,25 @@
+{
+  "id": "01-four-four",
+  "title": "The 4/4 Beat",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The 4/4 Time Signature\n\n**4/4** means 4 beats per measure, and each beat is a quarter note.\n\nIt's the most common time signature in rock, pop, and most modern music.\n\nCount along: **1 - 2 - 3 - 4 - 1 - 2 - 3 - 4**",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Basic Rock Beat\n\nThe standard rock beat in 4/4:\n\n- **Kick drum** on beats 1 and 3\n- **Snare drum** on beats 2 and 4\n- **Hi-hat** on every beat (or every 8th note)\n\nThis pattern is the backbone of virtually every rock and pop song.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a basic rock beat, where does the snare fall?",
+      "choices": ["Beats 1 and 3", "Beats 2 and 4", "Every beat", "Every 8th note"],
+      "answer": 1,
+      "explanation": "Snare on 2 and 4 is the defining pattern of the backbeat in rock music.",
+      "srs": true
+    }
+  ]
+}

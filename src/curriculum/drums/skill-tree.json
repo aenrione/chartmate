@@ -1,0 +1,14 @@
+{
+  "instrument": "drums",
+  "version": "1.0",
+  "units": [
+    {
+      "id": "01-basic-beats",
+      "title": "Basic Beats",
+      "description": "The fundamental patterns every drummer must know",
+      "icon": "drum",
+      "prerequisites": [],
+      "lessons": ["01-four-four"]
+    }
+  ]
+}
