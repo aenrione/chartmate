@@ -43,6 +43,10 @@ export function resolveLessonId(fileName: string): string {
   return fileName.replace(/\.json$/, '');
 }
 
+export function resolveUnitId(dirName: string): string {
+  return dirName;
+}
+
 // ── Loaders ──────────────────────────────────────────────────────────────────
 
 export async function loadSkillTree(instrument: Instrument): Promise<SkillTree> {

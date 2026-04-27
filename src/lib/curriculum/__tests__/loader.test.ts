@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest';
-import {parseSkillTree, parseLesson, resolveLessonId} from '../loader';
+import {parseSkillTree, parseLesson, resolveLessonId, resolveUnitId} from '../loader';
 
 describe('parseSkillTree', () => {
   it('returns a valid SkillTree from raw JSON', () => {
@@ -40,5 +40,11 @@ describe('resolveLessonId', () => {
   it('strips .json extension from filename', () => {
     expect(resolveLessonId('01-intro.json')).toBe('01-intro');
     expect(resolveLessonId('01-intro')).toBe('01-intro');
+  });
+});
+
+describe('resolveUnitId', () => {
+  it('returns directory name unchanged', () => {
+    expect(resolveUnitId('01-open-chords')).toBe('01-open-chords');
   });
 });
