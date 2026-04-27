@@ -5,11 +5,12 @@ import type {QuizActivity as QuizActivityType} from '@/lib/curriculum/types';
 interface Props {
   activity: QuizActivityType;
   onPass: () => void;
+  onFail: () => void;
 }
 
 type AnswerState = 'unanswered' | 'correct' | 'incorrect';
 
-export default function QuizActivity({activity, onPass}: Props) {
+export default function QuizActivity({activity, onPass, onFail}: Props) {
   const [selected, setSelected] = useState<number | null>(null);
   const [state, setState] = useState<AnswerState>('unanswered');
 
@@ -21,6 +22,7 @@ export default function QuizActivity({activity, onPass}: Props) {
       onPass();
     } else {
       setState('incorrect');
+      onFail();
     }
   }
 

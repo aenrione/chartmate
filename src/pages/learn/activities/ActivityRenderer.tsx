@@ -9,16 +9,17 @@ import TabExerciseActivity from './TabExerciseActivity';
 interface Props {
   activity: Activity;
   onPass: () => void;
+  onFail: () => void;
 }
 
-export default function ActivityRenderer({activity, onPass}: Props) {
+export default function ActivityRenderer({activity, onPass, onFail}: Props) {
   switch (activity.type) {
     case 'theory-card':
       return <TheoryCard activity={activity} onPass={onPass} />;
     case 'chord-diagram':
       return <ChordDiagram activity={activity} onPass={onPass} />;
     case 'quiz':
-      return <QuizActivity activity={activity} onPass={onPass} />;
+      return <QuizActivity activity={activity} onPass={onPass} onFail={onFail} />;
     case 'fretboard-drill':
       return <FretboardDrillActivity activity={activity} onPass={onPass} />;
     case 'tab-exercise':
