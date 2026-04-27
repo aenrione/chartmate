@@ -4,6 +4,7 @@ import {Guitar, Drum} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import type {Instrument} from '@/lib/curriculum/types';
 import SkillTree from './SkillTree';
+import LearnStats from './LearnStats';
 
 const INSTRUMENTS: {label: string; value: Instrument; Icon: React.ElementType}[] = [
   {label: 'Guitar', value: 'guitar', Icon: Guitar},
@@ -36,6 +37,9 @@ export default function LearnPage() {
           ))}
         </div>
       </div>
+
+      {/* Stats bar */}
+      <LearnStats />
 
       {/* Skill tree */}
       <SkillTree instrument={instrument} />
