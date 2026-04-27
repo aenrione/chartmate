@@ -24,6 +24,8 @@ const TOP_NAV_SECTIONS = [
   {label: 'Library', prefix: ['/library', '/library/setlists']},
   {label: 'Browse', prefix: ['/browse', '/spotify', '/updates']},
   {label: 'Learn', prefix: ['/learn']},
+  {label: 'Programs', prefix: ['/programs']},
+  {label: 'Calendar', prefix: ['/calendar']},
 ] as const;
 
 const INSTRUMENTS = [
@@ -104,6 +106,8 @@ function TopNav({pathname}: {pathname: string}) {
                 : section.label === 'Library' ? '/library'
                 : section.label === 'Browse' ? '/browse'
                 : section.label === 'Learn' ? '/learn'
+                : section.label === 'Programs' ? '/programs'
+                : section.label === 'Calendar' ? '/calendar'
                 : '#'
               }
               className={cn(

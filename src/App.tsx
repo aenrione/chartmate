@@ -45,6 +45,10 @@ import RepertoireProgressPage from '@/pages/guitar/repertoire/RepertoireProgress
 import RepertoireManagePage from '@/pages/guitar/repertoire/RepertoireManagePage';
 import LearnPage from '@/pages/learn/LearnPage';
 import LessonRunnerPage from '@/pages/learn/LessonRunnerPage';
+import ProgramsPage from '@/pages/programs/ProgramsPage';
+import ProgramDetailPage from '@/pages/programs/ProgramDetailPage';
+import UnitDetailPage from '@/pages/programs/UnitDetailPage';
+import CalendarPage from '@/pages/calendar/CalendarPage';
 
 function RootLayout() {
   const [setupComplete, setSetupComplete] = useState(false);
@@ -111,6 +115,10 @@ const router = createBrowserRouter([
       { path: '/tab-editor/:id', element: <TabEditorPage /> },
       { path: '/learn', element: <LearnPage /> },
       { path: '/learn/lesson/:instrument/:unitId/:lessonId', element: <LessonRunnerPage /> },
+      {path: '/programs', element: <ProgramsPage />},
+      {path: '/programs/:id', element: <ProgramDetailPage />},
+      {path: '/programs/:id/units/:unitId', element: <UnitDetailPage />},
+      {path: '/calendar', element: <CalendarPage />},
     ],
   },
 ]);
