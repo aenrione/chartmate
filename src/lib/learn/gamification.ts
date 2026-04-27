@@ -3,9 +3,9 @@ export function todayIso(): string {
 }
 
 function prevDayIso(dateIso: string): string {
-  const d = new Date(dateIso);
-  d.setDate(d.getDate() - 1);
-  return d.toISOString().slice(0, 10);
+  const [y, m, d] = dateIso.split('-').map(Number);
+  const date = new Date(Date.UTC(y, m - 1, d - 1));
+  return date.toISOString().slice(0, 10);
 }
 
 /**

@@ -21,6 +21,12 @@ describe('shouldIncrementStreak', () => {
   it('returns false if gap is 2+ days (should reset, not increment)', () => {
     expect(shouldIncrementStreak('2026-04-24', '2026-04-26')).toBe(false);
   });
+  it('returns true across month boundary (2026-04-30 → 2026-05-01)', () => {
+    expect(shouldIncrementStreak('2026-04-30', '2026-05-01')).toBe(true);
+  });
+  it('returns true across year boundary (2025-12-31 → 2026-01-01)', () => {
+    expect(shouldIncrementStreak('2025-12-31', '2026-01-01')).toBe(true);
+  });
 });
 
 describe('shouldResetStreak', () => {
@@ -38,5 +44,8 @@ describe('shouldResetStreak', () => {
   });
   it('returns true if gap is 10 days', () => {
     expect(shouldResetStreak('2026-04-16', '2026-04-26')).toBe(true);
+  });
+  it('returns false across month boundary (consecutive days)', () => {
+    expect(shouldResetStreak('2026-04-30', '2026-05-01')).toBe(false);
   });
 });
