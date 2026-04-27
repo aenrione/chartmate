@@ -22,15 +22,19 @@ export default function CalendarPage() {
   const [editSession, setEditSession] = useState<Session | undefined>();
 
   const load = useCallback(async () => {
-    const from = `${year}-${String(month + 1).padStart(2, '0')}-01`;
-    const lastDay = new Date(year, month + 1, 0).getDate();
-    const to = `${year}-${String(month + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
-    const [monthSessions, upcomingSessions] = await Promise.all([
-      getSessionsForDateRange(from, to),
-      getUpcomingSessions(7),
-    ]);
-    setSessions(monthSessions);
-    setUpcoming(upcomingSessions);
+    try {
+      const from = `${year}-${String(month + 1).padStart(2, '0')}-01`;
+      const lastDay = new Date(year, month + 1, 0).getDate();
+      const to = `${year}-${String(month + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+      const [monthSessions, upcomingSessions] = await Promise.all([
+        getSessionsForDateRange(from, to),
+        getUpcomingSessions(7),
+      ]);
+      setSessions(monthSessions);
+      setUpcoming(upcomingSessions);
+    } catch {
+      // DB error — leave existing state unchanged
+    }
   }, [year, month]);
 
   useEffect(() => {load();}, [load]);
@@ -68,17 +72,17 @@ export default function CalendarPage() {
               {MONTH_NAMES[month]} {year}
             </h1>
             <div className="flex items-center gap-1">
-              <Button variant="ghost" size="icon" onClick={prevMonth}>
+              <Button variant="ghost" size="icon" aria-label="Previous month" onClick={prevMonth}>
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => {setYear(now.getFullYear()); setMonth(now.getMonth());}}
+                onClick={() => { const t = new Date(); setYear(t.getFullYear()); setMonth(t.getMonth()); }}
               >
                 Today
               </Button>
-              <Button variant="ghost" size="icon" onClick={nextMonth}>
+              <Button variant="ghost" size="icon" aria-label="Next month" onClick={nextMonth}>
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>

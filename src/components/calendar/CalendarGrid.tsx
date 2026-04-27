@@ -23,7 +23,8 @@ export default function CalendarGrid({
   onDayClick,
   onSessionClick,
 }: CalendarGridProps) {
-  const today = new Date().toISOString().slice(0, 10);
+  const d = new Date();
+  const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   const firstDayOfWeek = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
@@ -63,11 +64,12 @@ export default function CalendarGrid({
           const isToday = dateStr === today;
 
           return (
-            <div
+            <button
               key={idx}
+              type="button"
               onClick={() => onDayClick(dateStr)}
               className={cn(
-                'bg-surface-container min-h-[80px] p-1 cursor-pointer hover:bg-surface-container-high transition-colors',
+                'w-full text-left bg-surface-container min-h-[80px] p-1 cursor-pointer hover:bg-surface-container-high transition-colors',
                 isToday && 'bg-primary/5',
               )}
             >
@@ -92,7 +94,7 @@ export default function CalendarGrid({
                   <div className="text-xs text-on-surface-variant px-1">+{daySessions.length - 3} more</div>
                 )}
               </div>
-            </div>
+            </button>
           );
         })}
       </div>
