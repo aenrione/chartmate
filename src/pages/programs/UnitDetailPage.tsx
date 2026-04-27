@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useCallback} from 'react';
 import {useParams, useNavigate} from 'react-router-dom';
 import {ArrowLeft, CheckCircle2, Calendar} from 'lucide-react';
 import {Button} from '@/components/ui/button';
@@ -8,7 +8,6 @@ import {
   completeUnit,
   getProgram,
   getSessionsForDate,
-  createSession,
 } from '@/lib/local-db/programs';
 import type {Unit, Goal, Session, Program} from '@/lib/local-db/programs';
 import GoalItem from '@/components/programs/GoalItem';
@@ -25,7 +24,7 @@ export default function UnitDetailPage() {
   const [sessionModalOpen, setSessionModalOpen] = useState(false);
   const [editSession, setEditSession] = useState<Session | undefined>();
 
-  async function load() {
+  const load = useCallback(async () => {
     if (!id || !unitId) return;
     const [prog, u, g] = await Promise.all([
       getProgram(Number(id)),
@@ -40,9 +39,9 @@ export default function UnitDetailPage() {
     setUnit(u);
     setGoals(g);
     setTodaySessions(unitSessions);
-  }
+  }, [id, unitId, navigate]);
 
-  useEffect(() => {load();}, [id, unitId]);
+  useEffect(() => {load();}, [load]);
 
   async function handleMarkComplete() {
     if (!unitId) return;
@@ -104,13 +103,14 @@ export default function UnitDetailPage() {
           ) : (
             <div className="space-y-2">
               {todaySessions.map(s => (
-                <div
+                <button
                   key={s.id}
+                  type="button"
                   onClick={() => {setEditSession(s); setSessionModalOpen(true);}}
-                  className="cursor-pointer text-sm text-on-surface px-3 py-2 rounded-lg bg-surface-container-high hover:bg-surface-container-highest"
+                  className="w-full text-left cursor-pointer text-sm text-on-surface px-3 py-2 rounded-lg bg-surface-container-high hover:bg-surface-container-highest"
                 >
                   {s.title ?? 'Practice session'}{s.scheduledTime ? ` · ${s.scheduledTime}` : ''}{s.completedAt ? ' ✓' : ''}
-                </div>
+                </button>
               ))}
             </div>
           )}
@@ -131,7 +131,7 @@ export default function UnitDetailPage() {
         onSaved={load}
         defaultDate={new Date().toISOString().slice(0, 10)}
         session={editSession}
-        units={unit ? [unit] : []}
+        units={[unit]}
       />
     </div>
   );

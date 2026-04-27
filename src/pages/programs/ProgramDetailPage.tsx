@@ -32,17 +32,20 @@ export default function ProgramDetailPage() {
   async function load() {
     if (!id) return;
     setLoading(true);
-    const [prog, units] = await Promise.all([
-      getProgram(Number(id)),
-      getUnitsForProgram(Number(id)),
-    ]);
-    if (!prog) {navigate('/programs'); return;}
-    const withGoals = await Promise.all(
-      units.map(async unit => ({unit, goals: await getGoalsForUnit(unit.id)})),
-    );
-    setProgram(prog);
-    setUnitsWithGoals(withGoals);
-    setLoading(false);
+    try {
+      const [prog, units] = await Promise.all([
+        getProgram(Number(id)),
+        getUnitsForProgram(Number(id)),
+      ]);
+      if (!prog) {navigate('/programs'); return;}
+      const withGoals = await Promise.all(
+        units.map(async unit => ({unit, goals: await getGoalsForUnit(unit.id)})),
+      );
+      setProgram(prog);
+      setUnitsWithGoals(withGoals);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {load();}, [id]);
@@ -52,7 +55,9 @@ export default function ProgramDetailPage() {
     await createUnit({
       programId: Number(id),
       title: newUnitTitle.trim(),
-      suggestedDays: newUnitDays ? Number(newUnitDays) : undefined,
+      suggestedDays: newUnitDays.trim()
+        ? (v => (!isNaN(v) && v > 0 ? v : undefined))(parseInt(newUnitDays, 10))
+        : undefined,
     });
     setNewUnitTitle('');
     setNewUnitDays('');
@@ -83,7 +88,7 @@ export default function ProgramDetailPage() {
   return (
     <div className="flex-1 min-h-0 overflow-y-auto">
       <div className="max-w-2xl mx-auto px-4 py-6">
-        <button onClick={() => navigate('/programs')} className="flex items-center gap-1 text-sm text-on-surface-variant hover:text-on-surface mb-4">
+        <button type="button" onClick={() => navigate('/programs')} className="flex items-center gap-1 text-sm text-on-surface-variant hover:text-on-surface mb-4">
           <ArrowLeft className="h-4 w-4" /> Programs
         </button>
 

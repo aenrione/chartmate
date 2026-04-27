@@ -19,6 +19,7 @@ function resolveLink(goal: Goal): string | null {
       return `/learn/lesson/${instrument}/${unitId}/${lessonId}`;
   }
   if (goal.type === 'exercise' && goal.refId) return goal.refId;
+  // 'song' and 'custom' types have no navigable route yet
   return null;
 }
 
@@ -28,17 +29,23 @@ export default function GoalItem({goal, onRefresh}: GoalItemProps) {
   const link = resolveLink(goal);
 
   async function handleToggle() {
-    if (done) {
-      await uncompleteGoal(goal.id);
-    } else {
-      await completeGoal(goal.id);
+    try {
+      if (done) {
+        await uncompleteGoal(goal.id);
+      } else {
+        await completeGoal(goal.id);
+      }
+    } finally {
+      onRefresh();
     }
-    onRefresh();
   }
 
   async function handleDelete() {
-    await deleteGoal(goal.id);
-    onRefresh();
+    try {
+      await deleteGoal(goal.id);
+    } finally {
+      onRefresh();
+    }
   }
 
   return (

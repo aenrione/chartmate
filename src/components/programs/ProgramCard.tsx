@@ -2,7 +2,7 @@ import {Link} from 'react-router-dom';
 import {Guitar, Drum, ChevronRight, Play, Archive} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {cn} from '@/lib/utils';
-import type {Program, Unit} from '@/lib/local-db/programs';
+import type {Program} from '@/lib/local-db/programs';
 import {activateProgram, archiveProgram} from '@/lib/local-db/programs';
 
 interface ProgramCardProps {

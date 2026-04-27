@@ -22,19 +22,22 @@ export default function ProgramsPage() {
 
   async function load() {
     setLoading(true);
-    const programs = await getPrograms();
-    const withUnits = await Promise.all(
-      programs.map(async program => ({
-        program,
-        units: await getUnitsForProgram(program.id),
-      })),
-    );
-    const sorted = [...withUnits].sort(
-      (a, b) =>
-        STATUS_ORDER.indexOf(a.program.status) - STATUS_ORDER.indexOf(b.program.status),
-    );
-    setItems(sorted);
-    setLoading(false);
+    try {
+      const programs = await getPrograms();
+      const withUnits = await Promise.all(
+        programs.map(async program => ({
+          program,
+          units: await getUnitsForProgram(program.id),
+        })),
+      );
+      const sorted = [...withUnits].sort(
+        (a, b) =>
+          STATUS_ORDER.indexOf(a.program.status) - STATUS_ORDER.indexOf(b.program.status),
+      );
+      setItems(sorted);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {load();}, []);
