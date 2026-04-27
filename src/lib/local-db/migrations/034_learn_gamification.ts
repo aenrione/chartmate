@@ -1,4 +1,4 @@
-import {type Kysely, type Migration} from 'kysely';
+import {sql, type Kysely, type Migration} from 'kysely';
 
 export const migration_034_learn_gamification: Migration = {
   async up(db: Kysely<any>) {
@@ -14,7 +14,15 @@ export const migration_034_learn_gamification: Migration = {
       .addColumn('earned_at', 'text', cb => cb.notNull()) // ISO datetime
       .execute();
 
-    // Single-row streak tracker (one row max per user)
+    // Add CHECK constraint on source column
+    await sql`CREATE TRIGGER IF NOT EXISTS chk_xp_ledger_source
+      BEFORE INSERT ON learn_xp_ledger
+      BEGIN
+        SELECT RAISE(ABORT, 'source must be lesson or heart_bonus')
+        WHERE NEW.source NOT IN ('lesson', 'heart_bonus');
+      END`.execute(db);
+
+    // Single-row streak tracker — singleton=1 UNIQUE enforces at most one row
     await db.schema
       .createTable('learn_streaks')
       .ifNotExists()
@@ -24,6 +32,8 @@ export const migration_034_learn_gamification: Migration = {
       .addColumn('last_active_date', 'text') // YYYY-MM-DD, nullable
       .addColumn('daily_goal_target', 'integer', cb => cb.notNull().defaultTo(10))
       .addColumn('updated_at', 'text', cb => cb.notNull())
+      .addColumn('singleton', 'integer', cb => cb.notNull().defaultTo(1))
+      .addUniqueConstraint('uq_learn_streaks_singleton', ['singleton'])
       .execute();
 
     // One row per calendar day for daily goal progress
@@ -40,6 +50,7 @@ export const migration_034_learn_gamification: Migration = {
   },
 
   async down(db: Kysely<any>) {
+    await sql`DROP TRIGGER IF EXISTS chk_xp_ledger_source`.execute(db);
     await db.schema.dropTable('learn_daily_goal').ifExists().execute();
     await db.schema.dropTable('learn_streaks').ifExists().execute();
     await db.schema.dropTable('learn_xp_ledger').ifExists().execute();

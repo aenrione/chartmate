@@ -33,6 +33,7 @@ import {migration_031_playbook_setlist_cascade} from './031_playbook_setlist_cas
 import {migration_032_stem_associations} from './032_stem_associations';
 import {migration_033_learn_tables} from './033_learn_tables';
 import {migration_034_learn_gamification} from './034_learn_gamification';
+import {migration_035_learn_schema_fixes} from './035_learn_schema_fixes';
 
 export const migrations: Record<string, Migration> = {
   '001_initial': InitialMigration,
@@ -69,4 +70,5 @@ export const migrations: Record<string, Migration> = {
   '032_stem_associations': migration_032_stem_associations,
   '033_learn_tables': migration_033_learn_tables,
   '034_learn_gamification': migration_034_learn_gamification,
+  '035_learn_schema_fixes': migration_035_learn_schema_fixes,
 };

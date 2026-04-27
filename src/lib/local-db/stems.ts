@@ -24,16 +24,9 @@ export async function saveStemAssociation(
 ): Promise<void> {
   const db = await getLocalDb();
   await db
-    .deleteFrom('stem_associations')
-    .where('song_key', '=', songKey)
-    .execute();
-  await db
     .insertInto('stem_associations')
-    .values({
-      song_key: songKey,
-      stem_folder_path: stemFolderPath,
-      created_at: getCurrentTimestamp(),
-    })
+    .values({song_key: songKey, stem_folder_path: stemFolderPath, created_at: getCurrentTimestamp()})
+    .onConflict(oc => oc.column('song_key').doUpdateSet({stem_folder_path: stemFolderPath}))
     .execute();
 }
 

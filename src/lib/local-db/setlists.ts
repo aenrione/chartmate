@@ -100,10 +100,8 @@ export async function updateSetlist(
 
 export async function deleteSetlist(id: number): Promise<void> {
   const db = await getLocalDb();
-  return db.transaction().execute(async trx => {
-    await trx.deleteFrom('setlist_items').where('setlist_id', '=', id).execute();
-    await trx.deleteFrom('setlists').where('id', '=', id).execute();
-  });
+  // ON DELETE CASCADE handles setlist_items automatically
+  await db.deleteFrom('setlists').where('id', '=', id).execute();
 }
 
 export async function getSetlistItems(setlistId: number): Promise<SetlistItem[]> {
@@ -226,32 +224,31 @@ export async function reorderSetlistItem(
 ): Promise<void> {
   const db = await getLocalDb();
 
-  // No explicit transaction: BEGIN/COMMIT across JS awaits routes through
-  // different pool connections on the Rust side (tauri-plugin-sql), and only
-  // the connection that ran PRAGMA busy_timeout has the timeout set — the
-  // others fail instantly on any lock. The CASE UPDATE below is itself atomic.
-  const rows = await db
-    .selectFrom('setlist_items')
-    .select(['id', 'position'])
-    .where('setlist_id', '=', setlistId)
-    .orderBy('position', 'asc')
-    .execute();
+  // TauriSqliteDriver uses a single connection + mutex, so transactions are safe here.
+  await db.transaction().execute(async trx => {
+    const rows = await trx
+      .selectFrom('setlist_items')
+      .select(['id', 'position'])
+      .where('setlist_id', '=', setlistId)
+      .orderBy('position', 'asc')
+      .execute();
 
-  const fromIndex = rows.findIndex(r => r.id === itemId);
-  if (fromIndex === -1 || fromIndex === toIndex) return;
+    const fromIndex = rows.findIndex(r => r.id === itemId);
+    if (fromIndex === -1 || fromIndex === toIndex) return;
 
-  const ids = rows.map(r => r.id);
-  const [moved] = ids.splice(fromIndex, 1);
-  ids.splice(toIndex, 0, moved);
+    const ids = rows.map(r => r.id);
+    const [moved] = ids.splice(fromIndex, 1);
+    ids.splice(toIndex, 0, moved);
 
-  const whenClauses = ids.map((id, i) => sql`WHEN ${id} THEN ${i}`);
-  await sql`UPDATE setlist_items SET position = CASE id ${sql.join(whenClauses, sql` `)} ELSE position END WHERE setlist_id = ${setlistId}`.execute(db);
+    const whenClauses = ids.map((id, i) => sql`WHEN ${id} THEN ${i}`);
+    await sql`UPDATE setlist_items SET position = CASE id ${sql.join(whenClauses, sql` `)} ELSE position END WHERE setlist_id = ${setlistId}`.execute(trx);
 
-  await db
-    .updateTable('setlists')
-    .set({updated_at: getCurrentTimestamp()})
-    .where('id', '=', setlistId)
-    .execute();
+    await trx
+      .updateTable('setlists')
+      .set({updated_at: getCurrentTimestamp()})
+      .where('id', '=', setlistId)
+      .execute();
+  });
 }
 
 export async function updateSetlistItemSpeed(

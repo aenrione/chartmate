@@ -378,6 +378,41 @@ export interface StemAssociations {
   created_at: string;
 }
 
+export interface LearnProgress {
+  id: Generated<number>;
+  instrument: string;
+  unit_id: string;
+  lesson_id: string;
+  completed_at: string;
+}
+
+export interface LearnXpLedger {
+  id: Generated<number>;
+  amount: number;
+  source: string;
+  instrument: string | null;
+  lesson_id: string | null;
+  earned_at: string;
+}
+
+export interface LearnStreaks {
+  id: Generated<number>;
+  current_streak: number;
+  longest_streak: number;
+  last_active_date: string | null;
+  daily_goal_target: number;
+  updated_at: string;
+  singleton: number; // always 1, used for UNIQUE constraint
+}
+
+export interface LearnDailyGoal {
+  id: Generated<number>;
+  date: string;
+  xp_earned: number;
+  target_xp: number;
+  completed: number; // 0 or 1 (SQLite boolean)
+}
+
 export interface DB {
   explorer_saves: ExplorerSaves;
   chorus_charts: ChorusCharts;
@@ -413,4 +448,8 @@ export interface DB {
   repertoire_reviews: RepertoireReviews;
   sync_meta: SyncMeta;
   stem_associations: StemAssociations;
+  learn_progress: LearnProgress;
+  learn_xp_ledger: LearnXpLedger;
+  learn_streaks: LearnStreaks;
+  learn_daily_goal: LearnDailyGoal;
 }
