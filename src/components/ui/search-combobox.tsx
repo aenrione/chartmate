@@ -85,12 +85,10 @@ export default function SearchCombobox({
                   )}
                 </>
               ) : (
-                <span className="flex items-center gap-2">
-                  <span>{placeholder}</span>
-                  <ChevronDown className="h-3.5 w-3.5 text-on-surface-variant shrink-0" />
-                </span>
+                <span>{placeholder}</span>
               )}
             </div>
+            <ChevronDown className="h-3.5 w-3.5 text-on-surface-variant shrink-0" />
           </button>
         </PopoverPrimitive.Trigger>
 
@@ -131,14 +129,15 @@ export default function SearchCombobox({
               <div className="px-3 py-2 text-xs text-on-surface-variant">{emptyText}</div>
             ) : (
               filtered.map(opt => (
-                <button
+                <div
                   key={opt.value}
-                  type="button"
                   role="option"
                   aria-selected={opt.value === value}
+                  tabIndex={0}
                   onClick={() => handleSelect(opt)}
+                  onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSelect(opt); } }}
                   className={cn(
-                    'w-full text-left px-3 py-2 text-sm transition-colors hover:bg-surface-container-high',
+                    'w-full text-left px-3 py-2 text-sm transition-colors hover:bg-surface-container-high cursor-pointer',
                     opt.value === value && 'bg-primary/10',
                   )}
                 >
@@ -148,7 +147,7 @@ export default function SearchCombobox({
                   {opt.sublabel && (
                     <div className="text-xs text-on-surface-variant truncate">{opt.sublabel}</div>
                   )}
-                </button>
+                </div>
               ))
             )}
           </div>
