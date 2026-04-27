@@ -5,6 +5,7 @@ import {cn} from '@/lib/utils';
 import type {Instrument} from '@/lib/curriculum/types';
 import SkillTree from './SkillTree';
 import LearnStats from './LearnStats';
+import UpcomingSessionsWidget from '@/components/programs/UpcomingSessionsWidget';
 
 const INSTRUMENTS: {label: string; value: Instrument; Icon: React.ElementType}[] = [
   {label: 'Guitar', value: 'guitar', Icon: Guitar},
@@ -16,6 +17,7 @@ export default function LearnPage() {
 
   return (
     <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+      <UpcomingSessionsWidget />
       {/* Instrument switcher */}
       <div className="shrink-0 px-6 pt-6 pb-4 border-b border-outline-variant/20">
         <h1 className="text-xl font-bold font-headline mb-4">Learn</h1>
