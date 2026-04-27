@@ -286,6 +286,7 @@ export async function completeUnit(id: number): Promise<void> {
 
 export async function deleteUnit(id: number): Promise<void> {
   const db = await getLocalDb();
+  await (db as any).deleteFrom('unit_goals').where('unit_id', '=', id).execute();
   await (db as any).deleteFrom('program_units').where('id', '=', id).execute();
 }
 

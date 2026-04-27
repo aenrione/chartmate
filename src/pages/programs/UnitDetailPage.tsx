@@ -32,7 +32,8 @@ export default function UnitDetailPage() {
       getGoalsForUnit(Number(unitId)),
     ]);
     if (!u) {navigate(`/programs/${id}`); return;}
-    const today = new Date().toISOString().slice(0, 10);
+    const d = new Date();
+    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     const sessions = await getSessionsForDate(today);
     const unitSessions = sessions.filter(s => s.unitId === Number(unitId));
     setProgram(prog);
