@@ -1,0 +1,32 @@
+{
+  "id": "03-c-chord",
+  "title": "The C Chord",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The C Major Chord\n\nC is one of the most common open chords. It has a warm, clear tone.\n\n**Finger placement:**\n- Index (1): string 2, fret 1\n- Middle (2): string 4, fret 2\n- Ring (3): string 5, fret 3\n\nDo not strum string 6 (low E).",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "C",
+      "frets": [-1, 3, 2, 0, 1, 0],
+      "fingers": [0, 3, 2, 0, 1, 0],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which string do you NOT play in the C chord?",
+      "choices": ["String 1 (high e)", "String 3 (G)", "String 5 (A)", "String 6 (low E)"],
+      "answer": 3,
+      "explanation": "The low E string (6) is muted — shown as X in the chord diagram.",
+      "srs": true
+    },
+    {
+      "type": "fretboard-drill",
+      "notes": ["C3", "E3", "G3", "C4"],
+      "requiredCorrect": 4
+    }
+  ]
+}

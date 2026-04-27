@@ -1,0 +1,32 @@
+{
+  "id": "02-g-chord",
+  "title": "The G Chord",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The G Major Chord\n\nThe G chord is one of the most used chords in music. It sounds full and bright.\n\n**Finger placement:**\n- Index (1): string 5, fret 2\n- Middle (2): string 6, fret 3\n- Ring (3): string 1, fret 3",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "G",
+      "frets": [3, 2, 0, 0, 0, 3],
+      "fingers": [3, 2, 0, 0, 0, 4],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "On which fret does your ring finger go for the G chord?",
+      "choices": ["Fret 1", "Fret 2", "Fret 3", "Open"],
+      "answer": 2,
+      "explanation": "Ring finger presses string 1 (high e) at fret 3.",
+      "srs": true
+    },
+    {
+      "type": "fretboard-drill",
+      "notes": ["G2", "B2", "D3", "G3"],
+      "requiredCorrect": 4
+    }
+  ]
+}

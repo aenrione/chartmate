@@ -1,0 +1,25 @@
+{
+  "id": "01-intro",
+  "title": "What Are Chords?",
+  "xp": 10,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# What Are Chords?\n\nA **chord** is three or more notes played at the same time. On guitar, you play chords by pressing strings down on the fretboard and strumming.\n\nMost songs use just 3-4 chords. Once you know the open chords, you can play thousands of songs.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Reading Chord Diagrams\n\nChord diagrams show you exactly where to put your fingers:\n\n- **Vertical lines** = strings (left = low E, right = high e)\n- **Horizontal lines** = frets\n- **Circles** = where to press down\n- **X** = don't play that string\n- **O** = play that string open (no finger)",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many notes make a chord?",
+      "choices": ["1", "2", "3 or more", "Exactly 6"],
+      "answer": 2,
+      "explanation": "A chord is three or more notes played together.",
+      "srs": true
+    }
+  ]
+}
