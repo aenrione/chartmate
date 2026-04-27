@@ -34,7 +34,7 @@ export async function markLessonCompleted(
       lesson_id: lessonId,
       completed_at: new Date().toISOString(),
     })
-    .onConflict(oc => oc.constraint('uq_learn_progress').doNothing())
+    .onConflict(oc => oc.columns(['instrument', 'unit_id', 'lesson_id']).doNothing())
     .execute();
 }
 
