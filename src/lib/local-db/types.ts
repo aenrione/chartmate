@@ -413,6 +413,54 @@ export interface LearnDailyGoal {
   completed: number; // 0 or 1 (SQLite boolean)
 }
 
+export interface PracticeProgram {
+  id: Generated<number>;
+  title: string;
+  description: string | null;
+  instrument: string | null;
+  status: string;          // 'draft' | 'active' | 'archived'
+  started_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProgramUnit {
+  id: Generated<number>;
+  program_id: number;
+  title: string;
+  description: string | null;
+  order_index: number;
+  suggested_days: number | null;
+  started_at: string | null;
+  completed_at: string | null;
+  created_at: string;
+}
+
+export interface UnitGoal {
+  id: Generated<number>;
+  unit_id: number;
+  title: string;
+  type: string;            // 'song' | 'tab' | 'learn_lesson' | 'exercise' | 'custom'
+  ref_id: string | null;
+  target: string | null;
+  notes: string | null;
+  order_index: number;
+  completed_at: string | null;
+  created_at: string;
+}
+
+export interface LessonSession {
+  id: Generated<number>;
+  title: string | null;
+  unit_id: number | null;
+  scheduled_date: string;  // YYYY-MM-DD
+  scheduled_time: string | null;
+  duration_minutes: number | null;
+  completed_at: string | null;
+  notes: string | null;
+  created_at: string;
+}
+
 export interface DB {
   explorer_saves: ExplorerSaves;
   chorus_charts: ChorusCharts;
@@ -452,4 +500,8 @@ export interface DB {
   learn_xp_ledger: LearnXpLedger;
   learn_streaks: LearnStreaks;
   learn_daily_goal: LearnDailyGoal;
+  practice_programs: PracticeProgram;
+  program_units: ProgramUnit;
+  unit_goals: UnitGoal;
+  lesson_sessions: LessonSession;
 }

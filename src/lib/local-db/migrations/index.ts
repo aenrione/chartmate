@@ -34,6 +34,7 @@ import {migration_032_stem_associations} from './032_stem_associations';
 import {migration_033_learn_tables} from './033_learn_tables';
 import {migration_034_learn_gamification} from './034_learn_gamification';
 import {migration_035_learn_schema_fixes} from './035_learn_schema_fixes';
+import {migration_036_practice_programs} from './036_practice_programs';
 
 export const migrations: Record<string, Migration> = {
   '001_initial': InitialMigration,
@@ -71,4 +72,5 @@ export const migrations: Record<string, Migration> = {
   '033_learn_tables': migration_033_learn_tables,
   '034_learn_gamification': migration_034_learn_gamification,
   '035_learn_schema_fixes': migration_035_learn_schema_fixes,
+  '036_practice_programs': migration_036_practice_programs,
 };
