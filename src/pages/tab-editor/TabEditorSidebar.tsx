@@ -1,8 +1,16 @@
 import {useState} from 'react';
 import {cn} from '@/lib/utils';
-import {Plus, Trash2, Guitar, Drum, Volume2, VolumeOff} from 'lucide-react';
+import {
+  Plus, Trash2, Guitar, Drum, Volume2, VolumeOff,
+  RefreshCw, Play, Navigation2, ChevronDown, ChevronRight, X,
+  BookOpen, Layers,
+} from 'lucide-react';
 import {getTuningsForInstrument, getDefaultTuningPreset, type TuningPreset} from '@/lib/tab-editor/tunings';
 import type {InstrumentType} from '@/lib/tab-editor/newScore';
+import type {useStemPlayer} from '@/hooks/useStemPlayer';
+import StemMixerPanel from '@/components/StemMixerPanel';
+import type {DetectedPattern} from '@/lib/tab-editor/patternDetector';
+import type {TabSection} from '@/lib/tab-editor/scoreOperations';
 
 interface TrackInfo {
   name: string;
@@ -26,6 +34,17 @@ interface TabEditorSidebarProps {
   onTitleChange: (title: string) => void;
   artist: string;
   onArtistChange: (artist: string) => void;
+  stemPlayer: ReturnType<typeof useStemPlayer>;
+  // sections & patterns
+  sections: TabSection[];
+  detectedPatterns: DetectedPattern[];
+  totalBars: number;
+  practiceRange: {startBar: number; endBar: number} | null;
+  onDetectPatterns: () => void;
+  onAddSection: (startBar: number, name: string) => void;
+  onRemoveSection: (startBar: number) => void;
+  onPracticeRange: (startBar: number, endBar: number) => void;
+  onJumpToBar: (barIndex: number) => void;
 }
 
 export default function TabEditorSidebar({
@@ -43,8 +62,24 @@ export default function TabEditorSidebar({
   onTitleChange,
   artist,
   onArtistChange,
+  stemPlayer,
+  sections,
+  detectedPatterns,
+  totalBars,
+  practiceRange,
+  onDetectPatterns,
+  onAddSection,
+  onRemoveSection,
+  onPracticeRange,
+  onJumpToBar,
 }: TabEditorSidebarProps) {
   const [showAddTrack, setShowAddTrack] = useState(false);
+  const [sectionsOpen, setSectionsOpen] = useState(true);
+  const [patternsOpen, setPatternsOpen] = useState(false);
+  const [expandedPattern, setExpandedPattern] = useState<string | null>(null);
+  const [addSectionOpen, setAddSectionOpen] = useState(false);
+  const [newSectionName, setNewSectionName] = useState('');
+  const [newSectionBar, setNewSectionBar] = useState(0);
 
   const activeTrack = tracks[activeTrackIndex];
   const tuningPresets = activeTrack && activeTrack.instrument !== 'drums'
@@ -81,6 +116,11 @@ export default function TabEditorSidebar({
             className="w-16 bg-surface-container text-xs text-on-surface px-2 py-1 rounded outline-none focus:ring-1 focus:ring-primary"
           />
         </div>
+      </div>
+
+      {/* Stems */}
+      <div className="border-b border-outline-variant/20">
+        <StemMixerPanel {...stemPlayer} compact />
       </div>
 
       {/* Tracks */}
@@ -183,6 +223,211 @@ export default function TabEditorSidebar({
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Sections & Patterns */}
+        <div className="border-t border-outline-variant/20">
+          {/* Sections sub-section */}
+          <div>
+            <button
+              className="w-full flex items-center gap-2 px-4 py-2 text-xs font-bold text-on-surface-variant uppercase tracking-wider hover:bg-surface-container-high transition-colors"
+              onClick={() => setSectionsOpen(v => !v)}
+            >
+              <BookOpen className="h-3.5 w-3.5" />
+              <span className="flex-1 text-left">Sections</span>
+              {sectionsOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+            </button>
+            {sectionsOpen && (
+              <div className="px-2 pb-2 space-y-1">
+                {sections.length === 0 && !addSectionOpen && (
+                  <p className="px-2 text-[10px] text-on-surface-variant/50 italic">No sections yet</p>
+                )}
+                {sections.map(sec => (
+                  <div
+                    key={sec.startBar}
+                    className={cn(
+                      'flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs',
+                      practiceRange?.startBar === sec.startBar
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-on-surface-variant hover:bg-surface-container-high',
+                    )}
+                  >
+                    <span className="flex-1 font-medium truncate">{sec.name}</span>
+                    <span className="text-[10px] text-on-surface-variant/50 shrink-0">
+                      {sec.startBar + 1}–{sec.endBar + 1}
+                    </span>
+                    <button
+                      onClick={() => onJumpToBar(sec.startBar)}
+                      className="p-0.5 rounded hover:bg-surface-container-highest transition-colors shrink-0"
+                      title="Jump to section"
+                    >
+                      <Navigation2 className="h-3 w-3" />
+                    </button>
+                    <button
+                      onClick={() => onPracticeRange(sec.startBar, sec.endBar)}
+                      className="p-0.5 rounded hover:bg-surface-container-highest transition-colors shrink-0"
+                      title="Practice this section (loop)"
+                    >
+                      <Play className="h-3 w-3" />
+                    </button>
+                    <button
+                      onClick={() => onRemoveSection(sec.startBar)}
+                      className="p-0.5 rounded hover:bg-error/20 text-on-surface-variant hover:text-error transition-colors shrink-0"
+                      title="Remove section"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+                {addSectionOpen ? (
+                  <div className="px-1 space-y-1">
+                    <input
+                      type="text"
+                      value={newSectionName}
+                      onChange={e => setNewSectionName(e.target.value)}
+                      placeholder="Name (e.g. Chorus)"
+                      className="w-full bg-surface-container text-xs text-on-surface px-2 py-1 rounded outline-none focus:ring-1 focus:ring-primary"
+                      autoFocus
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' && newSectionName.trim()) {
+                          onAddSection(newSectionBar, newSectionName.trim());
+                          setNewSectionName('');
+                          setAddSectionOpen(false);
+                        }
+                        if (e.key === 'Escape') setAddSectionOpen(false);
+                      }}
+                    />
+                    <div className="flex items-center gap-1">
+                      <label className="text-[10px] text-on-surface-variant">Start bar:</label>
+                      <input
+                        type="number"
+                        value={newSectionBar + 1}
+                        onChange={e => setNewSectionBar(Math.max(0, Math.min(totalBars - 1, Number(e.target.value) - 1)))}
+                        min={1}
+                        max={totalBars}
+                        className="w-16 bg-surface-container text-xs text-on-surface px-2 py-1 rounded outline-none focus:ring-1 focus:ring-primary"
+                      />
+                    </div>
+                    <div className="flex gap-1">
+                      <button
+                        onClick={() => {
+                          if (newSectionName.trim()) {
+                            onAddSection(newSectionBar, newSectionName.trim());
+                            setNewSectionName('');
+                            setAddSectionOpen(false);
+                          }
+                        }}
+                        disabled={!newSectionName.trim()}
+                        className="flex-1 text-[10px] px-2 py-1 rounded bg-primary text-on-primary disabled:opacity-40 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
+                      >
+                        Add
+                      </button>
+                      <button
+                        onClick={() => { setAddSectionOpen(false); setNewSectionName(''); }}
+                        className="text-[10px] px-2 py-1 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setAddSectionOpen(true)}
+                    className="w-full flex items-center gap-1 px-2 py-1 text-[10px] text-on-surface-variant hover:bg-surface-container-high rounded transition-colors"
+                  >
+                    <Plus className="h-3 w-3" /> Add section
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Detected Patterns sub-section */}
+          <div>
+            <button
+              className="w-full flex items-center gap-2 px-4 py-2 text-xs font-bold text-on-surface-variant uppercase tracking-wider hover:bg-surface-container-high transition-colors"
+              onClick={() => setPatternsOpen(v => !v)}
+            >
+              <Layers className="h-3.5 w-3.5" />
+              <span className="flex-1 text-left">Patterns</span>
+              {detectedPatterns.length > 0 && (
+                <span className="text-[10px] bg-surface-container-high px-1.5 py-0.5 rounded-full">
+                  {detectedPatterns.length}
+                </span>
+              )}
+              {patternsOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+            </button>
+            {patternsOpen && (
+              <div className="px-2 pb-2 space-y-1">
+                <button
+                  onClick={onDetectPatterns}
+                  className="w-full flex items-center gap-1 px-2 py-1 text-[10px] text-on-surface-variant hover:bg-surface-container-high rounded transition-colors"
+                >
+                  <RefreshCw className="h-3 w-3" /> Detect patterns
+                </button>
+                {detectedPatterns.length === 0 && (
+                  <p className="px-2 text-[10px] text-on-surface-variant/50 italic">
+                    Click "Detect patterns" to find repeating bars
+                  </p>
+                )}
+                {detectedPatterns.map(pattern => (
+                  <div key={pattern.label} className="rounded-lg overflow-hidden">
+                    <button
+                      className="w-full flex items-center gap-2 px-2 py-1.5 text-xs hover:bg-surface-container-high transition-colors"
+                      onClick={() => setExpandedPattern(expandedPattern === pattern.label ? null : pattern.label)}
+                    >
+                      <span
+                        className="w-2 h-2 rounded-full shrink-0"
+                        style={{background: pattern.color}}
+                      />
+                      <span className="font-medium">Pattern {pattern.label}</span>
+                      <span className="text-[10px] text-on-surface-variant/60">×{pattern.instances.length}</span>
+                      <span className="flex-1" />
+                      {expandedPattern === pattern.label
+                        ? <ChevronDown className="h-3 w-3 text-on-surface-variant/60" />
+                        : <ChevronRight className="h-3 w-3 text-on-surface-variant/60" />}
+                    </button>
+                    {expandedPattern === pattern.label && (
+                      <div className="pl-4 pr-2 pb-1 space-y-0.5">
+                        {pattern.instances.map(barIdx => (
+                          <div key={barIdx} className="flex items-center gap-1 text-[10px] text-on-surface-variant">
+                            <span className="flex-1">Bar {barIdx + 1}</span>
+                            <button
+                              onClick={() => onJumpToBar(barIdx)}
+                              className="p-0.5 rounded hover:bg-surface-container-highest transition-colors"
+                              title="Jump to bar"
+                            >
+                              <Navigation2 className="h-3 w-3" />
+                            </button>
+                            <button
+                              onClick={() => onPracticeRange(barIdx, barIdx + pattern.barLength - 1)}
+                              className="p-0.5 rounded hover:bg-surface-container-highest transition-colors"
+                              title="Practice this instance"
+                            >
+                              <Play className="h-3 w-3" />
+                            </button>
+                            <button
+                              onClick={() => {
+                                const name = `Pattern ${pattern.label}`;
+                                setNewSectionName(name);
+                                setNewSectionBar(barIdx);
+                                setAddSectionOpen(true);
+                                setSectionsOpen(true);
+                              }}
+                              className="p-0.5 rounded hover:bg-surface-container-highest transition-colors"
+                              title="Add as section"
+                            >
+                              <Plus className="h-3 w-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

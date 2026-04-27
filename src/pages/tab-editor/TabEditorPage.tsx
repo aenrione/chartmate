@@ -4,7 +4,7 @@ import {AlphaTabApi, model, importer, Settings, StaveProfile} from '@coderline/a
 import {loadComposition, saveComposition, markCompositionSaved} from '@/lib/local-db/tab-compositions';
 import SaveCompositionDialog, {type CompositionMeta} from './SaveCompositionDialog';
 import {useUnsavedChanges} from './useUnsavedChanges';
-import TabEditorCanvas, {type TabEditorCanvasHandle} from './TabEditorCanvas';
+import TabEditorCanvas, {type TabEditorCanvasHandle, type SectionLabel} from './TabEditorCanvas';
 import NoteInputPanel from './NoteInputPanel';
 import TabEditorSidebar from './TabEditorSidebar';
 import FretboardGrid from './FretboardGrid';
@@ -37,9 +37,17 @@ import {
   setTrackTuning,
   setTempo,
   getScoreTempo,
+  setBeatChord,
+  clearBeatChord,
+  getBeatChordName,
+  getSections,
+  setBarSection,
+  removeBarSection,
   type NoteEffect,
+  type TabSection,
 } from '@/lib/tab-editor/scoreOperations';
 import {voicingToNotes, type ChordVoicing} from '@/lib/tab-editor/chordDb';
+import {detectPatterns, type DetectedPattern} from '@/lib/tab-editor/patternDetector';
 import {
   Music,
   Play,
@@ -86,6 +94,7 @@ import YouTubePlayer from '@/components/YouTubePlayer';
 import {snapToYouTubeRate} from '@/lib/youtube-utils';
 import {exportToAlphaTex, exportToAsciiTab, exportToGp7} from '@/lib/tab-editor/exporters';
 import {UndoManager} from '@/lib/tab-editor/undoManager';
+import {computeSeekTick, tickToSeconds} from '@/lib/tab-editor/seekUtils';
 import {importFromAsciiTabWithMeta, extractAsciiTabMeta} from '@/lib/tab-editor/asciiTabImporter';
 import {cn, sanitizeFilename} from '@/lib/utils';
 import {toast} from 'sonner';
@@ -95,6 +104,7 @@ import {writeFile} from '@tauri-apps/plugin-fs';
 import {save as saveDialog} from '@tauri-apps/plugin-dialog';
 import {convertToAlphaTab} from '@/lib/rocksmith/convertToAlphaTab';
 import type {RocksmithArrangement} from '@/lib/rocksmith/types';
+import {useStemPlayer} from '@/hooks/useStemPlayer';
 
 type Score = InstanceType<typeof model.Score>;
 const {Duration} = model;
@@ -136,7 +146,7 @@ export default function TabEditorPage() {
   const canvasScrollRef = useRef<HTMLDivElement>(null);
   const lastPlaybackYRef = useRef(0);
   const [currentDuration, setCurrentDuration] = useState(Duration.Quarter);
-  const [, setRenderKey] = useState(0);
+  const [renderKey, setRenderKey] = useState(0);
   const [title, setTitle] = useState('Untitled');
   const [artist, setArtist] = useState('');
   const [tempo, setTempoState] = useState(DEFAULT_TEMPO_BPM);
@@ -147,6 +157,7 @@ export default function TabEditorPage() {
     () => _editorUICache.get(id ?? 'new')?.showFretboard ?? true,
   );
   const [isReady, setIsReady] = useState(false);
+  const [sectionLabels, setSectionLabels] = useState<SectionLabel[]>([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPlayerReady, setIsPlayerReady] = useState(false);
   const [staveMode, setStaveMode] = useState<'both' | 'tab' | 'notation'>(
@@ -169,6 +180,13 @@ export default function TabEditorPage() {
   const [showYoutubePanel, setShowYoutubePanel] = useState(false);
   const [youtubeFullscreen, setYoutubeFullscreen] = useState(false);
   const ytSyncSuppressRef = useRef(false);
+  // Deferred MIDI reload: loadMidiForScore() calls stop() internally, pausing playback.
+  // Set this flag when reRender() is called while playing; reload on next stop/finish.
+  const midiReloadNeeded = useRef(false);
+  // Seek-in-progress: set before calling api.stop() for a bar-click seek.
+  // handlePlayerStateChanged inspects this to restart at the new position instead of
+  // propagating the stop to React / stem state.
+  const seekStateRef = useRef<{tick: number; secs: number} | null>(null);
   const [compositionId, setCompositionId] = useState<number | undefined>(id ? Number(id) : undefined);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [pendingPreviewImage, setPendingPreviewImage] = useState<string | null>(null);
@@ -202,6 +220,8 @@ export default function TabEditorPage() {
 
   // PlaybackClock adapter — exposes AlphaTab position as a generic clock
   const positionRef = useRef({currentTimeMs: 0});
+  // Stores endTick / endTimeMs from the last positionChanged event for tick→time conversion
+  const tickMappingRef = useRef({endTick: 1, endTimeMs: 0});
   const isPlayingRef = useRef(isPlaying);
   isPlayingRef.current = isPlaying;
   const clockRef = useRef<PlaybackClock | null>(null);
@@ -213,6 +233,19 @@ export default function TabEditorPage() {
   }
 
   const songKey = id ? `tab-editor:${id}` : 'tab-editor:new';
+
+  // Stem player — synced to AlphaTab playback
+  const stemPlayer = useStemPlayer(songKey);
+  useEffect(() => {
+    if (!stemPlayer.stemsReady) return;
+    if (isPlaying) {
+      void stemPlayer.play();
+    } else {
+      void stemPlayer.pause();
+    }
+  // stemPlayer.play/pause are stable callbacks; stemsReady gates the sync
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPlaying, stemPlayer.stemsReady]);
 
   // YouTube integration
   const {
@@ -247,8 +280,9 @@ export default function TabEditorPage() {
     }
   }, []);
 
-  const handlePositionChanged = useCallback((currentTime: number) => {
+  const handlePositionChanged = useCallback((currentTime: number, endTime: number, _currentTick: number, endTick: number) => {
     positionRef.current.currentTimeMs = currentTime;
+    if (endTick > 0) tickMappingRef.current = {endTick, endTimeMs: endTime};
   }, []);
 
   const {
@@ -271,16 +305,62 @@ export default function TabEditorPage() {
     return canvasRef.current?.alphaTab?.getApi() ?? apiRef.current;
   }, []);
 
+  // Beat click during playback: seek AlphaTab and stems without audible pause.
+  // api.timePosition/tickPosition call outputDevice.pause()+play() internally, which
+  // crashes AlphaTab's audio worklet in certain states. Instead use api.stop() then
+  // restart from the new tick in handlePlayerStateChanged, bypassing all worklet ops.
+  const handleBeatClickWithSeek = useCallback((beat: InstanceType<typeof model.Beat>) => {
+    handleBeatClick(beat);
+    if (!isPlayingRef.current) return;
+
+    const api = getApi();
+    const {endTick, endTimeMs} = tickMappingRef.current;
+    if (!api || endTick <= 0 || endTimeMs <= 0) return;
+
+    const totalBars = scoreRef.current?.masterBars.length ?? 1;
+    const beatTick = computeSeekTick(beat, totalBars, endTick);
+    const targetSecs = tickToSeconds(beatTick, endTick, endTimeMs);
+
+    // Signal the seek — handlePlayerStateChanged will restart at this position.
+    seekStateRef.current = {tick: beatTick, secs: targetSecs};
+    api.stop();
+  }, [handleBeatClick, getApi]);
+
   const reRender = useCallback(() => {
     const api = getApi();
     const score = scoreRef.current;
     if (!api || !score) return;
     api.renderScore(score, [activeTrackIndex]);
-    // Regenerate MIDI data so playback reflects score changes
-    try { api.loadMidiForScore(); } catch { /* player may not be ready yet */ }
+    // loadMidiForScore() calls stop() internally — defer it when playing to avoid a pause.
+    if (!isPlayingRef.current) {
+      try { api.loadMidiForScore(); } catch { /* player may not be ready yet */ }
+    } else {
+      midiReloadNeeded.current = true;
+    }
     setRenderKey(k => k + 1);
     markDirty();
   }, [activeTrackIndex, getApi, markDirty]);
+
+  // Auto-extend score bars to cover the full stem duration when stems load
+  useEffect(() => {
+    if (!stemPlayer.stemsReady || stemPlayer.duration <= 0) return;
+    const score = scoreRef.current;
+    if (!score) return;
+    const masterBars = score.masterBars;
+    const currentBars = masterBars.length;
+    const refBar = masterBars[0];
+    const num = refBar?.timeSignatureNumerator ?? 4;
+    const den = refBar?.timeSignatureDenominator ?? 4;
+    const secondsPerBar = (num / den) * 4 * (60 / tempo);
+    const barsNeeded = Math.ceil(stemPlayer.duration / secondsPerBar);
+    if (barsNeeded <= currentBars) return;
+    const toAdd = barsNeeded - currentBars;
+    for (let i = 0; i < toAdd; i++) {
+      insertMeasureAfter(score, score.masterBars.length - 1);
+    }
+    reRender();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stemPlayer.stemsReady, stemPlayer.duration]);
 
   const handlePlayPause = useCallback(() => {
     ytSyncSuppressRef.current = true;
@@ -304,8 +384,12 @@ export default function TabEditorPage() {
     if (scoreTempo > 0) setTempoState(scoreTempo);
     api.renderScore(score, [activeTrackIndex]);
     try { api.loadMidiForScore(); } catch { }
-    markDirty();
-  }, [getApi, setScore, activeTrackIndex, markDirty]);
+    if (undoManagerRef.current.isAtCleanState) {
+      markClean();
+    } else {
+      markDirty();
+    }
+  }, [getApi, setScore, activeTrackIndex, markClean, markDirty]);
 
   const handleUndo = useCallback(() => {
     const score = scoreRef.current;
@@ -365,6 +449,8 @@ export default function TabEditorPage() {
     onBeforeMutation: handleBeforeMutation,
     onUndo: handleUndo,
     onRedo: handleRedo,
+    onScrollUp: () => canvasScrollRef.current?.scrollBy({top: -200, behavior: 'smooth'}),
+    onScrollDown: () => canvasScrollRef.current?.scrollBy({top: 200, behavior: 'smooth'}),
   });
 
   const loadScore = useCallback((score: InstanceType<typeof model.Score>) => {
@@ -439,10 +525,49 @@ export default function TabEditorPage() {
     return () => clearTimeout(timer);
   }, [initScore]);
 
+  const computeSectionLabels = useCallback(() => {
+    const api = getApi();
+    const score = scoreRef.current;
+    if (!api || !score) return;
+    const lookup = api.boundsLookup;
+    if (!lookup) return;
+    const track = score.tracks[activeTrackIndex];
+    if (!track) return;
+
+    const labels: SectionLabel[] = [];
+    for (let barIdx = 0; barIdx < score.masterBars.length; barIdx++) {
+      const masterBar = score.masterBars[barIdx];
+      if (!masterBar?.isSectionStart || !masterBar.section?.text) continue;
+
+      // Use the first beat of this bar on the active track to look up bounds.
+      // findBeat uses object identity — if boundsLookup is from a different track's
+      // render (stale), the beat won't be found and we skip, preventing misplaced labels.
+      const firstBeat = track.staves[0]?.bars[barIdx]?.voices[0]?.beats[0];
+      if (!firstBeat) continue;
+      const beatBounds = lookup.findBeat(firstBeat);
+      if (!beatBounds) continue;
+
+      const masterBarBounds = beatBounds.barBounds.masterBarBounds;
+      const systemBounds = masterBarBounds.staffSystemBounds;
+      if (!systemBounds) continue;
+
+      const text = masterBar.section.marker
+        ? `[${masterBar.section.marker}] ${masterBar.section.text}`
+        : masterBar.section.text;
+      labels.push({
+        text,
+        x: masterBarBounds.visualBounds.x,
+        y: systemBounds.visualBounds.y - 18,
+      });
+    }
+    setSectionLabels(labels);
+  }, [getApi, activeTrackIndex]);
+
   const handleRenderFinished = useCallback(() => {
     if (!scoreRef.current) initScore();
     updateCursorBounds();
-  }, [initScore, updateCursorBounds]);
+    computeSectionLabels();
+  }, [initScore, updateCursorBounds, computeSectionLabels]);
 
   const handleScoreLoaded = useCallback((score: Score) => {
     scoreRef.current = score;
@@ -451,12 +576,42 @@ export default function TabEditorPage() {
   }, [setScore]);
 
   const handlePlayerStateChanged = useCallback((state: number) => {
-    setIsPlaying(state === 1); // 1 = playing in alphaTab
-  }, []);
+    if (state === 0 && seekStateRef.current !== null) {
+      // AlphaTab stopped because we called api.stop() for a bar-click seek.
+      // Wait for the fully-stopped state, then defer restart so AlphaTab finishes
+      // its output-device cleanup before we re-enter. Restarting on an intermediate
+      // pause/transition state can hit "this.source.connect" on a disposed source.
+      const {tick, secs} = seekStateRef.current;
+      seekStateRef.current = null;
+      const api = getApi();
+      setTimeout(() => {
+        if (api) {
+          api.tickPosition = tick;
+          api.play();
+        }
+        if (stemPlayer.stemsReady) void stemPlayer.seek(secs);
+      }, 0);
+      return;
+    }
+    setIsPlaying(state === 1);
+  }, [getApi, stemPlayer.stemsReady, stemPlayer.seek]);
 
   const handlePlayerReady = useCallback(() => {
     setIsPlayerReady(true);
-  }, []);
+    // loadMidiForScore() in initScore() fires before the player is ready and is silently
+    // swallowed. Re-run it now so beat.absolutePlaybackStart is populated for all bars.
+    if (scoreRef.current) {
+      try { getApi()?.loadMidiForScore(); } catch { /* ignore */ }
+    }
+  }, [getApi]);
+
+  const handlePlayerFinished = useCallback(() => {
+    void stemPlayer.stopAndReset();
+    if (midiReloadNeeded.current) {
+      midiReloadNeeded.current = false;
+      try { getApi()?.loadMidiForScore(); } catch { }
+    }
+  }, [stemPlayer.stopAndReset, getApi]);
 
   const handleStop = useCallback(() => {
     ytSyncSuppressRef.current = true;
@@ -464,7 +619,12 @@ export default function TabEditorPage() {
     canvasRef.current?.alphaTab?.stop();
     setIsPlaying(false);
     youtubeSyncRef.current.onPause();
-  }, [youtubeSyncRef]);
+    void stemPlayer.stopAndReset();
+    if (midiReloadNeeded.current) {
+      midiReloadNeeded.current = false;
+      try { getApi()?.loadMidiForScore(); } catch { }
+    }
+  }, [youtubeSyncRef, stemPlayer.stopAndReset, getApi]);
 
   const handleLoadGuitarDemo = useCallback(() => {
     loadScore(createGuitarDemo());
@@ -608,14 +768,34 @@ export default function TabEditorPage() {
   }, [cursor, moveTo, reRender, currentDuration]);
 
   // Chord finder — insert selected chord voicing at current beat
-  const handleChordSelect = useCallback((voicing: ChordVoicing) => {
+  const handleChordSelect = useCallback((voicing: ChordVoicing, chordName: string) => {
     const score = scoreRef.current;
     if (!score) return;
+    handleBeforeMutation();
     const notes = voicingToNotes(voicing);
     setChord(score, cursor, notes, currentDuration);
+    // Map voicing frets (high-E first, null → -1) for the chord diagram
+    const strings = voicing.frets.map(f => f ?? -1);
+    setBeatChord(score, cursor, chordName, strings);
     reRender();
-    toast.success(`Inserted chord`);
-  }, [cursor, currentDuration, reRender]);
+    toast.success(`Chord ${chordName} inserted`);
+  }, [cursor, currentDuration, reRender, handleBeforeMutation]);
+
+  const handleChordNameCommit = useCallback((name: string) => {
+    const score = scoreRef.current;
+    if (!score) return;
+    handleBeforeMutation();
+    setBeatChord(score, cursor, name);
+    reRender();
+  }, [cursor, reRender, handleBeforeMutation]);
+
+  const handleChordClear = useCallback(() => {
+    const score = scoreRef.current;
+    if (!score) return;
+    handleBeforeMutation();
+    clearBeatChord(score, cursor);
+    reRender();
+  }, [cursor, reRender, handleBeforeMutation]);
 
   // Stave profile toggle — updates via API + re-renders the current score
   const handleStaveModeToggle = useCallback(() => {
@@ -689,6 +869,14 @@ export default function TabEditorPage() {
     reRender();
   }, [cursor.barIndex, reRender]);
 
+  // Current beat's chord name — recomputed whenever cursor or score changes
+  // renderKey increments on every reRender(), keeping this in sync with mutations
+  const currentChordName = useMemo(
+    () => (scoreRef.current ? getBeatChordName(scoreRef.current, cursor) : null),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cursor, renderKey],
+  );
+
   // Track count state — incremented on add/remove to force tracks recalculation
   const [trackVersion, setTrackVersion] = useState(0);
 
@@ -721,6 +909,7 @@ export default function TabEditorPage() {
   const handleTrackSelect = useCallback((index: number) => {
     setActiveTrackIndex(index);
     setTrackVersion(v => v + 1);
+    setSectionLabels([]);
     const api = getApi();
     const score = scoreRef.current;
     if (api && score && index < score.tracks.length) {
@@ -754,6 +943,7 @@ export default function TabEditorPage() {
     const newIndex = score.tracks.length - 1;
     setActiveTrackIndex(newIndex);
     setTrackVersion(v => v + 1);
+    setSectionLabels([]);
 
     const api = getApi();
     if (api) {
@@ -818,6 +1008,61 @@ export default function TabEditorPage() {
     reRender();
   }, [reRender]);
 
+  // ── Sections & Patterns ────────────────────────────────────────────────────
+  const [detectedPatterns, setDetectedPatterns] = useState<DetectedPattern[]>([]);
+  const [practiceRange, setPracticeRange] = useState<{startBar: number; endBar: number} | null>(null);
+
+  const sections = useMemo<TabSection[]>(() => {
+    const score = scoreRef.current;
+    if (!score) return [];
+    return getSections(score);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [renderKey, isReady]);
+
+  const totalBars = useMemo(
+    () => scoreRef.current?.masterBars.length ?? 1,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [renderKey, isReady],
+  );
+
+  const handleAddSection = useCallback((startBar: number, name: string) => {
+    const score = scoreRef.current;
+    if (!score) return;
+    setBarSection(score, startBar, name);
+    reRender();
+  }, [reRender]);
+
+  const handleRemoveSection = useCallback((startBar: number) => {
+    const score = scoreRef.current;
+    if (!score) return;
+    removeBarSection(score, startBar);
+    reRender();
+  }, [reRender]);
+
+  const handleDetectPatterns = useCallback(() => {
+    const score = scoreRef.current;
+    if (!score) return;
+    setDetectedPatterns(detectPatterns(score));
+  }, []);
+
+  const handlePracticeRange = useCallback((startBar: number, endBar: number) => {
+    setPracticeRange({startBar, endBar});
+  }, []);
+
+  const handleJumpToBar = useCallback((barIndex: number) => {
+    const api = getApi();
+    const score = scoreRef.current;
+    if (!api || !score) return;
+    const mb = score.masterBars[barIndex];
+    if (!mb) return;
+    // Use the first beat's playback start tick to seek
+    const track = score.tracks[activeTrackIndex];
+    const bar = track?.staves[0]?.bars[barIndex];
+    const tick = bar?.voices[0]?.beats[0]?.absolutePlaybackStart ?? 0;
+    api.tickPosition = tick;
+  }, [getApi, activeTrackIndex]);
+  // ── End Sections & Patterns ────────────────────────────────────────────────
+
   const doNewTab = useCallback(() => {
     scoreRef.current = null;
     _editorScoreCache.delete('new');
@@ -881,6 +1126,7 @@ export default function TabEditorPage() {
     setTitle(meta.title);
     setArtist(meta.artist);
     markClean();
+    undoManagerRef.current.markClean();
     _editorScoreCache.delete(id ?? 'new');
     toast.success('Saved to library');
     if (!compositionId) {
@@ -1303,6 +1549,16 @@ export default function TabEditorPage() {
             onTitleChange={handleTitleChange}
             artist={artist}
             onArtistChange={handleArtistChange}
+            stemPlayer={stemPlayer}
+            sections={sections}
+            detectedPatterns={detectedPatterns}
+            totalBars={totalBars}
+            practiceRange={practiceRange}
+            onDetectPatterns={handleDetectPatterns}
+            onAddSection={handleAddSection}
+            onRemoveSection={handleRemoveSection}
+            onPracticeRange={handlePracticeRange}
+            onJumpToBar={handleJumpToBar}
           />
         </div>
 
@@ -1317,12 +1573,14 @@ export default function TabEditorPage() {
               cursorBounds={cursorBounds}
               cursorStringNumber={cursor.stringNumber}
               cursorStringCount={scoreRef.current?.tracks[cursor.trackIndex]?.staves[0]?.stringTuning?.tunings?.length ?? 6}
+              sectionLabels={sectionLabels}
               onScoreLoaded={handleScoreLoaded}
               onRenderFinished={handleRenderFinished}
-              onBeatMouseDown={handleBeatClick}
+              onBeatMouseDown={handleBeatClickWithSeek}
               onNoteMouseDown={handleNoteClick}
               onPlayerStateChanged={handlePlayerStateChanged}
               onPlayerReady={handlePlayerReady}
+              onPlayerFinished={handlePlayerFinished}
               onPositionChanged={handlePositionChanged}
               onActiveBeatsChanged={handleActiveBeatsChanged}
               staveMode={staveMode}
@@ -1361,6 +1619,10 @@ export default function TabEditorPage() {
         onRestInsert={handleRestInsert}
         onAddMeasure={handleAddMeasure}
         onDeleteMeasure={handleDeleteMeasure}
+        currentChordName={currentChordName}
+        onChordNameCommit={handleChordNameCommit}
+        onChordClear={handleChordClear}
+        onOpenChordFinder={() => setShowChordFinder(true)}
       />
 
       {/* Status bar — desktop only */}
