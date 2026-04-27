@@ -56,48 +56,59 @@ export default function SearchCombobox({
     setOpen(false);
   }
 
-  function handleClear(e: React.MouseEvent) {
-    e.stopPropagation();
+  function handleClear() {
     onSelect('', '');
   }
 
   return (
     <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
-      <PopoverPrimitive.Trigger asChild>
-        <button
-          type="button"
-          className={cn(
-            'w-full flex items-center justify-between gap-2 rounded-xl border border-outline-variant/20 bg-surface-container-high px-3 py-2 text-sm text-left transition-colors hover:bg-surface-container-highest focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container',
-            !selected && 'text-on-surface-variant',
-            className,
-          )}
-        >
-          <div className="flex-1 min-w-0">
-            {selected ? (
-              <>
-                <div className="truncate text-on-surface">{selected.label}</div>
-                {selected.sublabel && (
-                  <div className="truncate text-xs text-on-surface-variant">{selected.sublabel}</div>
-                )}
-              </>
-            ) : (
-              <span>{placeholder}</span>
+      <div className="relative flex">
+        <PopoverPrimitive.Trigger asChild>
+          <button
+            type="button"
+            aria-haspopup="listbox"
+            aria-expanded={open}
+            aria-label={selected ? selected.label : placeholder}
+            className={cn(
+              'w-full flex items-center justify-between gap-2 rounded-lg border border-outline-variant/20 bg-surface-container-high px-3 py-2 text-sm text-left transition-colors hover:bg-surface-container-highest focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+              !selected && 'text-on-surface-variant',
+              selected && 'pr-8',
+              className,
             )}
-          </div>
-          {selected ? (
-            <X
-              className="h-3.5 w-3.5 text-on-surface-variant shrink-0 hover:text-on-surface"
-              onClick={handleClear}
-            />
-          ) : (
-            <ChevronDown className="h-3.5 w-3.5 text-on-surface-variant shrink-0" />
-          )}
-        </button>
-      </PopoverPrimitive.Trigger>
+          >
+            <div className="flex-1 min-w-0">
+              {selected ? (
+                <>
+                  <div className="truncate text-on-surface">{selected.label}</div>
+                  {selected.sublabel && (
+                    <div className="truncate text-xs text-on-surface-variant">{selected.sublabel}</div>
+                  )}
+                </>
+              ) : (
+                <span className="flex items-center gap-2">
+                  <span>{placeholder}</span>
+                  <ChevronDown className="h-3.5 w-3.5 text-on-surface-variant shrink-0" />
+                </span>
+              )}
+            </div>
+          </button>
+        </PopoverPrimitive.Trigger>
+
+        {selected && (
+          <button
+            type="button"
+            aria-label="Clear selection"
+            onClick={handleClear}
+            className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-on-surface-variant hover:text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        )}
+      </div>
 
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
-          className="z-50 w-[var(--radix-popover-trigger-width)] rounded-xl border border-outline-variant/20 bg-surface-container shadow-xl overflow-hidden"
+          className="z-50 w-[var(--radix-popover-trigger-width)] rounded-lg border border-outline-variant/20 bg-surface-container shadow-xl overflow-hidden"
           sideOffset={4}
           align="start"
         >
@@ -108,11 +119,12 @@ export default function SearchCombobox({
               value={query}
               onChange={e => setQuery(e.target.value)}
               placeholder={searchPlaceholder}
+              aria-label={searchPlaceholder}
               className="flex-1 bg-transparent text-sm text-on-surface placeholder:text-on-surface-variant outline-none"
             />
           </div>
 
-          <div className="max-h-60 overflow-y-auto py-1">
+          <div role="listbox" className="max-h-60 overflow-y-auto py-1">
             {loading ? (
               <div className="px-3 py-2 text-xs text-on-surface-variant">Loading…</div>
             ) : filtered.length === 0 ? (
@@ -122,6 +134,8 @@ export default function SearchCombobox({
                 <button
                   key={opt.value}
                   type="button"
+                  role="option"
+                  aria-selected={opt.value === value}
                   onClick={() => handleSelect(opt)}
                   className={cn(
                     'w-full text-left px-3 py-2 text-sm transition-colors hover:bg-surface-container-high',
