@@ -102,9 +102,14 @@ export default function SessionModal({
 
   async function handleDelete() {
     if (!session) return;
-    await deleteSession(session.id);
-    onSaved();
-    onClose();
+    setSaving(true);
+    try {
+      await deleteSession(session.id);
+      onSaved();
+      onClose();
+    } finally {
+      setSaving(false);
+    }
   }
 
   const alreadyDone = !!session?.completedAt;
@@ -185,7 +190,7 @@ export default function SessionModal({
             {isEditing && (
               confirmDelete ? (
                 <div className="flex gap-2">
-                  <Button variant="destructive" size="sm" onClick={handleDelete}>Confirm delete</Button>
+                  <Button variant="destructive" size="sm" onClick={handleDelete} disabled={saving}>Confirm delete</Button>
                   <Button variant="ghost" size="sm" onClick={() => setConfirmDelete(false)}>Cancel</Button>
                 </div>
               ) : (

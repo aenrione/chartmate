@@ -148,7 +148,7 @@ export default function AddGoalForm({unitId, onAdded}: AddGoalFormProps) {
 
       <div className="flex justify-end gap-2">
         <Button variant="secondary" size="sm" onClick={reset}>Cancel</Button>
-        <Button size="sm" onClick={handleAdd} disabled={saving || !title.trim()}>
+        <Button size="sm" onClick={handleAdd} disabled={saving || !title.trim() || (type === 'exercise' && !refId)}>
           Add goal
         </Button>
       </div>
