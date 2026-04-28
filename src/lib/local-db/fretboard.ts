@@ -353,13 +353,15 @@ export async function seedAnkiCards(): Promise<void> {
     },
   ]);
 
-  for (const row of rows) {
-    await db
-      .insertInto('fretboard_cards')
-      .values(row)
-      .onConflict(oc => oc.columns(['string_index', 'fret', 'direction']).doNothing())
-      .execute();
-  }
+  await db.transaction().execute(async trx => {
+    for (const row of rows) {
+      await trx
+        .insertInto('fretboard_cards')
+        .values(row)
+        .onConflict(oc => oc.columns(['string_index', 'fret', 'direction']).doNothing())
+        .execute();
+    }
+  });
 }
 
 export async function getAnkiDueCards(limit = 200): Promise<FretboardCard[]> {
@@ -428,5 +430,5 @@ export async function getAnkiDueCount(): Promise<number> {
     .where('next_review_date', '<=', today)
     .executeTakeFirst();
 
-  return result?.count ?? 0;
+  return Number(result?.count ?? 0);
 }
