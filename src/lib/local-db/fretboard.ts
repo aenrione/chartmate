@@ -1,6 +1,8 @@
 import {getLocalDb} from './client';
 import {getCurrentTimestamp} from './db-utils';
 import {sql} from 'kysely';
+import {calculateSM2, todayISO} from '../repertoire/sm2';
+import type {ReviewQuality} from '../repertoire/sm2';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -58,6 +60,19 @@ export interface UserStats {
   totalXp: number;
   totalDrillsCompleted: number;
   overallAccuracy: number;
+}
+
+export interface FretboardCard {
+  id: number;
+  stringIndex: number;
+  fret: number;
+  direction: 'pos_to_note' | 'note_to_pos';
+  interval: number;
+  easeFactor: number;
+  repetitions: number;
+  nextReviewDate: string;
+  lastReviewedAt: string | null;
+  createdAt: string;
 }
 
 // ── Session Functions ────────────────────────────────────────────────────────
@@ -283,4 +298,135 @@ export async function getUserStats(): Promise<UserStats> {
     totalDrillsCompleted: sessions?.total_drills ?? 0,
     overallAccuracy: totalQuestions > 0 ? totalCorrect / totalQuestions : 0,
   };
+}
+
+// ── Anki Card Functions ──────────────────────────────────────────────────────
+
+const SEED_ORDER: Array<{stringIndex: number; fret: number}> = [
+  // Low E (string 0), landmark frets first
+  {stringIndex: 0, fret: 0},
+  {stringIndex: 0, fret: 1},
+  {stringIndex: 0, fret: 3},
+  {stringIndex: 0, fret: 5},
+  {stringIndex: 0, fret: 7},
+  {stringIndex: 0, fret: 8},
+  {stringIndex: 0, fret: 10},
+  {stringIndex: 0, fret: 12},
+  // Low E, chromatic fill
+  {stringIndex: 0, fret: 2},
+  {stringIndex: 0, fret: 4},
+  {stringIndex: 0, fret: 6},
+  {stringIndex: 0, fret: 9},
+  {stringIndex: 0, fret: 11},
+  // Strings 1-5 (A, D, G, B, high E), frets 0-12
+  ...[1, 2, 3, 4, 5].flatMap(s =>
+    Array.from({length: 13}, (_, f) => ({stringIndex: s, fret: f}))
+  ),
+];
+
+export async function seedAnkiCards(): Promise<void> {
+  const db = await getLocalDb();
+  const today = todayISO();
+  const now = getCurrentTimestamp();
+  const rows = SEED_ORDER.flatMap(({stringIndex, fret}) => [
+    {
+      string_index: stringIndex,
+      fret,
+      direction: 'pos_to_note' as const,
+      interval: 0,
+      ease_factor: 2.5,
+      repetitions: 0,
+      next_review_date: today,
+      last_reviewed_at: null,
+      created_at: now,
+    },
+    {
+      string_index: stringIndex,
+      fret,
+      direction: 'note_to_pos' as const,
+      interval: 0,
+      ease_factor: 2.5,
+      repetitions: 0,
+      next_review_date: today,
+      last_reviewed_at: null,
+      created_at: now,
+    },
+  ]);
+
+  for (const row of rows) {
+    await db
+      .insertInto('fretboard_cards')
+      .values(row)
+      .onConflict(oc => oc.columns(['string_index', 'fret', 'direction']).doNothing())
+      .execute();
+  }
+}
+
+export async function getAnkiDueCards(limit = 200): Promise<FretboardCard[]> {
+  const db = await getLocalDb();
+  const today = todayISO();
+
+  const rows = await db
+    .selectFrom('fretboard_cards')
+    .selectAll()
+    .where('next_review_date', '<=', today)
+    .orderBy('repetitions', 'asc')
+    .orderBy('next_review_date', 'asc')
+    .limit(limit)
+    .execute();
+
+  return rows.map(r => ({
+    id: r.id,
+    stringIndex: r.string_index,
+    fret: r.fret,
+    direction: r.direction as 'pos_to_note' | 'note_to_pos',
+    interval: r.interval,
+    easeFactor: r.ease_factor,
+    repetitions: r.repetitions,
+    nextReviewDate: r.next_review_date,
+    lastReviewedAt: r.last_reviewed_at,
+    createdAt: r.created_at,
+  }));
+}
+
+export async function updateAnkiCard(id: number, quality: ReviewQuality): Promise<void> {
+  const db = await getLocalDb();
+
+  const row = await db
+    .selectFrom('fretboard_cards')
+    .select(['repetitions', 'ease_factor', 'interval'])
+    .where('id', '=', id)
+    .executeTakeFirstOrThrow();
+
+  const {newInterval, newEaseFactor, newRepetitions, nextReviewDate} = calculateSM2(
+    quality,
+    row.repetitions,
+    row.ease_factor,
+    row.interval,
+  );
+
+  await db
+    .updateTable('fretboard_cards')
+    .set({
+      interval: newInterval,
+      ease_factor: newEaseFactor,
+      repetitions: newRepetitions,
+      next_review_date: nextReviewDate,
+      last_reviewed_at: getCurrentTimestamp(),
+    })
+    .where('id', '=', id)
+    .execute();
+}
+
+export async function getAnkiDueCount(): Promise<number> {
+  const db = await getLocalDb();
+  const today = todayISO();
+
+  const result = await db
+    .selectFrom('fretboard_cards')
+    .select(db.fn.count<number>('id').as('count'))
+    .where('next_review_date', '<=', today)
+    .executeTakeFirst();
+
+  return result?.count ?? 0;
 }
