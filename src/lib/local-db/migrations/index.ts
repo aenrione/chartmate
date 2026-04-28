@@ -35,6 +35,13 @@ import {migration_033_learn_tables} from './033_learn_tables';
 import {migration_034_learn_gamification} from './034_learn_gamification';
 import {migration_035_learn_schema_fixes} from './035_learn_schema_fixes';
 import {migration_036_practice_programs} from './036_practice_programs';
+import {migration_037_xp_ledger_generic} from './037_xp_ledger_generic';
+import {migration_038_lesson_stars_and_levels} from './038_lesson_stars_and_levels';
+import {migration_039_achievements_missions_plan} from './039_achievements_missions_plan';
+import {migration_040_progression_integrity_triggers} from './040_progression_integrity_triggers';
+import {migration_041_active_time_tracking} from './041_active_time_tracking';
+import {migration_042_theory_srs} from './042_theory_srs';
+import {migration_043_fretboard_anki_cards} from './043_fretboard_anki_cards';
 
 export const migrations: Record<string, Migration> = {
   '001_initial': InitialMigration,
@@ -73,4 +80,11 @@ export const migrations: Record<string, Migration> = {
   '034_learn_gamification': migration_034_learn_gamification,
   '035_learn_schema_fixes': migration_035_learn_schema_fixes,
   '036_practice_programs': migration_036_practice_programs,
+  '037_xp_ledger_generic': migration_037_xp_ledger_generic,
+  '038_lesson_stars_and_levels': migration_038_lesson_stars_and_levels,
+  '039_achievements_missions_plan': migration_039_achievements_missions_plan,
+  '040_progression_integrity_triggers': migration_040_progression_integrity_triggers,
+  '041_active_time_tracking': migration_041_active_time_tracking,
+  '042_theory_srs': migration_042_theory_srs,
+  '043_fretboard_anki_cards': migration_043_fretboard_anki_cards,
 };

@@ -183,6 +183,7 @@ export interface PracticeSessions {
   ended_at: string | null;
   speed: number;
   notes: string | null;
+  duration_ms: number | null;
 }
 
 export interface SongSections {
@@ -252,11 +253,25 @@ export interface FretboardAttempts {
   created_at: string;
 }
 
+export interface FretboardCards {
+  id: Generated<number>;
+  string_index: number;
+  fret: number;
+  direction: string;
+  interval: Generated<number>;
+  ease_factor: Generated<number>;
+  repetitions: Generated<number>;
+  next_review_date: string;
+  last_reviewed_at: string | null;
+  created_at: string;
+}
+
 export interface FillPracticeSessions {
   id: Generated<number>;
   fill_id: string;
   bpm: number;
   learned: Generated<number>;
+  duration_ms: Generated<number>;
   created_at: string;
 }
 
@@ -334,6 +349,8 @@ export interface RepertoireItems {
   composition_id: number | null;
   /** Typed FK: references song_sections.id */
   song_section_id: number | null;
+  /** Dedup key for curriculum-seeded theory cards */
+  theory_source: string | null;
   interval: Generated<number>;
   ease_factor: Generated<number>;
   repetitions: Generated<number>;
@@ -393,6 +410,9 @@ export interface LearnXpLedger {
   instrument: string | null;
   lesson_id: string | null;
   earned_at: string;
+  surface: string | null;
+  ref_id: string | null;
+  dedupe_key: string | null;
 }
 
 export interface LearnStreaks {
@@ -411,6 +431,54 @@ export interface LearnDailyGoal {
   xp_earned: number;
   target_xp: number;
   completed: number; // 0 or 1 (SQLite boolean)
+}
+
+export interface LessonStars {
+  id: Generated<number>;
+  instrument: string;
+  unit_id: string;
+  lesson_id: string;
+  stars: number;                  // 1..3
+  best_hearts_remaining: number;  // 0..MAX_HEARTS
+  best_accuracy: number;          // 0..1
+  first_try: number;              // 0 or 1 (SQLite boolean)
+  attempts: Generated<number>;
+  last_completed_at: string;
+}
+
+export interface InstrumentLevels {
+  instrument: string;             // PK: 'guitar' | 'drums' | 'theory'
+  cum_xp: Generated<number>;
+  level: Generated<number>;
+  xp_into_level: Generated<number>;
+  xp_to_next: number;
+  updated_at: string;
+}
+
+export interface EarnedAchievement {
+  id: Generated<number>;
+  achievement_id: string;       // catalog id, UNIQUE
+  earned_at: string;
+  meta: string | null;          // JSON
+}
+
+export interface ActiveMission {
+  id: Generated<number>;
+  template_id: string;
+  week_start: string;           // YYYY-MM-DD (Monday, local)
+  target: number;
+  progress: Generated<number>;
+  xp_reward: number;
+  state: Generated<string>;     // 'active' | 'completed' | 'expired'
+  created_at: string;
+  completed_at: string | null;
+}
+
+export interface DailyPlan {
+  date: string;                 // YYYY-MM-DD (PK)
+  items: string;                // JSON array
+  target_xp: number;
+  generated_at: string;
 }
 
 export interface PracticeProgram {
@@ -461,6 +529,20 @@ export interface LessonSession {
   created_at: string;
 }
 
+/**
+ * Heartbeat-driven log of contiguous active app windows. One row per
+ * (visible + interacting) span, separated by idle timeout or tab hide.
+ * `duration_ms` accumulates from periodic 30s heartbeats. No stored `date`
+ * column — query daily totals with `date(started_at) = ?`.
+ */
+export interface AppSessions {
+  id: Generated<number>;
+  started_at: string;
+  ended_at: string | null;
+  duration_ms: Generated<number>;
+  context: Generated<string>; // CHECK-constrained: 'browse'|'lesson'|'drill'|'ear'|'repertoire'|'fill'|'rudiment'|'tab_editor'|'playbook'
+}
+
 export interface DB {
   explorer_saves: ExplorerSaves;
   chorus_charts: ChorusCharts;
@@ -486,6 +568,7 @@ export interface DB {
   tab_compositions: TabCompositions;
   fretboard_sessions: FretboardSessions;
   fretboard_attempts: FretboardAttempts;
+  fretboard_cards: FretboardCards;
   fill_practice_sessions: FillPracticeSessions;
   pdf_library: PdfLibrary;
   chart_pdfs: ChartPdfs;
@@ -500,8 +583,14 @@ export interface DB {
   learn_xp_ledger: LearnXpLedger;
   learn_streaks: LearnStreaks;
   learn_daily_goal: LearnDailyGoal;
+  lesson_stars: LessonStars;
+  instrument_levels: InstrumentLevels;
+  earned_achievements: EarnedAchievement;
+  active_missions: ActiveMission;
+  daily_plan: DailyPlan;
   practice_programs: PracticeProgram;
   program_units: ProgramUnit;
   unit_goals: UnitGoal;
   lesson_sessions: LessonSession;
+  app_sessions: AppSessions;
 }
