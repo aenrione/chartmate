@@ -16,7 +16,7 @@ export default function FretboardIQPage() {
   const [dueCount, setDueCount] = useState<number | null>(null);
 
   useEffect(() => {
-    getAnkiDueCount().then(setDueCount);
+    getAnkiDueCount().then(setDueCount).catch(() => setDueCount(0));
   }, []);
 
   // Load best scores for each drill
