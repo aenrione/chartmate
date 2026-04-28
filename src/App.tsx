@@ -4,6 +4,7 @@ import { SpotifyAuthProvider } from '@/contexts/SpotifyAuthContext';
 import { SyncProvider } from '@/contexts/SyncContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
 import { LayoutProvider } from '@/contexts/LayoutContext';
+import { ActivityTrackerProvider } from '@/contexts/ActivityTrackerContext';
 import { Toaster } from 'sonner';
 import Layout from '@/components/Layout';
 import FirstLaunchSetup from '@/components/FirstLaunchSetup';
@@ -32,6 +33,7 @@ import FretboardIQPage from '@/pages/guitar/fretboard/FretboardIQPage';
 import FretboardDrillPage from '@/pages/guitar/fretboard/FretboardDrillPage';
 import FretboardProgressPage from '@/pages/guitar/fretboard/FretboardProgressPage';
 import FretboardSummaryPage from '@/pages/guitar/fretboard/FretboardSummaryPage';
+import FretboardAnkiPage from '@/pages/guitar/fretboard/FretboardAnkiPage';
 import ChordFinderPage from '@/pages/guitar/chords/ChordFinderPage';
 import EarIQPage from '@/pages/guitar/ear/EarIQPage';
 import EarSessionPage from '@/pages/guitar/ear/EarSessionPage';
@@ -45,6 +47,8 @@ import RepertoireProgressPage from '@/pages/guitar/repertoire/RepertoireProgress
 import RepertoireManagePage from '@/pages/guitar/repertoire/RepertoireManagePage';
 import LearnPage from '@/pages/learn/LearnPage';
 import LessonRunnerPage from '@/pages/learn/LessonRunnerPage';
+import AchievementsPage from '@/pages/learn/AchievementsPage';
+import ProfilePage from '@/pages/profile/ProfilePage';
 import ProgramsPage from '@/pages/programs/ProgramsPage';
 import ProgramDetailPage from '@/pages/programs/ProgramDetailPage';
 import UnitDetailPage from '@/pages/programs/UnitDetailPage';
@@ -57,9 +61,11 @@ function RootLayout() {
       <SyncProvider>
         <SidebarProvider>
           <LayoutProvider>
+          <ActivityTrackerProvider>
           <Layout>
             <Outlet />
           </Layout>
+          </ActivityTrackerProvider>
           </LayoutProvider>
           {!setupComplete && (
             <FirstLaunchSetup onComplete={() => setSetupComplete(true)} />
@@ -86,6 +92,7 @@ const router = createBrowserRouter([
       { path: '/guitar/fretboard/drill/:drillType', element: <FretboardDrillPage /> },
       { path: '/guitar/fretboard/progress', element: <FretboardProgressPage /> },
       { path: '/guitar/fretboard/summary', element: <FretboardSummaryPage /> },
+      { path: '/guitar/fretboard/anki', element: <FretboardAnkiPage /> },
       { path: '/guitar/chords', element: <ChordFinderPage /> },
       { path: '/guitar/ear', element: <EarIQPage /> },
       { path: '/guitar/ear/session/:exerciseType', element: <EarSessionPage /> },
@@ -113,7 +120,9 @@ const router = createBrowserRouter([
       { path: '/library', element: <LibraryPage /> },
       { path: '/tab-editor', element: <TabEditorPage /> },
       { path: '/tab-editor/:id', element: <TabEditorPage /> },
+      { path: '/profile', element: <ProfilePage /> },
       { path: '/learn', element: <LearnPage /> },
+      { path: '/learn/achievements', element: <AchievementsPage /> },
       { path: '/learn/lesson/:instrument/:unitId/:lessonId', element: <LessonRunnerPage /> },
       {path: '/programs', element: <ProgramsPage />},
       {path: '/programs/:id', element: <ProgramDetailPage />},

@@ -1,10 +1,11 @@
 import {useState, useEffect, type ReactNode} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Zap, Flame, Music} from 'lucide-react';
+import {Zap, Flame, Music, BookOpen} from 'lucide-react';
 import {getAllDrills} from './drills/registry';
 import DrillCard from './components/DrillCard';
 import FretboardHeatMap from './components/FretboardHeatMap';
 import {useProgress, usePositionStats} from './hooks/useProgress';
+import {getAnkiDueCount} from '@/lib/local-db/fretboard';
 
 export default function FretboardIQPage() {
   const navigate = useNavigate();
@@ -12,6 +13,11 @@ export default function FretboardIQPage() {
   const {userStats} = useProgress();
   const {stats: positionStats} = usePositionStats();
   const [bestScores, setBestScores] = useState<Record<string, string>>({});
+  const [dueCount, setDueCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    getAnkiDueCount().then(setDueCount);
+  }, []);
 
   // Load best scores for each drill
   useEffect(() => {
@@ -42,6 +48,14 @@ export default function FretboardIQPage() {
             Precision focus exercises designed to build instant fretboard recognition and muscular memory.
           </p>
         </header>
+
+        {/* Daily Review */}
+        <div className="mb-8">
+          <DailyReviewCard
+            dueCount={dueCount}
+            onClick={() => navigate('/guitar/fretboard/anki')}
+          />
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {drills.map(drill => (
@@ -135,5 +149,40 @@ function StatItem({
       </div>
       <span className="text-lg font-mono font-bold text-on-surface">{value}</span>
     </div>
+  );
+}
+
+function DailyReviewCard({
+  dueCount,
+  onClick,
+}: {
+  dueCount: number | null;
+  onClick: () => void;
+}) {
+  const isEmpty = dueCount === 0;
+  return (
+    <button
+      onClick={onClick}
+      className="w-full flex items-center gap-5 p-5 rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/10 to-secondary/5 hover:from-primary/20 hover:to-secondary/10 transition-all active:scale-[0.99] text-left"
+    >
+      <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
+        <BookOpen className="h-6 w-6 text-primary" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="font-bold text-on-surface text-base">Daily Review</p>
+        <p className="text-sm text-on-surface-variant mt-0.5">
+          {dueCount === null
+            ? 'Loading…'
+            : isEmpty
+            ? 'All caught up — check back tomorrow'
+            : `${dueCount} card${dueCount === 1 ? '' : 's'} due`}
+        </p>
+      </div>
+      {dueCount !== null && !isEmpty && (
+        <span className="shrink-0 px-3 py-1 rounded-full bg-primary text-on-primary text-sm font-bold">
+          {dueCount}
+        </span>
+      )}
+    </button>
   );
 }
