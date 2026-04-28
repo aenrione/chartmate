@@ -1,4 +1,4 @@
-import {useState, useCallback, useEffect} from 'react';
+import {useState, useCallback, useEffect, useRef} from 'react';
 import {
   seedAnkiCards,
   getAnkiDueCards,
@@ -6,7 +6,6 @@ import {
   type FretboardCard,
 } from '@/lib/local-db/fretboard';
 import {noteAtPosition, areEnharmonic} from '../lib/musicTheory';
-import {previewNextInterval} from '@/lib/repertoire/sm2';
 import type {ReviewQuality} from '@/lib/repertoire/sm2';
 
 export type AnkiPhase = 'loading' | 'showing_front' | 'showing_back' | 'completed';
@@ -25,6 +24,7 @@ export interface AnkiSessionState {
 const NEW_CARD_LIMIT = 10;
 
 export function useAnkiSession() {
+  const ratingInFlightRef = useRef<number | null>(null);
   const [state, setState] = useState<AnkiSessionState>({
     phase: 'loading',
     cards: [],
@@ -87,6 +87,8 @@ export function useAnkiSession() {
   const rateCard = useCallback(async (quality: ReviewQuality) => {
     const card = state.cards[state.currentIndex];
     if (!card) return;
+    if (ratingInFlightRef.current === card.id) return;
+    ratingInFlightRef.current = card.id;
 
     setState(prev => {
       const nextIndex = prev.currentIndex + 1;
@@ -105,6 +107,7 @@ export function useAnkiSession() {
     });
 
     await updateAnkiCard(card.id, quality);
+    ratingInFlightRef.current = null;
   }, [state.cards, state.currentIndex]);
 
   return {
@@ -112,7 +115,6 @@ export function useAnkiSession() {
     submitNoteAnswer,
     submitPositionAnswer,
     rateCard,
-    previewNextInterval,
   };
 }
 
