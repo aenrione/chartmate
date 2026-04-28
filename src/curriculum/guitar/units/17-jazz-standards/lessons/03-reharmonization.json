@@ -1,0 +1,43 @@
+{
+  "id": "03-reharmonization",
+  "title": "Reharmonization",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Reharmonization — Giving Old Songs New Clothes\n\nReharmonization replaces the original chords with new ones that still support the melody but create a different harmonic color.\n\n## The Cardinal Rule\n\n**The melody must still work.** Every reharmonized chord must contain the melody note, or the melody note must be a color tone (9th, 11th, 13th) of the new chord.\n\n## Three Levels of Reharmonization\n\n### Level 1: Chord Extensions\nAdd color without changing chord function:\n- C → Cmaj9 (add 9th)\n- G7 → G13 (add 13th)\n- Dm7 → Dm9 (add 9th)\n\n### Level 2: Chord Substitution\nReplace with a harmonically equivalent chord:\n- G7 → Db7 (tritone substitute)\n- Cmaj7 → Em7 (relative minor)\n- Dm7 → F6 (shares notes D-F-A-C = Dm7 and F-A-C = F6/Fmaj with D bass)\n\n### Level 3: Full Reharmonization\nCreate an entirely new progression under the original melody. The melody dictates what chords can work.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the cardinal rule of reharmonization?",
+      "choices": [
+        "All chords must be jazz chord extensions",
+        "The melody must still work over the new chords",
+        "The original bass line must be preserved",
+        "Only tritone substitutions are allowed"
+      ],
+      "answer": 1,
+      "explanation": "The melody is the fixed element — it defines what chords can work. Any reharmonization must support the melody note (as a chord tone or appropriate extension). If the melody note clashes with the new chord, it's an invalid reharmonization.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Reharmonizing \"Autumn Leaves\" — A Case Study\n\n## Original First 4 Bars\n```\n| Cm7     | F7      | Bbmaj7  | Ebmaj7  |\n```\n\n## Reharmonized Version 1 (extensions only)\n```\n| Cm9     | F13     | Bbmaj9  | Ebmaj7#11 |\n```\n\nMelody note check:\n- Over Cm9: original melody fits (Eb is the b3rd, adds color)\n- Over F13: melody on D = natural (the 13th)\n- Over Bbmaj9: melody on C = natural (the 9th)\n\n## Reharmonized Version 2 (substitutions)\n```\n| Cm9     | B7      | Bbmaj7  | A7      |\n(F7 → B7 tritone sub)(Eb → A tritone sub)\n```\n\nBass movement: C → B → Bb → A (chromatic descending bass line)\nMelody: still works over each new chord\n\n## The Professional Approach\n\nJoe Pass, Ted Greene, and Bill Frisell are masters of reharmonization. Listen to Joe Pass's *Virtuoso* — he reharmonizes standard progressions in real time, creating new harmonic narratives while keeping the melody clear.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What benefit does reharmonization with tritone substitutions create in the bass line?",
+      "choices": [
+        "The bass moves in perfect 4ths",
+        "The bass creates smooth chromatic (half-step) movement",
+        "The bass stays on one note",
+        "The bass moves in large leaps"
+      ],
+      "answer": 1,
+      "explanation": "Tritone substitutions swap bass notes that are a tritone apart. For example, F7 (bass F) replaced by B7 (bass B) in a progression moving to Bb creates the chromatic bass line F → B → Bb. This smooth stepwise bass movement is one of the main reasons for using tritone subs.",
+      "srs": true
+    }
+  ]
+}

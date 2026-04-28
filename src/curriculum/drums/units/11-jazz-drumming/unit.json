@@ -1,0 +1,8 @@
+{
+  "id": "11-jazz-drumming",
+  "title": "Jazz Drumming",
+  "description": "Jazz ride patterns, swing feel, brushes, trading fours, and jazz comping",
+  "icon": "music",
+  "prerequisites": ["06-groove-styles"],
+  "lessons": ["01-jazz-ride", "02-swing-feel", "03-brushes", "04-trading-fours", "05-jazz-comping"]
+}

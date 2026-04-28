@@ -1,0 +1,25 @@
+{
+  "id": "05-tempo-and-metronome",
+  "title": "Tempo & the Metronome",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# BPM and Tempo\n\n**Tempo** = speed of the music, measured in **BPM** (beats per minute).\n\n| BPM Range | Feel |\n|-----------|------|\n| 60–80 | Slow ballad |\n| 80–110 | Medium groove |\n| 110–140 | Uptempo rock |\n| 140–180 | Fast punk/metal |\n| 180+ | Extreme metal |\n\nAlways practice new patterns slowly (60–70 BPM) before speeding up. Speed is a result of precision, not force.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Practicing with a Metronome\n\nThe metronome is the drummer's best teacher.\n\n**Effective metronome practice:**\n1. Set tempo 10 BPM below comfortable\n2. Play the pattern 4 full times cleanly\n3. Increase by 5 BPM\n4. Repeat until you reach target tempo\n\n**Pro tip:** Practice with the metronome on beats 2 and 4 only. This simulates playing with a real drummer's backbeat.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does BPM stand for?",
+      "choices": ["Bass Per Measure", "Beats Per Minute", "Beat Pattern Mode", "Bars Per Measure"],
+      "answer": 1,
+      "explanation": "BPM = Beats Per Minute. A song at 120 BPM has 120 quarter-note beats per minute — equivalent to 2 beats per second.",
+      "srs": true
+    }
+  ]
+}

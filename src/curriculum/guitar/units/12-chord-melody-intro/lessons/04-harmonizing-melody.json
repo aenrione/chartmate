@@ -1,0 +1,40 @@
+{
+  "id": "04-harmonizing-melody",
+  "title": "Harmonizing a Melody",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Diatonic Harmonization — Putting Chords Under a Melody\n\nIn diatonic harmonization, each melody note gets harmonized with the chord from the key that contains that note on top.\n\n## The Seven Chords of G Major\n\n| Degree | Chord | Notes |\n|--------|-------|-------|\n| I | Gmaj7 | G B D F# |\n| II | Am7 | A C E G |\n| III | Bm7 | B D F# A |\n| IV | Cmaj7 | C E G B |\n| V | D7 | D F# A C |\n| VI | Em7 | E G B D |\n| VII | F#m7b5 | F# A C E |\n\n## Using the Table\n\nIf your melody note is **E**, which chords contain E on top?\n- Cmaj7 (E is the major 7th)\n- Am7 (E is the fifth)\n- Em7 (E is the root)\n\nChoose the one that fits the harmonic context of the song.\n\n## Passing Tones\n\nNot every melody note needs a chord. **Passing tones** move between chord tones — you can let the previous chord sustain while a passing tone moves over it.\n\nThis reduces the density of chords and makes the arrangement breathe more naturally.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In G major, which chord would you most naturally use to harmonize a melody note of D on top?",
+      "choices": ["Gmaj7", "Am7", "Bm7", "D7"],
+      "answer": 3,
+      "explanation": "D is the root of D7 (V chord of G major), making it the most natural choice to harmonize a D melody note. D7 contains D-F#-A-C, with D naturally on top. Gmaj7 also contains D (as the fifth), but D7 makes D the root/strongest statement.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The 'Drop Voicing' Method for Chord-Melody\n\n## What Are Drop Voicings?\n\nA drop voicing takes a close-position chord (all notes as close together as possible) and **drops** one of the inner voices down an octave.\n\n**Close position Cmaj7**: C E G B (from low to high)\n**Drop-2 Cmaj7**: C G B E (the second-from-top note drops an octave)\n\nOn guitar, this creates **more open, resonant chords** that are easier to play and have better voice leading.\n\n## Drop-2 vs Drop-3\n\n- **Drop-2**: Second from top drops down → most common in jazz guitar\n- **Drop-3**: Third from top drops down → more orchestral feel\n\n## Practical Chord-Melody Shape\n\nCmaj7 drop-2 on strings 4-3-2-1 (melody on string 1):\n```\ne |--0--| (E = major 7th, melody)\nB |--3--| (G)\nG |--4--| (B)\nD |--3--| (C = root)\nA |--x--|\nE |--x--|\n```\nFrets: (x, x, 3, 4, 3, 0) — melody E on top.\n\nThis is a fundamental jazz chord-melody shape used by Joe Pass and countless others.",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "Cmaj7 drop-2 (melody on top)",
+      "frets": [0, 3, 4, 3, -1, -1],
+      "fingers": [0, 2, 4, 1, 0, 0],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a drop-2 voicing, which voice is dropped down an octave?",
+      "choices": ["The top (melody) voice", "The second from top voice", "The bass (lowest) voice", "The third from top voice"],
+      "answer": 1,
+      "explanation": "In a drop-2 voicing, the second from the top voice is dropped down an octave. This creates a more open, spread voicing that is characteristic of jazz guitar chord-melody playing.",
+      "srs": true
+    }
+  ]
+}

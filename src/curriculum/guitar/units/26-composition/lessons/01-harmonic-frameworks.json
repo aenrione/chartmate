@@ -1,0 +1,43 @@
+{
+  "id": "01-harmonic-frameworks",
+  "title": "Harmonic Frameworks",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Harmonic Frameworks — Building a Song's Architecture\n\nEvery song rests on a **harmonic framework** — the underlying chord structure that gives the melody and rhythm something to move against. Understanding frameworks lets you construct chord progressions intentionally.\n\n## The Five Major Framework Types\n\n### 1. Diatonic Major (I-IV-V-I)\nThe foundation of Western pop, folk, and country:\n- G – C – D – G\n- C – F – G – C\n- Works because all chords come from the same key\n\n### 2. Minor Framework (i-iv-v-i or i-VII-VI-VII)\nEmotionally darker:\n- Am – Dm – E7 – Am\n- Am – G – F – G (the \"Andalusian\" cadence)\n\n### 3. Modal Frameworks\nBased on modes rather than major/minor:\n- Dorian: m – IV – m (D Dorian: Dm – G – Dm)\n- Lydian: I – II – I (C Lydian: C – D – C)\n- Mixolydian: I – bVII – I (G Mixolydian: G – F – G)\n\n### 4. Jazz Frameworks (ii-V-I, tritone subs, modal)\nSee Units 14-17 for full detail.\n\n### 5. Blues Framework\n12-bar and variations — see Units 18-20.\n\n## The Framework-First Composition Method\n\n1. Choose a framework (diatonic major/minor, modal, jazz, blues)\n2. Set a key and tempo\n3. Build a loop (4-8 bars) using your framework\n4. Listen on repeat until you hear a melody spontaneously",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the 'Andalusian cadence' and why is it effective?",
+      "choices": [
+        "A 12-bar blues variant",
+        "The i-VII-VI-V descending chord progression (Am-G-F-E) with chromatic bass movement creating tension and release",
+        "A jazz ii-V-I in minor",
+        "A classical pedal point over a dominant chord"
+      ],
+      "answer": 1,
+      "explanation": "The Andalusian cadence (Am-G-F-E in A minor) creates a descending chromatic bass line A-G-F-E with a dramatic intensification through the Phrygian dominant E major chord. Its descending bass and mix of minor/major chords create rich tension, used in flamenco, classical, and countless rock songs.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Chord Progression Construction — Beyond I-IV-V\n\n## The Circle of Fourths — Your Composition Tool\n\nChords that are a 4th apart have a natural gravitational pull toward each other. The entire key system is built on this:\n\n```\nC → F → Bb → Eb → Ab → Db → Gb → B → E → A → D → G → C\n(each chord feels \"resolved\" by the next)\n```\n\n## Borrowed Chords\n\n\"Borrowing\" a chord from the parallel minor/major key adds color:\n\nIn C major: bVII (Bb major) borrowed from C minor\n\nUsed in:\n- \"Hey Jude\" (Beatles): C – G – Bb – F (bVII chord)\n- \"Sympathy for the Devil\" (Stones): similar borrowed chord\n\n## Secondary Dominants\n\nTemporarily tonicize any diatonic chord:\n\nIn G major, going to the V (D) chord: insert A7 (the V of D) before D:\n```\nG – A7 – D – G\n   (sec V)  \n```\n\nThe A7 creates a brief \"pull\" toward D before resolving to G.\n\n## Practical Exercise\n\nTake a simple I-IV-V-I (G-C-D-G). Add:\n1. A secondary dominant before the IV: Dm chord's secondary V (A7) before C? No — before D, add A7\n2. A borrowed chord: replace V with bVII (F major)\n3. A ii chord: replace IV with ii (Am)\n\nCompare all versions — each has a different emotional color.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'borrowed chord' in composition?",
+      "choices": [
+        "A chord from a different song",
+        "A chord taken from the parallel major or minor key to add unexpected color to a progression",
+        "A chord that must be returned later in the song",
+        "A chord outside of any key"
+      ],
+      "answer": 1,
+      "explanation": "A borrowed chord comes from the parallel key (e.g., borrowing Bb from C minor while in C major). It adds chromatic color and emotional contrast without modulating to a new key. The bVII chord is the most common borrowed chord in rock and pop.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "02-string-crossing",
+  "title": "String Crossing",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# String Crossing — The Real Challenge of Alternate Picking\n\nPlaying fast alternate picking on ONE string is relatively easy. The real difficulty is **transitioning between strings** while maintaining strict alternation.\n\n## The String Change Problem\n\nWhen you cross from a string that ended on a downstroke to the next string, your first note on the new string will be an upstroke — and vice versa. This \"inside/outside\" picking creates different mechanical challenges.\n\n## Inside Picking\n\n\"Inside\" picking: the pick travels in the space BETWEEN the two strings you're alternating.\n\nExample: ending on string 2 with a downstroke (pick is below string 2), then playing string 1 with an upstroke (pick must travel upward through the gap between strings 1 and 2).\n\n## Outside Picking\n\n\"Outside\" picking: the pick travels OUTSIDE (above or below) the two strings.\n\nExample: ending on string 1 with an upstroke, then playing string 2 with a downstroke — the pick travels down from above string 1 to string 2.\n\n## Two-String Exercise\n\n```\nString 1: D U D U (4 notes)\nString 2: D U D U (4 notes)\nRepeat\n```\n\nPractice all inside and outside combinations:\n1. String 2 ending Down → String 1 Up (inside)\n2. String 2 ending Up → String 1 Down (outside)\n3. String 1 ending Up → String 2 Down (outside)\n4. String 1 ending Down → String 2 Up (inside)",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In 'inside picking,' where does the pick travel when crossing strings?",
+      "choices": [
+        "Above both strings",
+        "Below both strings",
+        "In the space between the two strings being alternated",
+        "Parallel to the strings"
+      ],
+      "answer": 2,
+      "explanation": "Inside picking means the pick travels through the gap between the two strings — 'inside' them. For example, a down stroke on string 2 places the pick below it, and an upstroke on string 1 travels upward through the space between strings 1 and 2.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Pentatonic Scale with Alternate Picking — String Crossing Test\n\nThe minor pentatonic scale is the ideal string-crossing test because it uses 2 notes per string (irregular distribution compared to 3-note-per-string patterns).\n\n## A Minor Pentatonic, Box 1 — Picking Annotations\n\n```\ne |--D-U--|  (2 notes: D then U)\nB |--D-U--|  (crossing from e to B: outside pick on first note)\nG |--D-U--|\nD |--D-U--|\nA |--D-U--|\nE |--D-U--|  (start here)\n```\n\nAscending: each string starts with a down stroke (if the previous string ended on an up stroke — \"outside picking\" at each string change).\n\n## John Petrucci (Dream Theater) on 2-Note-Per-String Patterns\n\nPetrucci practices pentatonic patterns slowly with full awareness of every pick stroke. His advice:\n1. Slow down until each string change is clean\n2. Notice which crosses feel awkward (usually inside picks)\n3. Isolate those two-string transitions and practice them in isolation\n4. Reconnect to the full scale only after each transition is clean",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is the pentatonic scale (2 notes per string) a useful alternate picking exercise?",
+      "choices": [
+        "It only uses 5 notes, making it simple",
+        "The 2-notes-per-string pattern creates string crossings on every string change, exposing inside and outside picking challenges",
+        "It's the fastest scale",
+        "It doesn't require string crossing"
+      ],
+      "answer": 1,
+      "explanation": "The pentatonic's 2-notes-per-string pattern means you must cross strings constantly, alternating inside and outside picking on every string transition. This makes it an excellent test for string-crossing ability compared to 3-notes-per-string scales where patterns repeat more evenly.",
+      "srs": true
+    }
+  ]
+}

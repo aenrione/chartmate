@@ -1,0 +1,46 @@
+{
+  "id": "01-parallel-modes",
+  "title": "Parallel Modes",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Parallel Modes: The Foundation of Modal Interchange\n\n**Modal interchange** (also called **modal mixture**) is the practice of borrowing chords from parallel modes — modes that share the same root but have different interval patterns.\n\n### Parallel vs. Relative Modes\n\n**Relative modes**: C Ionian and A Aeolian are relative — they share the same notes (C major scale) but have different tonics.\n\n**Parallel modes**: C Ionian and C Dorian are parallel — they share the same tonic (C) but have different notes.\n\nModal interchange borrows from **parallel** modes only. The tonic never changes.\n\n### The Seven Parallel Modes of C\n\nAll built on C, but with different intervals:\n\n| Mode | Notes | Characteristic Tones (vs. C major) |\n|------|-------|------|\n| C Ionian (major) | C D E F G A B | — (baseline) |\n| C Dorian | C D Eb F G A Bb | b3, b7 |\n| C Phrygian | C Db Eb F G Ab Bb | b2, b3, b6, b7 |\n| C Lydian | C D E F# G A B | #4 |\n| C Mixolydian | C D E F G A Bb | b7 |\n| C Aeolian (natural minor) | C D Eb F G Ab Bb | b3, b6, b7 |\n| C Locrian | C Db Eb F Gb Ab Bb | b2, b3, b5, b6, b7 |\n\n### How Chord Borrowing Works\n\nEach parallel mode has its own set of diatonic chords. When a song in C major borrows a chord from C Aeolian (C natural minor), it uses a chord that contains one or more notes not in C major.\n\n**Example**: C Aeolian has Eb, Ab, and Bb. The iv chord of C Aeolian is Fm (F–Ab–C). When Fm appears in a C major song, it is a borrowed chord from C Aeolian.\n\n### The Most Common Borrowed Chords\n\nIn C major, from parallel modes:\n- **iv (Fm)** — from C Aeolian: contains Ab\n- **bVII (Bb)** — from C Mixolydian or Aeolian: contains Bb\n- **bVI (Ab)** — from C Aeolian: contains Ab and Eb\n- **bIII (Eb)** — from C Aeolian: contains Eb and Bb\n- **bII (Db)** — from C Phrygian: contains Db (the Neapolitan chord)\n\nThe most borrowed-from mode is C Aeolian (natural minor) — giving pop music most of its 'dark major' colors.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the difference between 'parallel modes' and 'relative modes'?",
+      "choices": [
+        "Parallel modes share the same tonic but have different notes; relative modes share the same notes but have different tonics",
+        "Parallel modes share the same notes; relative modes share the same tonic",
+        "Parallel modes are used in parallel music; relative modes in relative minor keys",
+        "They are identical — 'parallel' and 'relative' mean the same in modal theory"
+      ],
+      "answer": 0,
+      "explanation": "Parallel modes share the same starting note (tonic) but have different scales. C major and C Aeolian are parallel — both start on C but have different notes. Relative modes share the same collection of notes but start on different pitches. C major and A minor are relative — same notes, different tonics. Modal interchange borrows from parallel modes.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which borrowed chord comes from C Mixolydian rather than C Aeolian?",
+      "choices": [
+        "iv (Fm — contains Ab)",
+        "bVI (Ab major — contains Ab and Eb)",
+        "bVII (Bb major — contains Bb, which is the only difference from C major in Mixolydian)",
+        "bIII (Eb major)"
+      ],
+      "answer": 2,
+      "explanation": "C Mixolydian differs from C major by only one note: Bb instead of B natural. The chord built on Bb in C Mixolydian is Bb major (bVII). C Aeolian has three flattened notes (Eb, Ab, Bb), so bVI (Ab) and iv (Fm with Ab) come from Aeolian. bVII (Bb major) is specifically the signature chord of Mixolydian.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The Neapolitan chord (bII) in C major is Db major. From which parallel mode is it borrowed?",
+      "choices": ["C Aeolian", "C Lydian", "C Phrygian", "C Dorian"],
+      "answer": 2,
+      "explanation": "C Phrygian has a b2 — Db instead of D natural. The chord built on Db in C Phrygian is Db major (bII). This chord is called the Neapolitan (N or bII) in classical music, where it appears in first inversion before the dominant. It is borrowed from the Phrygian parallel mode.",
+      "srs": true
+    }
+  ]
+}

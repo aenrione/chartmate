@@ -1,0 +1,25 @@
+{
+  "id": "04-next-steps",
+  "title": "Where to Go Next",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# You've Built the Foundation\n\nCompleting this curriculum means you can:\n\n✓ Play rock, jazz, funk, reggae, and Latin grooves\n✓ Read drum notation and charts\n✓ Execute rudiments and apply them to the kit\n✓ Develop 4-limb independence\n✓ Play in odd time signatures\n✓ Solo musically with structure\n\n**What's next:**\n- Study specific drummers you love by transcribing their parts\n- Record yourself — video reveals what your ears miss\n- Play with musicians: nothing accelerates growth faster",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Advanced Horizons\n\n**Next milestones for serious drummers:**\n\n- **Metric modulation** — changing perceived tempo while keeping the same BPM\n- **Afro-Cuban drumming** — mambo, songo, nanigo (deep rhythmic tradition)\n- **Brush technique** — jazz ballads, quiet acoustic settings\n- **Recording drums** — mic placement, room acoustics, click tracks\n- **The 40 NARD rudiments** — the official complete set\n\n**The real secret:** Learn songs you love. Theory serves music — music doesn't serve theory.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is metric modulation?",
+      "choices": ["Changing the key signature", "Shifting perceived tempo by re-interpreting a subdivision as the new beat value", "Playing in multiple time signatures simultaneously", "A type of drum solo"],
+      "answer": 1,
+      "explanation": "Metric modulation shifts the perceived tempo by redefining which subdivision becomes the new beat — e.g., a triplet eighth note becomes the new quarter note, making the music feel faster or slower without an actual tempo change.",
+      "srs": true
+    }
+  ]
+}

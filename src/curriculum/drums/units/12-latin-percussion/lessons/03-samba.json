@@ -1,0 +1,34 @@
+{
+  "id": "03-samba",
+  "title": "Samba",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Samba: Brazil's National Rhythm\n\nSamba is the driving rhythmic engine of Brazilian carnival — high energy, densely layered, and deeply syncopated. Where bossa nova is intimate, samba is celebratory and communal.\n\n**Key samba elements:**\n- **Surdo** (bass drum role): plays a two-beat pattern — beat 2 open, beat 4 muted — creating the foundational pulse\n- **Tamborim** (high articulated hits): plays the 'tresillo' — a 3+3+2 grouping over 8 16th notes\n- **Snare** (caixa role): buzzing, continuous 16th note rolls with accents\n- **Hi-hat**: typically a 16th note pattern based on the partido alto\n\n**The samba bounce:** samba has a distinct forward momentum created by the combination of the surdo's two-beat pattern with the constant 16th note subdivision. It feels like it's always pulling slightly ahead of itself.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Samba Drum Kit Adaptation",
+      "description": "Kick plays the surdo pattern (muted beat 2, open beat 4 approximated here). Hi-hat drives 16th notes with the partido alto accents. Snare plays the caixa buzz roll with selective accents. This is a simplified kit adaptation — full samba uses a percussion ensemble.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 160,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x-x-x-x-x-x-x-x-"},
+        {"name": "Snare",  "pattern": "x-x-X-x-x-x-X-x-"},
+        {"name": "Kick",   "pattern": "----x-------x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the traditional role of the surdo in samba?",
+      "choices": ["High-pitched melodic accents", "The foundational bass drum pulse playing a two-beat pattern", "Continuous 16th note subdivision", "The clave pattern"],
+      "answer": 1,
+      "explanation": "The surdo is the large bass drum in samba percussion, playing the foundational heartbeat — beat 2 open, beat 4 muted (or vice versa depending on the ensemble role). It provides the gravity around which all other patterns orbit.",
+      "srs": true
+    }
+  ]
+}

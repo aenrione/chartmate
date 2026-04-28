@@ -1,0 +1,8 @@
+{
+  "id": "17-polyrhythms",
+  "title": "Polyrhythms",
+  "description": "3 against 2, 4 against 3, metric modulation, and superimposed meters",
+  "icon": "clock",
+  "prerequisites": ["08-odd-time"],
+  "lessons": ["01-three-against-two", "02-four-against-three", "03-five-against-four", "04-metric-modulation", "05-superimposed-meters"]
+}

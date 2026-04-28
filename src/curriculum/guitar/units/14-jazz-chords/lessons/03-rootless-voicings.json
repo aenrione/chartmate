@@ -1,0 +1,43 @@
+{
+  "id": "03-rootless-voicings",
+  "title": "Rootless Voicings",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Rootless Voicings — Piano Style on Guitar\n\nIn jazz, when a bassist is playing, the guitarist doesn't need to play the root — the bass has it covered. **Rootless voicings** omit the root entirely, using notes that create maximum color: 3rds, 7ths, 9ths, 13ths.\n\n## Why Rootless Voicings?\n\n1. **Less clutter**: Removing the root opens space in the chord\n2. **More color**: Extensions (9th, 11th, 13th) fit in the space the root occupied\n3. **Better voice leading**: Rootless chords tend to connect more smoothly\n4. **Piano tradition**: Bill Evans, McCoy Tyner, Herbie Hancock — all jazz pianists use rootless voicings\n\n## Dominant 7 Rootless Voicings (G7 examples)\n\n### Type A — 3-7-9-13\n- 3rd (B) on string 6, fret 7\n- 7th (F) on string 5, fret 8\n- 9th (A) on string 4, fret 7\n- 13th (E) on string 3, fret 9\n\n### Type B — 7-3-13-9 (inverted)\n- 7th (F) on string 6, fret 1\n- 3rd (B) on string 5, fret 2\n- 13th (E) on string 4, fret 2\n- 9th (A) on string 3, fret 2\n\n## Key Insight\n\nThe bass player plays G. You play the colors. Together you create a full, rich G13 sound.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why do jazz guitarists use rootless voicings when playing with a bassist?",
+      "choices": [
+        "Because root notes are too hard to play",
+        "The bassist covers the root, freeing the guitarist to play more colorful extensions",
+        "To sound more like a banjo",
+        "Because jazz theory forbids roots in chords"
+      ],
+      "answer": 1,
+      "explanation": "When a bassist plays the root notes, the guitarist is freed from that responsibility. Using the chord space for extensions (9th, 11th, 13th) creates richer, more colorful jazz harmony.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Rootless ii-V-I in C Major\n\nThis is the most important progression in jazz. Here's a smooth rootless voicing sequence:\n\n## Dm9 (rootless) → G13 (rootless) → Cmaj9 (rootless)\n\n### Dm9 rootless (strings 5-4-3-2)\n```\nA |--5--| F (minor 3rd)\nD |--7--| C (minor 7th)\nG |--5--| A (5th)\nB |--5--| E (9th)\n```\n\n### G13 rootless (strings 5-4-3-2)\n```\nA |--2--| B (major 3rd)\nD |--3--| F (minor 7th)\nG |--2--| A (9th = color)\nB |--3--| E (13th = color)\n```\n\n### Cmaj9 rootless (strings 5-4-3-2)\n```\nA |--3--| C (but wait — this has root... use this as transition)\nAlternately:\nA |--7--| E (major 3rd)\nD |--9--| B (major 7th)\nG |--9--| D (9th)\nB |--9--| A... (adjust for register)\n```\n\n## Voice Leading\n\nNotice how Dm9 → G13 → Cmaj9 can be played where **each voice moves by a half step or whole step**. This is the goal of rootless voicing practice — smooth chromatic connections.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What notes typically appear in a rootless dominant 7th chord voicing?",
+      "choices": [
+        "Root, 3rd, 5th, 7th",
+        "Only the 5th and 7th",
+        "3rd, 7th, and extensions like 9th and 13th",
+        "Root, 9th, 11th, 13th"
+      ],
+      "answer": 2,
+      "explanation": "Rootless dominant voicings use the 3rd and 7th (the harmonic core) plus color extensions like the 9th and 13th. Omitting the root leaves space for these richer tones and relies on the bassist to provide the root.",
+      "srs": true
+    }
+  ]
+}

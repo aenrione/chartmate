@@ -1,0 +1,46 @@
+{
+  "id": "04-fourth-species",
+  "title": "Fourth Species: Suspensions",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Fourth Species: The Art of Suspension\n\nFourth species introduces **suspensions** — the most expressive form of dissonance treatment in classical counterpoint. In fourth species, the counterpoint is in tied half notes: the second half-note of each measure is tied over to the downbeat of the next measure, creating dissonance before resolving.\n\n### The Suspension Formula: Preparation → Suspension → Resolution\n\nEvery suspension has three stages:\n1. **Preparation (P)**: The note appears as a consonance on a weak beat\n2. **Suspension (S)**: The same note is held (tied) into the next strong beat, where it is now dissonant against the new harmony\n3. **Resolution (R)**: The dissonant note steps down (almost always) to a consonance\n\n### Common Suspension Types\n\nNamed by the interval of the suspension and its resolution above the bass:\n\n| Suspension | Resolution | Context |\n|---|---|---|\n| **9-8** | 9th resolves down to 8th | Common soprano suspension |\n| **7-6** | 7th resolves down to 6th | Smooth, common |\n| **4-3** | 4th resolves down to 3rd | Strongest; over dominant |\n| **2-3** (bass) | 2nd resolves up to 3rd | Bass suspension (resolves up!) |\n| **6-5** | 6th resolves down to 5th | Less common |\n\n### The 4-3 Suspension: King of Suspensions\n\nThe 4-3 suspension over a dominant chord is the most powerful suspension in tonal music. The note a fourth above the bass (e.g., C above G) delays the expected 3rd (B above G):\n- Preparation: C appears as a consonance\n- Suspension: C is tied over the bar line; now G7 arrives, and C is dissonant (a fourth above G)\n- Resolution: C steps down to B — the major third of G\n\nThis delayed resolution makes the dominant chord feel even more dominant — it heightens the tension before V resolves to I.\n\n### The 2-3 Bass Suspension\n\nThe only suspension that resolves upward. The bass holds a note that is a 2nd below a chord tone, then rises to the resolution. Less common but creates a unique texture where the bass is the 'active' voice.\n\n### Consecutive Suspensions ('Chain of Suspensions')\n\nSuspensions can be chained: the resolution of one suspension becomes the preparation for the next. Bach's 'Air on the G String' and countless other pieces use chains of 7-6 or 4-3 suspensions to create long, expressive melodic arcs.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What are the three stages of a suspension, in order?",
+      "choices": [
+        "Dissonance → Consonance → Dissonance",
+        "Preparation (consonant) → Suspension (dissonant, tied) → Resolution (step down to consonance)",
+        "Approach → Leap → Resolution",
+        "Downbeat → Upbeat → Downbeat"
+      ],
+      "answer": 1,
+      "explanation": "A suspension always has: (1) Preparation — the note appears as a consonance; (2) Suspension — the same note is tied over the bar line into a dissonant position; (3) Resolution — the dissonant note steps down (usually) to a consonance. This three-stage process creates a controlled, expressive dissonance that the ear hears as tension-and-release.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why does the 4-3 suspension over a dominant chord have such powerful effect?",
+      "choices": [
+        "Because fourths are more dissonant than sevenths",
+        "Because it delays the major third of the dominant chord — the most defining chord tone — prolonging dominant tension before V resolves to I",
+        "Because it occurs on the strongest beat of the measure",
+        "Because it combines with parallel fifths to create maximum tension"
+      ],
+      "answer": 1,
+      "explanation": "The 4-3 suspension delays the arrival of the 3rd of the dominant chord. In G dominant, B (the major 3rd) is what makes G function as dominant and contain the leading tone. Suspending it — holding C in its place before it resolves to B — prolongs the dominant tension. The suspension essentially makes the listener wait even longer for the dominant to 'activate,' making the eventual resolution more satisfying.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the only suspension type that resolves upward rather than downward?",
+      "choices": ["9-8", "7-6", "4-3", "2-3 (bass suspension)"],
+      "answer": 3,
+      "explanation": "The 2-3 bass suspension resolves upward: the bass holds a note a 2nd below a chord tone, then rises up a step to the resolution. This is the one exception to the general rule that suspensions resolve downward. It creates a unique texture where the bass, rather than an upper voice, carries the suspension.",
+      "srs": true
+    }
+  ]
+}

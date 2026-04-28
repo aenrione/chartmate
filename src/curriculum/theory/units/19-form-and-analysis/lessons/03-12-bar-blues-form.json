@@ -1,0 +1,38 @@
+{
+  "id": "03-12-bar-blues-form",
+  "title": "The 12-Bar Blues Form",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## The 12-Bar Blues: The Universal Language\n\nThe **12-bar blues** is arguably the most influential harmonic form in all of popular music. From jazz to rock to country to R&B, its DNA is everywhere.\n\n### The Basic 12-Bar Structure (Key of C)\n\n| Bar | Chord | Function |\n|-----|-------|----------|\n| 1 | C7 (I7) | Tonic |\n| 2 | C7 (I7) | Tonic |\n| 3 | C7 (I7) | Tonic |\n| 4 | C7 (I7) | Tonic |\n| 5 | F7 (IV7) | Subdominant |\n| 6 | F7 (IV7) | Subdominant |\n| 7 | C7 (I7) | Back to Tonic |\n| 8 | C7 (I7) | Tonic |\n| 9 | G7 (V7) | Dominant |\n| 10 | F7 (IV7) | Subdominant |\n| 11 | C7 (I7) | Tonic |\n| 12 | G7 (V7) | Turnaround → back to bar 1 |\n\n### Why the I Chord Is a Dominant Seventh\n\nIn blues, all three core chords (I, IV, V) are typically dominant seventh chords. This is different from diatonic harmony, where I7 would be a major seventh chord. The dominant seventh on I is a blue note / blues scale influence — the b7 of the tonic chord is borrowed from the blues scale and creates a persistent tension that never fully resolves.\n\nThis 'unresolved' quality is fundamental to the blues aesthetic — the music is always in a state of longing.\n\n### The Quick-Change (Bar 2 to IV)\n\nA common variation: go to IV in bar 2 (instead of staying on I):\n\nBar 1: I7 | Bar 2: IV7 | Bar 3: I7 | Bar 4: I7 (then continue normally)\n\nThis 'quick four' gives the beginning of the form more momentum.\n\n### The Turnaround\n\nThe final two bars (11-12) form the **turnaround** — a progression that leads back to the beginning:\n\nClassic turnarounds in C:\n- I → V7 (C7 → G7)\n- I → bVII → IV → V (C7 → Bb7 → F7 → G7)\n- I → VI7 → ii7 → V7 (C → A7 → Dm7 → G7) ← jazz turnaround\n\n### Jazz Blues vs. Country Blues vs. Rock Blues\n\n**Country/folk blues**: Simple, raw. Often just three chords (I–IV–V) with guitar and voice. (Robert Johnson, Muddy Waters early recordings)\n\n**Jazz blues**: Chromatic additions — secondary dominants, tritone substitutions, chord extensions. Charlie Parker's 'Blues for Alice' uses an entirely different reharmonized blues form.\n\n**Rock blues**: Loud, electric. Often uses power chords (no 3rd). Distortion and bending blur chord quality. (Eric Clapton, Stevie Ray Vaughan, B.B. King electric period)\n\n**Modern R&B/neo-soul blues**: Extended chords on the I (I7, Imaj9, I13sus). Erykah Badu, D'Angelo, Robert Glasper.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is the I chord in blues typically a dominant seventh chord (e.g., C7 in C major), unlike in diatonic harmony?",
+      "choices": [
+        "Because blues musicians did not know about major seventh chords",
+        "Because the dominant seventh on the tonic is borrowed from the blues scale, creating a persistent blue-note tension that defines the blues aesthetic",
+        "Because the dominant seventh is easier to play on guitar",
+        "Because blues is in a minor key, where the I chord is naturally a minor seventh"
+      ],
+      "answer": 1,
+      "explanation": "In diatonic major harmony, I7 would be Imaj7 (C–E–G–B). Blues uses I7 = dominant seventh (C–E–G–Bb). The Bb (the 'blue' seventh) comes from the blues scale and creates a persistent tension that never fully resolves — all three chords (I7, IV7, V7) are dominant sevenths, meaning the music is always slightly unresolved, always longing. This permanent tension is the emotional heart of the blues.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'turnaround' in the 12-bar blues?",
+      "choices": [
+        "A key change at bar 6 that modulates to the subdominant",
+        "The final 1-2 bars of the form that create harmonic motion back to the beginning (I)",
+        "When the band 'turns around' and faces each other during a solo",
+        "A rhythmic device where the backbeat switches to the downbeat"
+      ],
+      "answer": 1,
+      "explanation": "The turnaround is the closing progression of a blues chorus (typically bars 11-12) that creates motion leading back to bar 1. The simplest turnaround is just V7 (G7 in C), which pulls back to I. More elaborate jazz turnarounds: I → VI7 → ii7 → V7 (C → A7 → Dm7 → G7). The turnaround gives the blues form its cyclical, repeating character.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "id": "08-chord-progressions",
+  "title": "Chord Progressions",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Chord Progressions\n\nA **chord progression** is a sequence of chords that forms the harmonic backbone of a song.\n\nThe most common progression in all of pop and rock music:\n\n**G – D – Em – C**\n\nThousands of hit songs use exactly this progression.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The I–IV–V–I Progression\n\nIn the key of G:\n- **I** = G major\n- **IV** = C major\n- **V** = D major\n\n**G → C → D → G** is the foundation of blues, rock, country, and folk.\n\nMaster smooth transitions between these three chords and you can play hundreds of songs.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the I chord in the key of G?",
+      "choices": ["C major", "D major", "G major", "E minor"],
+      "answer": 2,
+      "explanation": "The I chord is always the root of the key. In the key of G, that's G major.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which progression do thousands of pop songs use?",
+      "choices": ["Am–F–C–G", "G–D–Em–C", "E–A–B–E", "D–G–A–D"],
+      "answer": 1,
+      "explanation": "G–D–Em–C (I–V–vi–IV in the key of G) is the most recorded chord progression in modern music.",
+      "srs": true
+    }
+  ]
+}

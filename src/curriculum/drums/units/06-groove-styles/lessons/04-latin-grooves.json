@@ -1,0 +1,34 @@
+{
+  "id": "04-latin-grooves",
+  "title": "Bossa Nova & Samba",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Bossa Nova\n\nBossa nova fuses Brazilian samba with jazz harmony. The hi-hat foot pattern is the most distinctive element — it plays a clave-inspired syncopated pattern while the snare provides a light brushed backbeat.\n\nBossa is played at medium tempo with a gentle, laid-back feel. Brushes are strongly preferred over sticks — they produce the soft, whispery texture that defines the style. The kick is syncopated, never aggressive.\n\nKey records to study: João Gilberto's recordings, 'The Girl from Ipanema' (Astrud Gilberto), and any Antonio Carlos Jobim album.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Bossa Nova Pattern",
+      "description": "The bossa nova groove: hi-hat plays the syncopated clave-inspired pattern, snare plays a soft brushed backbeat on 2 and 4, kick syncopates against both. The open feel between the downbeats is essential — resist filling every space.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 130,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x---x-x-x---x-x-"},
+        {"name": "Snare",  "pattern": "----o-------o---"},
+        {"name": "Kick",   "pattern": "x-------x-x-----"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the primary feel difference between bossa nova and standard rock drumming?",
+      "choices": ["Bossa nova is much faster", "Bossa nova has a relaxed, syncopated feel based on the clave vs. rock's driving backbeat", "Bossa nova uses only kick and snare", "There is no difference in feel"],
+      "answer": 1,
+      "explanation": "Bossa nova has a gentle, swaying, syncopated feel rooted in the Brazilian clave rhythm, very different from rock's aggressive backbeat drive.",
+      "srs": true
+    }
+  ]
+}

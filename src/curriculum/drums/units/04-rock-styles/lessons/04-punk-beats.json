@@ -1,0 +1,20 @@
+{
+  "id": "04-punk-beats",
+  "title": "Punk & Hardcore Beats",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Punk Drumming\n\nPunk is loud, fast, and simple — intentionally stripped down.\n\n**The classic punk beat:**\n```\nHH: x-x-x-x-x-x-x-x-  (8th notes)\nSn: x---x---x---x---   (every beat — 4-on-the-floor snare)\nKD: x-------x-------   (beats 1 and 3)\n```\n\nNotice: snare on **every beat**, not just 2 and 4. This creates the relentless, aggressive forward drive of punk.\n\nFamous example: 'Blitzkrieg Bop' by the Ramones.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes punk drumming feel different from standard rock?",
+      "choices": ["Slower tempo", "Snare on every beat instead of just 2 and 4", "More complex fills", "Using brushes instead of sticks"],
+      "answer": 1,
+      "explanation": "Punk puts the snare on every beat (all four quarter notes), not just the backbeat (2 and 4). This creates a constant, aggressive drive that defines the genre.",
+      "srs": true
+    }
+  ]
+}

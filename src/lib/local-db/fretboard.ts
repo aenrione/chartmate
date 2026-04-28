@@ -4,6 +4,9 @@ import {sql} from 'kysely';
 import {calculateSM2, todayISO} from '../repertoire/sm2';
 import type {ReviewQuality} from '../repertoire/sm2';
 
+const MS_PER_DAY = 86_400_000;
+const INITIAL_EASE_FACTOR = 2.5;
+
 // ── Types ────────────────────────────────────────────────────────────────────
 
 export type AttemptStatus = 'correct' | 'incorrect' | 'skipped';
@@ -227,7 +230,7 @@ function calculateStreaks(dates: string[]): {currentStreak: number; longestStrea
   if (dates.length === 0) return {currentStreak: 0, longestStreak: 0};
 
   const today = getCurrentTimestamp().split('T')[0];
-  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+  const yesterday = new Date(Date.now() - MS_PER_DAY).toISOString().split('T')[0];
   const lastDate = dates[0];
 
   let currentStreak = 0;
@@ -235,7 +238,7 @@ function calculateStreaks(dates: string[]): {currentStreak: number; longestStrea
     let streak = 1;
     for (let i = 1; i < dates.length; i++) {
       const diffDays =
-        (new Date(dates[i - 1]).getTime() - new Date(dates[i]).getTime()) / 86400000;
+        (new Date(dates[i - 1]).getTime() - new Date(dates[i]).getTime()) / MS_PER_DAY;
       if (diffDays === 1) {
         streak++;
       } else {
@@ -249,7 +252,7 @@ function calculateStreaks(dates: string[]): {currentStreak: number; longestStrea
   let streak = 1;
   for (let i = 1; i < dates.length; i++) {
     const diffDays =
-      (new Date(dates[i - 1]).getTime() - new Date(dates[i]).getTime()) / 86400000;
+      (new Date(dates[i - 1]).getTime() - new Date(dates[i]).getTime()) / MS_PER_DAY;
     if (diffDays === 1) {
       streak++;
     } else {
@@ -275,7 +278,6 @@ export async function getUserStats(): Promise<UserStats> {
     ])
     .executeTakeFirst();
 
-  // Calculate streak from session dates
   const dates = await db
     .selectFrom('fretboard_sessions')
     .select(sql<string>`DATE(created_at)`.as('practice_date'))
@@ -326,6 +328,13 @@ const SEED_ORDER: Array<{stringIndex: number; fret: number}> = [
 
 export async function seedAnkiCards(): Promise<void> {
   const db = await getLocalDb();
+
+  const existing = await db
+    .selectFrom('fretboard_cards')
+    .select(db.fn.count<number>('id').as('count'))
+    .executeTakeFirst();
+  if (Number(existing?.count ?? 0) > 0) return;
+
   const today = todayISO();
   const now = getCurrentTimestamp();
   const rows = SEED_ORDER.flatMap(({stringIndex, fret}) => [
@@ -334,7 +343,7 @@ export async function seedAnkiCards(): Promise<void> {
       fret,
       direction: 'pos_to_note' as const,
       interval: 0,
-      ease_factor: 2.5,
+      ease_factor: INITIAL_EASE_FACTOR,
       repetitions: 0,
       next_review_date: today,
       last_reviewed_at: null,
@@ -345,7 +354,7 @@ export async function seedAnkiCards(): Promise<void> {
       fret,
       direction: 'note_to_pos' as const,
       interval: 0,
-      ease_factor: 2.5,
+      ease_factor: INITIAL_EASE_FACTOR,
       repetitions: 0,
       next_review_date: today,
       last_reviewed_at: null,
@@ -353,15 +362,11 @@ export async function seedAnkiCards(): Promise<void> {
     },
   ]);
 
-  await db.transaction().execute(async trx => {
-    for (const row of rows) {
-      await trx
-        .insertInto('fretboard_cards')
-        .values(row)
-        .onConflict(oc => oc.columns(['string_index', 'fret', 'direction']).doNothing())
-        .execute();
-    }
-  });
+  await db
+    .insertInto('fretboard_cards')
+    .values(rows)
+    .onConflict(oc => oc.columns(['string_index', 'fret', 'direction']).doNothing())
+    .execute();
 }
 
 export async function getAnkiDueCards(limit = 200): Promise<FretboardCard[]> {

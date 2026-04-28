@@ -1,0 +1,20 @@
+{
+  "id": "02-performance-preparation",
+  "title": "Performance Preparation",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Preparing for High-Stakes Performance\n\nPerformance preparation distinguishes professional musicians from capable players. Having the technical and musical ability is necessary but not sufficient — the ability to consistently deliver that ability under performance conditions is the final skill.\n\n**The performance paradox:** Audiences respond to musicians who appear relaxed and in the moment. Yet achieving that appearance requires extensive, deliberate preparation. Freedom in performance is the result of preparation, not the absence of it.\n\n**Mental preparation strategies:**\n\n1. **Mental rehearsal**: Sitting quietly and running through the performance in your mind, bar by bar. Visualize everything going well. Mental rehearsal activates the same neural pathways as physical practice.\n\n2. **Pre-performance routine**: Consistent routines (warm-up patterns, breathing exercises, quiet time before a show) signal the nervous system that performance mode is beginning. Inconsistent pre-show behavior produces inconsistent results.\n\n3. **Reframing performance anxiety**: Physical symptoms of anxiety (elevated heart rate, heightened senses, increased focus) are physiologically identical to physical symptoms of excitement. The reframe: 'I'm excited,' not 'I'm nervous.'\n\n4. **Focus point**: Identify one positive thing to focus on during the performance — not what might go wrong, but one element of your playing you're excited to express.\n\n**The sound check**: Use it methodically. Every element of your setup that can be verified before the show should be. Surprises during the performance are reduced by thorough preparation before it.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the relationship between preparation and performance freedom?",
+      "choices": ["More preparation reduces spontaneity and makes performance feel mechanical", "Preparation constrains the music too much — the best performances happen without preparation", "Freedom in performance is the result of preparation — thorough preparation removes anxiety and allows genuine spontaneity", "Preparation and freedom are unrelated"],
+      "answer": 2,
+      "explanation": "The apparent paradox of performance preparation is that extensive preparation produces greater freedom, not less. When the material is thoroughly prepared and technical execution is automatic, the performer is free to be in the moment — responding, expressing, and connecting — without cognitive load. Unpreparedness creates anxiety that blocks authentic expression.",
+      "srs": true
+    }
+  ]
+}

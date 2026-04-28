@@ -1,0 +1,44 @@
+{
+  "id": "01-clave",
+  "title": "The Clave",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Clave: The Rhythmic DNA of Latin Music\n\nThe **clave** is a 2-bar rhythmic pattern that serves as the foundational skeleton of virtually all Afro-Cuban and Latin music. Every other instrument plays in relationship to the clave — either reinforcing it, playing against it, or complementing it.\n\n**The two main claves:**\n\n**Son Clave (3-2):** Three hits in bar 1, two hits in bar 2\n- Bar 1: beat 1, beat 2-and, beat 4\n- Bar 2: beat 2, beat 3\n\n**Son Clave (2-3):** The reverse — 2 hits first, 3 hits second\n\n**Rumba Clave:** Similar to son clave but the 3rd hit of the '3-side' is a 16th note later. This gives rumba its distinct, more 'pulled' feel.\n\n**Critical concept:** You can't 'flip' the clave mid-song accidentally. If you're playing on the 3-side of the clave and you add an extra bar, you've 'flipped' the clave — catastrophic in traditional Latin music.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Son Clave 3-2 (Bar 1: 3-side)",
+      "description": "The three-hit side of the son clave. Three hits land on beat 1, the 'and' of beat 2, and beat 4. This pattern has a forward-leaning, anticipatory feel.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 104,
+      "tracks": [
+        {"name": "Clave", "pattern": "x---x-x-----x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Son Clave 3-2 (Bar 2: 2-side)",
+      "description": "The two-hit side of the son clave. Two hits on beats 2 and 3. The comparative emptiness of this bar creates tension that resolves when the 3-side returns.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 104,
+      "tracks": [
+        {"name": "Clave", "pattern": "----x---x-------"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a 3-2 son clave, how many hits are in the first bar?",
+      "choices": ["2", "3", "4", "5"],
+      "answer": 1,
+      "explanation": "In a 3-2 son clave, bar 1 has 3 hits (landing on beat 1, the and of 2, and beat 4), and bar 2 has 2 hits (landing on beats 2 and 3).",
+      "srs": true
+    }
+  ]
+}

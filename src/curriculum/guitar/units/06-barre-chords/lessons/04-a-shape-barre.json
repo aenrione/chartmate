@@ -1,0 +1,20 @@
+{
+  "id": "04-a-shape-barre",
+  "title": "A-Shape Barre Chords",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The A-Shape Barre\n\nTake the A major open shape and barre up the neck. Root note is on **string 5**.\n\n**B major (A shape at fret 2):**\n- Index: barre fret 2\n- Ring OR pinky: strings 2, 3, 4 at fret 4 (barre with ring finger)\n\nAlternative: use ring-middle-pinky to fret strings 4, 3, 2 individually.\n\nMove up 2 frets = C#, up 3 = D, up 5 = E.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "For A-shape barre chords, which string holds the root note?",
+      "choices": ["String 6 (low E)", "String 5 (A)", "String 4 (D)", "String 1 (high e)"],
+      "answer": 1,
+      "explanation": "A-shape barre chords have their root on string 5. That's why the open A chord is the template — A string is open at the A note.",
+      "srs": true
+    }
+  ]
+}

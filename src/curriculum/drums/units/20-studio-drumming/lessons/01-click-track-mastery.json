@@ -1,0 +1,20 @@
+{
+  "id": "01-click-track-mastery",
+  "title": "Click Track Mastery",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Click: Your Studio Partner\n\nThe click track is the constant in professional recording. Unlike live performance where minor tempo fluctuations can be charming, studio recordings live permanently — and a drummer who can't lock to a click will not be hired for sessions.\n\n**What 'locking to the click' really means:**\nNovice drummers hear the click as a separate entity they must 'follow.' Professional studio drummers internalize the click so completely that they don't hear it as separate — it becomes part of their internal pulse. The click is no longer a constraint; it's a confirmation.\n\n**Developing click comfort:**\n1. Practice to a metronome/click daily for all practice material\n2. Vary click sounds — sometimes a low tone, sometimes a high 'woodblock,' sometimes a cowbell\n3. Practice hearing the click in different parts of the beat — sometimes program it on beat 2 and 4 only, forcing you to infer beats 1 and 3\n4. Use half-time clicks (click only on beats 1 and 3) at challenging tempos\n\n**Advanced click work:**\n- **Turn off the click**: Play 32 bars to a click, then continue for 32 bars without — measure the tempo drift\n- **Groove-to-click relationship**: Know whether your pocket placement is ahead, on, or behind the click. Make that a consistent, intentional choice.\n- **Tempo changes**: Rehearse tempo changes (including ritardando and accelerando into new sections) with a sequenced click that matches the chart.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How do professional studio drummers perceive the click track differently from novice drummers?",
+      "choices": ["Professionals ignore the click entirely", "Professionals hear the click as a constraint to follow", "Professionals internalize the click until it becomes part of their pulse — a confirmation rather than a separate entity to track", "Professionals always play slightly ahead of the click"],
+      "answer": 2,
+      "explanation": "Professional studio drummers internalize the click so deeply that they no longer experience it as a separate thing to 'follow.' The click becomes a confirmation of their own internal pulse. Novice drummers who hear the click as an external constraint tend to react to it, causing slight delays that make the playing sound tracked.",
+      "srs": true
+    }
+  ]
+}

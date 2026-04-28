@@ -1,6 +1,6 @@
 // src/lib/curriculum/types.ts
 
-export type Instrument = 'guitar' | 'drums';
+export type Instrument = 'guitar' | 'drums' | 'theory';
 
 // ── Activity types ────────────────────────────────────────────────────────────
 
@@ -51,12 +51,37 @@ export interface TabExerciseActivity {
   unlockAfterSeconds?: number;
 }
 
+export interface DrumTrack {
+  name: string;
+  /**
+   * One character per subdivision:
+   * x = hit  |  X = accent  |  o = ghost note  |  - = rest
+   */
+  pattern: string;
+  /** Auto-detected from track name if omitted */
+  color?: 'yellow' | 'red' | 'blue' | 'green' | 'purple' | 'orange';
+}
+
+export interface DrumPatternActivity {
+  type: 'drum-pattern';
+  title?: string;
+  description?: string;
+  /** e.g. "4/4", "3/4", "6/8" — defaults to "4/4" */
+  timeSignature?: string;
+  /** 8 = eighth-note grid, 16 = sixteenth-note grid — defaults to 8 */
+  subdivisions?: number;
+  bpm?: number;
+  tracks: DrumTrack[];
+  srs?: boolean;
+}
+
 export type Activity =
   | TheoryCardActivity
   | ChordDiagramActivity
   | QuizActivity
   | FretboardDrillActivity
-  | TabExerciseActivity;
+  | TabExerciseActivity
+  | DrumPatternActivity;
 
 // ── Lesson ────────────────────────────────────────────────────────────────────
 

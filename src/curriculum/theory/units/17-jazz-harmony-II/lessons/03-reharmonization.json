@@ -1,0 +1,38 @@
+{
+  "id": "03-reharmonization",
+  "title": "Reharmonization",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Reharmonization: Creating New Harmonies Under a Melody\n\n**Reharmonization** is the art of replacing the original chord changes under a melody with a new set of chords. The melody notes remain; the harmony changes completely, creating a fresh interpretation of a familiar tune.\n\n### The Constraint: The Melody Wins\n\nThe melody note must be accommodated by every new chord. If the melody note on a given beat is G, the new chord must contain G (or have G as a viable extension):\n- G as root: Gmaj7, Gm7, G7\n- G as 3rd: Ebmaj7 (Eb–G–Bb–D), Em7 (E–G–B–D)\n- G as 5th: Cmaj7 (C–E–G–B), C7\n- G as 7th: Abmaj7 (Ab–C–Eb–G)\n- G as 9th: F major or F7 (F–A–C + G as 9th)\n- G as 11th: D7sus or Dm7 context\n\n### Strategy 1: Chromatic Voice Leading Approach\n\nWhen reharmonizing, aim for chords whose bass notes move chromatically. This 'chromatic bass reharmonization' was pioneered by Thelonious Monk and Bill Evans:\n\nOriginal: Cmaj7 → Am7 → Dm7 → G7\nReharmonized: Cmaj7 → Eb7 → Abmaj7 → Db7 (all tritone subs plus chromatic bass)\n\n### Strategy 2: Pedal Point Reharmonization\n\nHold the bass on one note while the upper harmony changes. The melody floats above with new chord qualities on each beat:\n- Bass: C–C–C–C (pedal)\n- Upper voices: Cmaj7 → Cm7 → C7 → Csus4 (quality changes, bass static)\n\n### Strategy 3: Line Cliché\n\nMove one inner voice by half step while the other voices hold. The most common:\n\nC major context: \n- Cmaj7 (C–E–G–B) → C7 (C–E–G–Bb) → Cm7 (C–Eb–G–Bb) → Cm6 (C–Eb–G–A)\n- The inner voice descends: B → Bb → Bb (static) → A\n\nThis descending line cliché over a static bass (C) is extremely common in jazz ballads and film scores. It creates constant harmonic movement with minimal voice leading effort.\n\n### Famous Reharmonizations\n\n- **Art Tatum** (1909–1956): Famous for elaborate, continuous reharmonization of standards. His version of 'Tea for Two' introduces secondary dominants, tritone substitutions, and chromatic passing chords that completely transform the original.\n- **Bill Evans** on 'My Funny Valentine': The standard verse is reharmonized with quartal voicings and chromatic bass lines that create an entirely new emotional landscape.\n- **Brad Mehldau** on 'Radiohead covers': Takes rock songs and reharmonizes them with jazz extensions and altered chords.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the primary constraint when reharmonizing a melody?",
+      "choices": [
+        "The new chords must come from the same key as the original",
+        "Every melody note must be accommodatable as a chord tone or extension of the new chord",
+        "The new harmony must be simpler than the original",
+        "The reharmonized chords must move by fifth (cycle of fifths only)"
+      ],
+      "answer": 1,
+      "explanation": "The melody is fixed — the harmony must serve it. Every melody note on a given beat must work as a chord tone (root, 3rd, 5th, 7th) or extension (9th, 11th, 13th) of whatever new chord you place under it. This constraint guides which reharmonization choices are possible at any given moment in the melody.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'line cliché' in jazz reharmonization?",
+      "choices": [
+        "A stock melodic phrase used in improvisation",
+        "A technique where one inner voice moves by half step while the bass and outer voices remain static",
+        "A formulaic ii–V–I progression used in every standard",
+        "A blues-derived melody pattern"
+      ],
+      "answer": 1,
+      "explanation": "A line cliché moves one inner voice chromatically (by half step) while other voices, especially the bass, remain on the same pitch. Example: over a C bass pedal, the inner voice descends B → Bb → Bb → A, producing Cmaj7 → C7 → Cm7 → Cm6. This creates continuous harmonic color with minimal motion and is a hallmark of jazz ballad writing.",
+      "srs": true
+    }
+  ]
+}

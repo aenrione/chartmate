@@ -1,0 +1,54 @@
+{
+  "id": "03-bass-clef",
+  "title": "The Bass Clef",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## The Bass Clef\n\nThe bass clef — also called the **F clef** — is the standard notation for low-pitched instruments. Its symbol consists of a curved line with **two dots that straddle the fourth line** from the bottom. Those two dots are a definition: the fourth line is **F3**. Everything else is calculated from that anchor.\n\n### Line Names: Good Boys Do Fine Always\n\nWith F3 on line 4, the lines of the bass clef from bottom to top are:\n\n| Line | Note | Mnemonic |\n|------|------|----------|\n| 1 (bottom) | **G2** | **G**ood |\n| 2 | **B2** | **B**oys |\n| 3 | **D3** | **D**o |\n| 4 | **F3** | **F**ine |\n| 5 (top) | **A3** | **A**lways |\n\nThe mnemonic **Good Boys Do Fine Always** gives you the five line names in order.\n\n### Space Names: All Cows Eat Grass\n\nThe four spaces, from bottom to top:\n\n| Space | Note |\n|-------|------|\n| 1 (bottom) | **A2** |\n| 2 | **C3** |\n| 3 | **E3** |\n| 4 (top) | **G3** |\n\n**All Cows Eat Grass** — A, C, E, G. A second common mnemonic: **ACEG** — starting from the bottom space.\n\n### Instruments That Use the Bass Clef\n\nThe bass clef is used for low-to-mid range instruments:\n- **Bass guitar** and **double bass**\n- **Cello**, **bassoon**, **trombone**, **tuba**\n- **Piano left hand**\n- **Baritone voice**\n\nFor piano players, mastering both clefs simultaneously is the central challenge of early reading development.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## The Bass Clef and Middle C\n\n### Middle C Connects Both Clefs\n\nOne of the most important conceptual landmarks in music notation is **middle C (C4)**. In the bass clef, middle C sits on the **first ledger line above the staff** — directly above the top line (A3).\n\nIn the treble clef, middle C sits on the **first ledger line below the staff**.\n\nThese two positions represent the same pitch. The space between the treble and bass staves in a grand staff (piano music) is not arbitrary — middle C occupies that shared ledger line in between. This is exactly why it is called \"middle\" C: it is in the middle of the grand staff.\n\n### Notes Above the Bass Clef Staff\n\n- **B3** — just above the top line (A3), in the space\n- **C4 (middle C)** — first ledger line above\n- **D4** — space above that ledger line\n- **E4** — second ledger line above\n\n### Notes Below the Bass Clef Staff\n\n- **F2** — just below the bottom line, in the space\n- **E2** — first ledger line below\n- **D2** — space below that\n- **C2 (low C on bass guitar)** — second ledger line below\n\n### Comparing Treble and Bass\n\nA crucial orientation skill: a note on line 1 of the bass clef (G2) is many steps below a note on line 1 of the treble clef (E4). These two staves live in different registers. When you switch from one to the other, recalibrate your pitch orientation completely — the physical position on the page no longer tells you the exact pitch without knowing which clef you are in.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The bass clef is also known as the F clef because its two dots identify which line as F3?",
+      "choices": ["The second line", "The third line", "The fourth line", "The fifth line"],
+      "answer": 2,
+      "explanation": "The two dots of the bass clef straddle the fourth line from the bottom, marking it as F3. This is why the bass clef is called the F clef.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Using 'Good Boys Do Fine Always,' what note is on the second line of the bass clef?",
+      "choices": ["G2", "B2", "D3", "A3"],
+      "answer": 1,
+      "explanation": "'Good Boys Do Fine Always' maps to lines 1–5: G, B, D, F, A. The second line is B2.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Where does middle C (C4) appear relative to the bass clef staff?",
+      "choices": [
+        "On the third line of the staff",
+        "In the top space of the staff",
+        "On the first ledger line above the staff",
+        "On the first ledger line below the staff"
+      ],
+      "answer": 2,
+      "explanation": "Middle C (C4) appears on the first ledger line above the bass clef staff, directly above the top line (A3). It is the same pitch that appears on the first ledger line below the treble clef staff.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which of these instruments primarily reads bass clef?",
+      "choices": ["Violin", "Flute", "Bass guitar", "Trumpet"],
+      "answer": 2,
+      "explanation": "Bass guitar, cello, double bass, tuba, and piano left hand are among the primary bass clef instruments. Violin, flute, and trumpet all read treble clef.",
+      "srs": true
+    }
+  ]
+}

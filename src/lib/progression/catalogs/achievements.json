@@ -1,0 +1,128 @@
+[
+  {
+    "id": "first_lesson",
+    "title": "First Note",
+    "description": "Complete your first lesson on any instrument.",
+    "icon": "graduation-cap",
+    "tier": "bronze",
+    "hidden": false,
+    "predicate": {"type": "event_count", "surface": "lesson", "min": 1}
+  },
+  {
+    "id": "five_day_habit",
+    "title": "Five-Day Habit",
+    "description": "Practice five days in a row.",
+    "icon": "flame",
+    "tier": "silver",
+    "hidden": false,
+    "predicate": {"type": "streak", "min": 5}
+  },
+  {
+    "id": "twenty_eight",
+    "title": "Twenty-Eight",
+    "description": "Keep a 28-day streak — long enough to feel automatic.",
+    "icon": "flame",
+    "tier": "gold",
+    "hidden": false,
+    "predicate": {"type": "streak", "min": 28}
+  },
+  {
+    "id": "three_star_five",
+    "title": "Three-Star Five",
+    "description": "Earn 3 stars on five lessons.",
+    "icon": "star",
+    "tier": "silver",
+    "hidden": false,
+    "predicate": {"type": "lessons_with_stars", "stars": 3, "min": 5}
+  },
+  {
+    "id": "three_star_unit",
+    "title": "Three-Star Unit",
+    "description": "Earn 3 stars on every lesson in any unit.",
+    "icon": "trophy",
+    "tier": "gold",
+    "hidden": false,
+    "predicate": {"type": "unit_all_three_stars"}
+  },
+  {
+    "id": "polyglot_week",
+    "title": "Polyglot Week",
+    "description": "Earn XP on guitar, drums and theory in a single week.",
+    "icon": "layers",
+    "tier": "silver",
+    "hidden": false,
+    "predicate": {"type": "instruments_touched_in_week", "min": 3}
+  },
+  {
+    "id": "xp_1000_guitar",
+    "title": "Thousand on Guitar",
+    "description": "Earn 1,000 lifetime XP on guitar.",
+    "icon": "guitar",
+    "tier": "silver",
+    "hidden": false,
+    "predicate": {"type": "xp_total", "instrument": "guitar", "min": 1000}
+  },
+  {
+    "id": "xp_1000_drums",
+    "title": "Thousand on Drums",
+    "description": "Earn 1,000 lifetime XP on drums.",
+    "icon": "drum",
+    "tier": "silver",
+    "hidden": false,
+    "predicate": {"type": "xp_total", "instrument": "drums", "min": 1000}
+  },
+  {
+    "id": "first_pocket",
+    "title": "First Pocket",
+    "description": "Hold a steady 80 bpm groove for 32 bars on any rudiment.",
+    "icon": "drum",
+    "tier": "bronze",
+    "hidden": false,
+    "predicate": {"type": "rudiment_sustained", "min_bpm": 80, "min_bars": 32}
+  },
+  {
+    "id": "cartographer",
+    "title": "Cartographer",
+    "description": "Earn XP on every practice surface in the app.",
+    "icon": "compass",
+    "tier": "gold",
+    "hidden": false,
+    "predicate": {"type": "surfaces_touched", "min": 7}
+  },
+  {
+    "id": "goal_crusher_5",
+    "title": "Goal Crusher",
+    "description": "Complete 5 program goals.",
+    "icon": "target",
+    "tier": "bronze",
+    "hidden": false,
+    "predicate": {"type": "event_count", "surface": "program_goal", "min": 5}
+  },
+  {
+    "id": "first_song_picked",
+    "title": "Picked Your First Song",
+    "description": "Add a song to your learning queue.",
+    "icon": "book-marked",
+    "tier": "bronze",
+    "hidden": false,
+    "predicate": {"type": "repertoire_items_min", "min": 1}
+  },
+  {
+    "id": "five_songs_in_progress",
+    "title": "Five-Song Setlist",
+    "description": "Have five songs in your learning queue at once.",
+    "icon": "list-music",
+    "tier": "silver",
+    "hidden": false,
+    "predicate": {"type": "repertoire_items_min", "min": 5}
+  },
+  {
+    "id": "night_owl",
+    "title": "Night Owl",
+    "description": "Practice between 11pm and 2am.",
+    "icon": "moon",
+    "tier": "bronze",
+    "hidden": true,
+    "predicate": {"type": "event_at_local_hour_range", "min_hour": 23, "max_hour": 2}
+  }
+]

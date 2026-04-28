@@ -1,0 +1,59 @@
+{
+  "id": "01-voice-leading-basics",
+  "title": "Voice Leading Basics",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Voice Leading: The Art of Smooth Motion\n\nVoice leading is the practice of moving individual melodic lines (voices) from one chord to the next with maximum smoothness and musicality. It is the difference between a chord progression that **lurches** and one that **flows**.\n\nIn four-part choral writing — the traditional training ground — the four voices are named after vocal ranges:\n- **Soprano** (top voice, highest pitch)\n- **Alto** (second voice)\n- **Tenor** (third voice)\n- **Bass** (bottom voice, lowest pitch)\n\nEven if you are writing for guitar, piano, or a full orchestra, these principles apply. Every chord tone is a 'voice' that connects to the next chord.\n\n### The Fundamental Types of Motion\n\nWhen two voices move between chords, they move in one of four ways:\n\n**1. Parallel Motion**: Both voices move in the same direction by the same interval.\nExample: Soprano C→D, Alto A→B (both move up a step)\n\n**2. Similar Motion**: Both voices move in the same direction but by different intervals.\nExample: Soprano C→E, Alto G→A (both move up, but by different amounts)\n\n**3. Contrary Motion**: The two voices move in opposite directions.\nExample: Soprano C→G (up a fifth), Bass G→C (down a fifth)\n\n**4. Oblique Motion**: One voice stays on the same pitch while the other moves.\nExample: Soprano E stays on E; Bass G moves to C\n\n### The Gold Standard: Contrary Motion\n\nContrary motion is the most valued type. When voices move in opposite directions, they create independence and balance. Bach's chorales are masterclasses in contrary motion — he routinely has the soprano and bass move in opposite directions to create architectural strength.\n\n### The Principle of Minimal Distance\n\nThe single most important voice-leading principle: **move each voice as little as possible.** Leap only when necessary. A half step or whole step is preferred over a third; a third over a fifth. Large leaps (sixths, sevenths, octaves) demand careful preparation and resolution.\n\nA leap of a seventh is so dissonant as a melodic interval that it is almost always avoided in classical four-part writing. When it does occur, it must resolve in the opposite direction by a step.\n\n### Why Voice Leading Matters\n\nBach's chorale harmonizations are the training ground not because they are old, but because they encode the most efficient, elegant solutions to the problem of smooth harmonic motion. Understanding them unlocks jazz voicings, orchestration, pop arranging, and film scoring — because all of these rely on the same underlying principle: **voices connect chords like threads through fabric**.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Forbidden Parallels: The Rules That Shape Style\n\nThe two most famous prohibitions in classical voice leading are **parallel fifths** and **parallel octaves**. Understanding *why* they are forbidden (not just that they are) gives you genuine musical insight.\n\n### Parallel Perfect Fifths\n\nTwo voices moving in parallel perfect fifths: e.g., Soprano G→A and Alto C→D (both moving up a major second, maintaining a perfect fifth).\n\n**Why forbidden?** Perfect fifths are so acoustically pure (the 3:2 frequency ratio) that they create a 'fused' sound — the two voices lose their independence and merge into one. In a texture where four distinct melodic lines are supposed to be heard, any fusion destroys that independence.\n\n### Parallel Octaves\n\nTwo voices moving in parallel octaves: e.g., Soprano G→A and Bass G→A an octave lower.\n\n**Why forbidden?** Octave doublings literally halve the number of distinct voices — if soprano and bass are moving in octaves, you effectively have three voices, not four. The harmonic richness collapses.\n\n### Hidden (Direct) Fifths and Octaves\n\nA softer prohibition: when two voices reach a perfect fifth or octave by **similar motion**, this is called a 'hidden' or 'direct' fifth/octave. It is more tolerated than parallel fifths but must be used carefully, especially when the outer voices (soprano and bass) are involved.\n\n**Exception rule**: Outer voices reaching a fifth/octave via similar motion is problematic. Inner voices have more freedom.\n\n### The Paradox: Jazz Parallel Organum\n\nJazz and modern music deliberately use parallel fifths as a stylistic device — parallel voicings, planing, etc. This is **intentional parallelism** for a specific color, not an accident. The rule against parallels exists in classical four-voice counterpoint to maintain voice independence. Once you understand that goal, you can choose when to break the rule for effect.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When Soprano moves C→D and Alto moves A→B (both up a major second), what type of motion is this?",
+      "choices": ["Contrary motion", "Oblique motion", "Similar motion", "Parallel motion"],
+      "answer": 3,
+      "explanation": "Parallel motion occurs when two voices move in the same direction by the same interval. Both voices here move up a major second, so this is parallel motion. Since both intervals are major seconds, this would create parallel major seconds — unusual but not the forbidden parallel fifths or octaves.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why are parallel perfect fifths forbidden in classical four-part writing?",
+      "choices": [
+        "Because they create voice crossing",
+        "Because the acoustic purity of perfect fifths causes the voices to fuse and lose independence",
+        "Because parallel fifths are too dissonant for the style",
+        "Because they exceed the normal range of the voices"
+      ],
+      "answer": 1,
+      "explanation": "Perfect fifths have the frequency ratio 3:2 — acoustically very pure. When two voices move in parallel perfect fifths, they 'fuse' perceptually into one sound rather than remaining two independent melodic lines. This destroys the four-voice texture that classical counterpoint aims to maintain.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which type of motion is generally considered the most valuable in four-part harmony?",
+      "choices": ["Parallel motion", "Similar motion", "Contrary motion", "Oblique motion"],
+      "answer": 2,
+      "explanation": "Contrary motion — voices moving in opposite directions — is the gold standard. It maintains voice independence, creates architectural balance, and is the hallmark of Bach's chorale style. When the soprano moves up and the bass moves down (or vice versa), the texture remains clear and balanced.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the 'principle of minimal distance' in voice leading?",
+      "choices": [
+        "Keep all voices within an octave of each other",
+        "Never use intervals larger than a third",
+        "Move each voice by the smallest possible interval when connecting chords",
+        "Always double the bass voice at the octave"
+      ],
+      "answer": 2,
+      "explanation": "The principle of minimal distance says: move each voice as little as possible. Prefer stepwise motion (half or whole steps) over leaps; prefer small leaps over large ones. This creates smooth, singing melodic lines in each voice rather than awkward jumps.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "05-jazz-progressions-analysis",
+  "title": "Analyzing Jazz Progressions",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Analyzing Jazz Progressions: A Systematic Approach\n\nAnalyzing a jazz standard requires identifying the key centers, labeling each chord's function, spotting substitutions, and understanding the overall form.\n\n### The Analysis Protocol\n\n1. **Identify the key** from the key signature and the tonic chord at phrase endings\n2. **Label diatonic chords** with Roman numerals\n3. **Identify ii–V patterns** — these are the harmonic building blocks of jazz\n4. **Look for modulations** — where does a ii–V–I occur in a new key?\n5. **Spot substitutions** — tritone subs (dominant chord a tritone from expected), chromatic approach chords, etc.\n6. **Note borrowed chords** — chords not in the primary key\n\n### Case Study: 'Autumn Leaves' (J. Kosma)\n\nKey: G major (relative: E minor — the verse begins on Cm7, suggesting Bb major... complex)\n\nActually 'Autumn Leaves' is commonly analyzed in G major with extensive use of the relative minor:\n\nCm7 – F7 – Bbmaj7 – Ebmaj7 (this is ii–V–I in Bb major — a modulation from G)\nAm7b5 – D7 – Gm (ii–V–i in G minor)\n\nThe piece oscillates between G major and G minor (parallel modal mixture). The opening four bars are entirely in Bb major, then the music moves to G minor for the cadence.\n\n### Case Study: 'Blue in Green' (Miles Davis/Bill Evans)\n\nThis piece defies easy analysis — it is deliberately ambiguous. The opening Bb13#11 does not settle into a key; Cmaj9 → A7b9 → Dm9 → Dm9/C → Bm7b5 → Bb13#11 → A7alt → Dm9 creates a cycle that never fully 'arrives.'\n\nThis is an example of **ambiguous tonal center** — the chord changes suggest D minor but avoid confirming it with a cadence. The effect is the dreamlike, floating quality that makes the piece famous.\n\n### The 'rhythm changes' Form\n\nBased on Gershwin's 'I Got Rhythm,' rhythm changes is one of two most common jazz forms (alongside the blues). In Bb major:\n\n**A section** (8 bars): Bbmaj7 – Gm7 – Cm7 – F7 – Fm7 – Bb7 – Ebmaj7 – Edim7 – Bbmaj7/F – F7 | Bbmaj7...\n\n**B section (Bridge)** (8 bars): D7 – D7 – G7 – G7 – C7 – C7 – F7 – F7 (cycle of secondary dominants)\n\nThe bridge uses four secondary dominants: D7 (V7/iii), G7 (V7/vi = V/ii? — here V7/ii in the Bb context... actually each secondary dominant points to the next chord: D7→G7→C7→F7→Bb is a descending fifth sequence, each functioning as V7 of the next).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the analysis of a jazz standard, what is the first step?",
+      "choices": [
+        "Identify all the tritone substitutions",
+        "Identify the key(s) from the key signature and final cadences",
+        "Transpose the standard to C major",
+        "Label every chord as I, IV, or V"
+      ],
+      "answer": 1,
+      "explanation": "The foundation of harmonic analysis is key identification. From the key signature, tonic cadences, and structural endpoints (phrase endings, repeat signs), you establish the primary key. Then you can label diatonic chords with Roman numerals, identify modulations (where the key center changes), and spot non-diatonic chords as borrowed, secondary dominants, or substitutions.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In 'rhythm changes' (based on 'I Got Rhythm'), what harmonic principle governs the B section (bridge)?",
+      "choices": [
+        "A cycle of parallel major chords moving by step",
+        "A series of secondary dominants in a descending fifth sequence: D7→G7→C7→F7 each pointing to the next",
+        "Static harmony on the dominant chord for eight bars",
+        "Borrowed chords from Bb Aeolian"
+      ],
+      "answer": 1,
+      "explanation": "The rhythm changes bridge uses a cycle of secondary dominants: D7→G7→C7→F7. Each dominant seventh chord is the V7 of the next chord in the progression. D7 points to G7 (V/iii or V7 of the relative vi), G7 points to C7, C7 points to F7, and F7 points back to the Bb major A section. This cycle of secondary dominants is one of the most recognizable harmonic devices in jazz.",
+      "srs": true
+    }
+  ]
+}

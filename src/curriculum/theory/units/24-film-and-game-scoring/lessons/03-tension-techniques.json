@@ -1,0 +1,38 @@
+{
+  "id": "03-tension-techniques",
+  "title": "Tension & Release Techniques",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Creating Tension in Film and Game Scores\n\nTension is the essential currency of film scoring. Horror, thriller, action, and drama all require specific techniques to elevate heart rate, create dread, and signal danger.\n\n### Harmonic Tension Techniques\n\n**1. Sustained dissonance**: Hold a dissonant chord (tritone, diminished seventh, cluster) without resolution. Bernard Herrmann's *Psycho* shower scene uses a single repeated two-note figure — just a minor second — to create unbearable tension.\n\n**2. Chromatic ascending bass**: A bass line that rises by half steps while the harmony above it remains static. Each semitone ascent adds pressure. Used extensively in Herrmann's Hitchcock scores.\n\n**3. Ostinato patterns**: Relentlessly repeated patterns create a hypnotic, anxious tension — the repetition itself becomes oppressive. The opening of *Psycho* uses a rapid, repeating string figure.\n\n**4. Pedal tone with chromaticism**: A held low note (often a low E or C) while chromatic harmonies move above creates a grinding, unstable feeling.\n\n### Orchestrational Tension Techniques\n\n**1. High string tremolos** (sul ponticello): Rapid bowing near the bridge — creates a glassy, eerie, trembling quality. The cliché 'scary movie strings' sound.\n\n**2. Brass clusters**: Low brass playing dense, dissonant clusters are physically threatening — the sheer acoustic mass is alarming.\n\n**3. Percussion hits**: A sudden fortissimo crash synchronizes with a visual shock (the 'jump scare hit').\n\n**4. Silence before the hit**: The moment of complete silence before the jump scare is often scarier than the music itself.\n\n### Tempo and Rhythm in Tension\n\n**Accelerando**: Gradually increasing tempo creates escalating urgency (John Williams's *Jaws* theme).\n\n**Irregular meter**: Alternating 5/4 and 4/4, or using polymeter, creates rhythmic unpredictability that keeps the listener off-balance.\n\n**Hemiola**: Three beats felt over two creates rhythmic ambiguity — the pulse seems to slip, unsettling the listener.\n\n### Ennio Morricone's Tension Palette (*Once Upon a Time in the West*, 1968)\n\nMorricone's spaghetti western scores are masterclasses in tension:\n- **Long, static harmonic stretches**: The same chord held for minutes while the action builds\n- **Unusual timbres**: Electric guitar, harmonica, whistling — non-orchestral tones creating aural discomfort\n- **Silence used as texture**: Long rests in the score are as important as the notes",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What technique did Bernard Herrmann use in the Psycho shower scene to create extreme tension?",
+      "choices": [
+        "A full orchestral fortissimo with all instruments",
+        "A sustained dissonant chord held for the entire scene",
+        "A rapidly repeated two-note minor second figure in the strings — minimal but intensely dissonant",
+        "Complete silence during the entire scene"
+      ],
+      "answer": 2,
+      "explanation": "Herrmann's 'Psycho' shower scene music is startlingly minimal — just strings playing a frantic, repeated figure using primarily minor second (half-step) clashes and sul ponticello (near-the-bridge) bowing. The extreme dissonance of the minor second repeated at high speed creates panic and violence through musical means. The score was so effective that Hitchcock originally planned the scene without music.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is 'silence before the hit' often scarier than the jump scare music itself?",
+      "choices": [
+        "Because human hearing is less sensitive after silence",
+        "Because silence triggers the expectation mechanism — the brain anticipates something coming, generating anxiety; the subsequent hit is almost a relief",
+        "Because silence represents peace and the sudden sound is more jarring",
+        "Because film directors require silence before jump scares by contract"
+      ],
+      "answer": 1,
+      "explanation": "When the music (or all sound) suddenly drops to silence, the audience's attention mechanism activates: something is about to happen. The brain generates its own tension by anticipating a threat. This anticipatory state is often more frightening than any music could be. The silence creates 'negative space' that the audience's imagination fills with dread — then the jump scare hit arrives as a release of that accumulated tension.",
+      "srs": true
+    }
+  ]
+}

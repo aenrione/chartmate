@@ -1,0 +1,34 @@
+{
+  "id": "02-mozambique",
+  "title": "Mozambique",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Mozambique: Pello el Afrokán's Creation\n\nMozambique is a Cuban street rhythm created by percussionist Pello el Afrokán (Pedro Izquierdo) in 1963. It blends Afro-Cuban rhythms with Cuban son and created one of the most joyful, danceable grooves in Latin music.\n\n**Structure:**\nMozambique is typically played by a percussion ensemble including:\n- **Conga drums**: Primary melodic/rhythmic voice\n- **Bell (cencerro)**: A specific bell pattern that defines the rhythm\n- **Timbales**: The 'shot' accents\n- **Bass/drums**: Driving the pulse\n\n**The bell pattern:** The mozambique bell pattern is closely related to the son clave 3-2, but with additional notes creating a denser, more driving feel.\n\n**On drum kit:** Adapting mozambique to the drum kit means:\n- Cowbell or hi-hat plays the bell pattern\n- Snare plays timbale-style shots on specific downbeats\n- Kick follows the bass conga tumbao\n- The whole groove should feel celebratory and driving, never heavy\n\n**Tito Puente** popularized mozambique in the US; it became a staple of New York salsa in the 1970s.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Mozambique Drum Kit Adaptation",
+      "description": "Bell pattern on hi-hat (clave-derived 3-2 feel), timbale shots on snare on beats 2 and 3, kick follows the bass conga tumbao. The rhythm should feel bright and celebratory at this medium-fast tempo.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 168,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x---x-x-x---x-x-"},
+        {"name": "Snare",  "pattern": "----X-x-----X---"},
+        {"name": "Kick",   "pattern": "x-x-----x-x-----"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Who created the mozambique rhythm?",
+      "choices": ["Tito Puente", "Celia Cruz", "Pello el Afrokán (Pedro Izquierdo)", "Arsenio Rodríguez"],
+      "answer": 2,
+      "explanation": "Mozambique was created by Cuban percussionist Pello el Afrokán (Pedro Izquierdo) in 1963. It blends Afro-Cuban street rhythms with Cuban son and became a hugely popular dance rhythm, later popularized in New York by Tito Puente.",
+      "srs": true
+    }
+  ]
+}

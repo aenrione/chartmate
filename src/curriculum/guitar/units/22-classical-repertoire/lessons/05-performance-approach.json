@@ -1,0 +1,43 @@
+{
+  "id": "05-performance-approach",
+  "title": "Classical Performance Approach",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Preparing a Classical Performance\n\nPerforming classical guitar requires different preparation than informal playing. The classical tradition has specific standards and protocols.\n\n## The Five Stages of Performance Preparation\n\n### Stage 1: Technical Mastery\n- Can play the piece at tempo without mistakes\n- All positions, shifts, and barré chords reliable\n- Right-hand strokes consistently correct\n\n### Stage 2: Musical Understanding\n- Know the historical context (composer, era, style)\n- Understand the harmonic structure\n- Have made all interpretive decisions (tempo, dynamics, phrasing)\n\n### Stage 3: Memory Security\n- Can play from memory in a quiet room\n- Can start from any section (not just the beginning)\n- Memory is \"structural\" — you know the form, not just the sequence\n\n### Stage 4: Performance Practice\n- Play for a small audience (friend, family)\n- Record video performances\n- Practice through mistakes without stopping\n\n### Stage 5: Mindset\n- Arrive early, tune quietly backstage\n- Focus on the music's message, not technical worries\n- Accept that live performance will differ from practice\n\n## The Julian Bream Method\n\nBream: \"I practice until I can play it ten times in a row perfectly. Then I give it two weeks without touching it. Then I perform it.\"",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does it mean for memory to be 'structural' rather than just sequential?",
+      "choices": [
+        "You've memorized every note in order",
+        "You understand the form so well you can start from any section, not just bar 1",
+        "You've written out the score from memory",
+        "You can play it faster than the written tempo"
+      ],
+      "answer": 1,
+      "explanation": "Structural memory means you know WHERE you are in the piece architecturally — you can identify the form, sections, and landmarks and start from any of them. Sequential memory (knowing only what comes next) is fragile; structural memory is robust under performance stress.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Classical Guitarists Who Define the Standard\n\nUnderstanding the master performers gives you a reference for what to aim toward:\n\n## Andrés Segovia (1893–1987)\nThe grandfather of modern classical guitar. Transcribed orchestral and keyboard works, created the concert guitar tradition. Recordings from the 1950s are still definitive.\n\n## Julian Bream (1933–2020)\nBritish guitarist and lutenist. Extended the repertoire enormously, commissioned works from Britten, Henze, Walton. Deeply musical, romantic in interpretation.\n\n## John Williams (b. 1941)\nStudent of Segovia. The pinnacle of technical perfection. His recordings of Villa-Lobos and Barrios are authoritative.\n\n## David Russell (b. 1953)\nScottish guitarist, Grammy winner. Known for his expressive, warm tone and impeccable technical control. Specializes in Spanish and Latin American music.\n\n## What to Listen For\n\nWhen studying these players, listen specifically to:\n- Tone quality (how they produce sound)\n- Dynamics (range from pp to ff)\n- Phrasing (where phrases breathe)\n- Tempo (how they handle rubato and steadiness)\n- Stage presence (how music flows despite technical demands)",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which guitarist is considered the founder of the modern classical guitar concert tradition?",
+      "choices": [
+        "Fernando Sor",
+        "Andrés Segovia",
+        "John Williams",
+        "Francisco Tárrega"
+      ],
+      "answer": 1,
+      "explanation": "Andrés Segovia (1893–1987) established the classical guitar as a legitimate concert instrument. He performed in the world's major concert halls, transcribed major works from other instruments, and created the performance tradition that all subsequent classical guitarists follow.",
+      "srs": true
+    }
+  ]
+}

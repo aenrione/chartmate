@@ -1,0 +1,25 @@
+{
+  "id": "04-next-steps",
+  "title": "Where to Go Next",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# You've Built the Foundation\n\nCompleting this curriculum means you can:\n\n✓ Play all open chords and barre chords\n✓ Read guitar tab and chord charts\n✓ Solo with the pentatonic scale\n✓ Use expressive techniques (bends, vibrato, hammer-ons)\n✓ Understand music theory (keys, scales, diatonic chords)\n\n**What's next?**\n- Learn your favorite songs by ear\n- Study a genre deeply (jazz, fingerstyle, metal)\n- Explore modes (Dorian, Mixolydian, Phrygian)\n- Learn to read standard notation",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Path Forward\n\n**Intermediate milestones:**\n- **CAGED system** — understand the 5 chord shapes and how they connect the fretboard\n- **Modes** — Dorian for minor jazz/blues, Mixolydian for rock, Lydian for that dreamy sound\n- **Fingerpicking styles** — Travis picking, fingerstyle arrangements\n- **Ear training** — transcribing songs by ear is the most powerful skill\n\n**The goal:** Be able to hear a song and play it. Everything in this curriculum builds toward that.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the CAGED system?",
+      "choices": ["A type of guitar strap", "Five chord shapes that map all chord voicings across the full fretboard", "A rhythm strumming method", "A pedal effects chain"],
+      "answer": 1,
+      "explanation": "CAGED is named after the 5 open chord shapes (C, A, G, E, D) that tile the entire fretboard. Learning it reveals how every chord, scale, and arpeggio position connects.",
+      "srs": true
+    }
+  ]
+}

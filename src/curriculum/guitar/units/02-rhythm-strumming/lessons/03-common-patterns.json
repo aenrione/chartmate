@@ -1,0 +1,25 @@
+{
+  "id": "03-common-patterns",
+  "title": "Essential Strum Patterns",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Most Common Pattern\n\nThis pattern works for thousands of songs:\n\n**↓ ↓ ↑ ↑ ↓ ↑**\n\nCounts: **1 – 2 + 3 + 4 +** (skip the upstrum on beat 1, skip downstrum on beat 3)\n\nPractice slowly with a metronome. Keep the arm moving even when you skip.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Rock Pattern\n\n**↓ ↓ ↑ ↓ ↑**\n\nCounts: **1 – 2 + – 4 +**\n\nThis punchy pattern drives rock and pop songs. The missing beat 3 gives it forward momentum — that anticipation is called **syncopation**.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is it called when a note lands between the beats, creating a 'pushed' feel?",
+      "choices": ["Vibrato", "Syncopation", "Arpeggiation", "Hammer-on"],
+      "answer": 1,
+      "explanation": "Syncopation places emphasis on off-beats or between-beats, giving music a driving, anticipated feel.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "id": "01-first-species",
+  "title": "First Species Counterpoint",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## First Species Counterpoint: Note Against Note\n\nSpecies counterpoint is a systematic method for learning to write multiple independent melodic lines. It was codified by Johann Joseph Fux in his 1725 treatise *Gradus ad Parnassum* (Steps to Parnassus), and remains the foundation of counterpoint pedagogy.\n\n**First species** is the most basic: one note in the counterpoint against every note in the given melody (cantus firmus). The ratio is 1:1 — note against note.\n\n### The Cantus Firmus\n\nThe *cantus firmus* (CF) is the given melody — a slow-moving, step-oriented line in whole notes. The student writes a counterpoint (CP) against it.\n\n### Allowed Intervals in First Species\n\nOnly **consonances** are permitted in first species:\n- **Perfect consonances**: Unison (1), Perfect fifth (5), Perfect octave (8)\n- **Imperfect consonances**: Major/minor third (3), Major/minor sixth (6)\n\nThe perfect fourth (4) is considered dissonant against the bass in classical counterpoint.\n\n### Rules for First Species\n\n1. **No parallel perfect fifths or octaves** (same rule as four-part harmony)\n2. **No direct (hidden) fifths/octaves** in outer voices\n3. **Avoid unisons except at the beginning and end**\n4. **Prefer imperfect consonances** (thirds and sixths) in the middle of the piece; they are more interesting than parallel fifths\n5. **Start and end on a perfect consonance** (unison or octave for an outer voice exercise)\n6. **Use contrary motion whenever possible** — especially when approaching the final unison/octave cadence\n7. **Avoid more than three consecutive parallel thirds or sixths** — they become monotonous\n\n### The Approach to the Final Note\n\nThe final note must be reached by contrary motion approaching a unison or octave. The conventional cadence in first species:\n- Soprano: 7th scale degree → octave (leading tone resolution)\n- Bass: 2nd scale degree → unison/octave (stepwise descent)\n\nThis contrary-motion approach confirms the tonal center conclusively.\n\n### Practical Example\n\nCantus firmus (in C major, bass): C–D–F–E–D–C\nCounterpoint (above): E–F–D–G–F–E ... G–E → ending on C/C (octave)\n\nAt each point: interval between CP and CF should be a third, sixth, fifth, or eighth, with smooth melodic motion in the CP.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does '1:1 ratio' mean in first species counterpoint?",
+      "choices": [
+        "One sharp for every flat in the key signature",
+        "One note in the counterpoint written against every note in the cantus firmus",
+        "One voice doubles the cantus firmus at the unison",
+        "One step of motion for every leap in the cantus firmus"
+      ],
+      "answer": 1,
+      "explanation": "In first species counterpoint, the ratio is 1:1 — for every note in the cantus firmus (the given melody), there is exactly one note in the counterpoint. This note-against-note writing is the simplest form and establishes the fundamental consonance-dissonance framework before adding rhythmic complexity in later species.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which intervals are considered consonant and therefore allowed in first species counterpoint?",
+      "choices": [
+        "Seconds, fourths, and sevenths (the dissonant intervals)",
+        "Unisons, thirds, fifths, sixths, and octaves (all perfect and imperfect consonances)",
+        "Only perfect intervals: unisons, fifths, and octaves",
+        "Any interval up to an octave"
+      ],
+      "answer": 1,
+      "explanation": "First species uses only consonances: unisons (1), thirds (3), fifths (5), sixths (6), and octaves (8). These are the intervals that 'rest' well without requiring resolution. Perfect fourths are considered dissonant against the bass in this style. Seconds (2), sevenths (7), and the tritone are all dissonant and forbidden in first species.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why should the final note in a first species exercise be approached by contrary motion?",
+      "choices": [
+        "To avoid crossing voices at the end",
+        "To create the strongest possible cadence — contrary motion confirms the tonal center and avoids hidden parallels",
+        "Because all leaps must be followed by contrary motion",
+        "To ensure the final interval is a third or sixth"
+      ],
+      "answer": 1,
+      "explanation": "Approaching the final note by contrary motion creates the strongest possible close. When soprano moves up (7→8: leading tone to octave) and bass moves down (2→1), the voices converge from opposite directions onto the final unison or octave. This contrary approach confirms the tonal center and avoids the weakness of both voices moving in the same direction at the structural endpoint.",
+      "srs": true
+    }
+  ]
+}

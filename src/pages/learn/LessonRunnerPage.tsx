@@ -1,11 +1,12 @@
 // src/pages/learn/LessonRunnerPage.tsx
 import {useCallback, useEffect, useState} from 'react';
-import {useParams, useNavigate} from 'react-router-dom';
-import {X, Heart, HeartCrack} from 'lucide-react';
+import {useParams, useNavigate, useLocation} from 'react-router-dom';
+import {X, ArrowLeft, Heart, HeartCrack} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import type {Instrument, Lesson, Activity} from '@/lib/curriculum/types';
 import {loadLesson} from '@/lib/curriculum/loader';
-import {markLessonCompleted, recordXp, syncStreakAfterXp} from '@/lib/local-db/learn';
+import {markLessonCompleted, getLearnStats} from '@/lib/local-db/learn';
+import {recordEvent} from '@/lib/progression';
 import ActivityRenderer from './activities/ActivityRenderer';
 import LessonComplete from './LessonComplete';
 
@@ -14,6 +15,12 @@ const MAX_HEARTS = 3;
 interface CompletionData {
   xpEarned: number;
   heartBonus: boolean;
+  stars: 1 | 2 | 3;
+  starsRaised?: {from: number; to: number};
+  leveledUp: boolean;
+  newLevel?: number;
+  achievements: string[];
+  missionsCompleted: string[];
   streak: number;
   todayXp: number;
   dailyGoalTarget: number;
@@ -33,20 +40,34 @@ function useLessonCompletion(instrument: string, unitId: string, lessonId: strin
       if (saving) return;
       setSaving(true);
       try {
-        const noHeartsLost = heartsLost === 0;
+        // Hearts already encode failures: 0 hearts lost == perfect first-try run.
+        // For lessons that have no scored activities, this still yields accuracy=1.
+        const accuracy = heartsLost === 0 ? 1 : 0.5;
         await markLessonCompleted(instrument, unitId, lessonId);
-        await recordXp(lessonXp, 'lesson', instrument, lessonId);
-        if (noHeartsLost) {
-          await recordXp(3, 'heart_bonus', instrument, lessonId);
-        }
-        const syncResult = await syncStreakAfterXp();
+        const result = await recordEvent({
+          kind: 'lesson_completed',
+          instrument: instrument as 'guitar' | 'drums' | 'theory',
+          unitId,
+          lessonId,
+          heartsLost,
+          accuracy,
+          lessonXp,
+        });
+        const stats = await getLearnStats();
+        const stars = (heartsLost === 0 && accuracy >= 0.85 ? 3 : heartsLost === 0 ? 2 : 1) as 1 | 2 | 3;
         setCompletionData({
-          xpEarned: lessonXp + (noHeartsLost ? 3 : 0),
-          heartBonus: noHeartsLost,
-          streak: syncResult.newStreak,
-          todayXp: syncResult.todayXp,
-          dailyGoalTarget: syncResult.dailyGoalTarget,
-          dailyGoalCompleted: syncResult.dailyGoalMet,
+          xpEarned: result.xpEarned,
+          heartBonus: heartsLost === 0,
+          stars,
+          starsRaised: result.starsRaised,
+          leveledUp: result.leveledUp,
+          newLevel: result.newLevel,
+          achievements: result.achievements,
+          missionsCompleted: result.missionsCompleted,
+          streak: result.streak,
+          todayXp: stats.todayXp,
+          dailyGoalTarget: stats.dailyGoalTarget,
+          dailyGoalCompleted: result.dailyGoalMet,
         });
       } finally {
         setSaving(false);
@@ -70,6 +91,8 @@ export default function LessonRunnerPage() {
     lessonId: string;
   }>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const fromPath = (location.state as {from?: string} | null)?.from ?? null;
 
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [activityIndex, setActivityIndex] = useState(0);
@@ -181,27 +204,51 @@ export default function LessonRunnerPage() {
         lesson={lesson}
         xpEarned={completionData.xpEarned}
         heartBonus={completionData.heartBonus}
+        stars={completionData.stars}
+        starsRaised={completionData.starsRaised}
+        leveledUp={completionData.leveledUp}
+        newLevel={completionData.newLevel}
+        achievements={completionData.achievements}
+        missionsCompleted={completionData.missionsCompleted}
         streak={completionData.streak}
         todayXp={completionData.todayXp}
         dailyGoalTarget={completionData.dailyGoalTarget}
         dailyGoalCompleted={completionData.dailyGoalCompleted}
         onNext={() => navigate('/learn')}
-        onBack={() => navigate('/learn')}
+        onBack={() => navigate(fromPath ?? '/learn')}
       />
     );
   }
 
   return (
     <div className="flex-1 min-h-0 flex flex-col bg-surface overflow-hidden">
-      <div className="shrink-0 flex items-center gap-4 px-4 py-3 border-b border-outline-variant/20">
-        <button
-          onClick={() => navigate('/learn')}
-          className="p-2 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant"
-        >
-          <X className="h-5 w-5" />
-        </button>
+      <div className="shrink-0 border-b border-outline-variant/20">
+        <div className="flex items-center gap-3 px-4 pt-3 pb-2">
+          <button
+            onClick={() => navigate(fromPath ?? '/learn')}
+            className="p-2 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant shrink-0"
+          >
+            {fromPath ? <ArrowLeft className="h-5 w-5" /> : <X className="h-5 w-5" />}
+          </button>
 
-        <div className="flex-1 flex gap-1">
+          <p className="flex-1 text-sm font-medium text-on-surface text-center truncate">
+            {lesson.title}
+          </p>
+
+          <div className="flex gap-1 shrink-0">
+            {Array.from({length: MAX_HEARTS}).map((_, i) => (
+              <Heart
+                key={i}
+                className={cn(
+                  'h-5 w-5 transition-colors',
+                  i < hearts ? 'text-red-500 fill-red-500' : 'text-outline-variant',
+                )}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="flex gap-1 px-4 pb-3">
           {lesson.activities.map((_, i) => (
             <div
               key={i}
@@ -216,23 +263,12 @@ export default function LessonRunnerPage() {
             />
           ))}
         </div>
-
-        <div className="flex gap-1 shrink-0">
-          {Array.from({length: MAX_HEARTS}).map((_, i) => (
-            <Heart
-              key={i}
-              className={cn(
-                'h-5 w-5 transition-colors',
-                i < hearts ? 'text-red-500 fill-red-500' : 'text-outline-variant',
-              )}
-            />
-          ))}
-        </div>
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto">
         {activity && (
           <ActivityRenderer
+            key={activityIndex}
             activity={activity}
             onPass={() => setCanContinue(true)}
             onFail={handleFail}

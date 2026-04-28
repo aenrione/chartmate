@@ -1,14 +1,206 @@
 {
   "instrument": "drums",
-  "version": "1.0",
+  "version": "2.0",
   "units": [
     {
       "id": "01-basic-beats",
-      "title": "Basic Beats",
-      "description": "The fundamental patterns every drummer must know",
+      "title": "Getting Started",
+      "description": "Set up your kit, hold your sticks, and play your first beat",
       "icon": "drum",
       "prerequisites": [],
-      "lessons": ["01-four-four"]
+      "lessons": ["01-four-four", "02-snare-and-hihat", "03-eighth-note-beats", "04-your-first-fill", "05-combining-beats-fills"]
+    },
+    {
+      "id": "02-drum-theory",
+      "title": "Reading Drum Notation",
+      "description": "Understand note values, time signatures, and drum charts",
+      "icon": "file-music",
+      "prerequisites": ["01-basic-beats"],
+      "lessons": ["01-notation-key", "02-note-values", "03-time-signatures", "04-reading-charts", "05-tempo-and-metronome"]
+    },
+    {
+      "id": "03-rudiments",
+      "title": "Drum Rudiments",
+      "description": "Master the alphabet of drumming — strokes, rolls, and paradiddles",
+      "icon": "layers",
+      "prerequisites": ["02-drum-theory"],
+      "lessons": ["01-single-stroke-roll", "02-double-stroke-roll", "03-paradiddle", "04-flam", "05-rudiment-applications"]
+    },
+    {
+      "id": "04-rock-styles",
+      "title": "Rock, Metal & Punk",
+      "description": "Play the beats that define rock music across its heaviest sub-genres",
+      "icon": "zap",
+      "prerequisites": ["03-rudiments"],
+      "lessons": ["01-rock-beats", "02-rock-fills", "03-metal-basics", "04-punk-beats", "05-style-challenge"]
+    },
+    {
+      "id": "05-independence",
+      "title": "4-Limb Independence",
+      "description": "Train each limb to work independently for more creative drumming",
+      "icon": "activity",
+      "prerequisites": ["04-rock-styles"],
+      "lessons": ["01-intro-to-independence", "02-bass-drum-patterns", "03-hihat-variations", "04-dynamic-independence"]
+    },
+    {
+      "id": "06-groove-styles",
+      "title": "Groove Styles",
+      "description": "Funk, jazz, reggae, and Latin — expand your rhythmic vocabulary",
+      "icon": "music",
+      "prerequisites": ["05-independence"],
+      "lessons": ["01-funk-beats", "02-jazz-swing", "03-reggae-beats", "04-latin-grooves", "05-half-time-shuffle"]
+    },
+    {
+      "id": "07-advanced-technique",
+      "title": "Advanced Technique",
+      "description": "Moeller method, ghost notes, and expressive dynamics",
+      "icon": "sparkles",
+      "prerequisites": ["06-groove-styles"],
+      "lessons": ["01-moeller-method", "02-ghost-notes", "03-dynamics-and-articulation", "04-double-bass-intro"]
+    },
+    {
+      "id": "08-odd-time",
+      "title": "Odd Time Signatures",
+      "description": "Explore 3/4, 6/8, 5/4, and 7/8 — the rhythms beyond 4/4",
+      "icon": "clock",
+      "prerequisites": ["07-advanced-technique"],
+      "lessons": ["01-three-four", "02-six-eight", "03-five-four", "04-seven-eight", "05-switching-time-signatures"]
+    },
+    {
+      "id": "09-fills-and-solos",
+      "title": "Fills & Soloing",
+      "description": "Build a fill vocabulary and learn to solo musically",
+      "icon": "star",
+      "prerequisites": ["07-advanced-technique"],
+      "lessons": ["01-fill-vocabulary", "02-over-the-barline", "03-groupings", "04-soloing-basics"]
+    },
+    {
+      "id": "10-complete-drummer",
+      "title": "The Complete Drummer",
+      "description": "Build a practice routine and go anywhere on the drums",
+      "icon": "trophy",
+      "prerequisites": ["08-odd-time", "09-fills-and-solos"],
+      "lessons": ["01-practice-routines", "02-playing-musically", "03-polyrhythms-intro", "04-next-steps"]
+    },
+    {
+      "id": "11-jazz-drumming",
+      "title": "Jazz Drumming",
+      "description": "Jazz ride patterns, swing feel, brushes, trading fours, and jazz comping",
+      "icon": "music",
+      "prerequisites": ["06-groove-styles"],
+      "lessons": ["01-jazz-ride", "02-swing-feel", "03-brushes", "04-trading-fours", "05-jazz-comping"]
+    },
+    {
+      "id": "12-latin-percussion",
+      "title": "Latin Percussion",
+      "description": "Son clave, bossa nova, samba, and Afro-Cuban 6/8 — the rhythmic foundations of Latin music",
+      "icon": "music",
+      "prerequisites": ["06-groove-styles"],
+      "lessons": ["01-clave", "02-bossa-nova", "03-samba", "04-afro-cuban", "05-mambo"]
+    },
+    {
+      "id": "13-metal-drumming",
+      "title": "Metal Drumming",
+      "description": "Double bass, blast beats, metal grooves, and thrash rhythms",
+      "icon": "zap",
+      "prerequisites": ["04-rock-styles", "03-rudiments"],
+      "lessons": ["01-double-bass-basics", "02-metal-grooves", "03-blast-beats", "04-thrash-rhythms", "05-metal-fills"]
+    },
+    {
+      "id": "14-hand-technique",
+      "title": "Hand Technique",
+      "description": "Moeller technique, finger control, rebound, stick heights, and wrist vs. fingers",
+      "icon": "activity",
+      "prerequisites": ["03-rudiments"],
+      "lessons": ["01-moeller-technique", "02-finger-control", "03-rebound-strokes", "04-stick-heights", "05-speed-exercises"]
+    },
+    {
+      "id": "15-brushwork",
+      "title": "Brushwork",
+      "description": "Brush sweeps, press rolls, jazz brushwork patterns, and ballad feel",
+      "icon": "music",
+      "prerequisites": ["11-jazz-drumming"],
+      "lessons": ["01-brush-basics", "02-sweep-patterns", "03-brush-comping", "04-ballad-brushwork", "05-brush-fills"]
+    },
+    {
+      "id": "16-funk-mastery",
+      "title": "Funk Mastery",
+      "description": "Ghost notes, 16th note funk, New Orleans second line, and syncopated kick patterns",
+      "icon": "activity",
+      "prerequisites": ["06-groove-styles", "14-hand-technique"],
+      "lessons": ["01-ghost-notes", "02-16th-note-funk", "03-new-orleans-groove", "04-syncopated-kick", "05-pocket-playing"]
+    },
+    {
+      "id": "17-polyrhythms",
+      "title": "Polyrhythms",
+      "description": "3 against 2, 4 against 3, metric modulation, and superimposed meters",
+      "icon": "clock",
+      "prerequisites": ["08-odd-time"],
+      "lessons": ["01-three-against-two", "02-four-against-three", "03-five-against-four", "04-metric-modulation", "05-superimposed-meters"]
+    },
+    {
+      "id": "18-afrocuban-deep",
+      "title": "Afro-Cuban Deep Dive",
+      "description": "Batá rhythms, mozambique, cascara, and guaguancó",
+      "icon": "music",
+      "prerequisites": ["12-latin-percussion"],
+      "lessons": ["01-bata-patterns", "02-mozambique", "03-cascara", "04-guaguanco", "05-afrocuban-orchestration"]
+    },
+    {
+      "id": "19-double-bass-mastery",
+      "title": "Double Bass Mastery",
+      "description": "Speed building, coordination, bass drum independence, and heel-toe technique",
+      "icon": "zap",
+      "prerequisites": ["13-metal-drumming"],
+      "lessons": ["01-heel-toe", "02-speed-building", "03-double-bass-coordination", "04-blast-variations", "05-double-bass-grooves"]
+    },
+    {
+      "id": "20-studio-drumming",
+      "title": "Studio Drumming",
+      "description": "Click track playing, reading charts, dynamic control, and session mindset",
+      "icon": "layers",
+      "prerequisites": ["16-funk-mastery", "07-advanced-technique"],
+      "lessons": ["01-click-track-mastery", "02-reading-drum-charts", "03-dynamic-control", "04-consistency-training", "05-session-mindset"]
+    },
+    {
+      "id": "21-jazz-advanced",
+      "title": "Advanced Jazz",
+      "description": "Free jazz concepts, odd-time jazz, playing inside/outside, and avant-garde drumming",
+      "icon": "sparkles",
+      "prerequisites": ["15-brushwork", "17-polyrhythms"],
+      "lessons": ["01-free-jazz-concepts", "02-odd-time-jazz", "03-inside-outside", "04-rhythm-conversations", "05-avant-garde-approaches"]
+    },
+    {
+      "id": "22-world-rhythms",
+      "title": "World Rhythms",
+      "description": "Indian rhythms (tal), Balkan meter, Middle Eastern grooves, and West African patterns",
+      "icon": "clock",
+      "prerequisites": ["12-latin-percussion", "08-odd-time"],
+      "lessons": ["01-indian-tal", "02-balkan-meter", "03-middle-eastern", "04-west-african", "05-world-fusion"]
+    },
+    {
+      "id": "23-electronic-hybrid",
+      "title": "Electronic & Hybrid Drumming",
+      "description": "Combining acoustic with electronics, triggering samples, hybrid setups, and looping",
+      "icon": "layers",
+      "prerequisites": ["20-studio-drumming"],
+      "lessons": ["01-trigger-basics", "02-hybrid-grooves", "03-sample-layering", "04-loop-pedal-drumming", "05-electronic-integration"]
+    },
+    {
+      "id": "24-composition-and-arrangement",
+      "title": "Composition & Arrangement",
+      "description": "Writing drum parts, reading scores, arrangement for different genres, and producing drum tracks",
+      "icon": "file-music",
+      "prerequisites": ["20-studio-drumming", "17-polyrhythms"],
+      "lessons": ["01-writing-drum-parts", "02-genre-specific-arrangement", "03-producing-drums", "04-drum-tracks", "05-chart-writing"]
+    },
+    {
+      "id": "25-master-drummer",
+      "title": "Master Drummer",
+      "description": "Synthesis of all paths — finding your voice, performance preparation, and artistic expression",
+      "icon": "trophy",
+      "prerequisites": ["21-jazz-advanced", "19-double-bass-mastery", "22-world-rhythms", "24-composition-and-arrangement"],
+      "lessons": ["01-finding-your-voice", "02-performance-preparation", "03-artistic-expression", "04-transcription-practice", "05-legacy-drummers"]
     }
   ]
 }

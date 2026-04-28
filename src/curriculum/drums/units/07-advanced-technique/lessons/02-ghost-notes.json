@@ -1,0 +1,20 @@
+{
+  "id": "02-ghost-notes",
+  "title": "Ghost Notes in Depth",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Ghost Notes: The Secret Ingredient\n\nGhost notes are very soft snare hits (played at about 10–20% volume) that fill space between the main backbeat strokes.\n\n**How to ghost:**\n- Keep stick 1–2 inches from the snare head\n- Barely tap — don't press, just drop\n- Placement: any 16th note between the backbeat hits\n\n**Why it matters:** Ghost notes transform a mechanical beat into a human groove. They're the difference between a drum machine and a drummer.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "At roughly what volume should ghost notes be played?",
+      "choices": ["Same volume as the backbeat", "10–20% of the backbeat volume", "50% volume", "As loud as possible"],
+      "answer": 1,
+      "explanation": "Ghost notes should be barely audible — about 10–20% of the main backbeat volume. They add texture without disrupting the main groove.",
+      "srs": true
+    }
+  ]
+}

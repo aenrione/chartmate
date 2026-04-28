@@ -1,0 +1,64 @@
+{
+  "id": "04-compound-meter",
+  "title": "Compound Meter",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Simple Meter vs. Compound Meter\n\nThe most fundamental distinction in meter is how the beat **subdivides**:\n\n- In **simple meter**, each beat divides naturally into **two equal parts** (duple subdivision)\n- In **compound meter**, each beat divides naturally into **three equal parts** (triple subdivision)\n\nThis difference in subdivision is what gives compound meters their distinctive **lilting, rolling quality** — the same quality you hear in Irish jigs, gospel marches, and classic rock ballads.\n\n### Simple Meters You Already Know\n\n| Time Sig | Beats/measure | Beat unit | Subdivision |\n|----------|---------------|-----------|-------------|\n| 4/4 | 4 | Quarter note | 2 eighth notes |\n| 3/4 | 3 | Quarter note | 2 eighth notes |\n| 2/4 | 2 | Quarter note | 2 eighth notes |\n\nIn 4/4, if you divide beat 1 into two equal parts, you get two eighth notes. This is the default subdivision.\n\n### Compound Meters\n\n| Time Sig | Beats/measure | Beat unit | Subdivision |\n|----------|---------------|-----------|-------------|\n| 6/8 | 2 | Dotted quarter | 3 eighth notes |\n| 9/8 | 3 | Dotted quarter | 3 eighth notes |\n| 12/8 | 4 | Dotted quarter | 3 eighth notes |\n\nIn 6/8, the beat unit is the **dotted quarter note** (worth 3 eighth notes). The bottom number (8) tells you the notation uses eighth notes, but the beat is the dotted quarter.\n\n### Counting 6/8\n\nAt a slow tempo, count all six eighth notes:\n> **1 — 2 — 3 — 4 — 5 — 6**\n\nAt a faster tempo, feel two big beats with triple subdivision:\n> **1 and a — 2 and a**\n\nThe first eighth of each group of three is the beat; the second and third are the subdivision syllables.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Compound Meter in Music\n\n### 9/8 and 12/8\n\n**9/8** has three dotted-quarter beats per measure, each divided into three eighth notes. Count:\n> **1 and a — 2 and a — 3 and a**\n\n**12/8** has four dotted-quarter beats per measure, each divided into three eighth notes. Count:\n> **1 and a — 2 and a — 3 and a — 4 and a**\n\n12/8 is extremely common in **blues and soul music** — the triplet-eighth feel is the foundation of the slow blues. \"Since I've Been Loving You\" by Led Zeppelin, much of B.B. King's catalog, and most slow gospel ballads are in 12/8.\n\n### 6/8 vs. 3/4: The Critical Distinction\n\nThis is one of the most commonly confused points in music theory. Both 6/8 and 3/4 contain six eighth notes' worth of time. The difference is in **how those six eighth notes are grouped and accented**:\n\n| | 6/8 | 3/4 |\n|-|-----|-----|\n| Beat grouping | 2 groups of 3 | 3 groups of 2 |\n| Accent | Beats 1 and 4 | Beats 1, 3, and 5 |\n| Feel | Lilting duple | Waltz |\n| Example | \"Greensleeves,\" Irish jig | Waltz, hymn |\n\nTo distinguish them by ear: **clap the beats**. In 6/8, you clap twice per measure (on the dotted-quarter beats). In 3/4, you clap three times.\n\n### Real-World Examples of Compound Meter\n\n- **\"House of the Rising Sun\"** (Animals) — 6/8, two big swinging beats per bar\n- **\"Greensleeves\"** — 3/4 or 6/8 depending on arrangement (most versions are 3/4 or compound-triple)\n- **Irish jigs** — 6/8, the defining meter of the genre\n- **Slow blues** — 12/8, four triplet-eighth beats per bar\n- **\"Norwegian Wood\"** (Beatles) — 3/4, a rare waltz-feel in rock",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In compound meter, how does each beat subdivide?",
+      "choices": [
+        "Into two equal parts",
+        "Into four equal parts",
+        "Into three equal parts",
+        "Into six equal parts"
+      ],
+      "answer": 2,
+      "explanation": "Compound meter is defined by beats that subdivide into three equal parts (triple subdivision). This contrasts with simple meter, where beats subdivide into two equal parts. The triple subdivision gives compound meters their rolling, lilting quality.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In 6/8 time, what is the actual beat unit felt at a normal performing tempo?",
+      "choices": [
+        "The eighth note",
+        "The quarter note",
+        "The dotted quarter note",
+        "The half note"
+      ],
+      "answer": 2,
+      "explanation": "Although the bottom number 8 means eighth notes are the notated unit, the beat in 6/8 at a normal tempo is the dotted quarter note — worth three eighth notes. The meter is felt as two dotted-quarter beats per measure.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many beats per measure does 9/8 have at a performing tempo?",
+      "choices": ["2 beats", "3 beats", "9 beats", "4 beats"],
+      "answer": 1,
+      "explanation": "9/8 has three dotted-quarter beats per measure (each subdivided into three eighth notes). At a slow practice tempo you might count all 9 eighth notes, but at performance tempo it groups as three big beats.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which of these songs is a well-known example of 6/8 (compound duple) meter?",
+      "choices": [
+        "\"Norwegian Wood\" by the Beatles",
+        "\"House of the Rising Sun\" by the Animals",
+        "\"Money\" by Pink Floyd",
+        "\"Bohemian Rhapsody\" by Queen"
+      ],
+      "answer": 1,
+      "explanation": "'House of the Rising Sun' is in 6/8, with two large swinging beats per bar each divided into three eighth notes. 'Norwegian Wood' is in 3/4. 'Money' is in 7/4.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "03-eighth-note-beats",
+  "title": "8th Note Beats",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# 8th Note Hi-Hat Patterns\n\nThe most common rock beat uses 8th notes on the hi-hat.\n\nCount: **1 + 2 + 3 + 4 +**\n\nHi-hat plays on every count (8 times per bar). Snare on 2 and 4. Kick on 1 and 3.\n\nThis is the foundation of thousands of songs. Master this pattern at multiple tempos before adding variations.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Basic 8th Note Rock Beat",
+      "description": "The essential rock groove. Hi-hat on every 8th note, snare locks the backbeat on 2 and 4, kick drives beats 1 and 3. Start slow and build speed gradually.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 85,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "xxxxxxxx"},
+        {"name": "Snare",  "pattern": "--x---x-"},
+        {"name": "Kick",   "pattern": "x---x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a basic 8th note rock beat, how many hi-hat strokes are in one measure of 4/4?",
+      "choices": ["4", "6", "8", "16"],
+      "answer": 2,
+      "explanation": "8th notes in 4/4: 4 beats × 2 eighth notes each = 8 hi-hat strokes per measure (counted as 1 + 2 + 3 + 4 +).",
+      "srs": true
+    }
+  ]
+}

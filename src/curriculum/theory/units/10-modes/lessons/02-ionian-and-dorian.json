@@ -1,0 +1,54 @@
+{
+  "id": "02-ionian-and-dorian",
+  "title": "Ionian & Dorian",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Ionian & Dorian\n\n### Ionian (Mode 1) — The Major Scale\n\n**Ionian** is simply the major scale with a modal name. Starting on the 1st degree of any major scale gives you Ionian.\n\n**C Ionian** (= C major): C D E F G A B C\nInterval pattern: **W–W–H–W–W–W–H**\n\n- 2 half steps in the scale: between 3–4 (E–F) and 7–8 (B–C)\n- Sound: bright, happy, complete, resolved\n- The 'default' scale in Western music\n\nKnowing Ionian is knowing the major scale — no new content here. But understanding it as 'Mode 1' connects it to the modal system.\n\n### Dorian (Mode 2) — The Jazz Minor\n\n**Dorian** is built on the 2nd degree of the major scale. **D Dorian** uses C major notes centered on D.\n\n**D Dorian**: D E F G A B C D\nInterval pattern: **W–H–W–W–W–H–W**\n\nCompare D Dorian to D natural minor (D Aeolian): D E F G A Bb C D\n\n**The one difference: the 6th degree.**\n- D Aeolian (natural minor): 6th = **Bb** (minor 6th)\n- D Dorian: 6th = **B natural** (major 6th)\n\nThat single raised 6th gives Dorian a slightly **brighter, jazzier** quality compared to pure natural minor. It's minor-feeling, but not as dark or heavy as Aeolian.\n\n### The Characteristic Dorian Sound\n\nThe raised 6th in Dorian produces a characteristic harmonic signature: the **IV chord is major** (not minor as in natural minor). In D Dorian:\n- i chord: Dm (D–F–A)\n- IV chord: **G major** (G–B–D) — major because of the B natural\n\nIn D natural minor, the iv chord would be G minor. The major IV chord in a minor-feeling context is instantly recognizable as Dorian.\n\n### Classic Dorian Examples\n\n- **'So What'** (Miles Davis) — the opening mode of jazz modal harmony\n- **'Scarborough Fair'** (traditional English folk song, popularized by Simon & Garfunkel)\n- **'Evil Ways'** (Santana) — the main riff lives on the Dorian i–IV motion\n- **'Oye Como Va'** (Santana) — Am7 to D9, a pure Dorian i–IV groove\n- **'Smoke on the Water'** intro riff (Deep Purple) is Dorian-inflected\n\n### Practical Application\n\nWhen you encounter a minor chord that functions as a tonic (not resolving to another chord), consider whether Dorian or Aeolian better suits the context. If the IV chord above it is major, you're almost certainly in Dorian.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What single note difference distinguishes D Dorian from D natural minor (Aeolian)?",
+      "choices": [
+        "Dorian has a raised 3rd (F# instead of F)",
+        "Dorian has a raised 6th (B natural instead of Bb)",
+        "Dorian has a raised 7th (C# instead of C)",
+        "Dorian has a lowered 2nd (Eb instead of E)"
+      ],
+      "answer": 1,
+      "explanation": "D Dorian and D natural minor are identical except for the 6th degree: Dorian has B natural (major 6th) while natural minor has Bb (minor 6th). This single raised 6th gives Dorian its characteristic brighter, jazzier quality.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the interval pattern of the Ionian (major) scale?",
+      "choices": ["W–H–W–W–W–H–W", "W–W–H–W–W–W–H", "H–W–W–W–H–W–W", "W–W–W–H–W–W–H"],
+      "answer": 1,
+      "explanation": "Ionian (major scale) follows the pattern W–W–H–W–W–W–H (whole-whole-half-whole-whole-whole-half). This produces the familiar do-re-mi sound with half steps between scale degrees 3–4 and 7–8.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In D Dorian, what quality is the IV chord, and why is that significant?",
+      "choices": [
+        "The IV chord is minor — same as in natural minor",
+        "The IV chord is major — because the raised 6th (B natural) makes G major possible",
+        "The IV chord is diminished — creating tension",
+        "There is no IV chord in Dorian"
+      ],
+      "answer": 1,
+      "explanation": "In D Dorian, the IV chord is G major (G–B–D). The B natural (the raised 6th of Dorian) is the third of the G major chord. In D natural minor, B would be Bb, making the iv chord G minor. The major IV in a minor context is the defining harmonic fingerprint of Dorian.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which famous Miles Davis composition is built on D Dorian?",
+      "choices": ["'Kind of Blue'", "'So What'", "'Round Midnight'", "'Autumn Leaves'"],
+      "answer": 1,
+      "explanation": "'So What' from Miles Davis's 1959 album 'Kind of Blue' is one of the most famous examples of Dorian mode in jazz. The piece is built on D Dorian for 16 bars, then moves up a half step to Eb Dorian for 8 bars — modal harmony at its most elegant.",
+      "srs": true
+    }
+  ]
+}

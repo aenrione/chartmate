@@ -1,0 +1,51 @@
+{
+  "id": "04-coltrane-changes",
+  "title": "Coltrane Changes",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Coltrane Changes: The Harmonic Revolution of 1959–1960\n\n**Coltrane changes** are a harmonic substitution system developed by John Coltrane in the late 1950s, most famously demonstrated in his composition 'Giant Steps' (1960). The system divides the octave into three equal parts — major thirds — and cycles through three tonic centers separated by major thirds.\n\n### The Symmetric Cycle\n\nThree keys a major third apart divide the chromatic octave equally:\n\n**B major → G major → Eb major → B major**\n(B → G is a minor third down; G → Eb is a major third down; Eb → B is a major third down)\n\nWait — more precisely, the three keys are:\n- **B major** (tonic center 1)\n- **G major** (tonic center 2, a major third below B)\n- **Eb major** (tonic center 3, a major third below G)\n\nThese three form a cycle: Eb → B → G → Eb (each a major third apart).\n\n### The 'Giant Steps' Progression\n\nThe head of 'Giant Steps' moves through these three tonic centers using ii–V–I patterns:\n\nBmaj7 | D7 | Gmaj7 | Bb7 | Ebmaj7 | Am7 D7 | Gmaj7 | C#m7 F#7\nBmaj7 | Fm7 Bb7 | Ebmaj7 | C#m7 F#7 | Bmaj7 | Fm7 Bb7 | Ebmaj7 | C#m7 F#7\n...\n\nThe chord changes come so rapidly (sometimes two per bar, sometimes one per two beats) that traditional ii–V–I improvisation over a single tonic is impossible. Coltrane's innovation was to create a consistent melodic vocabulary (a new scale pattern) that works over all three tonic centers simultaneously.\n\n### Why It Was Revolutionary\n\nBefore Coltrane changes, jazz improvisation over rapid changes meant 'playing the changes' — adjusting your scale/notes for each chord. Over ii–V–I in B, you played B major–oriented ideas; in G, G-oriented ideas, etc.\n\nBut with Coltrane changes, the changes move **too fast** (every two beats at the normal ballad tempo of 'Giant Steps' is actually quite quick). Coltrane developed patterns — scale fragments, arpeggios — that work across the three tonal centers simultaneously.\n\n### The 'Coltrane Matrix'\n\nColtrane also applied this to reharmonizing existing standards. 'Countdown' (1960) takes 'Tune Up' (Eddie Vinson) and replaces each ii–V–I in the original with a three-key Coltrane cycle:\n\nOriginal (Tune Up): Em7 → A7 → Dmaj7\nColtrane (Countdown): Em7 → F7 → Bbmaj7 | Db7 → Gbmaj7 → A7 | Dmaj7\n\nThe single ii–V–I becomes a miniature cycle through three keys, all within the same time span. The melody notes still fit because each new chord accommodates the original melody pitch.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What geometric property defines the Coltrane changes key cycle?",
+      "choices": [
+        "Keys a perfect fifth apart, like the cycle of fifths",
+        "Keys a minor second apart (chromatic), creating maximum tension",
+        "Three keys a major third apart, dividing the octave into three equal parts",
+        "Keys a minor third apart, like the diminished seventh chord cycle"
+      ],
+      "answer": 2,
+      "explanation": "Coltrane changes use three key centers separated by major thirds: B–G–Eb (each a major third below the previous). Three major thirds divide the octave into equal parts: B→G (4 semitones), G→Eb (4 semitones), Eb→B (4 semitones) = 12 semitones = one octave. This symmetric division ensures that the same harmonic material works in all three keys.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why did Coltrane's changes require a new approach to improvisation?",
+      "choices": [
+        "Because the changes used modes that jazz musicians had not yet learned",
+        "Because the chord changes move too rapidly for traditional 'playing the changes' — the harmonic rhythm outpaces the ability to switch tonal centers chord-by-chord",
+        "Because Coltrane changes are in 5/4 time, requiring different rhythmic skills",
+        "Because the changes only work with soprano saxophone, not other instruments"
+      ],
+      "answer": 1,
+      "explanation": "At 'Giant Steps'' moderate-to-fast tempo, chords can change every two beats. Switching tonal centers that quickly using traditional 'one scale per chord' improvisation is nearly impossible. Coltrane developed recurring patterns (arpeggios, scale fragments) that work over all three tonic centers simultaneously — a new kind of 'super-scale' thinking that transcends individual chord-by-chord navigation.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In 'Countdown' (Coltrane's reharmonization of 'Tune Up'), what is a single ii–V–I replaced with?",
+      "choices": [
+        "A tritone substitution — one chord replaces the V7",
+        "A three-key Coltrane cycle — three ii–V–I progressions in three different keys (a major third apart), all within the same time span",
+        "A pedal point — the bass stays on the tonic while the upper voices change",
+        "A blues chorus — the 12-bar blues replaces each section"
+      ],
+      "answer": 1,
+      "explanation": "In 'Countdown,' each ii–V–I from the original 'Tune Up' is expanded into a three-key Coltrane cycle: Em7→A7→Dmaj7 becomes Em7→F7→Bbmaj7/Db7→Gbmaj7/A7→Dmaj7. The three intermediate keys (Bb, Gb, D) are a major third apart. The entire substitution happens within the same four-bar time frame as the original two-bar ii–V–I.",
+      "srs": true
+    }
+  ]
+}

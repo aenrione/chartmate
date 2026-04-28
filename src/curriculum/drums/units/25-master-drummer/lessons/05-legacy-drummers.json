@@ -1,0 +1,25 @@
+{
+  "id": "05-legacy-drummers",
+  "title": "Legacy Drummers",
+  "xp": 40,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Lineage: Standing on Shoulders\n\nEvery great drummer is part of a lineage — each learned from those before them and influenced those after. Understanding this lineage deepens your appreciation for every technique and concept you've learned.\n\n**The founding generation:**\n- **Gene Krupa** (1909-1973): Brought drumming from the back of the bandstand to center stage; pioneered the drum solo\n- **Buddy Rich** (1917-1987): The ultimate technical standard — speed, power, and musicality in perfect combination\n- **Max Roach** (1924-2007): Developed melodic drumming; brought compositional thinking to the drum kit; civil rights activist\n\n**The jazz revolution:**\n- **Philly Joe Jones** (1923-1985): The quintessential bebop drummer; Coltrane and Miles Davis's most-used drummer\n- **Elvin Jones** (1927-2004): Triplet-based polyrhythm; the sound of Coltrane's classic quartet\n- **Tony Williams** (1945-1997): Extended the language to its furthest extremes; Miles Davis's Second Quintet\n\n**The rock and funk foundations:**\n- **John Bonham** (1948-1980): Power, groove, and feel beyond anyone's reach; Led Zeppelin\n- **Clyde Stubblefield** (1943-2017): The most sampled drummer in history; James Brown\n- **Billy Cobham** (b. 1944): Fusion drumming's peak; Mahavishnu Orchestra\n\n**The contemporary masters:**\n- **Steve Gadd** (b. 1945): Session perfection; '50 Ways to Leave Your Lover,' Paul Simon\n- **Vinnie Colaiuta** (b. 1956): The complete musician's drummer\n- **Jack DeJohnette** (b. 1942): Jazz drumming's most complete voice\n- **Gavin Harrison** (b. 1963): Groove, complexity, and musicality in rock context\n\n**Your place in the lineage:** By the time you reach this lesson, you have absorbed something from each of these traditions. Your playing carries their influence forward. The lineage continues through you.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# What the Masters Teach Beyond Technique\n\nThe most important lessons from the legacy drummers are not about patterns or techniques — they're about how to live as a musician.\n\n**Max Roach** on composition: 'Drums are not just rhythm. They can express an entire philosophical idea.' He spent his career using music as a vehicle for social commentary and human expression.\n\n**Tony Williams** on growth: He reinvented himself continuously — from teenage prodigy in Miles's band to rock-fusion leader with Lifetime to mature jazz composer. He never stopped growing.\n\n**Elvin Jones** on joy: Even in his final decades, long after establishing his legacy, Elvin brought an explosive joyfulness to every performance. The music was never a job.\n\n**John Bonham** on the feel: Bonham said that playing in time with power and feeling was more important than any technical accomplishment. The most technically advanced player in the room rarely makes the most music.\n\n**The synthesis:** Technical mastery, musical depth, artistic voice, professional reliability, continuous growth, and genuine love for the music. These are the qualities of the complete drummer. All the techniques, patterns, and concepts in this curriculum are simply tools in service of these qualities.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the most important lesson the legacy of master drummers teaches beyond technique?",
+      "choices": ["How to play faster and more complex patterns", "How to become famous", "Technical mastery is a tool in service of genuine musical expression, continuous growth, and love for the music", "How to earn more money as a musician"],
+      "answer": 2,
+      "explanation": "The legacy drummers demonstrate through their work and words that technique is a vehicle, not a destination. Max Roach used music for social commentary; Tony Williams reinvented himself continuously; Elvin Jones brought joy to every performance. These qualities — expression, growth, joy, love for the music — are what technique ultimately serves.",
+      "srs": true
+    }
+  ]
+}

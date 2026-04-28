@@ -149,7 +149,7 @@ export default function StemMixerPanel(props: StemMixerPanelProps) {
           )}
 
           {stemsReady && (
-            <div className="px-4 pb-3 space-y-2">
+            <div className="px-2 pb-2 space-y-1.5">
               {/* Playback note */}
               <p className="text-[10px] text-on-surface-variant/60">Synced with score playback</p>
 
@@ -160,7 +160,7 @@ export default function StemMixerPanel(props: StemMixerPanelProps) {
                 return (
                   <div key={name} className="space-y-0.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-on-surface capitalize">{name}</span>
+                      <span className="text-[11px] font-medium text-on-surface capitalize">{name}</span>
                       <button
                         onClick={() => handleMuteToggle(name)}
                         className={`p-0.5 rounded transition-colors ${isMuted ? 'text-on-surface-variant/40' : 'text-on-surface-variant hover:bg-surface-container-high'}`}

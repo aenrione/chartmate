@@ -1,0 +1,50 @@
+{
+  "id": "02-swing-feel",
+  "title": "Developing Swing Feel",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# What Makes Swing Feel?\n\nSwing feel is the difference between playing jazz notes on a page and actually making jazz music.\n\n**The triplet subdivision:** In a swung measure, every beat divides into three equal parts (triplets). The 8th notes you play land on the 1st and 3rd triplet of each beat — not the 1st and 2nd.\n\nThis means:\n- Beat '1': plays on the 1st triplet (downbeat) ✓\n- Beat '1-and': plays on the 3rd triplet (late 8th) ✓\n- Skip the middle triplet (2nd triplet is silent)\n\n**The continuum of swing:** Swing exists on a spectrum from light (almost straight 8ths, common at fast tempos) to heavy (very long-short, common at ballad tempos). Fast bebop tunes often sound nearly straight; slow blues ballads are deeply swung.\n\n**Internalizing it:** Don't think mathematically. Listen to recordings constantly. Sing the ride pattern out loud ('ding-a-ding, ding-a-ding'). Play along with recordings before trying to generate the feel from scratch.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Swing Ride with Hi-Hat Foot Pulse",
+      "description": "Ride carries the swing time, hi-hat foot locks beats 2 and 4. Bass drum plays a light 'feather' on beat 1. The snare is silent — focus entirely on feeling the triplet subdivision in the ride.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 132,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-xx-xx-"},
+        {"name": "Hi-Hat", "pattern": "--x---x-"},
+        {"name": "Snare",  "pattern": "--------"},
+        {"name": "Kick",   "pattern": "x-x-x-x-"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Medium Swing with Light Snare Comping",
+      "description": "Add a single snare accent on beat 4 to anticipate the next bar. This 'set-up' comping note is fundamental jazz vocabulary — it propels the music forward without disrupting the ride.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 120,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-xx-xx-"},
+        {"name": "Hi-Hat", "pattern": "--x---x-"},
+        {"name": "Snare",  "pattern": "------x-"},
+        {"name": "Kick",   "pattern": "x-------"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "At which triplet positions do swing 8th notes land?",
+      "choices": ["1st and 2nd triplets of each beat", "1st and 3rd triplets of each beat", "2nd and 3rd triplets of each beat", "All three triplets equally"],
+      "answer": 1,
+      "explanation": "Swing 8th notes land on the 1st triplet (downbeat) and the 3rd triplet (the late 'and') of each beat. The 2nd triplet is skipped, creating the characteristic long-short bounce.",
+      "srs": true
+    }
+  ]
+}

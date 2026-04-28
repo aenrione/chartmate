@@ -6,6 +6,7 @@ import ChordDiagram from './ChordDiagram';
 import QuizActivity from './QuizActivity';
 import FretboardDrillActivity from './FretboardDrillActivity';
 import TabExerciseActivity from './TabExerciseActivity';
+import DrumPatternActivity from './DrumPatternActivity';
 
 interface Props {
   activity: Activity;
@@ -19,6 +20,7 @@ const ACTIVITY_REGISTRY: Record<string, React.ComponentType<any>> = {
   'quiz': QuizActivity,
   'fretboard-drill': FretboardDrillActivity,
   'tab-exercise': TabExerciseActivity,
+  'drum-pattern': DrumPatternActivity,
 };
 
 export default function ActivityRenderer({activity, onPass, onFail}: Props) {

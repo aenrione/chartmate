@@ -1,0 +1,43 @@
+{
+  "id": "05-target-notes",
+  "title": "Target Notes in Blues Soloing",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Target Notes — Soloing with Purpose\n\nRandom pentatonic noodling vs. purposeful blues soloing — what's the difference? **Target notes**.\n\nA target note is a specific chord tone you aim for at the beginning or end of a phrase. Everything else is approach and embellishment — the target is your destination.\n\n## Target Note Hierarchy for Blues\n\n### Over a Dominant 7th Chord (e.g., E7)\n\n| Priority | Note | Why |\n|----------|------|-----|\n| Highest | 3rd (G#) | Defines major quality |\n| Highest | b7th (D) | Defines dominant quality |\n| High | Root (E) | Tonic, home |\n| Medium | 5th (B) | Stable but neutral |\n| Color | b3rd (G) | Blues tension |\n| Color | b5th (Bb) | Maximum tension |\n\n### The Most Important Targets\n\nLand on the **3rd** when you want brightness or arrival.\nLand on the **b7** when you want bluesy, unresolved tension.\nLand on the **root** when you want finality.\n\n## How to Use Targets\n\n1. Decide your target BEFORE you start the phrase\n2. Build a phrase that arrives on that target on a strong beat\n3. After landing on the target: hold it (vibrato), or use silence, or begin the next call",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which note is the highest-priority target in a blues solo over a dominant 7th chord?",
+      "choices": [
+        "The 5th (stable but neutral)",
+        "The b3rd (blue note)",
+        "The 3rd and b7th (guide tones that define the chord's quality)",
+        "The root only"
+      ],
+      "answer": 2,
+      "explanation": "The 3rd and b7th are the guide tones — they define the dominant chord's identity (major 3rd + flat 7th = dominant quality). Landing on these notes makes the harmony audible in your solo. They are the highest-priority targets.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Targeting the I-IV-V Chord Changes\n\nIn a 12-bar blues, the chord changes require you to adjust your target notes:\n\n## Key of E Blues — Target Notes by Chord\n\n### On E7 (bars 1-4)\n- Primary targets: G# (3rd), D (b7)\n- Note: G# is not in the A minor pentatonic!\n- Use G# as a passing or target note when on E7 for major-key color\n\n### On A7 (bars 5-6)\n- Primary targets: C# (3rd of A7), G (b7 of A7)\n- Shift your ear — you're now \"inside\" the IV chord\n\n### On B7 (bars 9-10)\n- Primary targets: D# (3rd of B7), A (b7 of B7)\n- The most tense moment — B7 wants to resolve strongly to E7\n\n## The Classic Move: Targeting the 3rd on the IV Chord Change\n\nWhen the chord moves from E7 to A7, make sure you're on C# or E (chord tones of A7) in bar 5. This moment of clarity is what separates players who \"hear the changes\" from those who don't.\n\n## Practical Exercise\n\nPlay a 12-bar blues in E at 80 BPM. Your only goal: land on the 3rd of each chord at the moment the chord changes.\n- Bar 1: G# (3rd of E7)\n- Bar 5: C# (3rd of A7)\n- Bar 9: D# (3rd of B7)\n\nEverything else can be free — just nail those three targets.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When the chord changes from E7 to A7 in a 12-bar blues, what is the ideal note to land on?",
+      "choices": [
+        "G natural (from the E minor pentatonic)",
+        "C# (the major 3rd of A7)",
+        "The same note you were just on",
+        "The root E"
+      ],
+      "answer": 1,
+      "explanation": "Landing on C# (the major 3rd of A7) at bar 5 when the chord moves to A7 clearly outlines the chord change. This 'change-hearing' move distinguishes blues soloists who track the harmony from those playing the same pentatonic pattern throughout.",
+      "srs": true
+    }
+  ]
+}

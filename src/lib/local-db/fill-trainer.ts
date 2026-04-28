@@ -11,6 +11,7 @@ export async function recordFillSession(
   fillId: string,
   bpm: number,
   learned: boolean,
+  durationMs = 0,
 ): Promise<void> {
   const db = await getLocalDb();
   await db
@@ -19,6 +20,7 @@ export async function recordFillSession(
       fill_id: fillId,
       bpm,
       learned: learned ? 1 : 0,
+      duration_ms: durationMs,
       created_at: new Date().toISOString(),
     })
     .execute();

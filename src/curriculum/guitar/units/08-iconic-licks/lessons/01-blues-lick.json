@@ -1,0 +1,20 @@
+{
+  "id": "01-blues-lick",
+  "title": "Classic Blues Lick",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The SRV Blues Lick\n\nOne of the most fundamental blues licks in the A minor pentatonic box:\n\n```\ne |--8b10--8--5--------|\nB |-----------8--5-----|\nG |------------------7-|\n```\n\nPick → bend → release → pull off → shift down → slide up.\n\n**Character:** Vocal, crying, emotional. This lick (or variations of it) appears in virtually every blues and rock solo.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What three expressive techniques are typically combined in blues licks?",
+      "choices": ["Tapping, harmonics, arpeggios", "Bends, vibrato, and slides", "Sweep picking, legato, economy picking", "Palm muting, power chords, open strings"],
+      "answer": 1,
+      "explanation": "Blues licks rely heavily on bends (for that crying vocal quality), vibrato (on sustained notes), and slides (for smooth melodic movement).",
+      "srs": true
+    }
+  ]
+}

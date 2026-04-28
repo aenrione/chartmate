@@ -1,0 +1,34 @@
+{
+  "id": "04-west-african",
+  "title": "West African Patterns",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# West African Percussion: The Rhythmic Source\n\nWest African percussion traditions — particularly those from Ghana, Senegal, Mali, Guinea, and Nigeria — are arguably the most influential rhythmic tradition in the modern world. They are the direct ancestor of jazz, funk, rhythm & blues, and by extension most popular music.\n\n**Core concepts:**\n\n**The bell (iron bell or gankogui):** The bell pattern is the rhythmic reference that all other instruments relate to. Everyone in the ensemble must hear and feel the bell. This is the same principle as the clave in Afro-Cuban music.\n\n**Interlocking patterns (hocket):** Rather than one instrument playing a complete rhythm, multiple instruments each play fragments that interlock to form a complete pattern. No single instrument plays the 'whole picture.'\n\n**Polyrhythm as norm:** The 3:2 and 4:3 relationships that Western musicians practice as 'polyrhythm exercises' are simply the normal texture of West African ensemble music — not unusual at all.\n\n**The Ewe bell pattern:**\nThe foundational bell pattern in Ghanaian Ewe music is a 12-pulse cycle (6/8 feel) where the bell plays on 7 of the 12 positions. This pattern is the ancestor of the Cuban clave.\n\n**Ensemble coordination:** West African percussion ensembles can have 8-20 players. Each player's part is simple; the combined effect is extraordinarily complex. The collective intelligence of the ensemble, not individual virtuosity, is the goal.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Ewe Bell Pattern (12-pulse)",
+      "description": "The ancestral bell pattern of West African Ewe music — a 12-pulse cycle with hits on 7 positions. This pattern is the historical predecessor of the Afro-Cuban clave. The underlying pulse is constant 12th notes; the bell plays a specific subset.",
+      "timeSignature": "6/8",
+      "subdivisions": 12,
+      "bpm": 88,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x-xx-x-x-xx-"},
+        {"name": "Snare",  "pattern": "x---x---x---"},
+        {"name": "Kick",   "pattern": "x-----x-----"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the structural principle of 'hocket' (interlocking patterns) in West African percussion?",
+      "choices": ["One master drummer plays all the patterns while others accompany", "Multiple musicians each play fragments that interlock to form a complete composite rhythm — no single instrument plays the whole picture", "All musicians play the same pattern simultaneously", "The bell player improvises while others keep time"],
+      "answer": 1,
+      "explanation": "Hocket (interlocking patterns) means each musician plays a fragment — specific positions within the overall cycle that are left empty by others. The complete rhythmic picture only emerges when all voices are combined. This collective organization creates extraordinary complexity from individually simple parts.",
+      "srs": true
+    }
+  ]
+}

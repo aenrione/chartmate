@@ -1,0 +1,69 @@
+{
+  "id": "04-augmented-and-diminished",
+  "title": "Augmented & Diminished",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Augmented and Diminished Intervals\n\n### The Complete Quality Hierarchy\n\nFor intervals that can be major or minor (2nds, 3rds, 6ths, 7ths):\n**diminished → minor → major → augmented**\n(each step = 1 half step larger)\n\nFor perfect intervals (unisons, 4ths, 5ths, octaves):\n**diminished → perfect → augmented**\n(each step = 1 half step larger)\n\nAugmented = one half step larger than major or perfect.\nDiminished = one half step smaller than minor or perfect.\n\n### The Tritone: The Most Dissonant Interval\n\nThe most important augmented/diminished interval is the **tritone** — six half steps, exactly halfway through the octave:\n\n- **Augmented 4th (A4)**: C to F# (C–F is a perfect 4th; raise F to F# = 6 half steps)\n- **Diminished 5th (d5)**: C to Gb (C–G is a perfect 5th; lower G to Gb = 6 half steps)\n\nThese two are **enharmonically equivalent** — the same 6 half steps, just spelled differently. Together they are both called the **tritone** (literally \"three whole tones\": C–D–E–F# or C–D–E–Gb).\n\nHistorically, the tritone was called *diabolus in musica* (\"the devil in music\") and was actively avoided in medieval and Renaissance counterpoint. Its extreme dissonance comes from its equal division of the octave — it has no \"direction,\" no inherent pull toward resolution in one direction over the other, making it harmonically unstable in a way that unsettles the ear.\n\nIn modern music, the tritone is everywhere — and purposeful:\n- **Dominant 7th chords**: the interval from the 3rd to the 7th of any dominant 7th chord (e.g., G7: B to F is a diminished 5th) creates the tritone that pulls the chord toward resolution.\n- **Blues harmony**: the flat 5th (tritone) is a defining sound of the blues scale and jazz improvisation.\n- **Film music**: tritones are used to signal danger, the supernatural, or unease (the \"Jaws\" effect).\n\n### Other Augmented and Diminished Intervals\n\n**Augmented 2nd (A2)**: 3 half steps (same as a minor 3rd in pitch, but spelled as a 2nd). Appears in harmonic minor scales between scale degrees 6 and 7. Has a distinctively exotic, \"Eastern\" sound.\n\n**Diminished 7th (d7)**: 9 half steps (same pitch as a major 6th, but spelled as a 7th). The diminished 7th chord — four notes all a minor 3rd apart — is constructed from stacked diminished 7th intervals and has a particularly tense, dramatic sound used in Romantic-era music and film scores.\n\n**Augmented 6th (A6)**: 10 half steps (same pitch as a minor 7th). Appears in Italian, French, and German augmented sixth chords — specialized chromatic chords that create intensified approach to the dominant.\n\n### Resolving the Tritone\n\nIn tonal music, the tritone resolves by **inward motion** (augmented 4th resolves inward: F# goes up to G, C goes up to C — the F# and C in a V7 resolve to the 3rd and root of the tonic chord) or **outward motion** for the diminished 5th. This resolution is the engine of authentic cadences.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Augmented and Diminished in Practice\n\n### Identifying Altered Intervals\n\nThe key to identifying augmented and diminished intervals is a two-step process:\n\n1. **Find the generic interval number** (count letter names)\n2. **Compare to the expected quality** for a major scale interval, then adjust\n\nFor example: C to G# is what interval?\n- Step 1: C(1) D(2) E(3) F(4) G(5) → a **5th**\n- Step 2: C to G is a perfect 5th (7 half steps). C to G# = 8 half steps. That is one half step *larger* than a perfect 5th → **augmented 5th**.\n\n### The Tritone in Dominant 7th Chords\n\nThe dominant 7th chord (V7) is the most important chord in tonal harmony, and it contains a tritone. In C major, the dominant 7th chord is **G7**: G – B – D – F.\n\n- The interval from **B to F** is a **diminished 5th** (tritone): B(1) C(2) D(3) E(4) F(5) = a 5th; B to F = 6 half steps = diminished 5th.\n- B (the leading tone) pulls upward to C (the tonic).\n- F (the 7th of G7) pulls downward to E (the 3rd of C major).\n\nThis double resolution — B→C and F→E — is why V7→I sounds so conclusive. The tritone is literally the tension inside the dominant seventh chord, and its resolution to consonance is the engine of tonal closure.\n\n### Enharmonic Equivalence and Spelling\n\nAn augmented 4th (C to F#) and a diminished 5th (C to Gb) are the same 6 half steps in pitch. But they are spelled differently, and in tonal harmony, spelling matters — it indicates the direction of resolution. F# resolves up to G; Gb resolves down to F. Same pitch, different functional direction.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a tritone, and how many half steps does it contain?",
+      "choices": [
+        "A major 3rd — 4 half steps",
+        "An augmented 4th or diminished 5th — 6 half steps",
+        "A minor 7th — 10 half steps",
+        "A perfect 5th raised by a whole step — 9 half steps"
+      ],
+      "answer": 1,
+      "explanation": "The tritone is the interval of 6 half steps — exactly halfway through the 12-half-step octave. It can be spelled as an augmented 4th (e.g., C to F#) or a diminished 5th (e.g., C to Gb). Both are enharmonically equivalent at 6 half steps. The name 'tritone' means 'three whole tones' (C–D = W, D–E = W, E–F# = W = 3 whole steps = 6 half steps).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the dominant 7th chord G7 (G–B–D–F), which two notes form the tritone that drives resolution to the tonic?",
+      "choices": [
+        "G and D",
+        "G and F",
+        "B and F",
+        "D and F"
+      ],
+      "answer": 2,
+      "explanation": "In G7, the tritone is between B (the 3rd of G7) and F (the 7th of G7). B to F spans: B(1) C(2) D(3) E(4) F(5) = a 5th, with B to F = 6 half steps = a diminished 5th (tritone). When G7 resolves to C major, B moves up to C (the leading tone resolves to tonic) and F moves down to E (the 7th resolves to the 3rd of C). This inward resolution of the tritone is the defining motion of an authentic cadence.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the interval from C up to G#?",
+      "choices": [
+        "Major 5th",
+        "Perfect 5th",
+        "Diminished 6th",
+        "Augmented 5th"
+      ],
+      "answer": 3,
+      "explanation": "Step 1: count the number — C(1) D(2) E(3) F(4) G(5) — it is a 5th. Step 2: C to G is a perfect 5th (7 half steps). C to G# = 8 half steps — one half step larger than a perfect 5th. A perfect interval raised by one half step becomes augmented. Therefore, C to G# is an augmented 5th. Note: there is no such thing as a 'major 5th' — 5ths are perfect, augmented, or diminished.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why was the tritone historically called 'diabolus in musica' (the devil in music)?",
+      "choices": [
+        "Because it was associated with the devil in medieval religious texts",
+        "Because its six-half-step span and equal division of the octave creates extreme harmonic instability with no inherent direction, making it the most dissonant interval in common use",
+        "Because it is impossible to sing in tune",
+        "Because it was banned by the Catholic Church in all sacred music"
+      ],
+      "answer": 1,
+      "explanation": "The tritone's dissonance comes from its acoustics: it divides the octave in half, creating a tense, ambiguous sound with no strong natural pull in one direction. Its frequency ratio is far from simple (approximately 45:32), unlike the pure ratios of perfect intervals. Medieval theorists found it harmonically unstable and acoustically harsh, leading to its avoidance in sacred polyphony. The nickname 'diabolus in musica' reflected both its sonic character and the cultural anxiety around dissonance in religious contexts.",
+      "srs": true
+    }
+  ]
+}

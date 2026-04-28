@@ -1,0 +1,54 @@
+{
+  "id": "02-major-triads",
+  "title": "Major Triads",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Major Triads\n\nThe **major triad** is the single most common chord in Western music. Its sound is often described as bright, stable, open, and resolved — the sonic equivalent of arriving home.\n\n### Anatomy of a Major Triad\n\nA major triad consists of three notes in a precise intervallic relationship:\n\n- **Root** to **third**: a **major third** — 4 half steps\n- **Third** to **fifth**: a **minor third** — 3 half steps\n- **Root** to **fifth**: a **perfect fifth** — 7 half steps (4 + 3)\n\nThink of it as a **major third stacked below a minor third**. That specific combination produces the major quality.\n\n### Common Major Triads\n\nHere are four major triads you should know immediately:\n\n| Chord | Root | Third | Fifth |\n|-------|------|-------|-------|\n| **C major** | C | E | G |\n| **G major** | G | B | D |\n| **D major** | D | F# | A |\n| **A major** | A | C# | E |\n\nNotice the pattern: the third requires a sharp in G, D, and A major because the notes of the C major scale would produce the wrong (smaller) interval if used without alteration.\n\n### Why 'Major'?\n\nThe word **major** in 'major triad' specifically refers to the **major third** between the root and the middle note. That interval — 4 half steps — is what distinguishes a major triad from a minor triad (which has only 3 half steps from root to third).\n\n### Major Triads in the Scale\n\nIn any major scale, three of the seven diatonic triads are major: those built on **scale degrees I, IV, and V**. In C major:\n- **I** = C major (C-E-G)\n- **IV** = F major (F-A-C)\n- **V** = G major (G-B-D)\n\nThese three chords alone form the harmonic backbone of countless songs in rock, folk, country, and blues.\n\n### The Sound of Stability\n\nMajor triads are acoustically consonant because the interval ratios between their notes align closely with the natural harmonic series. This is why they feel **resolved and stable** — the physics of sound itself supports that perception.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many half steps are between the root and the third of a major triad?",
+      "choices": ["3", "4", "5", "7"],
+      "answer": 1,
+      "explanation": "A major third spans exactly 4 half steps. This distinguishes the major triad from the minor triad, which has a minor third (3 half steps) from root to third.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What are the notes of a D major triad?",
+      "choices": ["D, F, A", "D, F#, A", "D, F#, A#", "D, F, A#"],
+      "answer": 1,
+      "explanation": "D major is D–F#–A. The major third above D is F# (4 half steps: D→D#→E→F→F#), and the perfect fifth above D is A (7 half steps). Using F natural would produce a minor third, not a major one.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "On which scale degrees of the major scale do major triads naturally occur?",
+      "choices": [
+        "I, II, and III",
+        "I, IV, and V",
+        "II, III, and VI",
+        "IV, V, and VII"
+      ],
+      "answer": 1,
+      "explanation": "In any major key, major triads occur naturally on scale degrees I, IV, and V. These are the three 'major' chords in the key and form the harmonic foundation of countless songs.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which interval pattern correctly describes a major triad from bottom to top?",
+      "choices": [
+        "Minor third + minor third",
+        "Major third + major third",
+        "Major third + minor third",
+        "Minor third + major third"
+      ],
+      "answer": 2,
+      "explanation": "A major triad is built with a major third (4 half steps) on the bottom and a minor third (3 half steps) on top, totaling a perfect fifth (7 half steps) from root to fifth. Flip the order — minor third on bottom — and you get a minor triad.",
+      "srs": true
+    }
+  ]
+}

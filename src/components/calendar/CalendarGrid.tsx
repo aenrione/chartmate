@@ -1,3 +1,4 @@
+import {Award} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import type {Session} from '@/lib/local-db/programs';
 import SessionChip from './SessionChip';
@@ -10,10 +11,27 @@ interface CalendarGridProps {
   sessions: Session[];
   onDayClick: (date: string) => void;
   onSessionClick: (session: Session) => void;
+  /** XP earned per YYYY-MM-DD (local). Optional — calendar still works without it. */
+  xpByDate?: Map<string, number>;
+  /** Dates where the daily goal was met. Highlighted with a small dot. */
+  goalMetDates?: Set<string>;
+  /** Dates where at least one achievement was unlocked. Renders a tiny trophy. */
+  achievementDates?: Set<string>;
+  /** Total active ms per YYYY-MM-DD. */
+  activeTimeByDate?: Map<string, number>;
 }
 
 function toDateStr(year: number, month: number, day: number): string {
   return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
+function fmtMs(ms: number): string {
+  const totalMin = Math.round(ms / 60_000);
+  if (totalMin < 1) return '';
+  if (totalMin < 60) return `${totalMin}m`;
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  return m > 0 ? `${h}h${m}m` : `${h}h`;
 }
 
 export default function CalendarGrid({
@@ -22,6 +40,10 @@ export default function CalendarGrid({
   sessions,
   onDayClick,
   onSessionClick,
+  xpByDate,
+  goalMetDates,
+  achievementDates,
+  activeTimeByDate,
 }: CalendarGridProps) {
   const d = new Date();
   const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -62,6 +84,11 @@ export default function CalendarGrid({
           const dateStr = toDateStr(year, month, day);
           const daySessions = byDate.get(dateStr) ?? [];
           const isToday = dateStr === today;
+          const xpToday = xpByDate?.get(dateStr) ?? 0;
+          const goalMet = goalMetDates?.has(dateStr) ?? false;
+          const hasAchievement = achievementDates?.has(dateStr) ?? false;
+          const activeMs = activeTimeByDate?.get(dateStr) ?? 0;
+          const timeLabel = fmtMs(activeMs);
 
           return (
             <button
@@ -69,15 +96,36 @@ export default function CalendarGrid({
               type="button"
               onClick={() => onDayClick(dateStr)}
               className={cn(
-                'w-full text-left bg-surface-container min-h-[80px] p-1 cursor-pointer hover:bg-surface-container-high transition-colors',
+                'w-full text-left bg-surface-container min-h-[80px] p-1 cursor-pointer hover:bg-surface-container-high transition-colors relative',
                 isToday && 'bg-primary/5',
+                goalMet && !isToday && 'bg-emerald-500/5',
               )}
             >
-              <div className={cn(
-                'text-xs font-medium mb-1 w-6 h-6 flex items-center justify-center rounded-full',
-                isToday ? 'bg-primary text-on-primary' : 'text-on-surface-variant',
-              )}>
-                {day}
+              <div className="flex items-center justify-between mb-1">
+                <div className={cn(
+                  'text-xs font-medium w-6 h-6 flex items-center justify-center rounded-full',
+                  isToday ? 'bg-primary text-on-primary' : 'text-on-surface-variant',
+                )}>
+                  {day}
+                </div>
+                <div className="flex items-center gap-0.5">
+                  {hasAchievement && (
+                    <Award className="h-3 w-3 text-amber-500" aria-label="Achievement unlocked" />
+                  )}
+                  {goalMet && (
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-label="Goal met" />
+                  )}
+                  {xpToday > 0 && (
+                    <span className="text-[9px] font-bold text-on-surface-variant tabular-nums">
+                      {xpToday}xp
+                    </span>
+                  )}
+                  {timeLabel && (
+                    <span className="text-[9px] font-semibold text-primary/70 tabular-nums">
+                      {timeLabel}
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="space-y-0.5">
                 {daySessions.slice(0, 3).map(s => (

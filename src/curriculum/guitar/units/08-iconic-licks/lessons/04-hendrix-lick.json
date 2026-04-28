@@ -1,0 +1,20 @@
+{
+  "id": "04-hendrix-lick",
+  "title": "Hendrix-Style Lick",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Hendrix Grip\n\nJimi Hendrix's style is defined by thumb-over-neck playing — his thumb frets the low E string while his fingers play chords and riffs simultaneously.\n\n**The Classic Hendrix Move:**\n- Thumb: low E muted or playing bass note\n- Fingers: chord fragment on middle strings\n- Pinky: melody note on high strings\n\n**E7#9 chord** (the 'Hendrix chord'):\n```\nFrets: 0 3 3 4 5 0\n```\nThe clash between the major and minor 3rd creates that electric tension.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes the E7#9 nicknamed the 'Hendrix chord' special?",
+      "choices": ["It uses a slide", "It contains both the major and minor 3rd simultaneously", "It requires two guitars", "It can only be played in open tuning"],
+      "answer": 1,
+      "explanation": "The E7#9 contains F# (major 3rd) and G (minor 3rd / #9) at the same time — an intentional dissonance that creates its distinctive edgy, funky sound.",
+      "srs": true
+    }
+  ]
+}

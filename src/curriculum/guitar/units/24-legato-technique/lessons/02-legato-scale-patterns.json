@@ -1,0 +1,43 @@
+{
+  "id": "02-legato-scale-patterns",
+  "title": "Legato Scale Patterns",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Legato Scale Patterns — Fluid Lines at Speed\n\nThe most efficient way to practice legato is through **scale patterns** — ascending and descending scales using hammer-ons (ascending) and pull-offs (descending) with minimal picking.\n\n## The One-Pick-Per-String Approach\n\nThe most common legato approach: pick only the first note on each string, then hammer/pull the rest.\n\n## A Aeolian (Natural Minor) — 3NPS Legato\n\nAscending (all hammer-ons after first note per string):\n```\ne |--p--12-h14-h15--|\nB |--p--12-h13-h15--|\nG |--p--12-h14-h16--|\nD |--p--12-h14-h16--|\nA |--p--12-h14-h15--|\nE |--p--12-h14-h15--|\n(p = pick first note, h = hammer)\n```\n\nDescending (all pull-offs after first note per string):\n```\ne |--p--15-po14-po12-|\nB |--p--15-po13-po12-|\n...\n(po = pull-off)\n```\n\n## The Joe Satriani Legato Sound\n\n**Joe Satriani** is famous for his legato runs — smooth, vocal, connected lines that seem to have no pick attack. His secret: **consistent finger pressure** across all left-hand fingers.\n\nMost players have a weaker ring and pinky — their legato notes drop in volume. Satriani's exercises specifically target ring and pinky strength to equalize all four fingers.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a legato scale pattern, what is the 'one-pick-per-string' approach?",
+      "choices": [
+        "Using only one type of pick stroke (all downstrokes)",
+        "Picking only the first note on each string, then using hammer-ons and pull-offs for all subsequent notes on that string",
+        "Playing every other note with the pick",
+        "Using a thumb pick only"
+      ],
+      "answer": 1,
+      "explanation": "One-pick-per-string means using a single pick stroke to initiate each string, then using hammer-ons (ascending) or pull-offs (descending) for the remaining 2-3 notes on that string. This minimizes pick noise and creates the characteristic smooth legato flow.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Legato Lick Construction\n\n## Building a Legato Lick\n\nLegato patterns tend to work best with longer note groups — 4-note or 6-note slurs:\n\n### 4-Note Slur (pick + 3 hammers):\n```\ne |--pick-12-h14-h15-h17--|\n```\nPick A, hammer B, hammer C, hammer D — one pick action, four notes.\n\n### 6-Note Slur across two strings:\n```\ne |--p-12-h14-h15-----|\nB |--p-13-h15-h17-----| (cross to next string after 3 notes)\n```\n\n## The Legato Slide\n\nCombining slides with legato creates the most fluid, guitaristic lines:\n```\ne |--p-12-h15----17s19-h20--|\n   (pick, hammer, slide, hammer)\n```\nThe slide carries the momentum forward without another pick attack.\n\n## Classic Legato Players to Study\n\n- **Allan Holdsworth**: The god of legato — impossibly fluid, jazz-influenced\n- **Joe Satriani**: \"Surfing with the Alien\" — melodic legato at speed\n- **Steve Vai**: Expressive, vocal legato with wide vibrato\n- **Frank Gambale**: Legato + economy picking combined\n- **Brett Garsed**: Australian fusion, Holdsworth influence, incredible smoothness",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes Allan Holdsworth's legato technique considered uniquely advanced?",
+      "choices": [
+        "He plays on a 7-string guitar",
+        "His fluid, seemingly effortless legato over jazz harmony with consistent tone across all fingers and positions",
+        "He invented the hammer-on technique",
+        "He only uses pull-offs, never hammer-ons"
+      ],
+      "answer": 1,
+      "explanation": "Holdsworth's legato is uniquely fluid because of his combination of consistent tone across all four fingers, jazz harmonic awareness, unique chord-scale thinking, and the ability to cover large intervals (3rds, 4ths, wider) with legato rather than being restricted to scalar patterns.",
+      "srs": true
+    }
+  ]
+}

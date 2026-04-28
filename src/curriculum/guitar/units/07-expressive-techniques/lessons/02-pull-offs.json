@@ -1,0 +1,20 @@
+{
+  "id": "02-pull-offs",
+  "title": "Pull-Offs",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Pull-Offs\n\nA **pull-off** is the reverse of a hammer-on:\n\n1. Have both fingers on the string (e.g. frets 7 and 5)\n2. Pick the higher fret (7)\n3. **Pull** the fretting finger sideways off the string — the lower note (5) sounds\n\nIn tab: `7p5`\n\nThe key is the pulling motion — don't just lift straight up. Flick the fingertip sideways to pluck the string as you leave.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In '9p7' in tab, which note do you pick first?",
+      "choices": ["Fret 7", "Fret 9", "Both at the same time", "Neither — it's a slide"],
+      "answer": 1,
+      "explanation": "Pick fret 9 first. Then pull your fretting finger sideways off the string to sound fret 7 without picking again.",
+      "srs": true
+    }
+  ]
+}

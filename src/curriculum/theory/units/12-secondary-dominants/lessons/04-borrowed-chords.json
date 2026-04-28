@@ -1,0 +1,51 @@
+{
+  "id": "04-borrowed-chords",
+  "title": "Borrowed Chords",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Borrowed Chords: From Parallel Keys\n\n'Borrowed chord' is a broad term, but in the context of secondary dominants, it often refers to chords borrowed from the **parallel minor** or another closely related mode. This is distinct from secondary dominants (which are dominant seventh chords pointing to diatonic targets).\n\n### The Parallel Relationship\n\nC major and C minor are **parallel** keys — they share the same tonic note but have different key signatures. C minor has Eb, Ab, and Bb (three flats).\n\nBorrowed chords import a chord from C minor into a C major context, creating unexpected dark or expressive color.\n\n### Common Borrowed Chords in C Major\n\n**iv (Fm)**: The minor subdominant. Fm (F–Ab–C) borrowed into C major. Extremely common in pop music — the Ab is the chromatic note.\n\n**bVII (Bb major)**: The subtonic major chord, built on the flattened seventh. Bb–D–F in C major context. Found in rock (Lynyrd Skynyrd, Beatles, Rolling Stones) and also borrowed from Mixolydian.\n\n**bVI (Ab major)**: The flattened sixth major chord. Ab–C–Eb in C major context. Extremely common in modern pop — artists like Katy Perry, Adele, and countless others use bVI extensively.\n\n**bIII (Eb major)**: The flattened third major chord. Less common but appears in rock and R&B.\n\n### The iv → I 'Amen' Progression\n\nOne of the most evocative uses of a borrowed chord: **iv → I** (Fm → C in C major).\n\nThe chromatic note Ab descends by half step to G (the fifth of C major). This half-step resolution creates a sighing, tender quality found in laments, hymns, and film scores.\n\nExamples:\n- 'Hey Jude' (Beatles): Uses iv (Fm when in F major context) near the end\n- Countless film scores use bVI → bVII → I (borrowed chords + subtonic)\n\n### Distinguishing Borrowed Chords from Secondary Dominants\n\n| | Secondary Dominant | Borrowed Chord |\n|---|---|---|\n| **Function** | Dominant (points to a target) | Can have any function (tonic, subdominant) |\n| **Form** | Always a dominant seventh (or major triad) | Often a major triad from parallel minor |\n| **Resolution** | Resolves to its target chord | May resolve in various ways |\n| **Example** | A7 → Dm (V7/ii) | Fm → C (iv → I) |\n\nThe distinction matters: A7 is a secondary dominant; Fm is a borrowed chord (modal mixture). Both add chromatic color, but through different mechanisms.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is bVII in C major, and from which parallel scale is it borrowed?",
+      "choices": [
+        "B major, borrowed from C Lydian",
+        "Bb major, borrowed from C Mixolydian or C natural minor",
+        "G major, borrowed from C Dorian",
+        "Ab major, borrowed from C Phrygian"
+      ],
+      "answer": 1,
+      "explanation": "bVII in C major is Bb major (Bb–D–F). The 'b' means the chord is built on the flattened seventh degree (Bb instead of B natural). Bb major appears in C Mixolydian (which has Bb) and C natural minor. It is one of the most common borrowed chords in rock and pop.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The progression Fm → C (iv → I) in C major is notable for which chromatic voice leading feature?",
+      "choices": [
+        "The F in Fm rises by half step to F# in C major",
+        "The Ab in Fm descends by half step to G (the fifth of C major)",
+        "The C in both chords creates a strong common tone",
+        "The Eb in Fm resolves up to E in C major"
+      ],
+      "answer": 1,
+      "explanation": "Fm = F–Ab–C. C major = C–E–G. The Ab descends by half step to G (the fifth of C). This chromatic half-step descent creates a particularly expressive, sighing quality. The common tone C between both chords also smooths the connection. This iv → I motion is associated with tenderness and lament in film and art music.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the key difference between a secondary dominant and a borrowed chord?",
+      "choices": [
+        "Secondary dominants are in minor keys; borrowed chords are in major keys",
+        "Secondary dominants function as dominant chords pointing to a target; borrowed chords can have any function and come from parallel modes",
+        "Borrowed chords always resolve to the tonic; secondary dominants resolve to ii",
+        "They are the same concept — both terms describe non-diatonic chords"
+      ],
+      "answer": 1,
+      "explanation": "A secondary dominant has dominant function — it is a dominant seventh (or major triad) pointing to a diatonic target. A borrowed chord comes from a parallel mode and can have any function (tonic, subdominant, etc.). Example: A7 (secondary dominant of ii) has dominant function; Fm (borrowed iv) has subdominant function in C major.",
+      "srs": true
+    }
+  ]
+}

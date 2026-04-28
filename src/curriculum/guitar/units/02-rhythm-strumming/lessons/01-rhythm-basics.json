@@ -1,0 +1,25 @@
+{
+  "id": "01-rhythm-basics",
+  "title": "Rhythm Essentials",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# What Is Rhythm?\n\nRhythm is the timing of musical events. On guitar, rhythm determines **when** you strum.\n\n**Key terms:**\n- **Beat** — the steady pulse of the music\n- **Measure** — a group of beats (usually 4 in pop/rock)\n- **Downstrum (↓)** — strumming toward the floor\n- **Upstrum (↑)** — strumming toward the ceiling\n\nCount aloud as you play: **1 – 2 – 3 – 4**",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Eighth Notes\n\nEighth notes divide each beat in half: **1 and 2 and 3 and 4 and**\n\nWrite it as: **1 + 2 + 3 + 4 +** (+ = \"and\")\n\n- Beat numbers (1, 2, 3, 4) = downstrums\n- \"and\" counts = upstrums\n\nKeep your strumming arm moving like a pendulum — down on the beat, up on the \"and\".",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a measure of 4/4, how many eighth notes are there?",
+      "choices": ["4", "6", "8", "16"],
+      "answer": 2,
+      "explanation": "Each of the 4 beats contains 2 eighth notes (beat + and), so 4 × 2 = 8 eighth notes.",
+      "srs": true
+    }
+  ]
+}

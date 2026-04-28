@@ -1,7 +1,8 @@
-import {type ReactNode, useState, useEffect, useCallback} from 'react';
-import {Link, useLocation} from 'react-router-dom';
+import {type ReactNode, useState, useEffect, useCallback, useRef} from 'react';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {useSpotifyAuth} from '@/contexts/SpotifyAuthContext';
 import {cn} from '@/lib/utils';
+import ProgressionPill from './ProgressionPill';
 import {
   Guitar,
   Drum,
@@ -11,7 +12,20 @@ import {
   Moon,
   Sun,
   PenTool,
+  ListMusic,
+  Play,
+  Pencil,
+  Trash2,
+  BookMarked,
+  Repeat2,
 } from 'lucide-react';
+import {
+  getSetlists,
+  createSetlist,
+  deleteSetlist,
+  updateSetlist,
+  type Setlist,
+} from '@/lib/local-db/setlists';
 import {useSidebar} from '@/contexts/SidebarContext';
 import {useLayout} from '@/contexts/LayoutContext';
 import SettingsDialog from '@/components/SettingsDialog';
@@ -124,6 +138,7 @@ function TopNav({pathname}: {pathname: string}) {
       </nav>
 
       <div className="flex items-center gap-3">
+        <ProgressionPill />
         <button
           onClick={toggle}
           className="hover:bg-surface-container transition-all duration-200 p-2 rounded-full text-on-surface-variant"
@@ -158,7 +173,127 @@ function TopNav({pathname}: {pathname: string}) {
   );
 }
 
-function DefaultSidebarContent({pathname, locationState}: {pathname: string; locationState: unknown}) {
+function SetlistsNavSection({search}: {search: string}) {
+  const navigate = useNavigate();
+  const [setlists, setSetlists] = useState<Setlist[]>([]);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editName, setEditName] = useState('');
+  const editInputRef = useRef<HTMLInputElement>(null);
+
+  const selectedId = search ? Number(new URLSearchParams(search).get('id')) || null : null;
+  const selectedSetlist = selectedId ? setlists.find(s => s.id === selectedId) ?? null : null;
+
+  const loadSetlists = useCallback(async () => {
+    const data = await getSetlists();
+    setSetlists(data);
+    return data;
+  }, []);
+
+  useEffect(() => {
+    loadSetlists();
+    const handler = () => loadSetlists();
+    window.addEventListener('setlists-updated', handler);
+    return () => window.removeEventListener('setlists-updated', handler);
+  }, [loadSetlists]);
+
+  useEffect(() => {
+    if (editingId !== null) editInputRef.current?.focus();
+  }, [editingId]);
+
+  const handleCreate = async () => {
+    const id = await createSetlist(`Setlist ${setlists.length + 1}`);
+    await loadSetlists();
+    navigate(`/library/setlists?id=${id}`);
+    window.dispatchEvent(new CustomEvent('setlists-updated'));
+  };
+
+  const handleDelete = async (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    await deleteSetlist(id);
+    const updated = await loadSetlists();
+    if (selectedId === id) {
+      const next = updated.find(s => s.id !== id);
+      navigate(next ? `/library/setlists?id=${next.id}` : '/library/setlists');
+    }
+    window.dispatchEvent(new CustomEvent('setlists-updated'));
+  };
+
+  const commitEdit = async () => {
+    if (editingId !== null && editName.trim()) {
+      await updateSetlist(editingId, {name: editName.trim()});
+      await loadSetlists();
+      window.dispatchEvent(new CustomEvent('setlists-updated'));
+    }
+    setEditingId(null);
+  };
+
+  return (
+    <div className="pl-10 pb-1 space-y-0.5">
+      <div className="flex items-center justify-between px-3 py-0.5">
+        <span className="text-xs text-outline uppercase tracking-widest">Add Setlist</span>
+        <button
+          onClick={handleCreate}
+          className="p-0.5 rounded hover:bg-surface-container-high"
+          title="New setlist"
+        >
+          <Plus className="h-3 w-3 text-on-surface-variant" />
+        </button>
+      </div>
+      <div className="max-h-52 overflow-y-auto">
+        {setlists.map(s => (
+          <div
+            key={s.id}
+            className={cn(
+              'group flex items-center gap-2 px-3 py-1.5 cursor-pointer rounded-md text-sm transition-colors',
+              selectedId === s.id
+                ? 'bg-surface-container text-on-surface font-medium'
+                : 'text-on-surface-variant/60 hover:text-on-surface hover:bg-surface-variant/50',
+            )}
+            onClick={() => navigate(`/library/setlists?id=${s.id}`)}
+          >
+            {editingId === s.id ? (
+              <input
+                ref={editInputRef}
+                className="flex-1 min-w-0 bg-surface-container border border-outline-variant/20 rounded px-1 py-0 text-sm text-on-surface outline-none"
+                value={editName}
+                onChange={e => setEditName(e.target.value)}
+                onBlur={commitEdit}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') commitEdit();
+                  if (e.key === 'Escape') setEditingId(null);
+                }}
+                onClick={e => e.stopPropagation()}
+              />
+            ) : (
+              <span className="flex-1 min-w-0 truncate">{s.name}</span>
+            )}
+            <span className="text-xs text-outline tabular-nums shrink-0">{s.itemCount ?? 0}</span>
+            <div className="hidden group-hover:flex items-center gap-0.5 shrink-0">
+              <button
+                className="p-0.5 rounded hover:bg-surface-container-high"
+                onClick={e => {
+                  e.stopPropagation();
+                  setEditingId(s.id);
+                  setEditName(s.name);
+                }}
+              >
+                <Pencil className="h-3 w-3 text-on-surface-variant" />
+              </button>
+              <button
+                className="p-0.5 rounded hover:bg-error/10"
+                onClick={e => handleDelete(s.id, e)}
+              >
+                <Trash2 className="h-3 w-3 text-error" />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DefaultSidebarContent({pathname, locationState, locationSearch}: {pathname: string; locationState: unknown; locationSearch: string}) {
   const state = locationState as {activeTab?: string} | null;
 
   return (
@@ -184,7 +319,6 @@ function DefaultSidebarContent({pathname, locationState}: {pathname: string; loc
                   {label: 'Fretboard IQ', href: '/guitar/fretboard', prefix: '/guitar/fretboard'},
                   {label: 'Chord Finder', href: '/guitar/chords', prefix: '/guitar/chords'},
                   {label: 'EarIQ', href: '/guitar/ear', prefix: '/guitar/ear'},
-                  {label: 'RepertoireIQ', href: '/guitar/repertoire', prefix: '/guitar/repertoire'},
                   {label: 'Saved Charts', href: '/library/saved-charts', prefix: '/library/saved-charts', state: {activeTab: 'guitar'}},
                 ]
               : item.href === '/sheet-music'
@@ -232,16 +366,91 @@ function DefaultSidebarContent({pathname, locationState}: {pathname: string; loc
             </div>
           );
         })}
+
+        {/* RepertoireIQ nav item */}
+        <div>
+          <Link
+            to="/guitar/repertoire"
+            className={cn(
+              'px-4 py-3 flex items-center gap-3 transition-all duration-150',
+              pathname.startsWith('/guitar/repertoire')
+                ? 'text-on-surface bg-surface-container'
+                : 'text-on-surface-variant/60 hover:text-on-surface hover:bg-surface-variant/50',
+            )}
+          >
+            <Repeat2 className="h-5 w-5" />
+            <span className="font-medium">RepertoireIQ</span>
+          </Link>
+          {pathname.startsWith('/guitar/repertoire') && (
+            <div className="pl-10 pb-1 space-y-0.5">
+              {([
+                {label: 'All', filter: 'all'},
+                {label: 'Guitar', filter: 'guitar'},
+                {label: 'Drums', filter: 'drums'},
+                {label: 'Theory', filter: 'theory'},
+              ] as const).map(({label, filter}) => {
+                const href = `/guitar/repertoire?filter=${filter}`;
+                const matchesFilter = locationSearch.includes(`filter=${filter}`) ||
+                  (filter === 'all' && !locationSearch.includes('filter='));
+                const active = pathname.startsWith('/guitar/repertoire') &&
+                  !pathname.includes('/session') && !pathname.includes('/manage') &&
+                  !pathname.includes('/progress') && matchesFilter;
+                return (
+                  <Link
+                    key={filter}
+                    to={href}
+                    className={cn(
+                      'block px-3 py-1.5 rounded-md text-sm transition-all duration-150',
+                      active
+                        ? 'text-on-surface bg-surface-container font-medium'
+                        : 'text-on-surface-variant/60 hover:text-on-surface hover:bg-surface-variant/50',
+                    )}
+                  >
+                    {label}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Saved Charts nav item */}
+        <div>
+          <Link
+            to="/library/saved-charts"
+            className={cn(
+              'px-4 py-3 flex items-center gap-3 transition-all duration-150',
+              pathname === '/library/saved-charts'
+                ? 'text-on-surface bg-surface-container'
+                : 'text-on-surface-variant/60 hover:text-on-surface hover:bg-surface-variant/50',
+            )}
+          >
+            <BookMarked className="h-5 w-5" />
+            <span className="font-medium">Saved Charts</span>
+          </Link>
+        </div>
+
+        {/* Setlists nav item */}
+        <div>
+          <Link
+            to="/library/setlists"
+            className={cn(
+              'px-4 py-3 flex items-center gap-3 transition-all duration-150',
+              pathname.startsWith('/library/setlists')
+                ? 'text-on-surface bg-surface-container'
+                : 'text-on-surface-variant/60 hover:text-on-surface hover:bg-surface-variant/50',
+            )}
+          >
+            <ListMusic className="h-5 w-5" />
+            <span className="font-medium">Setlists</span>
+          </Link>
+          {pathname.startsWith('/library/setlists') && (
+            <SetlistsNavSection search={locationSearch} />
+          )}
+        </div>
       </nav>
 
       <div className="px-4 mt-auto space-y-1">
-        <Link
-          to="/"
-          className="w-full py-3 px-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary-container font-bold flex items-center justify-center gap-2 mb-4 shadow-lg shadow-primary-container/20 active:scale-95 transition-transform"
-        >
-          <Plus className="h-4 w-4" />
-          New Session
-        </Link>
         <button
           onClick={() => window.dispatchEvent(new CustomEvent('open-settings'))}
           className="w-full text-on-surface-variant/60 hover:text-on-surface px-4 py-2 flex items-center gap-3 hover:bg-surface-variant/50 rounded-lg"
@@ -261,7 +470,7 @@ function DefaultSidebarContent({pathname, locationState}: {pathname: string; loc
   );
 }
 
-function Sidebar({pathname, locationState}: {pathname: string; locationState: unknown}) {
+function Sidebar({pathname, locationState, locationSearch}: {pathname: string; locationState: unknown; locationSearch: string}) {
   const {sidebarContent} = useSidebar();
 
   return (
@@ -269,7 +478,7 @@ function Sidebar({pathname, locationState}: {pathname: string; locationState: un
       'hidden lg:flex flex-col h-full bg-surface-container-low w-64 border-r border-outline-variant/20 shrink-0',
       !sidebarContent && 'py-4',
     )}>
-      {sidebarContent ?? <DefaultSidebarContent pathname={pathname} locationState={locationState} />}
+      {sidebarContent ?? <DefaultSidebarContent pathname={pathname} locationState={locationState} locationSearch={locationSearch} />}
     </aside>
   );
 }
@@ -314,7 +523,7 @@ export default function Layout({children}: {children: ReactNode}) {
           paddingRight: 'env(safe-area-inset-right, 0px)',
         }}
       >
-        <Sidebar pathname={pathname} locationState={location.state} />
+        <Sidebar pathname={pathname} locationState={location.state} locationSearch={location.search} />
         <main className="flex-1 min-h-0 flex flex-col overflow-hidden">
           {children}
         </main>

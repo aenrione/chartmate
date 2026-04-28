@@ -1,0 +1,38 @@
+{
+  "id": "03-rhythm-changes",
+  "title": "Rhythm Changes",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Rhythm Changes — Jazz's Second Most Important Form\n\n\"Rhythm Changes\" refers to the chord progression of **\"I Got Rhythm\"** by George Gershwin (1930). It's the second most common jazz form after the blues, and countless jazz heads are written over it.\n\n## The Form: AABA, 32 bars\n\n**A section** (8 bars, repeated 3 times):\n```\n| Bb  Gm  | Cm7  F7  | Bb  Bb7 | Eb  Edim |\n| Bb/F F7 | Bb   Bb  | Cm7  F7  | Bb       |\n```\n\n**B section** (Bridge, 8 bars):\n```\n| D7      | D7      | G7      | G7       |\n| C7      | C7      | F7      | F7       |\n```\n\nThe bridge uses **III7 – VI7 – II7 – V7** — secondary dominants moving in 4ths.\n\n## Famous Rhythm Changes Tunes\n\n- \"Anthropology\" — Charlie Parker\n- \"Oleo\" — Sonny Rollins\n- \"The Theme\" — Miles Davis\n- \"Cottontail\" — Duke Ellington\n- \"Moose the Mooche\" — Charlie Parker\n\n## Comping Rhythm Changes\n\nThe tempo is typically fast (200–300 BPM). Your comping must be economical:\n- Use shell voicings only at fast tempos\n- Aim for 2-beat chord changes on the A section\n- The bridge moves in 2-bar blocks (plenty of time)",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the form of 'Rhythm Changes' (I Got Rhythm)?",
+      "choices": ["12-bar blues", "ABAC, 32 bars", "AABA, 32 bars", "AAB, 24 bars"],
+      "answer": 2,
+      "explanation": "Rhythm Changes follows an AABA form with 32 bars: three 8-bar A sections (A-A-B-A) with the B section being the bridge. This form is also used in Gershwin's original 'I Got Rhythm.'",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Rhythm Changes Bridge\n\nThe bridge is the most harmonically interesting part of Rhythm Changes. It moves through four secondary dominants, each lasting 2 bars:\n\n```\nD7  |  D7  |  G7  |  G7  |  C7  |  C7  |  F7  |  F7\n```\n\n## What's Happening Harmonically\n\nThis is a **cycle of dominants moving in 4ths**:\n- D7 resolves (theoretically) to G\n- G7 resolves (theoretically) to C\n- C7 resolves (theoretically) to F\n- F7 resolves back to Bb (the tonic)\n\nBut in practice, none of them \"resolve\" — they keep moving forward in a chain of dominant suspense.\n\n## Comping the Bridge\n\nWith 2 bars per chord, you have time to be more interactive:\n1. Bar 1: chord stab on beat 1 (pad)\n2. Bar 2: rhythmic comping (Charleston or kicks)\n3. Respond to the soloist's phrases\n4. Leave space — don't play on every beat\n\n## Voicings for the Bridge\n\nUse dominant 9th shapes:\n- D9: x-x-4-4-3-2\n- G9: x-x-3-2-1-0 (open G position modified)\n- C9: x-3-2-3-1-x\n- F9: x-x-3-2-1-0 moved up 5 frets",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What harmonic movement does the bridge of Rhythm Changes follow?",
+      "choices": [
+        "Major chords moving in half steps",
+        "A cycle of dominant 7th chords moving in 4ths",
+        "ii-V-I progressions in 4 different keys",
+        "Alternating major and minor chords"
+      ],
+      "answer": 1,
+      "explanation": "The Rhythm Changes bridge uses D7 → G7 → C7 → F7, each dominant chord moving down a fifth (or up a fourth) to the next. This cycle of dominants creates forward harmonic momentum.",
+      "srs": true
+    }
+  ]
+}

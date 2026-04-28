@@ -1,0 +1,38 @@
+{
+  "id": "04-small-ensemble-writing",
+  "title": "Small Ensemble Writing",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Small Ensemble Writing\n\nWriting for small ensembles — string quartet, wind quintet, piano trio, jazz combo — differs significantly from orchestral writing. With fewer players, every note is exposed; there is nowhere to hide.\n\n### The String Quartet: The Gold Standard\n\nThe string quartet (Violin I, Violin II, Viola, Cello) is the most important chamber ensemble. Haydn, Mozart, Beethoven, Schubert, Brahms, Bartók — every major composer has written for it.\n\n**Voice distribution in string quartet**:\n- **Cello**: Bass voice — harmony foundation, sometimes lyrical tenor solos\n- **Viola**: Inner voice — harmonic filler, counter-melody\n- **Violin II**: Second soprano/alto — harmonic support, secondary melody\n- **Violin I**: Melody voice — primary line\n\n**Characteristics of good quartet writing**:\n1. All four voices have interesting material — no pure filler\n2. Texture varies (melody + accompaniment, then full texture, then single lines)\n3. Melodic material is shared between instruments\n4. Idiomatic writing — uses each instrument's strengths\n\n### The Piano Trio (Piano, Violin, Cello)\n\nThe piano already has full harmony and bass capability. The challenge: balance the piano against two strings.\n\n**Key issue**: The piano's attack decays; strings can sustain. Pianists must hold back dynamically to avoid overwhelming strings.\n\n**Texture strategies**:\n- Piano plays broken chords / arpeggios; strings carry melody\n- Strings play pizzicato or accompaniment figures; piano plays melody\n- Unison doubling at climaxes (all play the same line)\n\n### The Jazz Combo: Rhythm Section + Melody\n\nThe basic jazz combo: Piano (or guitar), Bass, Drums, + 1-2 melody instruments.\n\n**Rhythm section roles**:\n- **Bass**: Root motion, harmonic foundation, groove\n- **Drums**: Rhythmic texture, energy, dynamics\n- **Piano/Guitar**: Harmony, comping — fills the harmonic space\n\n**Melody instrument**: Improvises and/or reads the head (melody).\n\n**Key principle**: In jazz, the bass and drums are ALWAYS the groove foundation. The piano/guitar should not 'fill every space' — they leave room for the melody instrument. This is called 'comping' (accompanying): sparse, reactive, listening-based.\n\n### The Wood Wind Quintet\n\nFlute, Oboe, Clarinet (Bb), Bassoon, Horn (F) — five distinct timbres, no harmonic redundancy (unlike strings where multiple violins have similar timbre).\n\nChallenge: balance is tricky because each instrument has different volume and projection. The flute is easily covered by horn and bassoon. The oboe cuts through everything. Successful writing varies texture constantly.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a string quartet, which instrument is typically assigned the primary melody, and which provides the bass voice?",
+      "choices": [
+        "Violin II plays melody; Viola plays bass",
+        "Violin I plays primary melody; Cello provides the bass voice",
+        "Viola plays melody; Double Bass provides bass",
+        "All four instruments share melody equally with no distinction"
+      ],
+      "answer": 1,
+      "explanation": "In a standard string quartet texture, Violin I carries the primary melody (soprano voice) while the Cello provides the bass voice (harmonic foundation). The Viola and Violin II fill inner voices — harmonic support and counter-melodies. This voice distribution mirrors four-part choral writing (SATB), which is why studying string quartet writing is closely related to SATB harmony.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'comping' in a jazz ensemble context?",
+      "choices": [
+        "Competing with the melody instrument by playing equally loudly",
+        "Computer-assisted notation (shorthand for 'computing' harmony)",
+        "Accompanying the melody instrument reactively and sparsely — providing harmonic support without filling every space",
+        "Playing the melody simultaneously with the lead instrument"
+      ],
+      "answer": 2,
+      "explanation": "Comping (short for accompanying, or from the Latin 'complementum') is the jazz rhythm-section skill of providing harmonic support to the melody instrument or soloist in a sparse, reactive way. A good comper leaves space, listens to what the soloist is doing, and fills strategically rather than constantly. Over-comping — playing too much, too busily — is one of the most common mistakes of inexperienced jazz musicians.",
+      "srs": true
+    }
+  ]
+}

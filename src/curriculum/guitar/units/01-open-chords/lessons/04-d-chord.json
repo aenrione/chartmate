@@ -1,0 +1,32 @@
+{
+  "id": "04-d-chord",
+  "title": "The D Chord",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The D Major Chord\n\nD major is essential — it appears in countless songs across every genre.\n\n**Finger placement:**\n- Index (1): string 3, fret 2\n- Middle (2): string 1, fret 2\n- Ring (3): string 2, fret 3\n\nOnly strum strings 1–4. Mute strings 5 and 6.",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "D",
+      "frets": [2, 3, 2, 0, -1, -1],
+      "fingers": [2, 3, 1, 0, 0, 0],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many strings do you strum for the D chord?",
+      "choices": ["All 6", "5 strings", "4 strings", "3 strings"],
+      "answer": 2,
+      "explanation": "Strum only strings 1–4. The low E and A strings are muted (marked X).",
+      "srs": true
+    },
+    {
+      "type": "fretboard-drill",
+      "notes": ["D3", "A3", "D4", "F#4"],
+      "requiredCorrect": 4
+    }
+  ]
+}

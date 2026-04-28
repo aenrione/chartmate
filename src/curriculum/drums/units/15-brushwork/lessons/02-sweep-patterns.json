@@ -1,0 +1,35 @@
+{
+  "id": "02-sweep-patterns",
+  "title": "Sweep Patterns",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Two-Hand Sweep Pattern\n\nThe foundational brush technique for jazz ballads uses continuous sweep motions in both hands, creating an unbroken wash of sound with rhythmic articulation on top.\n\n**Classic left-hand sweep (for right-handed players):**\nThe left hand sweeps a large counterclockwise oval on the snare head:\n- The upstroke (away from you) emphasizes beats 1 and 3\n- The downstroke (toward you) emphasizes beats 2 and 4\n- Maintain constant contact — never lift the brush from the head\n- The oval should be roughly 6 inches across\n\n**Right-hand options:**\n1. Tap the swing pattern on the snare using the tip of the brush (like a light stick)\n2. Sweep a smaller clockwise oval for a two-hand wash\n3. Tap on the ride cymbal for a slightly more projecting sound\n\n**The 'shhhh' continuous sound:** This sweep technique produces the background wash that defines slow jazz ballad drumming. The rhythmic information lives in the accent points of the sweep, not in separate articulated strokes.\n\n**Speed consideration:** As tempo increases, the oval sweep becomes smaller and faster until it transitions into straight back-and-forth strokes.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Brush Sweep Rhythm Reference",
+      "description": "This pattern shows the rhythmic skeleton of the brush sweep — the accented points within the continuous oval motion. In actual brush playing, the hi-hat foot holds beats 2 and 4 while the hands continuously sweep.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 60,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-xx-xx-"},
+        {"name": "Hi-Hat", "pattern": "--x---x-"},
+        {"name": "Snare",  "pattern": "x---x---"},
+        {"name": "Kick",   "pattern": "x-------"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the classic two-hand brush sweep technique, what does the left hand do during a slow ballad?",
+      "choices": ["Taps individual notes on beats 1, 2, 3, and 4", "Sweeps a continuous oval on the snare head, maintaining contact throughout", "Holds the hi-hat closed", "Plays rim shots on the backbeat"],
+      "answer": 1,
+      "explanation": "The left hand sweeps a continuous counterclockwise oval on the snare head, never lifting off. This maintains the unbroken wash of sound characteristic of ballad brush playing, with rhythmic emphasis coming from the accent points within the sweep motion.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "12-latin-percussion",
+  "title": "Latin Percussion",
+  "description": "Son clave, bossa nova, samba, and Afro-Cuban 6/8 — the rhythmic foundations of Latin music",
+  "icon": "music",
+  "prerequisites": ["06-groove-styles"],
+  "lessons": ["01-clave", "02-bossa-nova", "03-samba", "04-afro-cuban", "05-mambo"]
+}

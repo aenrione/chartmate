@@ -1,0 +1,43 @@
+{
+  "id": "04-creating-your-blues-vocabulary",
+  "title": "Creating Your Blues Vocabulary",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Building a Personal Blues Vocabulary\n\nEvery great blues guitarist has a personal vocabulary — a set of licks, phrases, and gestures that are uniquely theirs. Building yours requires:\n\n1. **Absorbing** (transcribing and learning from masters)\n2. **Transforming** (modifying borrowed material)\n3. **Creating** (generating new ideas)\n4. **Forgetting** (playing until vocabulary becomes automatic)\n\n## The Transcription Method\n\nTranscription — learning solos by ear — is the most powerful blues learning tool:\n\n1. Choose a short phrase (2-4 bars)\n2. Listen repeatedly until you can sing it\n3. Find it on the guitar by trial and error\n4. Write it out in tab (optional)\n5. Play it in the original key until automatic\n6. Transpose it to 3 other keys\n\n## The Transformation Method\n\nTake a lick you've learned and transform it:\n\n| Original | Transformation |\n|----------|----------------|\n| Ascending | Make it descending |\n| Starts on beat 1 | Shift to start on \"and\" of 3 |\n| In A minor pentatonic | Transpose to B, C, D |\n| Fast 16th notes | Slow down, add bends |\n| Clean | Add vibrato and bends |\n\n**After 5 transformations, the lick is yours.**",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is transcription (learning solos by ear) considered the most powerful blues learning tool?",
+      "choices": [
+        "Because tabs are always wrong",
+        "It develops your ear to hear the music directly, bypasses intellectual filtering, and builds vocabulary the same way language is learned",
+        "It's faster than reading notation",
+        "Because blues has no written theory"
+      ],
+      "answer": 1,
+      "explanation": "Transcription builds a direct connection between what you hear and what you play. It develops the ear, builds musical vocabulary, and trains you to think musically rather than theoretically. The great blues masters — BB King, Albert King — all learned by listening, not reading.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Your Blues Practice Roadmap\n\n## Phase 1: Foundation (already have)\n- Minor pentatonic (all 5 positions)\n- Blues scale (b5 addition)\n- Basic call-and-response phrasing\n- 12-bar form and variations\n\n## Phase 2: Influences (current unit)\n- T-Bone Walker: 9th chords, double stops, jump blues\n- BB King: vibrato, BB box, economy of expression\n- SRV: intensity, bends, hybrid picking, Albert-style high register\n\n## Phase 3: Synthesis (personal)\n- Take one element from each master you admire\n- Create hybrid phrases that combine their ideas\n- Play over recordings and add your personal emotional touch\n\n## The Consistency Test\n\nAfter a solo, ask yourself:\n- Would someone recognize this as coming from the same player?\n- Do my phrases have a consistent personality?\n- Am I reacting to the music or executing exercises?\n\nConsistency of expression is what creates a recognizable voice.\n\n## Study Plan — 90 Days to Strong Blues Vocabulary\n\n- Days 1-30: Transcribe and transform 2 licks from BB King\n- Days 31-60: Transcribe and transform 2 licks from SRV\n- Days 61-90: Create 5 original licks combining what you've learned\n- Throughout: Jam over 12-bar blues every single day",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "After transcribing a lick, what is the most important step to make it your own?",
+      "choices": [
+        "Learn it in all 12 keys",
+        "Play it faster than the original",
+        "Transform it multiple ways — changing rhythm, direction, key, feel, and ornamentation",
+        "Publish it on social media"
+      ],
+      "answer": 2,
+      "explanation": "Transformation is what turns a borrowed lick into personal vocabulary. Changing the rhythm, direction, key, speed, and expressive details multiple times creates distance from the original source, making the material truly yours.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "02-direct-modulation",
+  "title": "Direct Modulation",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Direct Modulation: The Abrupt Key Change\n\n**Direct modulation** (also called **phrase modulation** or **abrupt modulation**) moves immediately from one key to another without a pivot chord. The old key simply stops, and the new key begins — often at a phrase boundary.\n\n### How Direct Modulation Works\n\nThe key change happens at a structural seam — typically:\n- At a phrase ending (after a cadence in the old key)\n- At a section boundary (verse → chorus, A section → B section)\n- Mid-phrase for dramatic effect\n\nBecause there is no pivot, the listener must adjust to the new tonal center quickly. A clear cadence in the new key must follow promptly to confirm the change.\n\n### The 'Truck Driver Modulation'\n\nThe most notorious form of direct modulation in pop music: **modulating up a half step or whole step at the final chorus** for an emotional lift. This device is called the 'truck driver modulation' (or 'gear change') — the music shifts up like a truck changing gears.\n\nExamples:\n- 'Livin' on a Prayer' (Bon Jovi): Key changes from E minor to G minor mid-song (up a minor third) — a large jump that creates a dramatic shift\n- 'I Will Always Love You' (Whitney Houston): The final chorus is a half step up from the verse\n- 'Man in the Mirror' (Michael Jackson): Semitone lift for the final climactic chorus\n\nThe truck driver modulation works not through harmonic logic but through **surprise and energy**. The sudden key change creates excitement because it disrupts the listener's expectations.\n\n### Phrase Modulation\n\nA cleaner form: the old key ends on a cadence, and the new key begins with its tonic. No pivot, but the phrase boundary provides a natural breathing point:\n\nEnd of verse: perfect cadence in G major (D7 → G)\nBeginning of bridge: C major begins immediately with I–V–IV\n\nThe listener accepts the new key because the phrase boundary signals 'something new is starting.'\n\n### When to Use Direct Modulation\n\nDirect modulation is appropriate when:\n1. **Emotional energy needs a boost** — the abruptness creates immediate impact\n2. **The new key is distant** (tritone, major third) and there is no good pivot chord\n3. **Speed matters** — development sections in classical music use direct modulation to cycle rapidly through multiple keys",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'direct modulation' and how does it differ from pivot chord modulation?",
+      "choices": [
+        "Direct modulation uses a pivot chord; pivot chord modulation does not",
+        "Direct modulation moves immediately to a new key without a shared pivot chord; pivot chord modulation uses a hinge chord",
+        "Direct modulation only occurs at the end of a piece; pivot modulation occurs in the middle",
+        "Direct modulation is more gradual and smooth than pivot chord modulation"
+      ],
+      "answer": 1,
+      "explanation": "Direct modulation moves abruptly from the old key to the new key without any shared pivot chord. The old key ends (usually at a cadence), and the new key begins. This is in contrast to pivot chord modulation, which uses a chord belonging to both keys as a smooth transition. Direct modulation is less smooth but can be dramatically effective.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is the 'truck driver modulation' (sudden key lift at the final chorus) effective despite its lack of harmonic sophistication?",
+      "choices": [
+        "Because it uses the smoothest possible voice leading between keys",
+        "Because it disrupts listener expectations with surprise, creating immediate emotional energy and excitement",
+        "Because it always moves to the relative minor for emotional depth",
+        "Because it uses the chromatic scale to connect the two keys"
+      ],
+      "answer": 1,
+      "explanation": "The truck driver modulation works through surprise and energy rather than harmonic logic. The sudden key change — especially upward by a half or whole step — creates an immediate emotional lift because it violates the listener's expectation of continued tonal stability. The abruptness IS the effect. It is a blunt instrument, but a very effective one for pop climaxes.",
+      "srs": true
+    }
+  ]
+}

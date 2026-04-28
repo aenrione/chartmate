@@ -1,0 +1,43 @@
+{
+  "id": "02-12-bar-variations",
+  "title": "12-Bar Blues Variations",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The 12-Bar Blues — Six Variations\n\nThe 12-bar blues is one of the most flexible and evolved forms in music. Here are six versions, from simplest to most sophisticated.\n\n## Version 1 — Basic Blues\n```\n| E  | E  | E  | E  |\n| A  | A  | E  | E  |\n| B  | A  | E  | E  |\n```\n\n## Version 2 — With Quick Change\n```\n| E  | A  | E  | E  |  (A in bar 2 = \"quick change\")\n| A  | A  | E  | E  |\n| B  | A  | E  | E  |\n```\n\n## Version 3 — Dominant 7th Blues\n```\n| E7 | A7 | E7 | E7 |\n| A7 | A7 | E7 | E7 |\n| B7 | A7 | E7 | B7 |  (last bar = turnaround)\n```\n\n## Version 4 — Jazz Blues (in Bb)\n```\n| Bb7  | Eb7  | Bb7  | Bb7  |\n| Eb7  | Edim7| Bb7  | G7   |\n| Cm7  | F7   | Bb7  | F7   |\n```\n\n## Version 5 — Bird Blues (Charlie Parker changes)\n```\n| F7    | Bb7   | F7    | Cm7 F7 |\n| Bb7   | Bdim7 | F7/C  | Am7 D7 |\n| Gm7   | C7    | Am7 D7| Gm7 C7 |\n```\n\n## Version 6 — Texas Shuffle Blues (see Lesson 3)\n\nEach version requires different comping and solo vocabulary. Master them all.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the 'quick change' in blues form?",
+      "choices": [
+        "Playing faster at the end of each 12-bar chorus",
+        "Going to the IV chord in bar 2 instead of staying on I",
+        "Switching to a minor key in bar 9",
+        "Adding a diminished chord in bar 6"
+      ],
+      "answer": 1,
+      "explanation": "A quick change (or 'quick IV') goes to the IV chord in bar 2 before returning to I in bars 3-4. Standard blues stays on I for the first 4 bars. The quick change adds harmonic interest early in the form.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Turnaround — Last Two Bars of the Blues\n\nThe turnaround in bars 11–12 is where the 12-bar form \"turns\" back to the top. This is where guitarists get creative.\n\n## Classic Blues Turnarounds\n\n### 1. Standard V-IV-I\n```\n| B7  | A7  | E7  |\n```\n\n### 2. Single-String Turnaround (E blues)\n```\ne |--0--4--3--2--1--0--|\n(high E string, descending chromatic)\n```\n\n### 3. Double-Stop Turnaround\n```\ne |--0---------0------|\nB |------4--3--2--1---|\n(root held, B string descends)\n```\n\n### 4. BB King-Style Turnaround\nUses a climbing minor pentatonic run into the V chord.\n\n### 5. Robert Johnson-Style\nSingle-note descending run on the bass strings:\n```\nE |--0-----4--3--2--1--|\n   E  ... chromatic descend back to E\n```\n\n## Practice Protocol\n\nLearn all five turnaround styles. Play a basic 12-bar in E, substituting a different turnaround each chorus. By the end of 5 choruses you'll have a complete vocabulary of endings.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a 12-bar blues, where does the turnaround typically occur?",
+      "choices": [
+        "Bars 1-2",
+        "Bars 5-6",
+        "Bars 9-10",
+        "Bars 11-12 (the last two bars)"
+      ],
+      "answer": 3,
+      "explanation": "The turnaround occurs in bars 11-12 (the final two bars of the 12-bar form). It creates harmonic momentum that leads back to bar 1 of the next chorus, making the loop seamless.",
+      "srs": true
+    }
+  ]
+}

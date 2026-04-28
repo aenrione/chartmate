@@ -1,0 +1,38 @@
+{
+  "id": "01-quartal-harmony",
+  "title": "Quartal Harmony",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Quartal Harmony: Building Chords in Fourths\n\nTraditional Western harmony builds chords by stacking thirds (tertian harmony). **Quartal harmony** builds chords by stacking **perfect fourths**. This creates a fundamentally different sonic world — open, ambiguous, modern.\n\n### From Thirds to Fourths\n\n**Tertian (traditional)**: C–E–G–B (thirds: C→E is M3, E→G is m3, G→B is M3)\n**Quartal**: C–F–Bb–Eb (fourths: C→F is P4, F→Bb is P4, Bb→Eb is P4)\n\nThe difference is immediately audible: the quartal stack sounds open, floating, and ambiguous — it doesn't clearly assert major or minor quality.\n\n### The McCoy Tyner / Coltrane Sound\n\nMcCoy Tyner (pianist on Coltrane's classic quartet recordings 1960–1965) pioneered quartal voicings in jazz:\n\n**Left hand**: Perfect fourth or fifth (rootless bass movement)\n**Right hand**: Stack of two or three fourths\n\nTypical McCoy voicing on D minor: \nLeft hand: A (the fifth of Dm)\nRight hand: D–G–C (stack of two fourths)\n\nThis creates a Dm11 sound without any thirds — the quality is ambiguous between minor, suspended, and modal.\n\n### Quartal Harmony and Modes\n\nQuartal harmony is ideally suited to modal music because:\n1. It avoids the clear major/minor designation of tertian chords\n2. It sounds 'ancient' (medieval parallel organum used fourths and fifths)\n3. It works over static harmonic areas without pushing for V→I resolution\n\nIn C Dorian: A stack of fourths built on D: D–G–C–F — this is the 'So What' voicing, and it perfectly expresses the Dorian modal color without any thirds.\n\n### Quartal Voicings for All Chord Types\n\n**How to build quartal voicings**: Choose fourths that are appropriate scale members. In D Dorian (D–E–F–G–A–B–C): D–G–C–E is a mixed quartal/quintal voicing (D→G=P4, G→C=P4, C→E=M3). Adding a major third on top is the 'So What' shape.\n\n### Listening Guide\n\n- **Miles Davis, 'Kind of Blue' (1959)**: McCoy Tyner predecessor Bill Evans uses quartal voicings throughout\n- **John Coltrane Quartet, 'A Love Supreme' (1964)**: McCoy Tyner's quartal piano is central to the album's modal sound\n- **Chick Corea, 'Spain'**: Quartal voicings in a flamenco-jazz context\n- **Herbie Hancock, 'Maiden Voyage'**: Fourths-based piano voicings throughout",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the fundamental difference between tertian and quartal harmony?",
+      "choices": [
+        "Tertian harmony is for classical music; quartal is for jazz only",
+        "Tertian harmony builds chords by stacking thirds; quartal harmony builds chords by stacking fourths",
+        "Tertian harmony uses only major chords; quartal harmony uses only minor chords",
+        "Tertian uses even-numbered intervals; quartal uses odd-numbered intervals"
+      ],
+      "answer": 1,
+      "explanation": "Tertian harmony (from Latin 'tertia,' third) stacks thirds: C–E–G (major triad), C–E–G–B (maj7). Quartal harmony stacks fourths: C–F–Bb–Eb. The different interval creates a fundamentally different sound — tertian chords have clear major/minor quality; quartal chords are open, ambiguous, and modern-sounding.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is quartal harmony particularly well-suited to modal jazz?",
+      "choices": [
+        "Because quartal chords always resolve to the tonic",
+        "Because quartal harmony avoids the clear major/minor designation of tertian chords, creating an open ambiguity that works over static modal areas without implying V→I resolution",
+        "Because quartal chords are easier to play on piano",
+        "Because fourths are more consonant than thirds in modal music"
+      ],
+      "answer": 1,
+      "explanation": "Modal jazz often dwells on one scale or chord area for extended periods without V→I harmonic motion. Quartal voicings are ideal because they don't strongly assert major or minor, don't create obvious harmonic tension that demands resolution, and create a floating, open quality appropriate to extended modal dwelling. The 'So What' chord is the canonical example: it sounds Dorian without forcing a cadential resolution.",
+      "srs": true
+    }
+  ]
+}

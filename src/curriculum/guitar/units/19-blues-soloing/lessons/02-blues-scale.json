@@ -1,0 +1,38 @@
+{
+  "id": "02-blues-scale",
+  "title": "The Blues Scale",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Blues Scale — The Chromatic Addition\n\nThe blues scale adds one note to the minor pentatonic: the **b5** (flat fifth), also called the **blue note**.\n\n## A Blues Scale\n\nA minor pentatonic: A – C – D – E – G\nA blues scale: A – C – D – **Eb** – E – G\n\nThe Eb is the blue note — squeezed between D and E.\n\n## Why the Blue Note Works\n\nThe b5 creates dissonance — it \"bends\" the sound toward emotional tension. In blues, this tension is the whole point. The b5 is bent from Eb up to E (the natural 5th), which is the most characteristic blues guitar gesture.\n\n## Blues Scale in Box 1 (A minor, fret 5)\n\n```\ne |--5--8---------|\nB |--5--8---------|\nG |--5--6--7------|\nD |--5--6--7------| (add fret 6 = Eb blue note)\nA |--5--7---------|\nE |--5--8---------|\n```\n\nThe blue note (b5) appears on strings 4 and 3 at fret 6 (between D at fret 5 and E at fret 7).\n\n## Using the Blue Note\n\nDon't simply play the blue note as a passing tone. **Bend it**:\n- Play Eb (fret 6, string 4) and bend it up to E (natural)\n- Or approach from the D below and slide through Eb to E\n- Or shake it (slow vibrato on Eb)\n\nThe expressive possibilities of this one note are vast.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What note is added to the minor pentatonic to create the blues scale?",
+      "choices": ["The major 7th", "The b2 (flat 2nd)", "The b5 (flat 5th) — the 'blue note'", "The major 3rd"],
+      "answer": 2,
+      "explanation": "The blues scale adds the b5 (flat fifth, also called the 'blue note') to the minor pentatonic. In A blues scale: A-C-D-Eb-E-G. The Eb is the blue note squeezed between D and E, creating the characteristic dissonance of blues.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Major vs. Minor Blues Scale\n\nThere's also a **major blues scale** — the major pentatonic with an added b3:\n\n**A major blues scale**: A – B – C – C# – E – F#\n\nThe b3 (C) is the blue note in the major context.\n\n## When to Use Each\n\n| Scale | Best For |\n|-------|----------|\n| Minor blues scale | Dark, moody, aggressive blues |\n| Major blues scale | Bright, uplifting, country-blues |\n| Mixed (both) | Complete blues vocabulary |\n\n## The BB King Box\n\nBB King's signature soloing area combines both blues scales in a small region around the root:\n\nIn A, around fret 5:\n```\ne |-------5-8-----------|\nB |-----5-6-8-----------|\nG |---5-6-7----(5-6-7)--|\n```\n\nThis \"BB Box\" sits above the regular minor pentatonic box and is the source of BB's singing, vocal quality.\n\n## Mixing Major and Minor\n\nThe true blues vocabulary mixes major and minor pentatonic constantly:\n- Start a phrase in minor (dark, bluesy)\n- Resolve to a major note (bright, resolved)\n- This major-minor tension is the essence of blues expression",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the 'BB King Box' or 'BB Box' in blues soloing?",
+      "choices": [
+        "A specific guitar model used by BB King",
+        "A small fretboard area above the minor pentatonic box mixing major and minor blues notes near the root",
+        "A 12-bar chord progression",
+        "A type of effects pedal"
+      ],
+      "answer": 1,
+      "explanation": "The BB King Box is a small pentatonic-plus scale area at the top of the standard minor pentatonic position, incorporating both major and minor 3rd blue notes. BB King's signature vocal bends and singing quality come largely from his mastery of this compact area.",
+      "srs": true
+    }
+  ]
+}

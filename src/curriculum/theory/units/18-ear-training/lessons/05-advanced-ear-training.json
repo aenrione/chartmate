@@ -1,0 +1,38 @@
+{
+  "id": "05-advanced-ear-training",
+  "title": "Advanced Ear Training",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Advanced Ear Training: From Intervals to Progressions\n\nOnce interval and chord quality recognition are solid, advanced ear training moves to hearing progressions, modulations, and individual chord tones within complex textures.\n\n### Hearing Progressions: The Roman Numeral Ear\n\nThe goal is to hear a chord progression and identify its Roman numerals without knowing the key. This is called **functional hearing** — you hear harmonic function (tonic, dominant, subdominant) rather than absolute pitches.\n\nProcess:\n1. Identify whether the opening chord feels like 'home' (I)\n2. When a chord appears that creates tension, identify whether it is V (dominant) or IV (subdominant) feeling\n3. Follow the harmonic motion: does it feel like a V→I resolution? A IV→V→I progression?\n\n### The Four Fundamental Progressions by Sound\n\n| Progression | Sound Quality |\n|---|---|\n| I → IV → V → I | Complete, rounded, classic |\n| I → V → vi → IV | Circular, modern pop feel |\n| I → vi → IV → V | '50s doo-wop, nostalgic |\n| ii → V → I | Jazz, sophisticated, strong pull |\n\n### Transcription: The Ultimate Test\n\nTranscribing music by ear — writing out both melody and chords from a recording — is the highest ear-training skill. Process for harmonic transcription:\n\n1. Identify the key (listen to the tonic chord)\n2. Identify phrase boundaries — where do the chords change at cadences?\n3. At each cadence, what is the last chord? (Usually V or I)\n4. Work backwards from cadences to fill in inner chords\n5. Verify by singing the bass line — can you hear individual bass notes?\n\n### Recommended Transcription Exercises\n\n- **Simple**: Transcribe 'Twinkle Twinkle Little Star' harmonized by a piano teacher (melody + chords)\n- **Medium**: Transcribe a Beatles verse (e.g., 'Let It Be' or 'Yesterday')\n- **Advanced**: Transcribe a Bill Evans piano trio recording (chord changes + voicings)\n- **Expert**: Transcribe 'Maiden Voyage' (Herbie Hancock) — quartal voicings and modal harmony\n\n### Tools and Practice\n\n- **Transcription software**: Transcribe! (Mac/Windows) allows slow playback without pitch change\n- **Tone deafness is rare**: Most people who think they are 'tone deaf' actually have untrained ears that can be developed\n- **Daily practice**: 15–20 minutes daily of active ear training is more effective than 2-hour sessions once a week",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'functional hearing' in ear training?",
+      "choices": [
+        "Hearing the specific note names (C, D, E) without reference to a key",
+        "Hearing harmonic function — identifying tonic, dominant, subdominant feeling — rather than absolute pitches",
+        "Being able to sing any note on demand (perfect pitch)",
+        "Identifying the time signature by ear"
+      ],
+      "answer": 1,
+      "explanation": "Functional hearing means hearing the role that each chord plays in the key — tonic (home), dominant (tension), subdominant (movement away from home). Rather than identifying notes as 'G, B, D, F' (absolute), functional hearing identifies 'that's the V7 chord — dominant function, wants to resolve.' This is the most practically useful ear training skill for playing, composing, and analyzing.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When transcribing harmony by ear, what is the most efficient starting strategy?",
+      "choices": [
+        "Start at the beginning and identify every chord in order",
+        "Identify phrase boundaries and cadence chords first, then fill in inner chords working backwards",
+        "Identify the highest note of each chord first",
+        "Listen to the melody only — ignore the harmony at first"
+      ],
+      "answer": 1,
+      "explanation": "Cadences are the structural landmarks of harmonic progressions — they are often the most clearly audible chord changes. By identifying V→I or IV→V→I at phrase endings first, you establish the key and the structural harmonic points. Then inner chords fill in logically. Working from cadences inward is more efficient than trying to identify every chord sequentially from the beginning.",
+      "srs": true
+    }
+  ]
+}

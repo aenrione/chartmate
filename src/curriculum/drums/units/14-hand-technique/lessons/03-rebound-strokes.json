@@ -1,0 +1,20 @@
+{
+  "id": "03-rebound-strokes",
+  "title": "Rebound Strokes",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Harnessing the Rebound\n\nEvery time a drumstick strikes a surface, it bounces back. Most beginners fight this rebound — they try to control or stop the stick after each hit. This is exactly wrong.\n\n**The rebound principle:** The stick's natural rebound from the drumhead should supply most of the energy for the next stroke. Your muscles only add a small amount of force on top of what physics already provides.\n\n**Practicing rebound:**\n1. Drop the stick onto the snare head and let it bounce freely\n2. Count the bounces — a well-maintained head and properly held stick will bounce 5-7 times\n3. Now try to 'ride' those bounces, letting the stick determine its own rhythm\n4. Gradually learn to control the bounce height without stopping it\n\n**Dead strokes** (controlled rebound suppression): Sometimes you want no rebound — for press rolls, stick shots, or specific tonal effects. This requires intentionally suppressing the natural rebound. Learning both freely rebounding and dead strokes gives complete expressive control.\n\n**Head condition matters:** A worn, thin, or over-damped head absorbs rebound energy. Fresh, resonant heads enable the rebound technique. This is one reason professionals change heads frequently.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the correct approach to the stick's natural rebound from the drumhead?",
+      "choices": ["Stop the stick immediately after each stroke to prevent unwanted noise", "Fight the rebound to maintain strict control", "Harness and redirect the rebound energy to power subsequent strokes", "Only allow rebound on the dominant hand"],
+      "answer": 2,
+      "explanation": "The stick's natural rebound should be harnessed — your fingers and wrist redirect the bouncing energy into the next stroke. Fighting the rebound wastes energy, causes tension, and severely limits speed. Good technique works with physics, not against it.",
+      "srs": true
+    }
+  ]
+}

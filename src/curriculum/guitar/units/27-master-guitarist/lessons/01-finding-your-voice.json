@@ -1,0 +1,43 @@
+{
+  "id": "01-finding-your-voice",
+  "title": "Finding Your Voice",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Finding Your Musical Voice — The Ultimate Goal\n\nEvery guitarist who reaches this level has accumulated vast technique and vocabulary. The challenge now is different: **synthesizing everything into a personal voice that is unmistakably yours**.\n\n## What Is a Musical Voice?\n\nA musical voice is the combination of:\n1. **Tone**: How you physically produce sound (pick angle, pressure, gear, touch)\n2. **Vocabulary**: Which techniques and patterns you gravitate toward\n3. **Phrasing**: How you organize notes in time\n4. **Harmonic Language**: Which chords and progressions feel natural to you\n5. **Aesthetic Values**: What you consider beautiful or interesting\n\nTaken together, these create a sonic fingerprint.\n\n## The Synthesis Problem\n\nYou've studied: fingerstyle, jazz, blues, classical, tapping, legato, alternate picking, composition. Each required absorbing other musicians' voices.\n\nNow the work is **subtracting**:\n- Which elements truly resonate with you?\n- Which elements feel \"borrowed\" and don't fit?\n- What musical territory do YOU want to explore?\n\n## The Identity Markers of Guitar Masters\n\n- **Wes Montgomery**: Octaves, thumb picking, warm tone\n- **BB King**: Economy, vibrato, the BB box\n- **Chet Atkins**: Thumb independence, sophistication, warmth\n- **Pat Metheny**: Lyrical clarity, jazz-country blend, 6-string and guitar synth\n- **SRV**: Texas blues intensity, heavy strings, Hendrix-King synthesis\n\nEach master took 2-3 elements and perfected them endlessly.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why does finding your voice require 'subtracting' learned techniques rather than adding more?",
+      "choices": [
+        "Technique is less important than sound",
+        "Having mastered many styles, the work is identifying which elements resonate authentically — removing borrowed elements to reveal your genuine musical personality",
+        "Subtraction is easier than addition",
+        "Professional guitarists use fewer techniques"
+      ],
+      "answer": 1,
+      "explanation": "After learning many styles and techniques, the guitarist is rich in vocabulary but may lack a distinctive voice. Finding your voice requires removing what doesn't fit — the borrowed, imitative elements — until what remains is authentically personal. Addition created the library; subtraction creates the voice.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Voice Development Exercises\n\n## Exercise 1: The Limitation Game\n\nCompose a piece using ONLY these restrictions:\n- 5 notes total (your choice)\n- One rhythm pattern\n- One dynamic level\n\nRestrictions force creativity. Some of the most personal musical statements come from working within tight limits.\n\n## Exercise 2: Your Top 5\n\nList the 5 guitarists who most moved you emotionally (not technically).\nFor each: identify the ONE thing that moves you most about them.\nNow practice specifically that element.\n\nResult: Your influences become internalized rather than imitated.\n\n## Exercise 3: Record Without Listening Back\n\nFor 30 days, improvise for 10 minutes daily and **don't listen back**.\nThis removes self-consciousness and forces you to play from feeling rather than from evaluation.\n\nAt the end of 30 days, listen to everything. Patterns will emerge — these are your authentic voice beginning to appear.\n\n## Exercise 4: The One-Scale Restriction\n\nFor one month, improvise using only ONE scale (e.g., A minor pentatonic Box 1). No other notes.\n\nThis forces you to find deep expression within a constraint — the essence of style development.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why does playing with self-imposed restrictions often reveal a more personal musical voice?",
+      "choices": [
+        "Restrictions make music simpler",
+        "Within restrictions, technical options narrow, forcing emotional and creative choices rather than vocabulary-filling",
+        "Restrictions are the classical tradition",
+        "Less notes means better music always"
+      ],
+      "answer": 1,
+      "explanation": "With unlimited options, musicians default to learned vocabulary. Restrictions eliminate the default responses, forcing genuine creativity and emotional decision-making. The resulting music often feels more personal and distinctive because it required making real choices rather than applying patterns.",
+      "srs": true
+    }
+  ]
+}

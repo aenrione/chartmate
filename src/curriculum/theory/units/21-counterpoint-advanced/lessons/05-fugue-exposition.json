@@ -1,0 +1,33 @@
+{
+  "id": "05-fugue-exposition",
+  "title": "The Fugue Exposition",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## The Fugue Exposition: Presenting the Subject\n\nThe **exposition** of a fugue presents the subject in all voices in succession. It is the opening section and the most structured part of the fugue.\n\n### Exposition Structure (Four-Voice Fugue)\n\n**Entry 1** (Dux): Subject in the first voice alone (e.g., soprano). Typically in the tonic.\n\n**Entry 2** (Comes): Answer in the second voice (e.g., alto). First voice begins the countersubject.\n\n**Entry 3**: Subject in the third voice (e.g., tenor). Second voice plays countersubject; first voice plays free counterpoint.\n\n**Entry 4**: Answer in the fourth voice (e.g., bass). Third voice plays countersubject; upper voices play free counterpoint.\n\n(End of exposition)\n\n### Codetta\n\nSometimes a brief **codetta** connects entries — a short bridge passage between the answer and the next subject entry. The codetta may modulate slightly or provide a brief episode to space out the entries.\n\n### The Middle Entries (Development)\n\nAfter the exposition, the fugue moves through **middle entries** — subject appearances in various keys (dominant, relative major/minor, subdominant, etc.), separated by **episodes** (sequential development of motives from the subject and countersubject). This is the development section of the fugue, analogous to sonata form development.\n\n### The Final Section (Stretto and Close)\n\nMost fugues build toward a climactic section with:\n- **Stretto**: Overlapping entries of the subject (creating density)\n- **Pedal point**: Long sustained tonic or dominant note in the bass while upper voices continue\n- **Final cadence**: Strong authentic cadence in the home key\n\n### Anatomy of a Great Fugue: BWV 847 (WTC I, C minor)\n\nBach's Fugue No. 2 in C minor is a model for study:\n- **Subject**: Four notes, chromatic quality (C–B–D–Db–Eb)\n- **Answer**: Tonal, in G minor\n- **Countersubject**: Eighth-note running figure in perfect double counterpoint with subject\n- **Three voices**: Compact, intense\n- **Exposition**: Three entries (soprano, alto, bass) with codetta between\n- **Middle entries**: G minor, Eb major, F minor\n- **Final stretto**: All three voices overlap in stretto\n- **Length**: 31 bars — maximum compression, no wasted notes\n\nListening guide: Bach's *Well-Tempered Clavier* Book I and II contain 48 preludes and fugues in all 24 major and minor keys. Every serious musician should know these works.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a four-voice fugue exposition, how many entries of the subject/answer occur before the exposition ends?",
+      "choices": ["Two (subject + answer)", "Three (subject + answer + subject)", "Four (one in each voice: S–A–T–B)", "Six (two rounds of all voices)"],
+      "answer": 2,
+      "explanation": "A four-voice fugue exposition has four entries — one in each voice. The entries alternate between subject and answer: typically Soprano (subject) → Alto (answer) → Tenor (subject) → Bass (answer). After all four voices have entered, the exposition is complete. The fugue then continues with middle entries and development.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'pedal point' and when does it typically occur in a fugue?",
+      "choices": [
+        "A note played by the foot pedal on an organ",
+        "A long sustained note (usually in the bass on the tonic or dominant) while the other voices continue moving — typically near the end of the fugue before the final cadence",
+        "Any note that appears in every fugue entry",
+        "The bass line that moves in lockstep with the subject"
+      ],
+      "answer": 1,
+      "explanation": "A pedal point (or organ point) is a long sustained note in the bass (or occasionally another voice) while the other voices continue with moving harmony. In a fugue, a dominant pedal near the end creates enormous tension — the bass sustains the dominant note (V) while the upper voices weave through increasingly complex harmonies above it, finally releasing into the tonic at the final cadence.",
+      "srs": true
+    }
+  ]
+}

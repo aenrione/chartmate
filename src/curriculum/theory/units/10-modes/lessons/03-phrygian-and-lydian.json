@@ -1,0 +1,72 @@
+{
+  "id": "03-phrygian-and-lydian",
+  "title": "Phrygian & Lydian",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Phrygian & Lydian\n\nThese two modes sit at opposite ends of the emotional spectrum: Phrygian is dark and exotic, Lydian is bright and ethereal. Both have a single signature note that defines their character.\n\n### Phrygian (Mode 3) — Dark and Exotic\n\n**Phrygian** is built on the 3rd degree of the major scale. **E Phrygian** uses C major notes centered on E.\n\n**E Phrygian**: E F G A B C D E\nInterval pattern: **H–W–W–W–H–W–W**\n\nThe defining feature: **the scale begins with a half step** — the 2nd degree is just a half step above the root (F natural above E). This **flat second (b2)** is Phrygian's signature.\n\n**Emotional character:** Dark, tense, ominous, exotic. Depending on the context it can sound Spanish (flamenco), Middle Eastern, or intensely menacing.\n\n**The Phrygian chord:** The characteristic harmonic gesture in Phrygian is the **bII chord** (a major chord built one half step above the root). In E Phrygian, bII = **F major**. The motion i → bII (Em → F) is instantly recognizable as Phrygian. This move appears constantly in flamenco and Spanish guitar music.\n\n**Examples in music:**\n- Flamenco guitar — the entire harmonic language of flamenco is largely built on Phrygian and Phrygian dominant\n- **'Wherever I May Roam'** (Metallica) — the opening riff uses Phrygian's b2 sound\n- **'White Rabbit'** (Jefferson Airplane) — builds on a Phrygian ascending line\n\n### Lydian (Mode 4) — Dreamy and Otherworldly\n\n**Lydian** is built on the 4th degree of the major scale. **F Lydian** uses C major notes centered on F.\n\n**F Lydian**: F G A B C D E F\nInterval pattern: **W–W–W–H–W–W–H**\n\nThe defining feature: **the 4th degree is raised a half step** — the scale has a **#4 (raised 4th, augmented fourth)** instead of the natural 4th. In F Lydian, the 4th degree is B natural instead of Bb.\n\n**Emotional character:** Dreamy, floating, ethereal, wonder-inducing, otherworldly. Lydian sounds like you're hovering slightly above the ground — bright, but unresolved in a pleasant way.\n\n**The Lydian chord:** The #4 creates a **tritone above the root**, but unlike the dominant seventh's tritone (which resolves downward under tension), the Lydian tritone floats upward peacefully. The characteristic chord move is **I → II** (F major → G major in F Lydian — note the major II chord, which is diatonic in Lydian).\n\n**Examples in music:**\n- John Williams film scores — Lydian mode creates the 'sense of wonder' in many cinematic moments\n- **'Flying'** (The Beatles, from Magical Mystery Tour) — a pure Lydian piece\n- **'The Simpsons' theme** — the opening notes outline a Lydian #4\n- Joe Satriani's guitar work — 'Flying in a Blue Dream' and others\n- Progressive rock — Dream Theater and similar bands use Lydian for epic, spacious passages",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the signature interval that defines Phrygian mode?",
+      "choices": [
+        "A raised 4th (#4) above the root",
+        "A flat 2nd (b2) — the scale begins with a half step",
+        "A minor 7th (b7) below the octave",
+        "A raised 6th (major 6th) above the root"
+      ],
+      "answer": 1,
+      "explanation": "Phrygian's defining characteristic is the flat 2nd (b2) — the scale begins with a half step (H–W–W–W–H–W–W). In E Phrygian, the 2nd degree is F natural, just a half step above E. This b2 gives Phrygian its dark, exotic, Spanish sound.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the signature interval that defines Lydian mode?",
+      "choices": [
+        "A flat 7th (b7) — one below the octave",
+        "A flat 2nd (b2) — the scale begins with a half step",
+        "A raised 4th (#4) — an augmented fourth above the root",
+        "A flat 6th (b6) — creating a darker minor sound"
+      ],
+      "answer": 2,
+      "explanation": "Lydian's defining characteristic is the raised 4th (#4, augmented fourth). In F Lydian, the 4th degree is B natural instead of Bb. This #4 creates a tritone above the root that floats rather than resolves urgently — giving Lydian its dreamy, ethereal quality.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "E Phrygian uses the same notes as which parent major scale?",
+      "choices": ["E major", "A major", "G major", "C major"],
+      "answer": 3,
+      "explanation": "E Phrygian is built on the 3rd degree of C major. E is the 3rd note of C major, so E Phrygian uses all the notes of C major (C D E F G A B) centered on E. The notes E–F–G–A–B–C–D are all natural notes — no sharps or flats.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The characteristic harmonic motion in Phrygian is best described as:",
+      "choices": [
+        "i resolving to V7",
+        "I moving to the II chord (a major chord a whole step above)",
+        "i moving to the bII chord (a major chord a half step above)",
+        "i moving to the iv minor chord"
+      ],
+      "answer": 2,
+      "explanation": "The Phrygian characteristic chord motion is i → bII: the tonic minor chord moving to a major chord just a half step above. In E Phrygian, that is Em → F major. This bII chord (the 'Phrygian chord') is the signature sound of flamenco and dark cinematic music.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which of the following composers and contexts is most associated with Lydian mode?",
+      "choices": [
+        "Metallica and heavy metal guitar riffs",
+        "John Williams and film score wonder/magic moments",
+        "Miles Davis and cool jazz improvisation",
+        "Antonio Carlos Jobim and bossa nova"
+      ],
+      "answer": 1,
+      "explanation": "John Williams frequently uses Lydian mode to create a sense of wonder, magic, and otherworldliness in film scores. The raised 4th of Lydian creates a floating, ethereal quality that perfectly supports cinematic moments of discovery and awe. Many famous film themes contain Lydian passages.",
+      "srs": true
+    }
+  ]
+}

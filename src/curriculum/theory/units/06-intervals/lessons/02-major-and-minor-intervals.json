@@ -1,0 +1,64 @@
+{
+  "id": "02-major-and-minor-intervals",
+  "title": "Major & Minor Intervals",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Major and Minor Intervals\n\n### Which Intervals Are Major or Minor?\n\nNot all intervals can be major or minor. Only four interval sizes carry major/minor quality:\n- **2nds** (major 2nd / minor 2nd)\n- **3rds** (major 3rd / minor 3rd)\n- **6ths** (major 6th / minor 6th)\n- **7ths** (major 7th / minor 7th)\n\nThe remaining intervals — unisons, 4ths, 5ths, and octaves — are called **perfect** intervals and have their own quality system (covered in the next lesson).\n\n### Defining Major Intervals\n\nMajor intervals are the intervals formed by the notes of the major scale above the tonic. Starting from C:\n\n| Interval | Notes | Half Steps |\n|----------|-------|------------|\n| Major 2nd (M2) | C – D | 2 |\n| Major 3rd (M3) | C – E | 4 |\n| Major 6th (M6) | C – A | 9 |\n| Major 7th (M7) | C – B | 11 |\n\nMemory shortcut: **all major scale intervals above the tonic are either major or perfect**. There are no minor intervals built naturally above the tonic of a major scale (for 2nds, 3rds, 6ths, and 7ths).\n\n### Defining Minor Intervals\n\nA **minor interval is one half step smaller than the corresponding major interval**. This is the critical relationship:\n\n| Interval | Notes (from C) | Half Steps |\n|----------|---------------|------------|\n| Minor 2nd (m2) | C – Db | 1 |\n| Minor 3rd (m3) | C – Eb | 3 |\n| Minor 6th (m6) | C – Ab | 8 |\n| Minor 7th (m7) | C – Bb | 10 |\n\nTo find a minor interval: find the major interval, then lower the upper note by one half step (or raise the lower note by one half step). The letter name stays the same — only the quality changes.\n\n### The Major/Minor 3rd: The Heart of Chord Quality\n\nThe difference between a **major chord** and a **minor chord** is entirely determined by whether the third above the root is a major 3rd or a minor 3rd:\n- C major chord: C – E – G (C to E = **major 3rd**, 4 half steps)\n- C minor chord: C – Eb – G (C to Eb = **minor 3rd**, 3 half steps)\n\nThat one half step difference — between E and Eb — is what makes a chord sound bright and happy vs. dark and somber. The major 3rd is arguably the most emotionally significant interval in Western music.\n\n### Consonance and Dissonance\n\nConsonance (stability) vs. dissonance (tension) in intervals:\n- **Most consonant**: perfect intervals (P5, P4, P8), major/minor 3rds\n- **Moderate consonance**: major/minor 6ths\n- **Mild dissonance**: major/minor 2nds, major 7th\n- **Strong dissonance**: minor 7th, minor 2nd, tritone\n\nMinor intervals are generally slightly more dissonant than their major counterparts, though both 3rds and 6ths are considered consonant regardless of major/minor quality.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many half steps are in a major 3rd?",
+      "choices": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "answer": 2,
+      "explanation": "A major 3rd spans 4 half steps. From C: C to C# (1), C# to D (2), D to D# (3), D# to E (4). C to E is the archetypal major 3rd — 4 half steps. The minor 3rd (C to Eb) is 3 half steps — one half step smaller. This 1-half-step difference between major and minor thirds is what determines whether a chord sounds major or minor.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "A minor interval is defined as:",
+      "choices": [
+        "An interval found in the minor scale but not the major scale",
+        "An interval that is one half step smaller than the corresponding major interval",
+        "An interval that is one whole step smaller than the corresponding major interval",
+        "An interval that sounds sad"
+      ],
+      "answer": 1,
+      "explanation": "By definition, a minor interval is exactly one half step smaller than the corresponding major interval of the same number. A minor 3rd (3 half steps) is one half step smaller than a major 3rd (4 half steps). A minor 7th (10 half steps) is one half step smaller than a major 7th (11 half steps). This relationship holds for all four interval sizes that have major/minor quality: 2nds, 3rds, 6ths, and 7ths.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the interval from C up to Bb?",
+      "choices": [
+        "Major 7th",
+        "Minor 6th",
+        "Major 6th",
+        "Minor 7th"
+      ],
+      "answer": 3,
+      "explanation": "First, the number: C(1) D(2) E(3) F(4) G(5) A(6) B(7) — C to Bb is a 7th. Second, the quality: count half steps from C to Bb: C to B is 11 half steps (major 7th), but Bb is one half step below B, so C to Bb = 10 half steps. Ten half steps = minor 7th. Therefore, C to Bb is a minor 7th. The minor 7th is an extremely important interval — it appears in dominant 7th chords, minor chords, and is central to jazz and blues harmony.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "A C major chord and a C minor chord differ by a single note. What is that note, and what interval change does it represent?",
+      "choices": [
+        "G changes to Gb — the fifth changes from perfect to diminished",
+        "E changes to Eb — the third changes from a major 3rd to a minor 3rd",
+        "C changes to C# — the root changes, making the whole chord higher",
+        "Both E and G change — the entire chord is lowered"
+      ],
+      "answer": 1,
+      "explanation": "C major is C–E–G and C minor is C–Eb–G. Only the third changes: E (major 3rd above C, 4 half steps) becomes Eb (minor 3rd above C, 3 half steps). The root (C) and fifth (G) remain the same. This is the fundamental principle of chord quality: the 3rd — major or minor — defines whether the chord sounds major or minor. A single half-step difference in one note completely transforms the chord's emotional character.",
+      "srs": true
+    }
+  ]
+}

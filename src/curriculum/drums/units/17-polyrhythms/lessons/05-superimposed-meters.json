@@ -1,0 +1,34 @@
+{
+  "id": "05-superimposed-meters",
+  "title": "Superimposed Meters",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Superimposing Meters: Multiple Grids Simultaneously\n\nSuperimposed meters take polyrhythm to its fullest expression: one limb operates in a completely different meter from the others, creating the sensation that multiple drummers playing different time signatures are inhabiting the same musical space.\n\n**Common superimpositions:**\n- **3/4 over 4/4**: The hands play a 3-beat pattern that cycles every 3 beats while the feet maintain 4/4. The combined pattern resolves after 12 beats (3 bars of 4/4 = 4 bars of 3/4).\n- **5/4 over 4/4**: The most heard in progressive music — a 5-beat hand pattern cycles back to unison every 20 beats.\n- **7/8 over 4/4**: The hand pattern moves 'early' by a half beat every cycle, creating a gradual phase drift.\n\n**Steve Gadd's '50 Ways to Leave Your Lover':** This iconic groove superimposes a marching-snare pattern (in 3/2 feel) over a 4/4 kick. It's one of the most analyzed drum parts in pop music — seemingly impossible, yet deeply groovy.\n\n**Mental approach:** Rather than trying to 'think both things at once,' most master drummers internalize each limb's pattern independently until it becomes automatic. Then the superimposition happens naturally without conscious management.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "3/4 Pattern Over 4/4 Kick",
+      "description": "Hi-hat and snare play a 3-beat cycling pattern (repeated 4 times to fill a 12-beat cycle) while kick holds steady in 4/4. The hands 'phase' through different relationships to the downbeat with each repetition.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 100,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x-x---x-"},
+        {"name": "Snare",  "pattern": "x---x---"},
+        {"name": "Kick",   "pattern": "x---x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When superimposing a 3/4 pattern over 4/4 time, after how many beats do the two patterns return to rhythmic unison?",
+      "choices": ["4 beats", "7 beats", "12 beats", "24 beats"],
+      "answer": 2,
+      "explanation": "LCM(3,4) = 12 beats. After 12 beats (3 complete bars of 4/4 or 4 complete bars of 3/4), both patterns begin simultaneously again at beat 1. Within that 12-beat cycle, the 3/4 pattern creates different relationships to the 4/4 downbeat with each repetition.",
+      "srs": true
+    }
+  ]
+}

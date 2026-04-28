@@ -1,0 +1,59 @@
+{
+  "id": "04-common-progressions",
+  "title": "Common Chord Progressions",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Common Chord Progressions\n\nKnowing your diatonic chords and their functions is theoretical knowledge. Knowing the most common progressions is **practical** knowledge — it lets you immediately recognize, play, and write music. A handful of progressions account for an enormous percentage of all Western popular music.\n\n### The Axis Progression: I–V–vi–IV\n\nThe most ubiquitous progression in contemporary pop music. In C major: **C–G–Am–F**.\n\nThousands of songs use this exact progression or a rotation of it. The reason: it cycles through all four harmonic functions (Tonic → Dominant → Tonic → Subdominant) with smooth voice leading and a minor chord (vi) that adds emotional complexity.\n\n### The I–IV–V: Blues and Rock\n\nThe foundational progression of blues, country, and rock. In G major: **G–C–D**.\n\nOften played with dominant seventh chords in blues (G7–C7–D7). The simplest possible expression of T–S–D harmony. Nearly infinite variations exist: 12-bar blues structures this progression over 12 measures with specific rhythmic and harmonic patterns.\n\n### The ii–V–I: Jazz Cornerstone\n\nThe most important progression in jazz. In C major: **Dm7–G7–Cmaj7**.\n\nEvery chord has a clear function: ii (subdominant preparation), V7 (dominant tension), I (tonic resolution). The voice leading between these three chords is particularly smooth. Virtually every jazz standard contains multiple ii–V–I progressions. Mastering it in all 12 keys is a fundamental jazz skill.\n\n### The I–vi–IV–V: The '50s Progression'\n\nThe sound of doo-wop and early rock & roll. In C major: **C–Am–F–G**.\n\nA rotation of the Axis progression. The vi chord provides an emotional 'dip' that makes the eventual return to I feel satisfying. Classic examples: 'Stand By Me,' 'Blue Moon,' countless early rock songs.\n\n### The vi–IV–I–V: Minor-Feel Pop\n\nAnother rotation of the same four chords, but starting on vi creates a darker, more minor-leaning feel without actually changing keys. In C major (sounds like A minor): **Am–F–C–G**.\n\n'Someone Like You' (Adele), 'Let Her Go' (Passenger), and hundreds of other emotionally resonant pop songs use this pattern.\n\n### The Canon Progression: I–V–vi–iii–IV\n\nDerived from Pachelbel's Canon in D, this progression is surprisingly common in modern music. In C major: **C–G–Am–Em–F** (often continuing with F–C–G).\n\nThe descending bass line (C–B–A–G–F–E–D–C) is what gives it its characteristic smooth, flowing quality.\n\n### A Key Insight\n\nMany of these progressions use the **same four chords** (I, IV, V, vi) in different orders and starting points. Knowing that Am–F–C–G and C–G–Am–F and G–Am–F–C are all rotations of the same progression means you understand them all at once.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The I–V–vi–IV progression in the key of D major uses which four chords?",
+      "choices": [
+        "D, A, Bm, G",
+        "D, G, Bm, A",
+        "D, A, F#m, G",
+        "D, G, Em, A"
+      ],
+      "answer": 0,
+      "explanation": "In D major: I = D, V = A, vi = B minor, IV = G. So the I–V–vi–IV progression is D–A–Bm–G. The same four chords appear in thousands of songs when transposed to different keys.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the ii–V–I progression in the key of F major?",
+      "choices": [
+        "Fm7 – Bb7 – EbMaj7",
+        "Gm7 – C7 – FMaj7",
+        "Am7 – D7 – GMaj7",
+        "Dm7 – G7 – CMaj7"
+      ],
+      "answer": 1,
+      "explanation": "In F major: ii = G minor (Gm7), V = C dominant (C7), I = F major (FMaj7). The ii–V–I is Gm7–C7–FMaj7. This is a crucial jazz progression — knowing it in all 12 keys is fundamental to jazz improvisation and comping.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which progression is considered the cornerstone of jazz harmony?",
+      "choices": ["I–IV–V", "I–V–vi–IV", "ii–V–I", "I–vi–IV–V"],
+      "answer": 2,
+      "explanation": "The ii–V–I is the cornerstone of jazz harmony. It appears in virtually every jazz standard and is the first progression jazz students are expected to master in all 12 keys. The smooth voice leading and clear functional motion (subdominant → dominant → tonic) make it harmonically ideal.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the key difference between the I–vi–IV–V and the vi–IV–I–V progressions?",
+      "choices": [
+        "They use completely different chords",
+        "They are rotations of the same four chords, but starting on vi creates a darker, minor-leaning feel",
+        "The second progression is in a minor key",
+        "The second progression does not contain a dominant chord"
+      ],
+      "answer": 1,
+      "explanation": "Both progressions use the same four chords (I, IV, V, vi) — just starting at different points in the cycle. Starting on vi (the relative minor) creates a darker, more emotionally heavy feel without actually being in a different key. This is why vi–IV–I–V sounds minor even though it uses the same chords as the major I–V–vi–IV.",
+      "srs": true
+    }
+  ]
+}

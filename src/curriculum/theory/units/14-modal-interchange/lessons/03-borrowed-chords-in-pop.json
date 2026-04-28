@@ -1,0 +1,46 @@
+{
+  "id": "03-borrowed-chords-in-pop",
+  "title": "Borrowed Chords in Pop Music",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Borrowed Chords in Contemporary Pop\n\nModal interchange is everywhere in modern pop music — it is one of the primary ways songwriters create emotional contrast, surprise, and depth without leaving a key signature.\n\n### Case Study 1: 'Bohemian Rhapsody' (Queen, 1975)\n\nThe song in Bb major uses staggering harmonic variety, including:\n- **Db major (bIII)**: Borrowed from Bb Aeolian — dark, operatic\n- **Eb minor (iv)**: Borrowed minor subdominant\n- **Gb major (bVI)**: Borrowed flat-six, creating the epic ballad feel\n\nThe ballad section (bars 1–24) creates its emotional arc through systematic use of modal interchange between Bb major and Bb minor borrowed chords.\n\n### Case Study 2: 'Hey Jude' (Beatles, 1968) — Key of F major\n\nThe chorus uses **Bb minor (iv in F major)** — one of the most emotionally charged borrowed chords in rock. The Db (flattened third of Bbm) creates a major → minor shift that is deeply affecting.\n\nThe 'na-na-na' outro uses F → Eb → Bb → F: the Eb is bVII and Bb is IV — both diatonic in F, but the Eb creates a Mixolydian flavor.\n\n### Case Study 3: 'Someone Like You' (Adele, 2011) — Key of A major\n\nThough mostly diatonic, the bridge introduces **Dmaj over a chromatic bass** and **F# minor with borrowed minor parallel** approach. The emotional power comes from the progression's straightforward use of vi–IV–I–V, not borrowed chords per se — but the dark major-key feel of vi explains why this pattern is sometimes described as 'modal mixture in feel.'\n\n### Case Study 4: 'No Surprises' (Radiohead, 1997) — Key of F major\n\nRadiohead uses **Bb minor (iv)** prominently, giving the song its bittersweet, melancholy quality despite being in major. The borrowed iv chord in this context represents resignation and emotional weight.\n\n### The Pattern: What Borrowed Chords Signal\n\nGeneralizations that hold across styles:\n- **iv in major**: Tenderness, nostalgia, lament\n- **bVII in major**: Power, triumph, anthemic quality\n- **bVI in major**: Drama, yearning, romance\n- **bIII in major**: Darkness, mystery, the unexpected\n- **bII (Neapolitan)**: Classical drama, surprise, the darkest borrowed chord\n\nUnderstanding these emotional associations lets songwriters and arrangers make choices that serve the lyric and mood rather than stumbling upon them accidentally.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In F major, what borrowed chord does 'Hey Jude' use in the chorus, and what emotional quality does it bring?",
+      "choices": [
+        "Ab major (bIII) — mysterious",
+        "Bb minor (iv) — emotional weight and yearning, using the borrowed Db",
+        "Eb major (bVII) — triumphant, anthemic",
+        "Gb major (bII) — classical surprise"
+      ],
+      "answer": 1,
+      "explanation": "In F major, the iv chord is Bb minor (Bb–Db–F). The Db (b3 of Bb minor, borrowed from F Aeolian) is the chromatic note absent from F major. This borrowed iv chord gives 'Hey Jude's chorus its characteristic emotional depth — the major-to-minor shift on the subdominant creates a beautiful yearning quality.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which borrowed chord is most associated with 'anthemic rock' and triumph (e.g., Journey, Queen, Survivor)?",
+      "choices": ["iv (minor subdominant)", "bVI (flat-six major)", "bVII (flat-seven major)", "bII (Neapolitan)"],
+      "answer": 2,
+      "explanation": "The bVII chord (e.g., Bb major in C major) is the signature borrowed chord of anthemic and stadium rock. Its power comes from the strong voice leading from Bb back to C (a whole step resolution), the subtonic quality (less final than V→I), and its frequent use in chains like bVI→bVII→I. It sounds muscular, direct, and triumphant.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What borrowed chord in 'Bohemian Rhapsody' (Bb major) creates the operatic, dark quality of the ballad section?",
+      "choices": [
+        "Db major (bIII), borrowed from Bb Aeolian",
+        "F minor (v), borrowed from Bb Dorian",
+        "Ab major (bVII), borrowed from Bb Mixolydian",
+        "Eb major (IV) — fully diatonic"
+      ],
+      "answer": 0,
+      "explanation": "Db major is bIII in Bb major — borrowed from Bb Aeolian. Db = Db–F–Ab contains both Db and Ab, neither of which is in Bb major. This gives the chord its dark, unexpected quality. In 'Bohemian Rhapsody,' these borrowed chords are essential to the song's operatic, emotionally overwhelming character.",
+      "srs": true
+    }
+  ]
+}

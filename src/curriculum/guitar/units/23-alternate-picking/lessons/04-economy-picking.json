@@ -1,0 +1,43 @@
+{
+  "id": "04-economy-picking",
+  "title": "Economy Picking",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Economy Picking — Frank Gambale's Innovation\n\n**Economy picking** (also called directional picking) was systematized by **Frank Gambale** (b. 1958) as an alternative to strict alternate picking for string changes.\n\n## The Core Concept\n\nWhen crossing to a new string, **always pick in the direction you're crossing**:\n- Moving to a higher-pitched string (down): use a downstroke\n- Moving to a lower-pitched string (up): use an upstroke\n\nThis eliminates inside picking — the most awkward pick movement.\n\n## Economy vs. Alternate — The Trade-Off\n\n| | Economy | Alternate |\n|--|---------|----------|\n| String changes | Always \"with\" the motion | Can be against the motion |\n| Speed potential | Very high | Very high |\n| Awkward positions | Fewer | Inside picks |\n| Rhythmic accuracy | Requires care | Very reliable |\n| Style | Sweep-like | Percussive |\n\n## Frank Gambale's Economy Scale Run\n\nA minor 3NPS scale ascending with economy picking:\n```\nString 6: D D U (always starting string with direction of travel)\nString 5: D D U\nString 4: D D U\nString 3: D D U\n...\n```\n\nNotice: the third note of each 3NPS group and the first note of the next string are both downstrokes — the continuation is smooth.\n\n## When to Use Economy\n\nFrank Gambale and Steve Morse use economy picking primarily. John Petrucci and Paul Gilbert use strict alternate. **Neither is superior** — they suit different musical styles and contexts.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In economy picking, when crossing from a low string to a high string, which direction should the pick stroke go?",
+      "choices": [
+        "Always upstroke regardless of direction",
+        "Alternating as in strict alternate picking",
+        "Downstroke — matching the downward direction of movement to the next higher string",
+        "Upstroke — opposite to the direction of movement"
+      ],
+      "answer": 2,
+      "explanation": "Economy picking always moves the pick in the direction you're traveling. Moving to a higher-pitched string (physically lower on the guitar) uses a downstroke. Moving to a lower-pitched string uses an upstroke. This eliminates the awkward 'against the direction' pick strokes.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Sweep Picking vs. Economy Picking\n\nThese terms are often confused:\n\n## Sweep Picking\n\nA **single pick stroke** that continues through multiple adjacent strings in one direction, like a strum but with one note per string.\n\nUsed for: arpeggios across 5-6 strings\n\n```\ne |--8--| ↓ (one continuous downward sweep)\nB |--8--| ↓\nG |--9--| ↓\nD |--10-| ↓\nA |--10-| ↓\n```\n\n## Economy Picking\n\nAlternate picking with **re-use** of the same stroke direction when crossing strings to avoid inside picks.\n\nUsed for: scale runs, scale sequences\n\n## The Spectrum\n\nStrict Alternate ←→ Economy Picking ←→ Sweep Picking\n\nMost advanced players use all three in context:\n- Alternate: rhythmically precise, single string or 2NPS\n- Economy: fast scale runs (3NPS)\n- Sweep: arpeggios across multiple strings\n\nFrank Gambale's 1987 video \"Speed Picking\" is the definitive education on economy and sweep picking.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the key difference between sweep picking and economy picking?",
+      "choices": [
+        "Sweep uses only downstrokes; economy uses only upstrokes",
+        "Sweep is a single continuous stroke across multiple strings (like a strum with one note per string); economy is alternate picking with direction-matching on string crossings",
+        "Sweep is for chords; economy is for single notes",
+        "They are the same technique with different names"
+      ],
+      "answer": 1,
+      "explanation": "Sweep picking is a continuous stroke across adjacent strings — one motion, multiple strings, one note each (used for arpeggios). Economy picking is modified alternate picking where the stroke direction matches the string-crossing direction — separate strokes, one note each (used for scales).",
+      "srs": true
+    }
+  ]
+}

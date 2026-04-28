@@ -1,0 +1,27 @@
+{
+  "id": "04-add9-and-more",
+  "title": "Add9 & Extended Chords",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Cadd9 Chord\n\nCadd9 is one of the most beautiful open chords. It's C major with an added D (the 9th).\n\n**Cadd9 finger placement:**\n- Ring (3): string 5, fret 3\n- Middle (2): string 4, fret 2\n- Index (1): string 2, fret 3 (move from C's index on fret 1)\n- Strings 1 and 3: open\n\nResult: a lush, open sound that's all over modern pop and acoustic music.",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "Cadd9",
+      "frets": [0, 3, 0, 2, 3, -1],
+      "fingers": [0, 3, 0, 2, 4, 0],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What note does 'add9' add to a chord?",
+      "choices": ["The 7th", "The 9th (same as the 2nd, one octave up)", "The 6th", "The 4th"],
+      "answer": 1,
+      "explanation": "An add9 chord adds the 9th degree — which is the same pitch class as the 2nd, just an octave higher. For C, that's D.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "01-tritone-substitution",
+  "title": "Tritone Substitution",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Tritone Substitution: The Core of Jazz Reharmonization\n\n**Tritone substitution** is the technique of replacing a dominant seventh chord with another dominant seventh chord whose root is a tritone (augmented fourth/diminished fifth) away. This is the single most important reharmonization technique in jazz.\n\n### Why It Works: The Shared Guide Tones\n\nG7 and Db7 are a tritone apart. Look at their guide tones:\n\n| Chord | Third | Seventh |\n|---|---|---|\n| G7 | B (major 3rd) | F (minor 7th) |\n| Db7 | F (major 3rd of Db) | Cb = B (minor 7th of Db) |\n\nG7's B and F = Db7's F and B (enharmonically). The guide tones are **the same pitches**, just swapped in function (B is 3rd in G7, 7th in Db7; F is 7th in G7, 3rd in Db7).\n\nSince the guide tones define chord function, both G7 and Db7 resolve equally well to C major. The tritone substitution is not an accident — it is guaranteed to work by acoustic logic.\n\n### Tritone Sub in the ii–V–I\n\nStandard: Dm7 → G7 → Cmaj7\n\nTritone sub on V: Dm7 → **Db7** → Cmaj7\n\nThe Db7 creates a **chromatic bass line**: D–Db–C. The bass steps down by half step into the tonic. This smooth chromatic descent is the hallmark sound of tritone substitution — it appears in bebop, bossa nova, and virtually all jazz styles.\n\n### Tritone Sub on ii as well\n\nThe ii chord can also be substituted:\n- ii7 (Dm7) → V7 (G7) → Imaj7 (Cmaj7)\n- SubII7 → SubV7 → Imaj7\n- AbMaj7 → Db7 → Cmaj7 (replacing both ii and V with tritone sub)\n\nThis is more advanced and creates an unusual sound.\n\n### The Chromatic Bass Line Effect\n\nOne of the main aesthetic payoffs of tritone substitution is the chromatic bass movement:\n- ii–V–I standard: D → G → C (bass leaps a fourth)\n- ii–SubV–I: D → Db → C (bass steps chromatically)\n\nThe smooth chromatic descent sounds sophisticated and modern. Charlie Parker, Miles Davis, and John Coltrane exploited this effect constantly.\n\n### Altered Dominant = Tritone Sub Connection\n\nRecall from Jazz Harmony I: the G7alt chord uses the Ab melodic minor scale. Ab is the root of Db — the tritone substitute. The altered scale and the tritone substitution are **the same harmonic idea viewed from different angles**.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why do G7 and Db7 resolve equally well to C major?",
+      "choices": [
+        "Because they are in the same key (C major contains both G and Db)",
+        "Because they share the same guide tones: G7's B and F equal Db7's F and B (enharmonically swapped)",
+        "Because they are both dominant seventh chords on adjacent scale degrees",
+        "Because tritone-related chords always resolve to the same tonic"
+      ],
+      "answer": 1,
+      "explanation": "G7 has guide tones B (3rd) and F (7th). Db7 has guide tones F (3rd) and Cb/B (7th). These are the same two pitches — B and F — just swapped in role. Since both chords contain B and F, the tritone that resolves into C major's E and C is identical. This shared-guide-tone relationship guarantees that both chords resolve equally well to Cmaj7.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What bass line effect is created when tritone substitution replaces V7 in a ii–V–I (D→G→C becomes D→Db→C)?",
+      "choices": [
+        "A bass line that leaps by fourths and fifths",
+        "A chromatic bass line — the bass descends by half step into the tonic",
+        "A whole-tone bass line",
+        "The bass stays on the same note for two measures"
+      ],
+      "answer": 1,
+      "explanation": "Standard ii–V–I bass: D → G → C (leap of a fourth from D to G, then leap of a fifth from G to C). With tritone sub: D → Db → C. The bass now moves chromatically — down a half step from D to Db, then another half step from Db to C. This smooth chromatic descent is the defining characteristic sound of tritone substitution and is central to jazz bass line writing.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the tritone substitution for E7 (the dominant of A)?",
+      "choices": ["Bb7", "B7", "F7", "D7"],
+      "answer": 0,
+      "explanation": "The tritone of E is Bb (E→F→F#→G→Ab→Bb — six half steps). So the tritone substitution for E7 is Bb7. Bb7 resolves to A just as E7 does, because they share the same guide tones: E7 has G# and D; Bb7 has D and Ab/G# (enharmonically). Bb → A is a smooth half-step bass descent into the resolution.",
+      "srs": true
+    }
+  ]
+}

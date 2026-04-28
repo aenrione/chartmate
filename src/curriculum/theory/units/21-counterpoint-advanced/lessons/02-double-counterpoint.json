@@ -1,0 +1,38 @@
+{
+  "id": "02-double-counterpoint",
+  "title": "Double Counterpoint",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Double Counterpoint: Invertible Voices\n\n**Double counterpoint** (also called **invertible counterpoint**) is a technique where two melodic lines are written so that either voice can appear above or below the other without creating forbidden parallels. The voices can be 'inverted' — exchanged in register.\n\n### The Basic Concept\n\nIn double counterpoint at the octave, two voices are written so that when they are inverted (the upper voice moves an octave lower, or the lower voice moves an octave higher), the result is still harmonically and contrapuntally correct.\n\n**Original**:\n- Voice A (top): C–D–E–F\n- Voice B (bottom): G–F–E–C\n\n**Inverted** (A moved down an octave):\n- Voice B (now top): G–F–E–C\n- Voice A (now bottom, octave lower): C–D–E–F\n\nFor this inversion to work, the interval relationships must still be consonant. In double counterpoint at the octave:\n- Intervals invert around the octave: a 5th becomes a 4th, a 3rd becomes a 6th, etc.\n- **Problem**: A perfect fifth inverts to a fourth. In two-voice writing, a fourth is dissonant against the bass — so you cannot have a bare fifth in the original if you want to invert it!\n\n### Rules for Double Counterpoint at the Octave\n\n1. **Avoid perfect fifths** in the original — they become fourths in the inversion, which are dissonant\n2. **Use thirds and sixths liberally** — they invert to sixths and thirds respectively, remaining consonant\n3. **Avoid unisons** except at the beginning/end — they become octaves on inversion (acceptable but static)\n\n### Why Double Counterpoint Matters\n\nDouble counterpoint is the engine of **fugue development**. In a fugue, when the subject appears in the tenor and the countersubject appears in the soprano, the material must also work when the subject moves to the soprano and countersubject to the tenor — that is, when the voices are inverted.\n\nBach's fugues are masterclasses in double counterpoint. In the **Fugue No. 2 in C minor from WTC Book I (BWV 847)**, the subject and countersubject are in perfect double counterpoint — every restatement inverts the voice arrangement, and the counterpoint remains flawless.\n\n### Triple and Quadruple Counterpoint\n\n**Triple counterpoint**: Three voices, each pair must be invertible. Any of the three voices can be placed on top, middle, or bottom without forbidden parallels.\n\n**Quadruple counterpoint**: Four voices, all arrangements valid — extremely rare and difficult. Bach achieves it in the 'Art of Fugue.'",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In double counterpoint at the octave, why should you avoid perfect fifths in the original voice arrangement?",
+      "choices": [
+        "Because perfect fifths are forbidden in all counterpoint",
+        "Because a perfect fifth inverts to a perfect fourth, which is dissonant against the bass in the inverted position",
+        "Because perfect fifths are too loud when inverted",
+        "Because the octave inversion makes fifths sound like tritones"
+      ],
+      "answer": 1,
+      "explanation": "In double counterpoint at the octave, all intervals invert: a 5th becomes a 4th (5 + 4 = 9 = octave + unison). A perfect fourth is considered dissonant against the bass in classical counterpoint — it requires resolution like a suspension. Therefore, original perfect fifths create problematic fourths in the inversion. This constraint is why double counterpoint relies heavily on thirds and sixths.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the relationship between double counterpoint and fugue writing?",
+      "choices": [
+        "Double counterpoint is only used in the exposition of a fugue",
+        "The fugue subject must be written in double counterpoint with the tonal answer",
+        "Double counterpoint allows the fugue subject and countersubject to exchange positions (soprano↔tenor) in different fugue entries while remaining harmonically correct",
+        "Double counterpoint replaces the countersubject when the fugue modulates"
+      ],
+      "answer": 2,
+      "explanation": "In a fugue, the subject always appears paired with a countersubject. At different entries, the subject may be in the soprano and countersubject in the alto, or vice versa. For this voice exchange to work without creating forbidden parallels, the subject and countersubject must be in double counterpoint — written so that either voice can appear above the other. This is why fugue subjects are designed with double counterpoint in mind.",
+      "srs": true
+    }
+  ]
+}

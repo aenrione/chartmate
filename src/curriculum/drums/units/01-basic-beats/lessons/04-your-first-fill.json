@@ -1,0 +1,39 @@
+{
+  "id": "04-your-first-fill",
+  "title": "Your First Drum Fill",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# What Is a Drum Fill?\n\nA **fill** is a short burst of notes that fills the space between sections of a song — a way of saying 'the chorus is coming' or 'we're turning a corner'.\n\nThe simplest fill: **4 quarter notes on the snare drum landing on beat 4** of a measure. Drop out the hi-hat, play four rapid snare hits on beat 4, then return to beat 1.\n\nKeep it in time — a fill that disrupts the pulse hurts the song. The goal is a seamless transition, not a showcase.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Snare Fill on Beat 4",
+      "description": "Three beats of groove, then four 16th-note snare hits on beat 4. The hi-hat drops out during the fill, kick stays on beats 1 and 3.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 75,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x-x-x-x-x-x-x-x-"},
+        {"name": "Snare",  "pattern": "----x-------xxxx"},
+        {"name": "Kick",   "pattern": "x-------x-------"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Around-the-Kit Fill\n\nOnce you can do a snare fill, move it around the toms:\n\n**16th note fill across all drums:**\n- Beat 4, 16th note 1: snare\n- Beat 4, 16th note 2: hi tom\n- Beat 4, 16th note 3: mid tom\n- Beat 4, 16th note 4: floor tom\n\nThis 'around the kit' fill appears in countless rock and pop songs. Keep it even — every note the same volume and spacing. Start very slow so muscle memory develops correctly.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the main purpose of a drum fill?",
+      "choices": ["To show off technical skill", "To fill silence when other musicians stop", "To signal a transition between song sections", "To speed up the tempo"],
+      "answer": 2,
+      "explanation": "Drum fills signal transitions — from verse to chorus, from intro to verse. They're musical punctuation, not just technical display.",
+      "srs": true
+    }
+  ]
+}

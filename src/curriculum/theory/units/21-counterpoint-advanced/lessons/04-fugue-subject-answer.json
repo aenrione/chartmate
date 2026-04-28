@@ -1,0 +1,38 @@
+{
+  "id": "04-fugue-subject-answer",
+  "title": "Fugue Subject and Answer",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## The Fugue: Subject and Answer\n\nA **fugue** (from Latin *fuga*, 'flight') is a polyphonic composition where a short melodic theme (the **subject**) is introduced in one voice, then imitated by subsequent voices entering in succession. Unlike a canon, a fugue allows free (non-imitative) counterpoint between subject entries.\n\n### The Subject\n\nThe fugue **subject** (also called *dux*, 'leader') is the main theme. Subject characteristics:\n- Typically 1–4 bars long\n- Clearly distinctive — memorable rhythm and contour\n- Designed for double counterpoint (must work inverted)\n- Fits naturally with itself in stretto (overlapping entries)\n- Usually begins on the tonic (1st or 5th scale degree) and ends on the tonic or dominant\n\n**Famous fugue subjects**:\n- Bach, *WTC I, C major* (BWV 846): Ascending broken chord, short\n- Bach, *WTC I, D minor* (BWV 851): Angular, chromatic, dramatic\n- Handel, 'Hallelujah Chorus' fugue subject: 'King of Kings and Lord of Lords'\n- Beethoven, *Op. 131 String Quartet*, opening fugue: Ascending minor ninth\n\n### The Answer\n\nThe **answer** (*comes*, 'companion') is the subject's imitation in the second voice. It typically appears a fifth higher (or fourth lower) than the subject.\n\n**Two types of answer**:\n\n**Tonal answer**: The answer is slightly modified — specific notes are adjusted to keep the harmony in the tonic key. A subject that opens with 1–5 (tonic to dominant) is answered with 5–1 (dominant to tonic) rather than 5–2 (which would suggest the dominant key).\n\n**Real answer**: The answer is an exact transposition of the subject at the fifth.\n\n### Why Tonal Answers Exist\n\nIf the subject begins on scale degree 5 (the dominant), a real answer would start on scale degree 2 — which suggests the dominant key rather than staying in the tonic key. A tonal answer adjusts the opening to start on degree 1 instead, keeping the answer 'in the tonic key area' while still being an approximate fifth-transposition of the subject.\n\n**Rule of thumb**: If the subject prominently features 1→5 or 5→1 motion near the beginning, use a tonal answer (adjust that motion to 5→1 or 1→5 in the answer). Otherwise, use a real answer.\n\n### The Countersubject\n\nThe **countersubject** is the melodic line that accompanies the subject. It must be in double counterpoint with the subject (exchangeable in all entries) and should complement the subject rhythmically (if subject has long notes, countersubject has short notes, and vice versa).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the difference between a 'real answer' and a 'tonal answer' in a fugue?",
+      "choices": [
+        "A real answer is in the same key; a tonal answer is in a different key",
+        "A real answer is an exact fifth-transposition of the subject; a tonal answer makes small adjustments to certain intervals to preserve the key center",
+        "A real answer uses the same rhythm; a tonal answer uses augmented rhythms",
+        "They are the same — both terms describe the fugue's second voice entry"
+      ],
+      "answer": 1,
+      "explanation": "A real answer transposes the subject exactly a fifth higher (all intervals preserved). A tonal answer modifies certain pitches — particularly the opening 1→5 motion, which becomes 5→1 in the answer — to avoid implying the dominant key. Tonal answers are used when the subject starts with prominent 1–5 motion, which would otherwise make the answer sound like it is in the dominant key.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What properties should a good fugue countersubject have?",
+      "choices": [
+        "It should be in the same rhythm as the subject to create unity",
+        "It should be in double counterpoint with the subject and complement it rhythmically (if the subject has long notes, the countersubject has short notes)",
+        "It should be louder than the subject to be heard clearly",
+        "It should be a variation of the subject with the same melodic shape"
+      ],
+      "answer": 1,
+      "explanation": "A good countersubject must: (1) be in double counterpoint with the subject — so it can appear above or below the subject in any entry; (2) contrast rhythmically — if the subject is rhythmically active with short notes, the countersubject should have longer, more sustained notes, and vice versa. This rhythmic complementarity ensures both voices remain clearly audible and independent.",
+      "srs": true
+    }
+  ]
+}

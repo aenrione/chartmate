@@ -1,0 +1,20 @@
+{
+  "id": "01-three-four",
+  "title": "3/4 — The Waltz",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# 3/4 Time\n\n3/4 has 3 quarter note beats per measure — the 'waltz' feel.\n\nCount: **1 – 2 – 3 – 1 – 2 – 3**\n\n**Basic 3/4 beat:**\n```\nHH: x-x-x-  (3 8th notes)\nSn: ----x-   (beat 2)\nKD: x-----   (beat 1)\n```\n\n**Famous 3/4 songs:**\n- 'My Favorite Things' (jazz standard)\n- 'Nothing Else Matters' (Metallica)\n- 'Take It To The Limit' (Eagles)\n\nThe key mental shift: feel the music in groups of 3, not 4.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many beats are in a measure of 3/4 time?",
+      "choices": ["2", "3", "4", "6"],
+      "answer": 1,
+      "explanation": "3/4 time has 3 beats per measure, each a quarter note. The 3-beat cycle creates the characteristic 'one-two-three' waltz feel.",
+      "srs": true
+    }
+  ]
+}

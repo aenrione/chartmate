@@ -1,0 +1,52 @@
+{
+  "id": "04-dominant-7-rhythm",
+  "title": "Dominant 7 Rhythm Patterns",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Dominant 7 Chords in Blues Rhythm\n\nThe blues uses **dominant 7th chords** (1-3-5-b7) on ALL three chords (I7, IV7, V7), not just the V chord. This violates classical harmony but is fundamental to blues — the flat 7th on the I chord creates the \"bluesy\" tension.\n\n## Essential Blues Chord Shapes\n\n### E7 (open position)\n```\ne |--0--|\nB |--3--|\nG |--1--|\nD |--2--|\nA |--2--|\nE |--0--|\n```\nFrets: (0, 3, 1, 2, 2, 0)\n\n### A7 (open position)\n```\ne |--0--|\nB |--2--|\nG |--0--|\nD |--2--|\nA |--0--|\nE |--x--|\n```\nFrets: (0, 2, 0, 2, 0, -1)\n\n### B7 (open position)\n```\ne |--2--|\nB |--0--|\nG |--2--|\nD |--1--|\nA |--2--|\nE |--x--|\n```\nFrets: (2, 0, 2, 1, 2, -1)\n\n## Rhythm Pattern — Second Line Feel\n\nA New Orleans-style second line blues rhythm:\n```\nBeat: 1    +    2    +    3    +    4    +\nComp: X    .    .    X    X    .    .    X\n(downstroke on 1, then up-down on 2&3, up on 4)\n```",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "E7 (open)",
+      "frets": [0, 3, 1, 2, 2, 0],
+      "fingers": [0, 3, 1, 2, 2, 0],
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "A7 (open)",
+      "frets": [0, 2, 0, 2, 0, -1],
+      "fingers": [0, 2, 0, 1, 0, 0],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is the 7th chord on the I (tonic) unusual in classical harmony but normal in blues?",
+      "choices": [
+        "Classical harmony doesn't use 7th chords",
+        "In classical harmony, the I chord is usually major or major 7; blues uses I7 (dominant) creating tension that's characteristic of the style",
+        "Blues has 8 bars, not 12",
+        "The 7th chord in blues is minor 7, not dominant 7"
+      ],
+      "answer": 1,
+      "explanation": "Classical harmony reserves dominant 7th chords for the V chord (as a tension leading to resolution). Blues uses dominant 7th quality on ALL chords — I7, IV7, V7 — creating a pervasive bluesy tension. This unresolved dominant quality is central to the blues sound.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the key of E blues, what are the three dominant 7th chords used?",
+      "choices": [
+        "Emaj7, Amaj7, Bmaj7",
+        "Em7, Am7, Bm7",
+        "E7, A7, B7",
+        "E, A, B (plain triads)"
+      ],
+      "answer": 2,
+      "explanation": "The three blues chords are built on the I (E7), IV (A7), and V (B7) of the key. All are dominant 7th quality — this is fundamental to blues harmony and distinguishes it from pop or classical usage.",
+      "srs": true
+    }
+  ]
+}

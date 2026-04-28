@@ -1,0 +1,28 @@
+{
+  "id": "02-reading-tab-notation",
+  "title": "Tab Symbols & Techniques",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Common Tab Symbols\n\n| Symbol | Meaning |\n|--------|----------|\n| `h` | Hammer-on |\n| `p` | Pull-off |\n| `/` | Slide up |\n| `\\\\` | Slide down |\n| `b` | Bend |\n| `~` | Vibrato |\n| `x` | Muted/dead note |\n\nExample: `7h9` means hammer from fret 7 to fret 9.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does the symbol 'b' mean in guitar tab?",
+      "choices": ["Bass note", "Bend the string", "Bar chord", "Beat marker"],
+      "answer": 1,
+      "explanation": "'b' in tab means bend — push the string up (or down) to raise its pitch.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does '5/7' mean in tab?",
+      "choices": ["Play fret 5 then fret 7 normally", "Slide up from fret 5 to fret 7", "A time signature", "Play both frets simultaneously"],
+      "answer": 1,
+      "explanation": "The / symbol means slide up — fret 5 into fret 7 with the finger gliding along the string.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "id": "05-tonicization",
+  "title": "Tonicization vs. Modulation",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Tonicization vs. Modulation: A Critical Distinction\n\nWhen music briefly emphasizes a non-tonic chord using a secondary dominant, we call this **tonicization**. When music actually changes keys, we call this **modulation**. Understanding the difference is essential for harmonic analysis.\n\n### Tonicization: A Brief Visit\n\nTonicization is a **temporary** emphasis on a diatonic chord, making it feel momentarily like a tonic without actually establishing a new key center.\n\nSignals of tonicization:\n1. A secondary dominant (or applied chord) appears before a diatonic chord\n2. The 'tonicized' chord quickly gives way to other diatonic chords\n3. No new key signature is established; the music returns to the original context\n4. The passage lasts only one or two measures\n\n**Example**: In C major, the progression I → V7/ii → ii → V7 → I\n- C → A7 → Dm → G7 → C\n- The A7 tonicizes Dm for one beat/measure, then the music continues in C major\n- This is not a modulation to D minor; it is a brief tonicization\n\n### Modulation: Establishing a New Home\n\nModulation is a **permanent** (within a section) shift to a new key center. The music does not quickly return to the original key.\n\nSignals of modulation:\n1. A new key center is established for multiple phrases\n2. Cadences in the new key confirm the new tonic\n3. The old key's chords no longer feel like 'home'\n4. Often, a new key signature might appear in a score\n\n**Example**: A song moves from C major to G major and stays there for eight measures before returning — that is modulation, not tonicization.\n\n### The Gray Area\n\nSome passages are genuinely ambiguous. If a 'tonicized' area lasts two or three measures and includes a cadence in that key, analysts may call it a **brief modulation** or **tonicization with cadential confirmation**.\n\nThe practical test: **does the listener lose track of the original tonic?** If yes, it is probably a modulation. If the original key remains audible in the background, it is tonicization.\n\n### Extended Tonicization: The Sequence\n\nMany classical pieces use **sequences of secondary dominants** — a chain of V/x → x → V/y → y:\n\n**E7 → Am → D7 → Gm → C7 → F → G7 → C**\n\nThis is a cycle-of-fifths progression with secondary dominants on every chord. Each chord is briefly tonicized before the bass descends by fifth. The overall key of C major is never lost; we simply 'visit' each diatonic chord with extra emphasis.\n\nBeethoven's *Sonata Op. 53 (Waldstein)*, development section, uses exactly this technique over an extended passage.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the primary difference between tonicization and modulation?",
+      "choices": [
+        "Tonicization uses secondary dominants; modulation uses borrowed chords",
+        "Tonicization is a temporary emphasis on a non-tonic chord; modulation is a sustained shift to a new key center",
+        "Tonicization occurs in minor keys; modulation in major keys",
+        "They are the same — 'tonicization' is just the theoretical term for modulation"
+      ],
+      "answer": 1,
+      "explanation": "Tonicization briefly emphasizes a diatonic chord using a secondary dominant, but the original key remains the 'home.' Modulation shifts the key center permanently (within a section), confirmed by cadences in the new key. The music in modulation feels like it has relocated; in tonicization, it has only visited.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the progression C → A7 → Dm → G7 → C (in C major), how should the A7 → Dm passage be analyzed?",
+      "choices": [
+        "As a modulation to A major",
+        "As a modulation to D minor",
+        "As a tonicization of Dm via its secondary dominant A7",
+        "As a borrowed chord from C minor"
+      ],
+      "answer": 2,
+      "explanation": "A7 is V7/ii — the secondary dominant of Dm. Since the music quickly returns to G7 → C and the original key context is maintained, this is tonicization: A7 briefly makes Dm feel like a temporary tonic, then the music continues in C major. No new key is established.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "A cycle-of-fifths sequence with secondary dominants on each chord (E7→Am→D7→Gm→C7→F→G7→C) is best described as:",
+      "choices": [
+        "A modulation through multiple keys",
+        "Extended tonicization — each chord is briefly emphasized but the original key (C major) is never abandoned",
+        "A series of borrowed chords from different parallel modes",
+        "A chromatic sequence unrelated to C major"
+      ],
+      "answer": 1,
+      "explanation": "In a descending-fifths sequence with secondary dominants, each chord is momentarily tonicized before the motion continues. The overall key of C major is maintained throughout — this is extended tonicization, not modulation. The listener can always hear that the goal is C major, even as the progression visits Am, Gm, and F along the way.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "05-electronic-integration",
+  "title": "Electronic Integration",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Complete Electronic Integration\n\nAt the highest level of hybrid drumming, the acoustic kit becomes one voice in a broader electronic ecosystem — synced with sequencers, responding to MIDI, controlling synthesizers, and integrating seamlessly with full-production backing tracks.\n\n**MIDI from drums:** Modern trigger modules (Roland TD-50, Alesis Strike) output MIDI. This means each drum hit can:\n- Trigger any software instrument (a piano, a synthesizer, any sampler)\n- Control parameters in real time (velocity controls filter cutoff, for example)\n- Trigger lighting or video effects synchronized to the music\n- Send tempo information to synced devices via MIDI clock\n\n**Backing track integration:**\nMany modern touring drummers play alongside backing tracks for parts of the show. This requires:\n- Absolute click track commitment (the track doesn't follow you; you follow it)\n- In-ear monitoring (the click must be in your ears, inaudible to the audience)\n- Technical contingency plans (what happens if the backing track drops?)\n\n**Electronic production mindset:**\nThe hybrid drummer thinks like a producer — each sound has a role in the frequency spectrum and arrangement. Ghost notes that compete with the bass line need to be re-voiced or removed. The kick must not fight the synth bass. The cymbal wash must coexist with the synthesizer pads.\n\n**The future of drumming:** The division between 'drummer' and 'music producer' is dissolving. Understanding electronic music production — arrangement, synthesis, mixing basics — is increasingly part of the professional drummer's skill set.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does MIDI output from a drum trigger module enable?",
+      "choices": ["Only triggering drum samples", "Any drum hit can trigger synthesizers, control parameters, trigger lighting effects, and send sync to other devices", "Communication between two drum sets only", "Converting acoustic sound to digital audio only"],
+      "answer": 1,
+      "explanation": "MIDI output from drum triggers means drum hits become control signals for any MIDI-capable device. A kick hit can trigger a synth bass note, a snare hit can modulate a filter, and hi-hat openings can send control data to lighting. This transforms the drum kit from a purely percussive instrument into a control interface for an entire electronic production system.",
+      "srs": true
+    }
+  ]
+}

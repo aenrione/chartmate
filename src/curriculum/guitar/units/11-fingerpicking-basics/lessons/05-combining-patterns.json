@@ -1,0 +1,38 @@
+{
+  "id": "05-combining-patterns",
+  "title": "Combining Patterns & Musical Context",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# When to Use Which Pattern\n\nGreat fingerstyle playing isn't about one fixed pattern — it's about matching your pattern to the mood and context of the music.\n\n## Pattern-to-Feel Guide\n\n| Feel | Pattern | Example |\n|------|---------|----------|\n| Gentle/intimate | Simple P-I-M-A arpeggio | Acoustic ballads |\n| Driving/rhythmic | Travis picking | Country, folk-rock |\n| Spanish/classical | P-A-M-I reverse arpeggio | Flamenco-influenced pop |\n| Ethereal/ambient | Simultaneous chord strums | New age guitar |\n| Waltz/3/4 | P-I-M waltz | Folk waltzes, barroom songs |\n\n## Dynamics — The Missing Ingredient\n\nMost beginners play every note at the same volume. Real music has shape:\n\n- **Swell into the chorus**: gradually increase finger pressure/speed\n- **Pull back on verses**: lighter touch, more resonance\n- **Accent the bass note**: let the thumb strike slightly harder than the fingers on strong beats\n- **Silence as expression**: let notes stop (damp) for punctuation\n\n## Combining Two Patterns in One Song\n\nVerse: Simple arpeggio (intimate, slow feel)\nChorus: Travis picking (driving, energetic)\n\nThis contrast is exactly what Paul Simon does in \"The Sound of Silence\" and \"Homeward Bound.\"",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which fingerpicking pattern best suits a driving, rhythmic country feel?",
+      "choices": ["P-A-M-I reverse arpeggio", "Simple P-I-M-A arpeggio", "Travis picking", "Simultaneous chord strums"],
+      "answer": 2,
+      "explanation": "Travis picking — with its alternating bass and syncopated treble notes — creates the driving rhythmic feel associated with country and folk-rock guitar. Artists like Chet Atkins and Paul Simon use it for energetic passages.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Building a Complete Fingerstyle Piece\n\nLet's outline a full fingerstyle arrangement of a simple song:\n\n## Structure\n\n**Intro** (4 bars): G → D → Em → C\n- Pattern: Simple arpeggio P-I-M-A, soft dynamics\n\n**Verse** (8 bars): G → D → Em → C × 2\n- Pattern: Travis picking, medium dynamics\n- Slightly accent beat 1 bass note\n\n**Chorus** (8 bars): C → G → D × 2\n- Pattern: Travis picking with pinches on beat 1\n- Louder, more projecting tone\n\n**Outro** (4 bars): G → D → Em → G\n- Pattern: Slow arpeggio, decrescendo\n- End with a gentle simultaneous strum\n\n## Practice Strategy\n\n1. Learn each section separately\n2. Link intro to verse only (repeat until seamless)\n3. Add chorus\n4. Full run-through at 75% tempo\n5. Record yourself — it reveals issues you can't hear while playing\n\n**Key principle**: Speed is the last thing you add. Accuracy and tone come first.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the recommended order when building speed in fingerpicking?",
+      "choices": [
+        "Speed first, then accuracy",
+        "Accuracy and tone first, speed added last",
+        "Memorize the piece first, then slow down",
+        "Play at performance tempo from the start"
+      ],
+      "answer": 1,
+      "explanation": "Accuracy and tone quality must be established at slow tempos first. Speed is always added last — practicing fast with mistakes reinforces errors. Slow, clean practice builds the neural pathways that eventually allow fast, effortless playing.",
+      "srs": true
+    }
+  ]
+}

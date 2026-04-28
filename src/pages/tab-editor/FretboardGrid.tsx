@@ -9,6 +9,8 @@ interface FretboardGridProps {
   maxFret?: number;
   onFretClick: (stringNumber: number, fret: number) => void;
   onClose: () => void;
+  scaleNotes?: string[];
+  rootNote?: string;
 }
 
 const SINGLE_DOT_FRETS = new Set([3, 5, 7, 9, 15, 17, 19, 21]);
@@ -22,6 +24,8 @@ export default function FretboardGrid({
   maxFret = 24,
   onFretClick,
   onClose,
+  scaleNotes,
+  rootNote,
 }: FretboardGridProps) {
   const fretboard = useMemo(() => buildFretboard(tuning, maxFret), [tuning, maxFret]);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -87,25 +91,31 @@ export default function FretboardGrid({
                 {/* Fret cells */}
                 {stringNotes.map((note: FretNote) => {
                   const isOpenString = note.fret === 0;
+                  const isRoot = scaleNotes ? note.name === rootNote : false;
+                  const inScale = scaleNotes ? scaleNotes.includes(note.name) : false;
+                  const dimmed = scaleNotes && !inScale;
                   return (
                     <button
                       key={note.fret}
                       onClick={() => handleClick(sIdx, note.fret)}
                       className={cn(
-                        CELL_W, 'h-[28px] shrink-0 flex items-center justify-center',
+                        CELL_W, 'h-[28px] shrink-0 flex items-center justify-center relative',
                         'text-[10px] font-mono rounded-[3px] transition-colors',
-                        // Base style — dark fretboard look
                         isActive
                           ? 'bg-blue-500/15 text-blue-300 hover:bg-blue-500/30'
                           : 'bg-zinc-800/60 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200',
-                        // Nut marker
                         isOpenString && 'border-r-2 border-r-zinc-500',
-                        // Fret wire effect
                         !isOpenString && 'border-l border-zinc-700/50',
                       )}
                     >
-                      {note.name}
-                      <span className="text-[8px] opacity-60">{note.octave}</span>
+                      <span className={cn(dimmed && 'opacity-25')}>{note.name}</span>
+                      <span className={cn('text-[8px]', dimmed ? 'opacity-10' : 'opacity-60')}>{note.octave}</span>
+                      {isRoot && (
+                        <span className="absolute bottom-[2px] left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-amber-400" />
+                      )}
+                      {inScale && !isRoot && (
+                        <span className="absolute bottom-[2px] left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-400/80" />
+                      )}
                     </button>
                   );
                 })}

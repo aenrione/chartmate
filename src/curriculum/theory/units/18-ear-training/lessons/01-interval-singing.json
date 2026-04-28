@@ -1,0 +1,46 @@
+{
+  "id": "01-interval-singing",
+  "title": "Interval Singing & Recognition",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Interval Recognition: Training Your Inner Ear\n\nThe ability to recognize intervals by ear — **relative pitch** — is one of the most practically valuable skills a musician can develop. It allows you to hear a melody and know what notes are being played, to identify chord qualities, and to write down music you hear.\n\n### The Song Association Method\n\nThe most reliable way to memorize interval sounds is to associate each interval with a song that opens with that interval:\n\n| Interval | Ascending | Descending |\n|---|---|---|\n| Minor 2nd (m2) | 'Jaws' theme | 'Für Elise' (opening) |\n| Major 2nd (M2) | 'Happy Birthday' | 'Mary Had a Little Lamb' |\n| Minor 3rd (m3) | 'Smoke on the Water' | 'Hey Jude' (last na-na) |\n| Major 3rd (M3) | 'When the Saints Go Marching In' | 'Swing Low Sweet Chariot' |\n| Perfect 4th (P4) | 'Here Comes the Bride' | 'Born to Run' (verse) |\n| Tritone (TT) | 'The Simpsons' theme | 'Maria' (West Side Story) |\n| Perfect 5th (P5) | 'Star Wars' theme | 'The Flintstones' |\n| Minor 6th (m6) | 'The Entertainer' | 'Nobody Knows the Trouble' |\n| Major 6th (M6) | 'My Bonnie Lies Over the Ocean' | 'Nobody Knows (descending)' |\n| Minor 7th (m7) | 'Somewhere' (West Side Story) | 'Watermelon Man' |\n| Major 7th (M7) | 'Take On Me' (A-ha) | 'I Love You' (Cole Porter) |\n| Octave (P8) | 'Somewhere Over the Rainbow' | 'Willow Weep for Me' |\n\n### Active Listening Practice\n\nThe key to developing interval recognition is **daily active practice**, not just passive listening:\n\n1. **Sing intervals**: With a drone on your instrument, sing each interval up and down. Hear it in your voice.\n2. **Dictate melodies**: Listen to a melody and write it down using solfège or note names.\n3. **Play and sing**: Play a note, sing another note, check — was that a major 3rd? Minor 6th?\n\n### The Role of Context\n\nIntervals sound different depending on context. A perfect fifth in isolation sounds hollow; in a power chord, it sounds powerful; in a dominant seventh chord, it sounds tense. Train your ear in context (within chords and progressions) as well as in isolation.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which song is traditionally used to recognize an ascending perfect fifth?",
+      "choices": ["'Happy Birthday'", "'Here Comes the Bride'", "'Star Wars' theme", "'Somewhere Over the Rainbow'"],
+      "answer": 2,
+      "explanation": "The opening of the 'Star Wars' main theme (John Williams) leaps a perfect fifth upward on the first two notes ('Star/Wars'). Other commonly used perfect fifth mnemonics include 'Twinkle Twinkle Little Star' (first two notes) and 'The Flintstones' theme. Having a reliable song association for each interval is the foundation of ear training.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the difference between 'relative pitch' and 'perfect (absolute) pitch'?",
+      "choices": [
+        "Relative pitch means you can identify notes in relation to a given reference pitch; perfect pitch means you can identify notes without any reference",
+        "Relative pitch is more accurate than perfect pitch",
+        "Perfect pitch requires more training than relative pitch",
+        "They are the same skill — both involve identifying specific pitches by ear"
+      ],
+      "answer": 0,
+      "explanation": "Relative pitch is the ability to identify intervals and notes in relation to a given reference point (e.g., 'this note is a major third above that one'). Perfect (absolute) pitch is the rare ability to identify notes without any reference — you simply know that a sound is 'C#' or 'Bb'. Relative pitch can be learned through training; perfect pitch is largely innate and difficult to develop in adulthood. Relative pitch is more musically useful for most practical applications.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is the tritone (augmented fourth) associated with 'The Simpsons' theme for ascending recognition?",
+      "choices": [
+        "Because The Simpsons is known for dissonant music",
+        "Because the opening of the Simpsons theme leaps a tritone upward on a distinctive note",
+        "Because it is not associated with The Simpsons — that is the major seventh",
+        "Because Danny Elfman used it as a test for music theory in the score"
+      ],
+      "answer": 1,
+      "explanation": "Danny Elfman's Simpsons theme features a prominent ascending tritone early in the melody — the distinctive 'Simp-sons!' leap. The tritone (augmented fourth = 6 semitones) is the most dissonant interval within an octave, and having a memorable pop-culture association helps students quickly recognize its unique quality.",
+      "srs": true
+    }
+  ]
+}

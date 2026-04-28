@@ -1,0 +1,64 @@
+{
+  "id": "05-locrian-and-modal-harmony",
+  "title": "Locrian & Modal Harmony",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Locrian & Modal Harmony\n\n### Locrian (Mode 7) — Maximum Dissonance\n\n**Locrian** is built on the 7th degree of the major scale. **B Locrian** uses C major notes centered on B.\n\n**B Locrian**: B C D E F G A B\nInterval pattern: **H–W–W–H–W–W–W**\n\nLocrian has two defining — and deeply destabilizing — features:\n- **b2**: the scale begins with a half step (C natural is just a semitone above B)\n- **b5**: the fifth degree is diminished (F natural, not F#)\n\nThe b5 means that the **tonic chord itself is diminished** (B–D–F). A diminished chord is inherently unstable — it cannot function as a point of rest. This is the core problem with Locrian as a tonal center: the 'home' chord is already tense and wants to move.\n\n**Where Locrian appears:**\n- As the **vii° chord** in major key harmony and **iiø7** in minor key harmony\n- In extreme metal for ultra-dark, dissonant passages\n- Occasionally in jazz and contemporary classical music as a deliberate color\n\n**The half-diminished chord is Locrian's seventh chord:** Bø7 (B–D–F–A) — the half-diminished chord — is the tonic seventh chord in B Locrian, and it appears as the ii chord in C major harmony.\n\n### Modal Harmony vs. Tonal Harmony\n\nTonal harmony (major and minor keys) relies on **V–I cadences** to establish and confirm the tonal center. The tritone in the dominant seventh chord resolves inward, producing a conclusive landing.\n\n**Modal harmony works differently.** Modes typically avoid or minimize V–I cadences because resolving to the tonic via V7 would simply pull the music toward the parent major key, undermining the modal center. Instead, modal music uses:\n\n1. **Characteristic chord loops** — repeating progressions that establish the modal color through repetition rather than resolution. Dorian: **i–IV**. Mixolydian: **I–bVII**. Phrygian: **i–bII**. Lydian: **I–II**.\n\n2. **Drone tones** — a sustained root note underneath the harmony locks in the tonal center even as chords change.\n\n3. **Avoiding leading tones** — modes that have a b7 (Dorian, Phrygian, Mixolydian, Aeolian, Locrian) avoid creating strong V7 resolution, keeping the music 'floating' in modal space.\n\n### The Seven Modes: A Complete Summary\n\n| Mode | Signature | Color | Example |\n|------|-----------|-------|---------|\n| **Ionian** | — (major) | Bright, stable | Most pop/rock |\n| **Dorian** | raised 6th | Jazzy, slightly dark | 'So What' |\n| **Phrygian** | b2 | Dark, exotic, Spanish | Flamenco, metal |\n| **Lydian** | #4 | Dreamy, ethereal | Film scores |\n| **Mixolydian** | b7 | Earthy, bluesy | Rock, blues, Celtic |\n| **Aeolian** | — (natural minor) | Dark, melancholic | Rock ballads |\n| **Locrian** | b2 + b5 | Dissonant, unstable | Metal, jazz |\n\nFluency with all seven modes is a hallmark of professional musicianship. Each mode is a distinct lens through which you can hear and compose music — expanding your palette from two options (major/minor) to seven.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Identifying Modes: The Practical Method\n\nWhen you encounter an unfamiliar scale or modal sound, use this approach to identify the mode:\n\n### Method 1: Compare to Major and Minor\n\nAsk: does this scale sound **major-ish** (bright) or **minor-ish** (dark)?\n\n- **Major-ish modes** (have a major 3rd above root): Ionian, Lydian, Mixolydian\n  - Ionian = pure major\n  - Lydian = major + raised 4th (#4)\n  - Mixolydian = major + lowered 7th (b7)\n\n- **Minor-ish modes** (have a minor 3rd above root): Dorian, Phrygian, Aeolian, Locrian\n  - Aeolian = pure natural minor\n  - Dorian = natural minor + raised 6th (major 6th)\n  - Phrygian = natural minor + lowered 2nd (b2)\n  - Locrian = natural minor + lowered 2nd (b2) AND lowered 5th (b5)\n\n### Method 2: Find the Parent Major Scale\n\nAny mode is a major scale starting on a different degree. To find the parent scale:\n1. Identify which major scale contains all the notes of the mode\n2. The mode's root is one of the 7 scale degrees of that parent\n\nExample: you have the scale E F G A B C D. What mode is this?\n- These notes form the C major scale\n- E is the 3rd degree of C major\n- Therefore: **E Phrygian** (mode 3)\n\n### The One-Note Shortcuts\n\nOnce you know the mode is major-ish or minor-ish, one characteristic note clinches the identification:\n- Major with **#4** = Lydian\n- Major with **b7** = Mixolydian\n- Minor with **major 6th** = Dorian\n- Minor with **b2** = Phrygian (if also b5 = Locrian)\n\nWith these shortcuts, you can identify any mode in seconds.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is Locrian rarely used as a stable tonal center?",
+      "choices": [
+        "Because Locrian has too many sharps to be practical",
+        "Because the tonic chord in Locrian is a diminished triad — inherently unstable",
+        "Because Locrian has no distinct characteristic note",
+        "Because Locrian is only used in classical music"
+      ],
+      "answer": 1,
+      "explanation": "In Locrian, the b5 means the tonic triad is diminished (e.g., B–D–F in B Locrian). A diminished chord cannot serve as a stable resting point — it is inherently tense and wants to resolve. This makes establishing Locrian as a tonal center extremely difficult.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How does modal harmony typically establish a tonal center instead of using V–I cadences?",
+      "choices": [
+        "By playing the tonic chord louder and longer than other chords",
+        "By using characteristic chord loops, drone tones, and avoiding strong leading-tone resolutions",
+        "By modulating to a related key and then returning",
+        "By using chromatic passing chords to approach the tonic"
+      ],
+      "answer": 1,
+      "explanation": "Modal harmony establishes tonal centers through repeated characteristic chord patterns (like Dorian's i–IV loop), sustained drone tones on the root, and deliberately avoiding the V7–I cadence that would pull toward the parent major key instead of the modal center.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which mode has BOTH a flat 2nd (b2) AND a flat 5th (b5)?",
+      "choices": ["Phrygian", "Dorian", "Aeolian", "Locrian"],
+      "answer": 3,
+      "explanation": "Locrian is the only mode with both b2 and b5. Its interval pattern is H–W–W–H–W–W–W. B Locrian: B–C–D–E–F–G–A. The F natural is the b5 (diminished fifth above B), and the C natural is the b2 (half step above B).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which one-note difference distinguishes Dorian from Aeolian, and which note difference distinguishes Phrygian from Aeolian?",
+      "choices": [
+        "Dorian has b6 (vs. Aeolian's natural 6); Phrygian has b2 (vs. Aeolian's natural 2)",
+        "Dorian has raised 6 (vs. Aeolian's b6); Phrygian has b2 (vs. Aeolian's natural 2)",
+        "Dorian has b7; Phrygian has #4",
+        "Dorian has #4; Phrygian has b7"
+      ],
+      "answer": 1,
+      "explanation": "Compared to Aeolian (natural minor): Dorian raises the 6th by a half step (major 6th instead of minor 6th), while Phrygian lowers the 2nd by a half step (b2 instead of natural 2). Both modifications produce dramatically different emotional characters: Dorian brighter/jazzier, Phrygian darker/more exotic.",
+      "srs": true
+    }
+  ]
+}

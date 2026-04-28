@@ -1,0 +1,48 @@
+{
+  "id": "01-double-bass-basics",
+  "title": "Double Bass Basics",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Double Bass Drumming: Two Feet, One Groove\n\nDouble bass drumming uses either two bass drums or a double pedal on one bass drum. The slave pedal (left foot) mirrors the master pedal (right foot), giving you independent control of both bass drum beaters.\n\n**Two techniques:**\n\n1. **Heel-toe** (single motion, two sounds): Rock the foot from heel to toe in one motion to produce two consecutive strikes. Efficient at medium tempos and for rolling passages.\n\n2. **Swivel/slide**: Similar single-leg technique for producing rapid double notes.\n\n3. **Alternating feet**: Simply alternating RLRL on the pedals — the most natural starting point. Less efficient at extreme speeds but more controllable for beginners.\n\n**Setup:** Both pedals must be adjusted identically — same beater angle, same spring tension, same beater distance. Any asymmetry in the pedal setup will translate directly into rhythmic unevenness.\n\n**The most important practice tool:** a metronome. Double bass work that's slightly uneven sounds terrible. Tempo precision is not negotiable.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Basic Double Bass 8th Notes",
+      "description": "Alternating RLRL double bass on every 8th note. Snare stays on beats 2 and 4. Hi-hat plays straight 8ths on the right hand. This is the foundational double bass pattern — build it slowly and evenly before adding speed.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 90,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "xxxxxxxx"},
+        {"name": "Snare",  "pattern": "--x---x-"},
+        {"name": "Kick",   "pattern": "xxxxxxxx"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Double Bass 16th Notes",
+      "description": "16th-note double bass: RLRL alternating at twice the density. The hands play 8th notes on hi-hat (typical metal approach). Snare on beats 2 and 4. This is the core of most metal drumming at moderate tempos.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 100,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x-x-x-x-x-x-x-x-"},
+        {"name": "Snare",  "pattern": "----x-------x---"},
+        {"name": "Kick",   "pattern": "xxxxxxxxxxxxxxxx"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When setting up a double pedal, why must both pedals be adjusted identically?",
+      "choices": ["For aesthetic symmetry on stage", "So both feet experience the same resistance, ensuring rhythmic evenness", "Because manufacturers require it", "To make the pedals last longer"],
+      "answer": 1,
+      "explanation": "If the two pedals have different spring tension, beater angle, or travel distance, the two feet will have different mechanical resistance. This creates rhythmic unevenness that's clearly audible — the two feet must feel identical to play evenly.",
+      "srs": true
+    }
+  ]
+}

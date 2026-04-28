@@ -1,0 +1,43 @@
+{
+  "id": "05-building-your-repertoire",
+  "title": "Building Your Jazz Repertoire",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Building a Jazz Repertoire — The Long Game\n\nEvery serious jazz musician develops a **book** — a collection of standards they know cold (head, chord changes, can improvise over). This takes years but the strategy matters.\n\n## The Standard Repertoire\n\nThese tunes appear at virtually every jazz jam session:\n\n### Must-Know Standards\n- \"Autumn Leaves\" (Kosma)\n- \"All of Me\" (Marks/Simons)\n- \"There Will Never Be Another You\" (Warren)\n- \"Summertime\" (Gershwin)\n- \"Fly Me to the Moon\" (Howard)\n- \"The Days of Wine and Roses\" (Mancini)\n- \"All the Things You Are\" (Kern)\n\n### Bebop Heads\n- \"Anthropology\" — Parker (over Rhythm Changes)\n- \"Donna Lee\" — Parker (over Indiana)\n- \"Confirmation\" — Parker (original)\n- \"Oleo\" — Rollins (Rhythm Changes)\n\n### Ballads\n- \"Misty\" (Garner)\n- \"Round Midnight\" (Monk)\n- \"Body and Soul\" (Green)\n- \"Stella by Starlight\" (Young)\n\n## How to Learn a Standard Efficiently\n\n1. Sing the melody (know the tune by ear before touching the guitar)\n2. Learn the changes from a Real Book lead sheet\n3. Practice chord-melody version\n4. Practice improvisation (chord tones, then bebop lines)\n5. Play it at a jam session",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'the Real Book' in jazz?",
+      "choices": [
+        "A theory textbook for jazz musicians",
+        "A fake book (lead sheet collection) containing hundreds of jazz standard melodies and chord changes",
+        "A collection of transcribed solos by famous jazz players",
+        "A rhythm training method for drummers"
+      ],
+      "answer": 1,
+      "explanation": "The Real Book is the most widely used jazz fake book — a collection of lead sheets showing melody lines and chord changes for hundreds of jazz standards. Originally a bootleg photocopied collection, it's now published legally by Hal Leonard. Every jazz musician uses it.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Jazz Guitarist's Practice Map\n\n## Monthly Progression\n\n**Month 1**: Autumn Leaves\n- Learn changes cold\n- Comp with shells\n- Improvise with chord tones\n\n**Month 2**: All of Me\n- Simple changes (mostly I-vi-ii-V)\n- Practice chord-melody version\n- Develop bebop line over each section\n\n**Month 3**: Fly Me to the Moon\n- Straightforward AABA form\n- Bossa nova rhythm (optional)\n- Work on ii-V-I vocabulary in multiple keys\n\n**Month 4**: All the Things You Are\n- More complex changes (moves through many keys)\n- Apply all ii-V-I vocabulary\n- Challenge your ear on key changes\n\n## What to Do at a Jam Session\n\n1. Listen to the first chorus before joining in\n2. Comp minimally when you first enter\n3. When it's your turn to solo, start simply\n4. If you get lost in the changes, stop — listen for 2 bars — then re-enter\n5. After the session, note which changes gave you trouble and practice them",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What should you do if you get lost in the chord changes during a jazz jam session solo?",
+      "choices": [
+        "Keep playing and hope to find your place",
+        "Stop the band and restart",
+        "Briefly stop playing, listen for 1-2 bars to find your place, then re-enter",
+        "Switch to playing only open strings"
+      ],
+      "answer": 2,
+      "explanation": "Getting lost happens to every musician. The professional approach: briefly stop, listen to the rhythm section for 1-2 bars to identify where you are in the form, then re-enter. A brief pause is far less disruptive than continuing to play lost.",
+      "srs": true
+    }
+  ]
+}

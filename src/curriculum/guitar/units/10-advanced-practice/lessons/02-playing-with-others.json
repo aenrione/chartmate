@@ -1,0 +1,20 @@
+{
+  "id": "02-playing-with-others",
+  "title": "Playing with Others",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Most Important Skill: Listening\n\nPlaying with other musicians exposes the skill nobody practices alone: **listening**.\n\n**Rules for ensemble playing:**\n1. **Lock into the drummer/bass** — they define the groove\n2. **Leave space** — don't fill every second; silence is music\n3. **Watch dynamics** — match the energy of the room\n4. **Comp during solos** — simple, supportive chord stabs when others solo\n5. **Never compete** — two soloists at once sounds like noise",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When another musician is soloing, what should a rhythm guitarist do?",
+      "choices": ["Solo simultaneously to add texture", "Stop playing entirely", "Play simple supportive comping chords", "Play the same notes as the soloist"],
+      "answer": 2,
+      "explanation": "Comping (accompanying) during someone else's solo means playing simple, supportive chord fragments that enhance the soloist without competing. Less is more.",
+      "srs": true
+    }
+  ]
+}

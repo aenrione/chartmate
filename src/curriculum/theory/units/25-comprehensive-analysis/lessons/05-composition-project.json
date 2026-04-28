@@ -1,0 +1,51 @@
+{
+  "id": "05-composition-project",
+  "title": "Composition Project",
+  "xp": 50,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## The Comprehensive Composition Project\n\nYou have now studied 25 units covering the full breadth of music theory from reading music through counterpoint, jazz harmony, film scoring, and beyond. This final lesson is not about learning new information — it is about integrating everything you know.\n\n### The Project\n\nCompose a short piece (16–64 bars) that deliberately demonstrates synthesis of at least four of the following elements:\n\n1. **Counterpoint**: At least one contrapuntal passage (two independent voices)\n2. **Modal interchange**: At least one borrowed chord\n3. **Secondary dominant**: At least one secondary dominant resolution\n4. **Extended/altered chords**: At least one jazz-style 9th, 11th, or altered chord\n5. **Form**: Clear binary, ternary, or song form structure\n6. **Voice leading**: Smooth connections demonstrating the principles learned\n7. **Modulation**: A key change (can be brief)\n8. **Style reference**: Clear stylistic influence from one identified genre\n\n### Analysis Checklist: Review All 25 Units\n\n**Foundation (Units 1–10)**: Reading, rhythm, pitch, keys, scales, intervals, chords, seventh chords, diatonic harmony, modes\n\n**Voice Leading Branch (Units 11, 15, 21)**: Four-part harmony, species counterpoint, advanced counterpoint\n\n**Chromaticism Branch (Units 12, 14, 16)**: Secondary dominants, modal interchange, modulation\n\n**Jazz Branch (Units 13, 17, 18)**: Jazz harmony I & II, ear training\n\n**Form Branch (Units 19, 20)**: Form and analysis, orchestration\n\n**Contemporary Branch (Units 22, 23, 24, 25)**: Blues/gospel, contemporary harmony, film/game scoring, comprehensive analysis\n\n### The Theory-Practice Connection\n\nEvery concept in this curriculum exists in service of one goal: **musical communication**. Theory describes what great musicians already knew intuitively. The point of studying it formally is to give you access to those techniques consciously — so that what was unconscious for them can be conscious for you, and eventually unconscious for you too (through practice).\n\nThe best musical theory is invisible in the finished work. When you hear a Bach chorale, you don't think 'there's a 4-3 suspension resolving over the dominant.' You feel the emotion, the inevitability, the beauty. The theory explains why it works; the music just works.\n\nYou now have the theory. The rest is listening, playing, and making music.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the ultimate relationship between music theory and musical expression?",
+      "choices": [
+        "Theory replaces expression — a perfectly theoretical piece is automatically expressive",
+        "Theory and expression are opposites — the more theory you know, the less natural your music",
+        "Theory is the description of what expressive musicians already knew intuitively — it gives conscious access to techniques so they can eventually become intuitive",
+        "Theory is only useful for classical music and analysis; it is irrelevant to expression in jazz or pop"
+      ],
+      "answer": 2,
+      "explanation": "Music theory describes the patterns that musical masters discovered through practice and expression. Studying theory gives you conscious access to these patterns — 'ah, this is why that chord works here, this is why that resolution feels inevitable.' The goal of this conscious knowledge is not to think about theory while playing, but to absorb it so thoroughly that it becomes part of your musical intuition. Theory serves expression; it doesn't replace it.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a comprehensive composition exercise, why is it valuable to deliberately synthesize elements from multiple units?",
+      "choices": [
+        "Because examiners require evidence from every unit",
+        "Because forced synthesis reveals gaps in understanding — techniques that seem clear in isolation may be harder to integrate in a real compositional context",
+        "Because longer compositions are always better than shorter ones",
+        "Because real music never uses concepts from just one theory area"
+      ],
+      "answer": 1,
+      "explanation": "Forced synthesis is a diagnostic tool: concepts that you understand theoretically in isolation may feel awkward or wrong when you try to use them in combination with other concepts. Writing a piece that must simultaneously use modal interchange AND counterpoint AND form reveals whether these are truly internalized or merely memorized. The struggle of integration is where real learning happens.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does it mean for music theory to be 'invisible in the finished work'?",
+      "choices": [
+        "The theory should be hidden so audiences cannot see the structure",
+        "The theoretical choices should serve the music so naturally that the listener hears only emotion and beauty, not the theoretical apparatus behind it",
+        "Modern music should not sound theoretical — it should sound random and natural",
+        "Score markings and analysis notes should not be visible to performers"
+      ],
+      "answer": 1,
+      "explanation": "When theory is truly integrated, the listener doesn't hear 'a ii–V–I with tritone substitution.' They hear the emotional movement — tension, release, arrival. The theory is invisible because it has become music. Bach's chorales don't sound like theory exercises; they sound like prayer. That is the goal: theory so internalized that it becomes transparent — a vehicle for musical truth rather than an end in itself.",
+      "srs": true
+    }
+  ]
+}

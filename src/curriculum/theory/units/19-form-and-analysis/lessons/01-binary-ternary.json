@@ -1,0 +1,51 @@
+{
+  "id": "01-binary-ternary",
+  "title": "Binary and Ternary Form",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Musical Form: How Music Organizes in Time\n\n**Musical form** describes how a piece is organized into sections and how those sections relate to each other. Understanding form allows you to hear music architecturally — not just as a stream of notes, but as a structure with sections, contrasts, and returns.\n\n### Binary Form (AB)\n\nBinary form has two sections, typically labeled A and B. Both sections are usually repeated:\n\n**Simple binary**: ||: A :||: B :|| (each section repeated)\n\nThe A section establishes the home key. The B section moves to a related key (usually the dominant in major, the relative major in minor) and returns to the tonic.\n\n**Key scheme in major**: A: I → V (or stays on I) | B: V → I (modulates back)\n\nExamples:\n- Most **Baroque dance movements** (minuets, gavottes, courantes): typically binary\n- Bach's **Prelude No. 1 in C major** (Well-Tempered Clavier): simple two-part structure\n- Most folk tunes have binary structure\n\n**Rounded binary**: A ||: B + A' :|| — the B section returns to a varied A at its end. This is a transition form toward ternary.\n\n### Ternary Form (ABA)\n\nTernary form has three sections: A → B → A (return). The return of A creates a symmetrical sandwich.\n\n**Key scheme**: A (tonic) | B (contrasting key) | A' (tonic again)\n\nExamples:\n- **Da capo aria** (Baroque opera): The singer returns to the beginning 'da capo' (from the head) after the B section\n- Most **minuet and trio** movements in Classical period music: Minuet (A) → Trio (B) → Minuet D.C. (A)\n- Pop music **verse-chorus-verse** is sometimes analyzed as ternary when the bridge (B) is surrounded by repeated chorus/verse pairs\n\n### The Importance of Return\n\nThe return of A in ternary form creates one of the most powerful musical effects: **recognition and homecoming**. After the contrast of B, hearing A return triggers familiarity and satisfaction.\n\nThis return principle — departure and return — underlies virtually all larger musical forms: rondo (ABACADA...), sonata (exposition → development → recapitulation), and even the 12-bar blues (I → IV → V → I is a contained departure-return).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What distinguishes 'rounded binary' from 'simple binary'?",
+      "choices": [
+        "Rounded binary has three sections; simple binary has two",
+        "Rounded binary ends its B section with a return to A material (B+A'), while simple binary does not",
+        "Rounded binary is in a minor key; simple binary is in major",
+        "They are identical — 'rounded' just means the sections are repeated with repeats signs"
+      ],
+      "answer": 1,
+      "explanation": "Simple binary is ||:A:||:B:|| — two independent sections. Rounded binary is ||:A:||:B+A':|| — the B section ends with a return of A material (A'), creating a hint of ternary structure while remaining technically two-part. Rounded binary is important because it evolved into Classical sonata form: the A section became the 'exposition,' B the 'development,' and A' the 'recapitulation.'",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In ternary form (ABA), what harmonic area does the B section typically explore?",
+      "choices": [
+        "The B section stays in the tonic key",
+        "The B section moves to a contrasting key (dominant, relative major/minor, or another related key)",
+        "The B section is always in the parallel minor",
+        "The B section uses no defined key — it is freely atonal"
+      ],
+      "answer": 1,
+      "explanation": "The B section of ternary form provides harmonic contrast by moving to a related key. In major keys, this is often the dominant or relative minor. In minor keys, often the relative major. This harmonic journey makes the return of A feel like a genuine homecoming — you have been away and returned. The contrast is what makes the return meaningful.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does 'da capo' mean in a da capo aria, and what form does it create?",
+      "choices": [
+        "Italian for 'from the end' — an instruction to stop",
+        "Italian for 'from the head' — instruction to return to the beginning, creating an ABA ternary form",
+        "Italian for 'with the beat' — a tempo instruction",
+        "Italian for 'big section' — describing the aria's grandeur"
+      ],
+      "answer": 1,
+      "explanation": "Da capo (Italian: 'from the head/beginning') is an instruction in Baroque opera to return to the beginning after completing the B section, creating an A–B–A structure. The singer typically ornaments the repeated A section, demonstrating their virtuosity. The da capo aria is the dominant vocal form of the Baroque era (Handel operas, Bach cantatas) and exemplifies pure ternary form.",
+      "srs": true
+    }
+  ]
+}

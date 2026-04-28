@@ -1,8 +1,8 @@
 // src/pages/learn/LearnStats.tsx
 import {useEffect, useState} from 'react';
-import {Flame} from 'lucide-react';
+import {Flame, Guitar, Drum, Music} from 'lucide-react';
 import {cn} from '@/lib/utils';
-import {getLearnStats, setDailyGoalTarget} from '@/lib/local-db/learn';
+import {getLearnStats, setDailyGoalTarget, getAllInstrumentLevels, type InstrumentLevelView} from '@/lib/local-db/learn';
 
 interface Stats {
   streak: number;
@@ -10,6 +10,12 @@ interface Stats {
   todayXp: number;
   dailyGoalCompleted: boolean;
 }
+
+const INSTRUMENT_ICONS: Record<string, React.ComponentType<{className?: string}>> = {
+  guitar: Guitar,
+  drums: Drum,
+  theory: Music,
+};
 
 const GOAL_OPTIONS = [5, 10, 15, 20];
 
@@ -51,10 +57,12 @@ function GoalRing({current, target}: {current: number; target: number}) {
 
 export default function LearnStats() {
   const [stats, setStats] = useState<Stats | null>(null);
+  const [levels, setLevels] = useState<InstrumentLevelView[]>([]);
   const [showPicker, setShowPicker] = useState(false);
 
   useEffect(() => {
     getLearnStats().then(setStats).catch(() => {});
+    getAllInstrumentLevels().then(setLevels).catch(() => {});
   }, []);
 
   async function handleSetTarget(target: number) {
@@ -66,7 +74,8 @@ export default function LearnStats() {
   if (!stats) return null;
 
   return (
-    <div className="shrink-0 px-6 py-3 border-b border-outline-variant/20 flex items-center gap-6">
+    <div className="shrink-0 px-6 py-3 border-b border-outline-variant/20 flex flex-col gap-2.5">
+      <div className="flex items-center gap-6">
       {/* Streak */}
       <div className="flex items-center gap-1.5">
         <Flame
@@ -119,6 +128,30 @@ export default function LearnStats() {
               {opt}
             </button>
           ))}
+        </div>
+      )}
+      </div>
+
+      {/* Per-instrument level bars */}
+      {levels.length > 0 && (
+        <div className="flex items-center gap-3 flex-wrap">
+          {levels.map(l => {
+            const Icon = INSTRUMENT_ICONS[l.instrument] ?? Music;
+            const total = l.xp_into_level + l.xp_to_next;
+            const pct = total > 0 ? Math.min(100, Math.round((l.xp_into_level / total) * 100)) : 0;
+            return (
+              <div key={l.instrument} className="flex items-center gap-2 min-w-[140px] flex-1">
+                <Icon className="h-3.5 w-3.5 text-on-surface-variant shrink-0" />
+                <span className="text-[10px] font-bold text-on-surface w-8 shrink-0">Lv {l.level}</span>
+                <div className="flex-1 h-1.5 bg-surface-container-high rounded-full overflow-hidden min-w-[60px]">
+                  <div className="h-full bg-primary rounded-full transition-all" style={{width: `${pct}%`}} />
+                </div>
+                <span className="text-[10px] text-on-surface-variant whitespace-nowrap tabular-nums">
+                  {l.xp_into_level}/{total}
+                </span>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

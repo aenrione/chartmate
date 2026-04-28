@@ -1,0 +1,20 @@
+{
+  "id": "01-practice-routines",
+  "title": "Building a Practice Routine",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Balanced Drummer's Practice\n\n**30-minute daily routine:**\n| Time | Focus |\n|------|-------|\n| 5 min | Warm-up (single strokes, slow) |\n| 5 min | Rudiments (current rudiment, build speed) |\n| 5 min | Independence (add new pattern) |\n| 10 min | Songs / grooves (material you're learning) |\n| 5 min | Free play (improvise, have fun) |\n\nAlways use a metronome. Track your max clean tempo for each skill — progress is motivating.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why should every practice session end with free play?",
+      "choices": ["Free play doesn't require a metronome", "It applies skills musically and keeps drumming enjoyable", "It's required to cool down muscles", "To test if the skills transferred"],
+      "answer": 1,
+      "explanation": "Free play lets you apply what you practiced in an enjoyable, musical context. It reinforces skills naturally and — most importantly — keeps drumming fun. Enjoyment sustains long-term practice.",
+      "srs": true
+    }
+  ]
+}

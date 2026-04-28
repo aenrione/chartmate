@@ -1,0 +1,51 @@
+{
+  "id": "04-upper-structure-triads",
+  "title": "Upper Structure Triads",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Upper Structure Triads: Advanced Jazz Voicing\n\nAn **upper structure triad** (UST) is a technique where a simple major or minor triad is placed in the right hand on top of the guide tones (3rd and 7th) in the left hand. The resulting sound is a richly altered chord.\n\n### The Concept\n\nFor a G7 chord:\n- **Left hand**: B and F (the guide tones — 3rd and 7th of G7)\n- **Right hand**: Any triad that, combined with B and F, creates an interesting extended/altered sound\n\nThe triad in the right hand becomes the 'upper structure' — the color tones — while the guide tones in the left hand identify the underlying harmonic function.\n\n### Common Upper Structures on G7\n\n| Right-hand triad | Result | Character |\n|---|---|---|\n| **A major** (A–C#–E) | G13#11 | Lydian dominant, bright |\n| **Ab major** (Ab–C–Eb) | G7b9b13 | Alt chord, dark and tense |\n| **Bb major** (Bb–D–F) | G9 (or G13sus) | Open, floating |\n| **D major** (D–F#–A) | G9#11 | Thelonious Monk territory |\n| **Db major** (Db–F–Ab) | G7b9#11 | Tritone-related, very altered |\n| **E major** (E–G#–B) | G7#9b13 | Hendrix meets jazz |\n\n### Why It Works: Tritone Symmetry\n\nUpper structures over G7 often use triads related to Db7 — the tritone substitute. Ab, Db, and Bb triads all imply Db7 relationships. This is not coincidental: G7 and Db7 share the same guide tones (B/F = Cb/F enharmonically).\n\n### Hearing Upper Structures\n\nHerbie Hancock, McCoy Tyner, Bill Evans, and Chick Corea use upper structure triads extensively. Classic examples:\n\n- Herbie Hancock's intro to 'Maiden Voyage': stacked fourths that create upper structure sonorities\n- Bill Evans on 'Waltz for Debby': lush right-hand triads over guide tones\n- McCoy Tyner's 'Giant Steps' recording: quartal upper structures creating intense modal clusters\n\n### Practical Application\n\nTo use upper structure triads at the piano:\n1. Identify the chord (e.g., C7)\n2. Play guide tones in left hand: E (3rd) and Bb (7th)\n3. Experiment with triads in right hand that add interesting extensions\n4. Check that the combination makes musical sense (no b9 clash unless you want it)\n5. Listen to how the right-hand triad moves from the previous chord — voice leading still applies",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What are 'guide tones' in jazz piano, and why are they played in the left hand in upper structure voicings?",
+      "choices": [
+        "Root and fifth; they establish the bass register",
+        "Third and seventh; they most precisely define chord quality and are the harmonic skeleton",
+        "Root and ninth; they create the richest extensions",
+        "Fifth and thirteenth; they are the most interesting color tones"
+      ],
+      "answer": 1,
+      "explanation": "Guide tones are the 3rd and 7th of a chord — the two notes that most precisely define chord quality. The 3rd tells you major/minor/dominant; the 7th tells you maj7/dominant7/min7. In upper structure voicings, the left hand holds these anchoring tones while the right hand plays a triad that adds color (extensions and alterations).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "If you play G7 guide tones (B and F) in your left hand and an Ab major triad (Ab–C–Eb) in your right hand, what kind of G7 chord do you have?",
+      "choices": [
+        "G9 — a bright, unaltered dominant",
+        "G7#11 — Lydian dominant",
+        "G7b9b13 — a darkly altered dominant",
+        "G7sus4 — a suspended dominant"
+      ],
+      "answer": 2,
+      "explanation": "Ab major triad = Ab–C–Eb. Over G7 guide tones (B and F): Ab = b9 of G7, C = 4th (not an alteration), Eb = b13 of G7. So this upper structure creates G7b9b13 — an altered dominant with flat nine and flat thirteen. This is a very dark, tense sound that resolves powerfully to Cmaj7.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the harmonic connection between upper structures on G7 and the chord Db7?",
+      "choices": [
+        "Db7 is the relative minor of G7",
+        "G7 and Db7 share the same guide tones (B/F = Cb/F enharmonically) — they are tritone substitutes",
+        "Db7 is the bVII of G7 — borrowed from the parallel minor",
+        "There is no connection — they are unrelated dominant chords"
+      ],
+      "answer": 1,
+      "explanation": "G7 and Db7 are a tritone apart and share the same guide tones: G7's B and F = Db7's Cb and F enharmonically. This tritone relationship means upper structure triads that imply Db7 (like Ab major, Db major) work perfectly over G7's guide tones — they create altered dominant sounds from the tritone-substitute perspective.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "02-rock-fills",
+  "title": "Rock Fills",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Building Rock Fills\n\nRock fills typically use 16th notes across the toms:\n\n**4-beat tom fill:**\n```\nBeat 4: hi-tom × 4 → snare × 4 → floor tom × 4 → kick\n```\n\n**The John Bonham triplet fill:**\nGroup of 3 notes (LRK) repeating across toms and kick:\nL=snare, R=hi-tom, K=kick\n\nThis fill, famously used in 'Fool in the Rain' and 'Moby Dick', sounds complex but is just a 3-note pattern repeating.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why do triplet fills feel rhythmically interesting over a 4/4 groove?",
+      "choices": ["Triplets are always louder", "Groups of 3 don't divide evenly into 4/4, creating polyrhythmic tension", "They're played on beat 1 only", "Triplets slow the tempo"],
+      "answer": 1,
+      "explanation": "Triplets (3-note groups) don't divide evenly into 4/4 time, so they cross over barlines and beat positions, creating a spinning, polyrhythmic tension before resolving back to beat 1.",
+      "srs": true
+    }
+  ]
+}

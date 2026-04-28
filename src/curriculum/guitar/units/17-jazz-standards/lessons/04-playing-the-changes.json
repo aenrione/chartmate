@@ -1,0 +1,43 @@
+{
+  "id": "04-playing-the-changes",
+  "title": "Playing the Changes",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Playing the Changes — Full ii-V-I Vocabulary\n\nThis lesson consolidates the jazz improvisation vocabulary for playing over standard chord changes.\n\n## The Complete ii-V-I Toolkit\n\n### Over Dm7 (ii chord in C):\n- Scale: D Dorian (D E F G A B C)\n- Bebop scale: add C# between C and D\n- Chord tones to target: F (b3) and C (b7)\n\n### Over G7 (V chord in C):\n- Scale: G Mixolydian or G Altered\n- Bebop scale: G A B C D E F F# G\n- Chord tones to target: B (3) and F (b7)\n- Target note approaching from Dm7: F → B (tritone movement of guide tones)\n\n### Over Cmaj7 (I chord in C):\n- Scale: C Ionian or C Lydian\n- Chord tones to target: E (3) and B (7)\n- Arrival = release of tension\n\n## The Guide Tone Line\n\nThe most elegant way to navigate changes: follow the **guide tones** (3rds and 7ths) from chord to chord:\n\n```\nDm7: F (3rd) → G7: F (7th) → Cmaj7: E (3rd)\nDm7: C (7th) → G7: B (3rd) → Cmaj7: B (7th)\n```\n\nNotice: each guide tone moves by just a half step or whole step to the next chord's guide tone. This is the jazz guitarist's road map.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How do the guide tones (3rd and 7th) move from Dm7 to G7 to Cmaj7?",
+      "choices": [
+        "They jump by large intervals (4ths and 5ths)",
+        "They remain the same (common tones)",
+        "They move by half steps and whole steps (smooth voice leading)",
+        "They move in random directions"
+      ],
+      "answer": 2,
+      "explanation": "The guide tones voice-lead smoothly: Dm7's 7th (C) becomes G7's 3rd (B) — movement by half step. G7's 7th (F) becomes Cmaj7's 3rd (E) — movement by half step. This smooth guide tone movement is the harmonic 'gravity' of the ii-V-I.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Three-Step Improvisation Checklist\n\nWhen improvising over any chord change, run through this checklist:\n\n## Step 1: What chord am I on?\nIdentify the chord type (maj7, m7, dom7, m7b5)\n\n## Step 2: What are the chord tones?\nRoot, 3rd, 5th, 7th — know these cold\n\n## Step 3: Where am I going next?\nKnow the next chord and plan your approach:\n- Land on a chord tone of the NEXT chord\n- Use an approach note to the next chord's 3rd or 7th\n- Use a bebop scale run that naturally ends on the target\n\n## The \"One Chord at a Time\" Practice\n\nLoop a single chord change for 5 minutes:\n```\n| Dm7 (2 bars) | G7 (2 bars) | repeat |\n```\n\nImprovise only over these two chords. Notice:\n- What notes sound good over Dm7?\n- What notes sound different over G7?\n- How does the arrival at G7 change your note choices?\n\nThis focused practice builds much faster than trying to navigate 32 bars at once.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the most important target note to arrive on at the beginning of each new chord?",
+      "choices": [
+        "The root of the chord",
+        "The 5th of the chord",
+        "A guide tone (3rd or 7th) of the incoming chord",
+        "The 9th of the chord"
+      ],
+      "answer": 2,
+      "explanation": "Landing on a guide tone (3rd or 7th) at the beginning of a new chord creates the clearest harmonic statement. These notes define the chord's quality and their smooth voice leading between chords creates jazz's characteristic flowing, connected melody.",
+      "srs": true
+    }
+  ]
+}

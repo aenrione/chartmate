@@ -1,0 +1,34 @@
+{
+  "id": "05-half-time-shuffle",
+  "title": "The Half-Time Shuffle",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Holy Grail of Grooves\n\nThe **half-time shuffle** is one of the most challenging and coveted grooves in drumming.\n\nFamously used in 'Fool in the Rain' (Led Zeppelin, John Bonham) and Bernard Purdie's work on 'Babylon Sisters' (Steely Dan).\n\n**Structure:**\n- Hi-hat plays shuffle 16th triplets (long-rest-short): the 'Purdie shuffle' feel\n- Snare lands on beat 3 only (half-time placement)\n- Ghost notes fill the spaces between main hits\n- Kick is syncopated within the triplet grid\n\nThis groove requires all four limbs doing different independent things simultaneously. The ghost notes are the soul of the groove — without them it sounds mechanical.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Half-Time Shuffle (16th Note Grid Approximation)",
+      "description": "Written in 16th-note grid: hi-hat plays on the 1st and 3rd 16th of every beat (the 'shuffle' positions), snare lands hard on beat 3, ghost notes (o) fill key positions. The actual shuffle feel is triplet-based — think of every two 16ths as a triplet pair.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 86,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x-x-x-x-x-x-x-x-"},
+        {"name": "Snare",  "pattern": "o-o-o-o-X-o-o-o-"},
+        {"name": "Kick",   "pattern": "x---x-------x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is the half-time shuffle considered one of the hardest grooves to master?",
+      "choices": ["It requires two bass drums", "All four limbs play independent rhythmic patterns simultaneously with a triplet-based feel", "It must be played at extremely fast tempos", "It requires reading complex sheet music"],
+      "answer": 1,
+      "explanation": "The half-time shuffle demands genuine 4-limb independence: shuffle 16th triplets on hi-hat, ghost notes on snare, syncopated kick, and left foot hi-hat — all at different rhythmic positions.",
+      "srs": true
+    }
+  ]
+}

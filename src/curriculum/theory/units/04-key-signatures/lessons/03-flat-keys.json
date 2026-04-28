@@ -1,0 +1,69 @@
+{
+  "id": "03-flat-keys",
+  "title": "Flat Key Signatures",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Flat Key Signatures\n\n### The Order of Flats\n\nJust as sharps follow a fixed order, flats are always added in their own fixed sequence:\n\n**Bb — Eb — Ab — Db — Gb — Cb — Fb**\n\nThe mnemonic is: **Battle Ends And Down Goes Charles's Father** — the initials **B E A D G C F**. Notice something elegant: this is the **exact reverse** of the order of sharps (F C G D A E B backwards = B E A D G C F). Once you know one, you know the other.\n\n### Reading the Flat Keys\n\n| Key | Flats | Key Signature |\n|-----|-------|---------------|\n| F major | 1 | Bb |\n| Bb major | 2 | Bb, Eb |\n| Eb major | 3 | Bb, Eb, Ab |\n| Ab major | 4 | Bb, Eb, Ab, Db |\n| Db major | 5 | Bb, Eb, Ab, Db, Gb |\n| Gb major | 6 | Bb, Eb, Ab, Db, Gb, Cb |\n| Cb major | 7 | all seven flats |\n\n### The Golden Rule: The Second-to-Last Flat Names the Key\n\nFor flat key signatures with **two or more flats**, the major key name is the **second-to-last flat** in the key signature — the flat immediately to the left of the last one added.\n\n- Flats: Bb, Eb → second-to-last is Bb → key is **Bb major**\n- Flats: Bb, Eb, Ab → second-to-last is Eb → key is **Eb major**\n- Flats: Bb, Eb, Ab, Db → second-to-last is Ab → key is **Ab major**\n- Flats: Bb, Eb, Ab, Db, Gb → second-to-last is Db → key is **Db major**\n\n### The One-Flat Exception: F Major\n\nThis rule does not work for one flat (Bb alone), because there is no second-to-last flat. **One flat = F major** — you must simply memorize this. F major is extremely common in classical, pop, and orchestral music, so it is one of the first key signatures to engrain by memory anyway.\n\n### Why This Rule Works\n\nThe second-to-last flat is always the **4th scale degree (subdominant)** of the current key. The subdominant is the note whose *name* matches the key — in Eb major, Eb is the tonic, and it is also the second-to-last flat in the signature. The structural logic runs deep: each new flat key adds the 4th degree of the new key as the next flat, which means the tonic of the new key is already sitting one position before the most recent flat.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## The Circle of Fifths: Flat Side\n\n### Moving by Descending Fifths\n\nThe flat keys follow a descending-fifth pattern from C: C → F → Bb → Eb → Ab → Db → Gb → Cb. Each new key is a **perfect fifth below** (or a perfect fourth above) the previous one. This is the flat side of the circle of fifths.\n\nAlternatively: each successive flat key starts on the **4th degree (subdominant)** of the previous key. C major's 4th is F → F major. F major's 4th is Bb → Bb major. Bb's 4th is Eb → Eb major. Subdominant motion drives the flat key pattern, just as dominant (5th) motion drives the sharp key pattern.\n\n### Enharmonic Keys\n\nAt the bottom of the circle of fifths, sharp keys and flat keys overlap. Three pairs of keys are **enharmonically equivalent** — they sound identical but are written differently:\n\n- **B major (5#) = Cb major (7b)** — same pitches, different notation\n- **F# major (6#) = Gb major (6b)** — exactly halfway around the circle\n- **C# major (7#) = Db major (5b)** — same pitches, different notation\n\nComposers and performers choose between enharmonic spellings based on which is easier to read. Db major (5 flats) is far more practical to read than C# major (7 sharps), so it appears far more often in concert literature.\n\n### Practical Flat Key Shortcuts\n\n- **One flat = F major** — memorize directly\n- **Two flats = Bb major** — very common in orchestral and jazz writing\n- **Three flats = Eb major** — extremely common in wind band and jazz\n- **Four flats = Ab major** — common in Romantic-era piano music\n\nFlat keys tend to be favored by wind and brass instruments (they naturally finger in flat keys), while sharp keys are often more comfortable for strings and guitar.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the correct order in which flats are added to key signatures?",
+      "choices": [
+        "F, C, G, D, A, E, B",
+        "B, E, A, D, G, C, F",
+        "E, B, A, D, G, C, F",
+        "F, Bb, Eb, Ab, Db, Gb, Cb"
+      ],
+      "answer": 1,
+      "explanation": "Flats are added in the order Bb Eb Ab Db Gb Cb Fb — the initials spell BEADGCF ('Battle Ends And Down Goes Charles's Father'). This is the exact reverse of the sharp order (FCGDAEB). Memorizing both is essential for quick key identification.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "A key signature contains three flats: Bb, Eb, Ab. What major key is this?",
+      "choices": [
+        "Ab major",
+        "Bb major",
+        "Eb major",
+        "F major"
+      ],
+      "answer": 2,
+      "explanation": "With three flats (Bb, Eb, Ab), the second-to-last flat is Eb — so the key is Eb major. The rule: the second-to-last flat names the key. The last flat (Ab) is the 4th scale degree of Eb major, which is why it appears as the most recently added flat.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why does the 'second-to-last flat names the key' rule NOT work for a key signature with only one flat?",
+      "choices": [
+        "Because F major is not a real key",
+        "Because with only one flat there is no second-to-last flat — F major must simply be memorized",
+        "Because the rule only applies to sharp keys",
+        "Because one flat means the piece is in Bb major, not F major"
+      ],
+      "answer": 1,
+      "explanation": "The second-to-last flat rule requires at least two flats to work — you need a second-to-last flat to exist. With only one flat (Bb), there is no flat before it. F major is the one-flat key and must be memorized as a special case. This is the only exception to the rule.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which pair of keys are enharmonically equivalent — they contain the same pitches but are notated differently?",
+      "choices": [
+        "G major and F major",
+        "Eb major and E major",
+        "F# major and Gb major",
+        "Ab major and A major"
+      ],
+      "answer": 2,
+      "explanation": "F# major (6 sharps) and Gb major (6 flats) are enharmonic equivalents — they use the same 12 pitches (just spelled differently) and sound completely identical. F# major and Gb major sit exactly opposite each other at the bottom of the circle of fifths. Composers choose based on which spelling is easier to read in context.",
+      "srs": true
+    }
+  ]
+}

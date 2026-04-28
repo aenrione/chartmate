@@ -1,0 +1,43 @@
+{
+  "id": "05-posture-and-position",
+  "title": "Posture and Position",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Classical Guitar Posture — Avoiding Injury, Enabling Technique\n\nClassical guitar posture was developed over centuries to allow maximum technique with minimum physical strain. Ignoring it leads to injury; following it enables longevity.\n\n## The Classical Position\n\n1. **Chair**: Armless, standard height, feet flat on the floor\n2. **Footstool** or **guitar support**: Left foot elevated on a footstool (traditional) or guitar support cradle attached to the leg\n3. **Guitar position**:\n   - Back of guitar rests on left thigh\n   - Neck inclined at 45-60 degrees upward\n   - Body of guitar against the torso, not held away\n4. **Left elbow**: Slightly away from the body, forearm parallel to neck\n5. **Shoulders**: Level, relaxed — not hunched or raised\n6. **Head**: Looking at the neck without bending the spine\n\n## The Footstool Debate\n\n**Traditional footstool**: Raises left foot, tilts guitar. Risk: lower back and left hip strain over decades.\n\n**Modern guitar support** (Dynarette, Ergoplay, etc.): Attaches to guitar leg, avoids footstool. Preferred by health-conscious players today.\n\n## Breathing\n\nBefore playing every piece: **take a breath**. Tension in the body prevents fluid technique. Great classical guitarists look relaxed because they are — any tension is immediately audible in the music.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the main health risk associated with traditional footstool use over many years?",
+      "choices": [
+        "Wrist strain from elevation",
+        "Lower back and left hip strain from the asymmetric posture",
+        "Neck pain from looking left",
+        "Right shoulder repetitive stress"
+      ],
+      "answer": 1,
+      "explanation": "The traditional footstool raises the left foot, creating an asymmetric hip position. Over decades of daily practice, this can cause lower back pain and left hip problems. Modern guitar supports attach to the guitar and avoid this postural asymmetry.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Left-Hand Position in Classical Guitar\n\n## The Classical Left-Hand Setup\n\n1. **Thumb**: Behind the neck, roughly opposite the middle finger, NOT hooked over\n2. **Fingers**: Curved, tips perpendicular to the strings (not angled)\n3. **Wrist**: Slightly outward — the back of the hand should be mostly flat\n4. **Knuckles**: Parallel or nearly parallel to the neck\n5. **Pressure**: Minimum pressure to produce a clean note — no more\n\n## Why No Thumb Wrap in Classical?\n\nClassical technique forbids thumb-over fretting because:\n- The curved finger position requires the thumb behind the neck for balance\n- Thumb-over locks the wrist and reduces reach\n- Classical chord shapes require maximum finger spread, impossible with thumb-over\n\n## Barré Technique\n\nThe barré (full and half) is the classical left-hand's most demanding technique:\n\n**Full barré**: All six strings pressed by the index finger\n**Half barré (cejilla)**: Partial coverage, selective strings\n\n### Common Barré Problems\n1. Buzzing in the middle strings (index not straight enough)\n2. Muted treble string (index too close to fret below)\n3. Wrist pulling forward (causes buzzing)\n\n**Solution**: Roll the index slightly toward the headstock — the bony edge of the finger is harder than the flat underside.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When performing a full barré, why should the index finger roll slightly toward the headstock?",
+      "choices": [
+        "To reach the bass strings easier",
+        "The bony side-edge of the index finger is firmer than the soft pad, creating cleaner contact across all strings",
+        "To avoid nail contact with the strings",
+        "It's easier to release quickly"
+      ],
+      "answer": 1,
+      "explanation": "The flat underside of the index finger has natural gaps (between joints) where strings buzz. Rolling the finger slightly uses the harder, bonier edge, which creates more consistent contact across all strings and reduces buzzing.",
+      "srs": true
+    }
+  ]
+}

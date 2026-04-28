@@ -1,9 +1,11 @@
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useLocation} from 'react-router-dom';
 import {ExternalLink, Trash2} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {cn} from '@/lib/utils';
 import type {Goal} from '@/lib/local-db/programs';
 import {completeGoal, uncompleteGoal, deleteGoal} from '@/lib/local-db/programs';
+import {recordEventSafely} from '@/lib/progression';
+import {getLocalDb} from '@/lib/local-db/client';
 import GoalTypeIcon from './GoalTypeIcon';
 
 interface GoalItemProps {
@@ -19,13 +21,14 @@ function resolveLink(goal: Goal): string | null {
       return `/learn/lesson/${instrument}/${unitId}/${lessonId}`;
   }
   if (goal.type === 'exercise' && goal.refId) return goal.refId;
-  if (goal.type === 'song' && goal.refId) return '/library/saved-charts';
+  if (goal.type === 'song' && goal.refId) return `/sheet-music/${goal.refId}`;
   // 'custom' type has no navigable route
   return null;
 }
 
 export default function GoalItem({goal, onRefresh}: GoalItemProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const done = !!goal.completedAt;
   const link = resolveLink(goal);
 
@@ -35,6 +38,15 @@ export default function GoalItem({goal, onRefresh}: GoalItemProps) {
         await uncompleteGoal(goal.id);
       } else {
         await completeGoal(goal.id);
+        // Resolve programId so the engine can credit XP to the right instrument's level.
+        const db = await getLocalDb();
+        const row = await db
+          .selectFrom('program_units')
+          .select('program_id')
+          .where('id', '=', goal.unitId)
+          .executeTakeFirst();
+        const programId = row?.program_id ?? 0;
+        await recordEventSafely({kind: 'program_goal_completed', goalId: goal.id, programId});
       }
     } finally {
       onRefresh();
@@ -86,7 +98,7 @@ export default function GoalItem({goal, onRefresh}: GoalItemProps) {
 
       <div className="flex items-center gap-1 shrink-0">
         {link && (
-          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => navigate(link)}>
+          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => navigate(link, {state: {from: location.pathname}})}>
             <ExternalLink className="h-3.5 w-3.5 text-primary" />
           </Button>
         )}

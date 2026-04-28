@@ -1,0 +1,43 @@
+{
+  "id": "01-carulli-study",
+  "title": "Carulli Study",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Ferdinando Carulli — The Accessible Master\n\n**Ferdinando Carulli** (1770–1841) was the most prolific guitar composer of the early 19th century. His method books and etudes are the standard starting point for classical guitar students worldwide.\n\n## About the Studies\n\nCarulli's Op. 60 contains 24 short studies, each focused on a specific technical element. They are ideal for beginning classical studies because:\n- **Melodic**: they sound musical, not just mechanical\n- **Short**: 8-32 bars, manageable to learn completely\n- **Progressive**: each study introduces one new challenge\n- **Beautiful**: suitable for performance, not just practice\n\n## Study in E Minor (Op. 60, No. 1 — Andante)\n\nThis study features:\n- **Right hand**: P-I-M-A arpeggio pattern throughout\n- **Left hand**: mostly open string chord shapes\n- **Key**: E minor (open string-friendly for guitar)\n- **Texture**: melody in treble (string 1), accompaniment below\n\n## The Opening Section\n\n```\ne |--0-------2-------0--2--3--|\nB |--0--0--3---3--0------------|\nG |--0---2---2---2--0----------|\nD |--2-4---4---2-2-------------|\nA |----------------------------|\nE |--0-0-0-0-0-0-0-0-----------|\n   Em          B7  (simplified)\n```\n\n## Performance Directions\n\n**Andante** = walking pace (~72-80 BPM)\nDynamic range: p to mf — never loud\nExpression: gentle, lyrical, singing melody",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes Carulli's Op. 60 studies ideal for beginning classical guitar students?",
+      "choices": [
+        "They are technically very easy and require no skill",
+        "They are musical, short, progressive in difficulty, and beautiful enough to perform",
+        "They contain only open string notes",
+        "They are the most technically advanced classical studies"
+      ],
+      "answer": 1,
+      "explanation": "Carulli's studies are valued because they combine pedagogical purpose with musical beauty. Each study has a single technical focus, is short enough to master, and sounds genuinely musical — not like an exercise. This makes practice both effective and rewarding.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Learning a Carulli Study — The Method\n\n## Stage 1: Separate Hands\n\n1. **Left hand only**: Work through chord shapes and shifts without playing the right hand\n2. **Right hand only**: Practice the arpeggio pattern on open strings\n\n## Stage 2: Combining\n\n3. **Together, very slow** (40 BPM): Each beat is clear, no rushing\n4. **Separate phrases**: Learn 4-bar units, link them one at a time\n\n## Stage 3: Musicality\n\n5. **Add dynamics**: Which bars should swell? Where is the peak?\n6. **Add phrasing**: Where do phrases begin and end? Breathe at phrase ends.\n7. **Performance tempo**: Only increase tempo after musicality is established\n\n## Stage 4: Memory\n\n8. **Learn it by heart**: Classical guitar is traditionally performed from memory\n9. **Test the memory**: Play with eyes closed, or play in a different room\n10. **Perform for someone**: The performance test is the final validation\n\n## The Musical Goal\n\nThe study should sound like a miniature piece of music — not an exercise. If the listener can't hear it as music, the performance isn't finished yet.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In classical guitar tradition, how are pieces typically performed?",
+      "choices": [
+        "Reading from sheet music on a stand",
+        "From memory, without score",
+        "Using a tablet with the score displayed",
+        "With a music stand but glancing at the audience"
+      ],
+      "answer": 1,
+      "explanation": "Classical guitar is traditionally performed from memory. Andrés Segovia established this expectation in the 20th century, and it remains the standard. Memorization also frees the player to focus on musical expression rather than score-reading.",
+      "srs": true
+    }
+  ]
+}

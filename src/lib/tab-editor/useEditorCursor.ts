@@ -1,6 +1,7 @@
 import {useState, useCallback, useRef, useEffect} from 'react';
 import type {AlphaTabApi} from '@coderline/alphatab';
 import {model} from '@coderline/alphatab';
+import {DRUM_LANE_COUNT} from './drumMap';
 
 type Beat = InstanceType<typeof model.Beat>;
 type Note = InstanceType<typeof model.Note>;
@@ -216,8 +217,17 @@ export function useEditorCursor(apiRef: React.RefObject<AlphaTabApi | null>) {
     if (!score) return;
     const staff = score.tracks[cursor.trackIndex]?.staves[0];
     if (!staff) return;
-    const stringCount = staff.stringTuning?.tunings?.length ?? 6;
 
+    // Drums: lane 1 = top (Crash), lane N = bottom (Pedal HH) — matching DRUM_LANES order.
+    // "Up" on screen = toward lower lane number (toward cymbals at top).
+    if (staff.isPercussion) {
+      if (cursor.stringNumber > 1) {
+        moveTo({...cursor, stringNumber: cursor.stringNumber - 1});
+      }
+      return;
+    }
+
+    const stringCount = staff.stringTuning?.tunings?.length ?? 6;
     // In alphaTab, string N = top (highest pitch), string 1 = bottom (lowest pitch).
     // "Up" on screen = toward higher string number (higher pitch).
     if (cursor.stringNumber < stringCount) {
@@ -231,7 +241,15 @@ export function useEditorCursor(apiRef: React.RefObject<AlphaTabApi | null>) {
     const staff = score.tracks[cursor.trackIndex]?.staves[0];
     if (!staff) return;
 
-    // "Down" on screen = toward lower string number (lower pitch).
+    // Drums: "Down" = toward higher lane number (toward bass drum / pedal HH at bottom).
+    if (staff.isPercussion) {
+      if (cursor.stringNumber < DRUM_LANE_COUNT) {
+        moveTo({...cursor, stringNumber: cursor.stringNumber + 1});
+      }
+      return;
+    }
+
+    // Guitar/bass: "Down" = toward lower string number (lower pitch).
     if (cursor.stringNumber > 1) {
       moveTo({...cursor, stringNumber: cursor.stringNumber - 1});
     }

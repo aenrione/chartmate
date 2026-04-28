@@ -1,0 +1,27 @@
+{
+  "id": "02-sus-chords",
+  "title": "Sus2 & Sus4 Chords",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Dsus2 and Dsus4\n\n**Dsus2** — lift your index finger off string 3:\n- Frets: x x 0 2 3 0\n- Floaty, open sound used in \"Wonderwall\"\n\n**Dsus4** — add pinky to string 1, fret 3:\n- Frets: x x 0 2 3 3\n- Tense, wants to resolve back to D\n\nTry alternating: **D → Dsus4 → D → Dsus2 → D**",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "Dsus2",
+      "frets": [0, 3, 2, 0, -1, -1],
+      "fingers": [0, 3, 1, 0, 0, 0],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a sus4 chord, the major 3rd is replaced by which interval?",
+      "choices": ["The 2nd", "The 4th", "The 5th", "The 6th"],
+      "answer": 1,
+      "explanation": "Sus4 replaces the 3rd with a perfect 4th, creating tension that naturally resolves back to the major chord.",
+      "srs": true
+    }
+  ]
+}

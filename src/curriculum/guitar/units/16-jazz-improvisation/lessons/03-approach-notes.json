@@ -1,0 +1,43 @@
+{
+  "id": "03-approach-notes",
+  "title": "Approach Notes",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Approach Notes — Targeting the Changes\n\nApproach notes are **non-chord tones played immediately before a chord tone target**, creating tension that resolves when you land on the target.\n\n## The Four Types of Approach\n\n### 1. Chromatic Approach (from below)\nHalf step below the target:\n- Targeting E → play Eb before it\n- Targeting B → play Bb before it\n\n### 2. Chromatic Approach (from above)\nHalf step above the target:\n- Targeting E → play F before it\n- Targeting B → play C before it\n\n### 3. Diatonic Approach (from below)\nWhole step below, using a scale tone:\n- Targeting E → play D before it\n- Targeting B → play A before it\n\n### 4. Double Chromatic Approach\nTwo chromatic notes approaching from below:\n- Targeting E → play Db, D, then E\n- Creates a characteristic bebop \"lean\"\n\n## Encirclement\n\nCombine above + below approach for maximum tension:\n- Targeting B: F (above) → Bb (below) → B\n- This encircles the target from both directions\n\nCharlie Parker and Wes Montgomery use encirclement constantly — it's the defining sound of bebop.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'encirclement' as an approach technique?",
+      "choices": [
+        "Playing the same note repeatedly in circles",
+        "Approaching a target note from both above (chromatic) and below (chromatic or diatonic)",
+        "Using only notes from the pentatonic scale",
+        "Bending a note up and back down"
+      ],
+      "answer": 1,
+      "explanation": "Encirclement approaches the target from both directions — a note above (half step or whole step) followed by a note below, then the target. This double approach creates strong harmonic tension that resolves when you land on the chord tone.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Approach Notes in Context — ii-V-I\n\nHere's a ii-V-I (Dm7 – G7 – Cmaj7) using approach notes:\n\n```\nTarget notes: F (on Dm7) → B (on G7) → E (on Cmaj7)\n\nWithout approaches: ... F ... B ... E\nWith chromatic approaches:\n  | Dm7        | G7         | Cmaj7      |\n  E-F (chrom) | Bb-B(chrom)| Eb-E(chrom)|\n```\n\nEach target is approached from a half step below.\n\n## Why Approach Notes Work\n\nOur ears expect resolution. The half-step below creates a gravitational \"lean\" toward the target — when you land on the chord tone, it feels satisfying and inevitable.\n\nThis is why jazz lines sound so fluid and purposeful — they're constantly leaning into chord tones.\n\n## Practice Exercise\n\n1. Play a Dm7 arpeggio (D-F-A-C)\n2. Before each arpeggio note, add a chromatic approach from below:\n   - Before D: C# (half step below)\n   - Before F: E (half step below)\n   - Before A: G# (half step below)\n   - Before C: B (half step below)\n3. This creates a bebop line: C#-D-E-F-G#-A-B-C",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In jazz improvisation, on which part of the beat should approach notes ideally land?",
+      "choices": [
+        "On the downbeat (strong beat)",
+        "On the upbeat (weak beat/off-beat), with the target landing on the next downbeat",
+        "Anywhere — the placement doesn't matter",
+        "Only on beat 4"
+      ],
+      "answer": 1,
+      "explanation": "Approach notes should land on weak beats (upbeats/off-beats) with the target chord tone arriving on the strong beat (downbeat). This rhythmic placement gives the approach maximum tension and the resolution maximum satisfaction.",
+      "srs": true
+    }
+  ]
+}

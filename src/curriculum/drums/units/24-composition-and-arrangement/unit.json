@@ -1,0 +1,8 @@
+{
+  "id": "24-composition-and-arrangement",
+  "title": "Composition & Arrangement",
+  "description": "Writing drum parts, reading scores, arrangement for different genres, and producing drum tracks",
+  "icon": "file-music",
+  "prerequisites": ["20-studio-drumming", "17-polyrhythms"],
+  "lessons": ["01-writing-drum-parts", "02-genre-specific-arrangement", "03-producing-drums", "04-drum-tracks", "05-chart-writing"]
+}

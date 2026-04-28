@@ -1,0 +1,32 @@
+{
+  "id": "05-speed-exercises",
+  "title": "Speed Development Exercises",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Building Speed Intelligently\n\nSpeed is the byproduct of efficiency, not the goal. Chasing speed directly almost always builds tension, which creates a hard ceiling and eventual injury.\n\n**The correct speed-building method:**\n\n1. **Find your 'tension point'** — the tempo at which you feel the first hint of muscle tension\n2. **Work below that point** — consistently practicing 10-15% below your tension threshold\n3. **Gradually raise the ceiling** — as efficiency improves at lower tempos, the tension point rises naturally\n4. **The metronome increment method**: Use 2 BPM increments. Play 8 bars at one tempo perfectly, then advance 2 BPM. If tension appears, drop 4 BPM and rebuild.\n\n**The five technique speed builders:**\n- Single stroke roll: even RLRL acceleration\n- Double stroke roll: clean, even RRLL bounces\n- Paradiddle variations: different accent patterns create different challenges\n- Flam accents: connecting rudiments across surfaces\n- Finger bursts: rapid finger-controlled groups (5-stroke, 6-stroke rolls)\n\n**Rest is productive:** Speed improvements largely happen during sleep and rest as the nervous system consolidates patterns. More practice hours beyond a certain point produces diminishing returns and injury risk.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Single Stroke Speed Builder (Alternating)",
+      "description": "Continuous single stroke roll on snare. At this moderate tempo, focus on absolute evenness between right and left hands, identical stick heights, and zero tension. Speed will come naturally from this foundation.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 100,
+      "tracks": [
+        {"name": "Snare", "pattern": "xxxxxxxxxxxxxxxx"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the most reliable method for building drumming speed without injury?",
+      "choices": ["Practice at maximum speed for extended periods every day", "Work consistently below your tension threshold and raise it gradually over time", "Play only fast passages and skip slow practice", "Use heavier sticks to build strength"],
+      "answer": 1,
+      "explanation": "Speed is built by working just below your tension threshold — where technique is clean and tension-free. As efficiency improves, the tension point rises naturally. Practicing above the tension threshold builds bad habits and leads to injury. Rest periods are essential as the nervous system consolidates new patterns.",
+      "srs": true
+    }
+  ]
+}

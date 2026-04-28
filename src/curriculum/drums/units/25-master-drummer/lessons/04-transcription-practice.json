@@ -1,0 +1,20 @@
+{
+  "id": "04-transcription-practice",
+  "title": "Transcription Practice",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Transcription: The Master Tool\n\nTranscription — listening to a recording and notating exactly what you hear — is the most powerful learning tool available to any drummer at any level. It has been the primary method of jazz education since the music began.\n\n**What transcription teaches:**\n1. **Ear development**: Training your ear to hear subtle rhythmic details, dynamic relationships, and tonal colors\n2. **Pattern vocabulary**: Learning real vocabulary from the masters rather than invented exercises\n3. **Understanding style**: How a drummer constructs a performance within a specific genre\n4. **Personal influence absorption**: The patterns you transcribe become part of your vocabulary\n\n**The transcription process:**\n1. **First listen**: Get a feel for the overall performance\n2. **Isolate sections**: Work 2-4 bars at a time, looping them until you can hear every detail\n3. **Transcribe by feel first**: Before writing it down, play along until you can match the sound\n4. **Write it down**: Formal notation cements the learning\n5. **Play along**: Check your transcription against the original\n6. **Analyze**: What makes this passage interesting? What patterns do you see?\n\n**Essential transcriptions for the complete drummer:**\n- Max Roach: 'St. Thomas' — brushwork and melodic drumming\n- Elvin Jones: 'My Favorite Things' — triplet-based comping\n- John Bonham: 'When the Levee Breaks' — pure groove power\n- Clyde Stubblefield: 'Funky Drummer' — ghost note funk\n- Dave Weckl: 'Master Plan' — technical vocabulary in a musical context",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is the transcription process considered more valuable than working from drum exercise books?",
+      "choices": ["Exercise books are always incorrect", "Transcription develops the ear while teaching real vocabulary from master performers — pattern knowledge plus ear training simultaneously", "Exercise books are too expensive", "Transcription is faster than reading notation"],
+      "answer": 1,
+      "explanation": "Transcription develops the ear (training you to hear subtle rhythmic details) while teaching you real vocabulary from the actual performance tradition. Exercise books provide patterns but not the ear training or the direct connection to musical context that transcription provides. The two skills — hearing and playing — develop simultaneously through transcription.",
+      "srs": true
+    }
+  ]
+}

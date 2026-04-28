@@ -1,0 +1,33 @@
+{
+  "id": "03-artificial-harmonics",
+  "title": "Artificial Harmonics",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Artificial Harmonics — Transposable Bells\n\nArtificial harmonics (also called **harp harmonics**) allow you to produce harmonic tones on any fretted note. Unlike natural harmonics which are fixed positions, artificial harmonics move with you.\n\n## The Technique\n\n**Setup**: The left hand frets a note normally. The right hand does two things simultaneously:\n1. The **right-hand index finger** touches the string lightly 12 frets above the fretted note\n2. The **right-hand ring finger** or thumb plucks the string\n\n**Example**: Left hand frets C (string 2, fret 1). Right-hand index lightly touches string 2 at fret 13. Right-hand ring plucks. Result: C harmonic, one octave above fretted C.\n\n## The 12-Fret Rule\n\nFor octave artificial harmonics, always touch **12 frets above** the fretted note:\n- Fretted at 1 → touch at 13\n- Fretted at 3 → touch at 15\n- Fretted at 5 → touch at 17\n- Fretted at 7 → touch at 19\n\nFor harmonics a 5th above: touch 7 frets above the fretted note.\n\n## Chet Atkins and Lenny Breau\n\nChet Atkins was famous for playing full **chord melodies in artificial harmonics**, making the guitar sound like a harp. Listen to his recording of \"Yankee Doodle Dixie\" for a stunning demonstration.\n\nLenny Breau took artificial harmonics into jazz, creating unprecedented tonal colors in his solo guitar work. His album *The Legendary Lenny Breau* (1983) is essential listening.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "To produce an artificial harmonic on a note fretted at the 5th fret, where does the right-hand index finger lightly touch?",
+      "choices": ["At the 5th fret", "At the 10th fret", "At the 12th fret", "At the 17th fret"],
+      "answer": 3,
+      "explanation": "For octave artificial harmonics, the right-hand index touches 12 frets above the fretted note. 5 + 12 = 17th fret. This divides the remaining string length in half, producing the octave harmonic.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Playing a Melody in Artificial Harmonics\n\n## Right-Hand Technique Breakdown\n\nThe right hand must do three things at once:\n1. **Index finger (I)**: touches lightly 12 frets above the fretted note (harmonic node)\n2. **Ring finger (A)**: plucks the string below the index\n3. **Thumb (P)**: plays bass notes normally (no harmonic technique)\n\nThis allows you to play a melody in harmonics while simultaneously playing a bass line normally.\n\n## Example: C Major Scale in Artificial Harmonics\n\n```\nLeft hand frets: x-1-3-5 (C-D-E-F on string 2)\nRight hand index: 13-15-17-17\nRight hand ring: plucks below index each time\n```\n\nResult: C D E F — all one octave higher, in bell-like artificial harmonic tone.\n\n## Practice Tip\n\n1. Start with one note: fret C (string 2, fret 1), touch at 13, pluck with ring\n2. When that sounds clear, move to D (fret 3, touch 15)\n3. Build the scale note by note\n4. The right-hand index must be **exact** — even 1mm off kills the harmonic\n5. Lightness is key — any pressure from the index damps the string",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In artificial harmonics technique, which right-hand finger lightly touches the harmonic node?",
+      "choices": ["Thumb (P)", "Index (I)", "Middle (M)", "Ring (A)"],
+      "answer": 1,
+      "explanation": "In artificial harmonics, the right-hand index finger (I) lightly touches the harmonic node 12 frets above the fretted note. The ring finger (A) or thumb plucks the string. This two-finger coordination in the right hand is what makes this technique challenging.",
+      "srs": true
+    }
+  ]
+}

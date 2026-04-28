@@ -21,9 +21,10 @@ import {exportToGp7} from '@/lib/tab-editor/exporters';
 import {getScoreTempo} from '@/lib/tab-editor/scoreOperations';
 import SaveCompositionDialog, {type CompositionMeta} from '@/pages/tab-editor/SaveCompositionDialog';
 
-type Tab = 'chorus' | 'guitar' | 'bass' | 'drums' | 'keys';
+type Tab = 'all' | 'chorus' | 'guitar' | 'bass' | 'drums' | 'keys';
 
 const TABS: {id: Tab; label: string}[] = [
+  {id: 'all', label: 'All'},
   {id: 'chorus', label: 'Rhythm / Chorus'},
   {id: 'guitar', label: 'Guitar'},
   {id: 'bass', label: 'Bass'},
@@ -37,7 +38,7 @@ export default function SavedChartsPage() {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>(() => {
     const fromState = (location.state as any)?.activeTab as Tab | undefined;
-    return TABS.some(t => t.id === fromState) ? fromState! : 'chorus';
+    return TABS.some(t => t.id === fromState) ? fromState! : 'all';
   });
   const [search, setSearch] = useState(() => searchParams.get('q') ?? '');
   const [addToRepertoire, setAddToRepertoire] = useState<SavedChartEntry | null>(null);
@@ -51,6 +52,7 @@ export default function SavedChartsPage() {
   // Bulk import
   const dirInputRef = useRef<HTMLInputElement>(null);
   const pageRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
   const [bulkImporting, setBulkImporting] = useState(false);
   const [sort, setSort] = useState<CompositionSortOrder>('saved_at_desc');
 
@@ -74,6 +76,10 @@ export default function SavedChartsPage() {
   // Drums state (merged)
   const [drumsItems, setDrumsItems] = useState<LibraryItem[]>([]);
   const [drumsLoading, setDrumsLoading] = useState(false);
+
+  // All state (cross-instrument)
+  const [allItems, setAllItems] = useState<LibraryItem[]>([]);
+  const [allLoading, setAllLoading] = useState(false);
 
   const totalSelected = selectedCompIds.size + selectedChartMd5s.size;
 
@@ -120,8 +126,26 @@ export default function SavedChartsPage() {
     setDrumsLoading(false);
   }, []);
 
+  const loadAll = useCallback(async (q?: string, s: CompositionSortOrder = 'saved_at_desc') => {
+    setAllLoading(true);
+    const [chartResults, guitar, bass, keys, drums] = await Promise.all([
+      getSavedCharts(q),
+      getSavedCompositions('guitar', q, s),
+      getSavedCompositions('bass', q, s),
+      getSavedCompositions('keys', q, s),
+      getSavedCompositions('drums', q, s),
+    ]);
+    const merged: LibraryItem[] = [
+      ...chartResults.map(data => ({ sourceType: 'chorus' as const, data })),
+      ...[...guitar, ...bass, ...keys, ...drums].map(data => ({ sourceType: 'composition' as const, data })),
+    ];
+    setAllItems(merged);
+    setAllLoading(false);
+  }, []);
+
   const loadTab = useCallback((tab: Tab, q?: string, s: CompositionSortOrder = 'saved_at_desc') => {
     const loaders: Record<Tab, (q?: string, s?: CompositionSortOrder) => void> = {
+      all: loadAll,
       chorus: (q) => loadChorus(q),
       drums: loadDrums,
       guitar: (q, s) => loadCompositions('guitar', q, s),
@@ -129,10 +153,12 @@ export default function SavedChartsPage() {
       keys: (q, s) => loadCompositions('keys', q, s),
     };
     loaders[tab](q, s);
-  }, [loadChorus, loadDrums, loadCompositions]);
+  }, [loadAll, loadChorus, loadDrums, loadCompositions]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { loadTab(activeTab, search || undefined, sort); }, [activeTab, loadTab, sort]);
+
+  useEffect(() => { searchRef.current?.focus(); }, []);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSearch = useCallback(
@@ -300,6 +326,7 @@ export default function SavedChartsPage() {
   };
 
   const loadingByTab: Record<Tab, boolean> = {
+    all: allLoading,
     chorus: chartsLoading,
     drums: drumsLoading,
     guitar: compositionsLoading,
@@ -330,6 +357,7 @@ export default function SavedChartsPage() {
               />
               <button
                 onClick={() => selectionMode ? exitSelectionMode() : setSelectionMode(true)}
+                disabled={activeTab === 'all'}
                 className={cn(
                   'flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors',
                   selectionMode
@@ -378,8 +406,9 @@ export default function SavedChartsPage() {
             <Search className="h-4 w-4 text-on-surface-variant" />
           </div>
           <input
+            ref={searchRef}
             type="search"
-            placeholder={activeTab === 'chorus' ? 'Filter charts\u2026' : 'Filter compositions\u2026'}
+            placeholder={activeTab === 'chorus' ? 'Filter charts\u2026' : activeTab === 'all' ? 'Search all\u2026' : 'Filter compositions\u2026'}
             className="w-full rounded-xl bg-surface-container-high py-2.5 pl-10 pr-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-tertiary/40"
             value={search}
             onChange={handleSearch}
@@ -406,6 +435,22 @@ export default function SavedChartsPage() {
           <div className="flex items-center justify-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-tertiary" />
           </div>
+        ) : activeTab === 'all' ? (
+          <DrumsSection
+            items={allItems}
+            removingComps={removingComps}
+            removingCharts={removingCharts}
+            onRemoveComposition={handleRemoveComposition}
+            onRemoveChart={handleRemoveChart}
+            onEditComposition={(comp, e) => { e.preventDefault(); e.stopPropagation(); setEditTarget(comp); }}
+            search={search}
+            selectionMode={false}
+            selectedCompIds={new Set()}
+            selectedChartMd5s={new Set()}
+            onToggleSelectComp={() => {}}
+            onToggleSelectChart={() => {}}
+            showInstrumentLabel
+          />
         ) : activeTab === 'chorus' ? (
           <ChorusSection
             charts={charts}
@@ -888,6 +933,7 @@ function DrumsSection({
   selectedChartMd5s,
   onToggleSelectComp,
   onToggleSelectChart,
+  showInstrumentLabel,
 }: {
   items: LibraryItem[];
   removingComps: Set<number>;
@@ -901,6 +947,7 @@ function DrumsSection({
   selectedChartMd5s?: Set<string>;
   onToggleSelectComp?: (id: number) => void;
   onToggleSelectChart?: (md5: string) => void;
+  showInstrumentLabel?: boolean;
 }) {
   if (items.length === 0) {
     return (
@@ -922,6 +969,9 @@ function DrumsSection({
         {items.map(item => {
           if (item.sourceType === 'composition') {
             const comp = item.data;
+            const instrLabel = showInstrumentLabel
+              ? comp.instrument.charAt(0).toUpperCase() + comp.instrument.slice(1)
+              : undefined;
             return (
               <CompositionCard
                 key={`comp-${comp.id}`}
@@ -930,6 +980,7 @@ function DrumsSection({
                 onRemove={onRemoveComposition}
                 onEdit={onEditComposition}
                 badge="Tab"
+                instrumentLabel={instrLabel}
                 activeTab="drums"
                 selectionMode={selectionMode}
                 isSelected={selectedCompIds?.has(comp.id)}

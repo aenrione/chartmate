@@ -1,0 +1,43 @@
+{
+  "id": "02-cross-genre-fluency",
+  "title": "Cross-Genre Fluency",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Cross-Genre Fluency — Speaking Many Musical Languages\n\nAt the master level, genre boundaries dissolve. The vocabulary you've built — jazz harmony, blues expression, classical technique, rock energy — becomes one integrated language.\n\n## The Cross-Pollination History\n\n**Chet Atkins** took country fingerpicking + jazz chords = his signature sound\n**SRV** took Texas blues + Hendrix rock + Albert King = his signature sound\n**Pat Metheny** took jazz + country + Brazilian music = his signature sound\n**Mike Stern** took jazz + rock fusion = his signature sound\n\nEvery master guitarist is a hybrid — they absorbed diverse influences and synthesized them.\n\n## The Genre Vocabulary Map\n\n| Genre | Core Vocabulary |\n|-------|-----------------|\n| Blues | Minor pentatonic, bends, call-response, 12-bar |\n| Jazz | Shell/drop-2 voicings, bebop lines, ii-V-I |\n| Classical | Rest/free stroke, arpeggios, contrapuntal voice leading |\n| Rock | Power chords, alternate picking, distortion, riffs |\n| Country | Hybrid picking, bends, Travis picking, pedal steel licks |\n| Fingerstyle | PIMA, Travis picking, chord-melody, harmonics |\n\nYou now have vocabulary in all six.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does 'cross-pollination' mean in the context of guitar style development?",
+      "choices": [
+        "Playing the same lick in multiple genres",
+        "Absorbing vocabulary from diverse genres and synthesizing them into a hybrid personal style",
+        "Changing genres every few years",
+        "Learning covers of songs from different genres"
+      ],
+      "answer": 1,
+      "explanation": "Cross-pollination means borrowing from multiple genres and fusing them — Chet Atkins's country + jazz, SRV's blues + Hendrix, Pat Metheny's jazz + country + Brazil. The synthesis creates a sound that belongs to no single genre but is entirely personal.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Applying Cross-Genre Fluency\n\n## Experiment 1: Jazz-Blues Fusion\n\nTake a 12-bar blues and:\n1. Use drop-2 voicings instead of open blues shapes for comping\n2. Improvise using bebop scales and approach notes over the blues changes\n3. Add jazz turnarounds (ii-V-I) at bars 11-12 instead of the standard V-IV-I\n\nResult: a jazz-blues hybrid that players like BB King (in his later years with jazz musicians) and Grant Green exemplify.\n\n## Experiment 2: Classical-Rock\n\nTake a classical piece (Carulli, Sor) and:\n1. Play it with distortion\n2. Add vibrato to sustained notes (blues-style, not classical)\n3. Add a blues bend to the peak melodic note\n\nResult: Classical metal — which Yngwie Malmsteen and Ritchie Blackmore explored.\n\n## Experiment 3: Fingerstyle-Jazz\n\nArrange a jazz standard (Autumn Leaves) as a solo fingerstyle piece:\n1. PIMA right hand\n2. Alternating bass (Travis or classical)\n3. Chord-melody for the melody\n4. Jazz voicings (shells and drop-2) for the chords\n\nResult: Joe Pass's *Virtuoso* style — the complete guitar as orchestra.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which guitarist is most famous for fusing classical and rock vocabulary?",
+      "choices": [
+        "BB King",
+        "Yngwie Malmsteen — neo-classical metal using classical sequences, Bach-inspired counterpoint, and rock distortion",
+        "Chet Atkins",
+        "John Petrucci"
+      ],
+      "answer": 1,
+      "explanation": "Yngwie Malmsteen pioneered neo-classical metal — fusing baroque/classical vocabulary (Bach, Paganini, Vivaldi) with distorted electric guitar and rock rhythm. His use of harmonic minor scales, classical sequences, and high-speed alternate picking created the genre.",
+      "srs": true
+    }
+  ]
+}

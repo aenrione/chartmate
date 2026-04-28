@@ -1,0 +1,20 @@
+{
+  "id": "05-avant-garde-approaches",
+  "title": "Avant-Garde Approaches",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Extended Techniques and Avant-Garde Percussion\n\nThe avant-garde jazz tradition expanded the drum kit's sonic palette far beyond its traditional use.\n\n**Extended techniques on the drum kit:**\n\n1. **Bowing**: Running a bass bow or violin bow along the edge of a cymbal — produces an ethereal, sustained tone\n2. **Rubbing**: Rubbing the head with a rubber ball or bare hand while the drum sustains — produces pitch bends\n3. **Muffling and preparation**: Objects placed on heads to alter tone (tape, cloth, coins)\n4. **Pitch bending with pedal**: Pressing the hi-hat with variable pressure while striking — creates a subtle pitch modulation\n5. **Stick on stick**: Hitting one stick against another held over a resonating drum or cymbal\n6. **Drum stool as instrument**: Gong drums, bells, and other objects integrated into the playing space\n\n**Milford Graves and the body as percussion:** Graves moved beyond the kit to treat the entire body as a percussive instrument, integrating movement, voice, and improvised objects.\n\n**The avant-garde principle:** These techniques aren't meant to shock or be experimental for its own sake. Each extended technique exists because it creates a sound that no conventional technique can produce — and sometimes that sound is exactly what the music needs.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the justification for using extended techniques (bowing, rubbing, preparation) on the drum kit?",
+      "choices": ["Shock value and novelty for its own sake", "Demonstrating technical ability", "Creating sounds that no conventional technique can produce, serving specific musical moments", "Replacing all conventional techniques with new ones"],
+      "answer": 2,
+      "explanation": "Extended techniques are justified when they produce sounds that conventional playing cannot — sounds that serve a specific musical purpose. Bowing a cymbal creates a sustained, ethereal tone; rubbing a head creates pitch bends; neither is available through standard playing. When the music needs that sound, the technique is appropriate.",
+      "srs": true
+    }
+  ]
+}

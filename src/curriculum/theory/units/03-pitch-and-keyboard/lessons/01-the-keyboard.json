@@ -1,0 +1,46 @@
+{
+  "id": "01-the-keyboard",
+  "title": "The Piano Keyboard",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## The Piano Keyboard: A Map of Western Pitch\n\nThe piano keyboard is the clearest, most visual representation of pitch in all of Western music. Even if you never play piano, **understanding the keyboard is essential** for every musician — it gives you a physical map where all scales, chords, and intervals become visible.\n\n### The Numbers\n\nA full-size piano keyboard has:\n- **88 keys total**\n- **52 white keys**\n- **36 black keys**\n- **7.25 octaves** of range\n\nFor theory purposes, you need to understand the repeating pattern within a single **octave** — the same pattern tiles across the entire keyboard.\n\n### The Musical Alphabet\n\nThe white keys use the 7-letter musical alphabet: **A B C D E F G**. After G, the alphabet repeats from A. These seven letters correspond to the seven distinct pitch classes in Western music (called the **diatonic** notes).\n\n### The Octave Pattern\n\nOne octave = **12 keys** (7 white + 5 black). This 12-key pattern repeats identically from one end of the keyboard to the other. The pitch name tells you *what* note it is; an octave number (C4, C5, C6) tells you *which octave*.\n\n### The Black Key Groups: Your Landmark System\n\nBlack keys come in alternating groups:\n- **Groups of 2** and **groups of 3**, repeating across the entire keyboard\n\nThis grouping is your navigation system:\n- **C** is always the white key **immediately to the left of a group of 2 black keys**\n- **F** is always the white key **immediately to the left of a group of 3 black keys**\n\nWith C and F as landmarks, you can find any other note without counting from the beginning of the keyboard each time.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Navigating the Keyboard: Octaves and Middle C\n\n### Middle C (C4)\n\nThe reference point for the entire keyboard is **middle C**, officially designated **C4** in scientific pitch notation. It is:\n- The C closest to the exact center of a standard 88-key keyboard\n- Located on the first ledger line below the treble clef staff\n- Located on the first ledger line above the bass clef staff\n- The starting point from which octave numbers are counted\n\n### Octave Numbering\n\nOctave numbers increment at every C:\n- **C4** = middle C\n- **C5** = one octave above middle C\n- **C3** = one octave below middle C\n- **A4** = 440 Hz, the international tuning standard (the A above middle C)\n\n### White Key Names in Order\n\nStarting from any C and going up to the next C:\n> **C — D — E — F — G — A — B — C**\n\nEach adjacent pair of white keys is either a **whole step** (with a black key between them) or a **half step** (no black key between them). The natural half steps on the white keys are:\n- **E to F** (no black key between E and F)\n- **B to C** (no black key between B and C)\n\nAll other adjacent white keys have a black key between them.\n\n### Why Every Musician Needs This\n\nScales, chords, and intervals all become transparent when mapped to a keyboard:\n- You can **see** a major scale as a pattern of steps\n- You can **see** a chord as a cluster of keys\n- You can **see** why C major has no sharps or flats (all white keys)\n- You can **see** interval distances as physical distances between keys",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many keys are in one octave on the piano keyboard?",
+      "choices": ["7", "8", "12", "13"],
+      "answer": 2,
+      "explanation": "One octave consists of 12 keys: 7 white and 5 black. This 12-key pattern (12 half steps) repeats across the entire piano keyboard.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The note C can always be found in what position relative to the black keys?",
+      "choices": [
+        "To the right of a group of 3 black keys",
+        "To the left of a group of 2 black keys",
+        "Between two groups of black keys",
+        "To the left of a group of 3 black keys"
+      ],
+      "answer": 1,
+      "explanation": "C is always the white key immediately to the left of a group of 2 black keys. This landmark pattern repeats across the entire keyboard and is the quickest way to find any C without counting every key.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the standard scientific pitch designation for middle C?",
+      "choices": ["C3", "C4", "C5", "C0"],
+      "answer": 1,
+      "explanation": "Middle C is officially C4 in scientific pitch notation. It is the C closest to the center of a standard 88-key keyboard, and the reference point from which octave numbers count up and down.",
+      "srs": true
+    }
+  ]
+}

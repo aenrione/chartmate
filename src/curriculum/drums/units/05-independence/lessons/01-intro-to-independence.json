@@ -1,0 +1,20 @@
+{
+  "id": "01-intro-to-independence",
+  "title": "4-Limb Independence",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Why Independence Matters\n\nDrumming uses all four limbs simultaneously:\n- **Right hand** — hi-hat or ride cymbal\n- **Left hand** — snare drum\n- **Right foot** — bass drum\n- **Left foot** — hi-hat pedal\n\n**Independence** = each limb does something different at the same time.\n\nThis is unnatural at first. Your brain wants to synchronize limbs (like walking). Practice reprograms that reflex.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does the left foot typically control on a drum kit?",
+      "choices": ["Bass drum", "Snare drum", "Hi-hat pedal", "Ride cymbal"],
+      "answer": 2,
+      "explanation": "The left foot controls the hi-hat pedal, which opens and closes the two hi-hat cymbals. The right foot controls the bass drum pedal.",
+      "srs": true
+    }
+  ]
+}

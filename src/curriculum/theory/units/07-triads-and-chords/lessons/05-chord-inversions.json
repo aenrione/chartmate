@@ -1,0 +1,62 @@
+{
+  "id": "05-chord-inversions",
+  "title": "Chord Inversions",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Chord Inversions\n\nEvery triad can be arranged with a different note on the bottom — in the **bass**. These rearrangements are called **inversions**. They don't change what chord you're playing, but they significantly affect the sound, the voice leading, and the bass line.\n\n### The Three Positions\n\n**Root position** — the root is the lowest note:\n- C major in root position: **C–E–G** (C in the bass)\n- Most stable, most grounded sound. The tonic chord in root position is the strongest harmonic landing point in tonal music.\n\n**First inversion** — the third is the lowest note:\n- C major in first inversion: **E–G–C** (E in the bass)\n- Slightly less stable than root position. Has a lighter, more flowing feel. Common in passing situations and counterpoint.\n\n**Second inversion** — the fifth is the lowest note:\n- C major in second inversion: **G–C–E** (G in the bass)\n- The least stable inversion. The fourth interval between the bass and the note above it (G to C) creates a characteristic tension. Classical theory treats second-inversion chords with strict rules — they typically appear in specific contexts like the **cadential 6-4** (the second-inversion tonic chord that precedes a dominant chord at cadences).\n\n### Slash Chord Notation\n\nIn lead sheets and contemporary notation, inversions are written as **slash chords**:\n\n- **C/E** = C major chord with E in the bass (first inversion)\n- **C/G** = C major chord with G in the bass (second inversion)\n- **G/B** = G major chord with B in the bass (first inversion)\n- **D/F#** = D major chord with F# in the bass (first inversion)\n\nThe letter before the slash is the chord; the letter after is the bass note.\n\n### Voice Leading: Why Inversions Matter\n\nInversions allow the bass line to move **smoothly by step** rather than jumping between root positions:\n\n- C major (root) → G/B (G major first inversion) → Am\n- Bass line: **C → B → A** — a descending stepwise line\n\nWithout the G/B inversion, the bass would jump from C to G (a fifth) — functional, but less elegant. Inversions are the primary tool for creating **smooth, melodic bass lines** in voice leading.\n\n### Inversions and Stability\n\nRoot position is the most stable — it sounds complete and grounded. First inversion is more mobile and flowing. Second inversion is the least stable and typically appears as a transitional sonority rather than a point of rest. Understanding this gradient of stability gives you precise control over harmonic tension in your writing.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a first inversion triad, which note is in the bass?",
+      "choices": ["The root", "The third", "The fifth", "The octave"],
+      "answer": 1,
+      "explanation": "In first inversion, the third of the chord is the lowest (bass) note. For C major, first inversion puts E in the bass: E–G–C. This creates a lighter, less grounded sound than root position.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does the chord symbol 'G/B' mean?",
+      "choices": [
+        "G minor with a flat second",
+        "G major chord with B in the bass",
+        "A chord halfway between G and B",
+        "G major played one octave above B"
+      ],
+      "answer": 1,
+      "explanation": "In slash chord notation, the letter before the slash is the chord and the letter after is the bass note. G/B means a G major chord (G–B–D) with B in the bass — G major in first inversion.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which inversion of a triad is considered the least stable?",
+      "choices": ["Root position", "First inversion", "Second inversion", "All inversions are equally stable"],
+      "answer": 2,
+      "explanation": "Second inversion is the least stable triad position. The interval of a fourth between the bass note (the fifth of the chord) and the note above it creates a tension that pulls the chord toward resolution. Classical counterpoint treats second-inversion chords with special care for this reason.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the primary musical reason for using chord inversions?",
+      "choices": [
+        "To change the key of the music",
+        "To allow the bass line to move more smoothly by step",
+        "To make the chord louder and more prominent",
+        "To replace the chord with a different harmony"
+      ],
+      "answer": 1,
+      "explanation": "Inversions allow bass lines to move in stepwise motion rather than jumping between roots. A progression like C → G/B → Am gives the bass a smooth descending line (C→B→A) instead of a large leap from C to G.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "If C major in root position is C–E–G, what are the notes (bottom to top) of C major in second inversion?",
+      "choices": ["C–E–G", "E–G–C", "G–C–E", "G–E–C"],
+      "answer": 2,
+      "explanation": "Second inversion places the fifth in the bass. For C major, the fifth is G, so second inversion is G–C–E (G in bass, then C, then E on top). This corresponds to the chord symbol C/G.",
+      "srs": true
+    }
+  ]
+}

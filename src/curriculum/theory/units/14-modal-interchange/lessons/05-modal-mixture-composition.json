@@ -1,0 +1,46 @@
+{
+  "id": "05-modal-mixture-composition",
+  "title": "Modal Mixture in Composition",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Modal Mixture as a Compositional Tool\n\nModal mixture (borrowing chords from parallel modes) is not just a theoretical concept — it is a practical compositional strategy. Understanding how to use it deliberately transforms your harmonic palette.\n\n### Strategy 1: The Darkness Dip\n\nIn a major-key song, briefly introduce a borrowed chord to create emotional contrast before returning to brightness:\n\nI → IV → **iv** → I (C → F → Fm → C)\n\nThe Fm creates a dip into minor color, making the return to C major feel like emerging from shadow into light. This is the 'darkness dip' — a single borrowed chord for contrast.\n\n### Strategy 2: The Parallel Minor Cadence\n\nEnd a major-key section with a minor-key cadence for ambiguity:\n\nI → **bVI** → **bVII** → I\n\nThe bVI and bVII are borrowed; the final I is major, but it has just been approached through two minor-key chords. This creates a feeling of having traveled far and returned home unexpectedly.\n\n### Strategy 3: Modal Dorian Lift\n\nIn a minor-key song, use the Dorian IV chord (major subdominant) for a moment of brightness:\n\ni → **IV (major)** → V → i\n\nIn D minor with the Dorian IV: Dm → G major → Am → Dm. The G major chord (not G minor, which is diatonic to D Aeolian) is borrowed from D Dorian and creates a brief lift. Carlos Santana uses this constantly: 'Oye Como Va' is in D Dorian — Am7 → D9 — the D9 has a major-third flavor from the Dorian mode.\n\n### Strategy 4: Enharmonic Modal Interchange\n\nAdvanced: use chords that relate enharmonically to both a borrowed and diatonic chord, creating ambiguity. Schubert was a master of this — his late piano sonatas move fluidly between parallel major and minor without fully committing to either.\n\n### Analysis: Schubert's Lullaby (Wiegenlied, D. 498)\n\nIn Ab major. The middle section introduces Abm (Ab minor = parallel minor tonic) — a pure Picardy-third reversal within the song. This oscillation between Ab major and Ab minor creates the song's bittersweet, tender character. Even a simple lullaby uses modal mixture for emotional depth.\n\n### Practical Exercise\n\nTake any I–IV–V–I progression in C major: C–F–G–C. Now:\n1. Replace F with Fm: C–**Fm**–G–C (borrowed iv)\n2. Replace G with Db (bII in front of I): C–F–**Db**–C (Neapolitan approach)\n3. Add bVI before V: C–F–**Ab**–G–C (borrowed bVI before dominant)\n\nEach substitution creates a different emotional character while maintaining the key of C.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the 'darkness dip' strategy in modal mixture composition?",
+      "choices": [
+        "Starting a major-key song in the parallel minor before transitioning to major",
+        "Briefly introducing a single borrowed chord for emotional contrast before returning to the major context",
+        "Using the natural minor scale for improvisation over major chords",
+        "Ending every phrase with a minor cadence"
+      ],
+      "answer": 1,
+      "explanation": "The 'darkness dip' uses a single borrowed chord — typically iv, bVI, or bVII in major — to create a brief moment of minor color. The surrounding major context makes the borrowed chord stand out emotionally, and the return to diatonic chords feels like resolution. It is the most economical use of modal mixture: one chord changes everything.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In D minor, using G major instead of G minor as the IV chord creates a 'Dorian lift.' From which parallel mode is G major borrowed?",
+      "choices": ["D Aeolian (natural minor)", "D Dorian (raised 6th = B natural, enabling G major IV)", "D Phrygian", "D Harmonic minor"],
+      "answer": 1,
+      "explanation": "D Aeolian (natural minor) has G minor as iv (G–Bb–D). D Dorian raises the 6th scale degree: B natural instead of Bb. With B natural in the scale, the chord on G is G–B–D = G major. So G major in a D minor context is borrowed from D Dorian. This 'Dorian lift' is characteristic of Santana, folk music, and Celtic-influenced rock.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The progression I → bVI → bVII → I uses two borrowed chords. What modes do bVI and bVII come from, respectively, in C major?",
+      "choices": [
+        "bVI from C Lydian; bVII from C Phrygian",
+        "Both from C Aeolian (natural minor), which has both Ab (bVI root) and Bb (bVII root)",
+        "bVI from C Dorian; bVII from C Mixolydian",
+        "bVI from C Mixolydian; bVII from C Aeolian"
+      ],
+      "answer": 1,
+      "explanation": "C Aeolian (C natural minor) has the scale C–D–Eb–F–G–Ab–Bb. Both Ab (bVI root) and Bb (bVII root) are in this scale. The chords Ab major (bVI) and Bb major (bVII) are therefore both borrowed from C Aeolian. C Mixolydian has Bb but not Ab, so bVI specifically comes from Aeolian.",
+      "srs": true
+    }
+  ]
+}

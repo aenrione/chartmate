@@ -1,0 +1,33 @@
+{
+  "id": "01-three-against-two",
+  "title": "3 Against 2",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# 3:2 — The Foundation of Polyrhythm\n\nA polyrhythm occurs when two different meters are played simultaneously. The 3:2 (three against two) is the most fundamental polyrhythm, found in West African music, jazz, and classical music.\n\n**Understanding 3:2:**\nOver 6 pulses, one voice plays 3 equal notes (on pulses 1, 3, 5) while another voice plays 2 equal notes (on pulses 1 and 4).\n\n**The mnemonic:** \"Not difficult\" — say it with equal emphasis on every syllable: NOT-dif-fi-CULT. Your right hand plays the notes on the capital letters (NOT, CULT), your left hand plays on every syllable.\n\n**Alternatively:** The word 'watermelon' — WA-ter-ME-lon: right hand on the capitals, left on every syllable.\n\n**Applications in drumming:**\n- Elvin Jones played 3-feel over 4/4 constantly in his comping with Coltrane\n- The clave is built on 3:2 relationships\n- In 12/8 (compound time), 3 against 2 is implied by the meter itself\n\n**The key:** Both voices must feel internally subdivided correctly. The 3 does not feel like triplets; the 2 does not feel like half notes. Each feels like its own meter.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "3 Against 2 — Hands",
+      "description": "Right hand plays 3 equally spaced notes (every other 16th triplet position) while left hand plays 2 (every third). In the 16-subdivision grid approximation: right hand on positions 1, 6, 11; left hand on 1 and 9. The resulting interlocking pattern has a satisfying 'rotation' feel.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 80,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x--x--x-"},
+        {"name": "Snare",  "pattern": "x---x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Over a 6-pulse framework, where do the 3 notes land in a 3:2 polyrhythm?",
+      "choices": ["Pulses 1, 2, 3", "Pulses 1, 3, 5 (evenly dividing 6 by 3)", "Pulses 1, 4, 6", "Pulses 2, 4, 6"],
+      "answer": 1,
+      "explanation": "In a 3:2 polyrhythm, the 3 notes divide 6 pulses equally: 6 ÷ 3 = 2 pulses apart, so they land on pulses 1, 3, and 5. The 2 notes divide 6 equally too: 6 ÷ 2 = 3 pulses apart, landing on pulses 1 and 4.",
+      "srs": true
+    }
+  ]
+}

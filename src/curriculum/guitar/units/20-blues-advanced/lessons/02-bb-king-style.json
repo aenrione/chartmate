@@ -1,0 +1,43 @@
+{
+  "id": "02-bb-king-style",
+  "title": "BB King Style",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# BB King — The Blues Boss\n\n**BB King** (1925–2015) redefined blues guitar with an approach so individual that his sound is immediately recognizable from a single note. His style is built on economy, expression, and absolute mastery of vibrato.\n\n## BB King's Core Principles\n\n### 1. Fewer Notes, More Feeling\nBB rarely played fast runs. A single bent note with perfect vibrato communicated more emotion than 20 notes.\n\n### 2. The BB King Vibrato\nBB's vibrato was wide (up to a whole step), fast, and perfectly controlled. He bent strings up (toward the ceiling) using a push motion from the wrist and arm — not just the fingers.\n\n### 3. No Simultaneous Chords + Melody\nBB famously said he couldn't sing and play chords at the same time — so he alternated: sing a phrase, answer with guitar. This created his iconic call-and-response between voice and instrument.\n\n### 4. The BB Box\nHis solo area: strings 1-2 in the upper register above the standard pentatonic box. For A blues, around fret 17-20 on strings 1-2.\n\n## Essential Recordings\n\n- \"The Thrill Is Gone\" (1969) — his signature song\n- \"Every Day I Have the Blues\" (live)\n- *Live at the Regal* (1965) — possibly the greatest live blues album ever\n- \"Why I Sing the Blues\" — autobiographical classic",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why does BB King never play rhythm chords while singing?",
+      "choices": [
+        "He doesn't know chord shapes",
+        "It's physically impossible to play guitar and sing at the same time",
+        "He couldn't do both simultaneously, so he alternates — using guitar to respond to his vocals",
+        "His guitar is tuned differently from standard"
+      ],
+      "answer": 2,
+      "explanation": "BB King famously stated he can't sing and play at the same time. Instead of a limitation, he turned this into a strength — creating the iconic voice-and-guitar call-and-response where his singing and guitar playing answer each other in conversation.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# BB King's Vibrato and Bending Technique\n\n## The Vibrato Mechanics\n\nBB's vibrato is a **wide, lateral push-pull vibrato**:\n\n1. Plant the tip of the finger on the string\n2. Use the wrist (not just the finger) to push the string up toward the ceiling\n3. Release back to pitch\n4. Repeat at 5–7 Hz for his characteristic \"crying\" speed\n5. Width: up to a whole step (2 frets) on extreme vibrato\n\n## The Bend-and-Release\n\nBB's most characteristic move: bend a note up (usually a whole step or half step), and release it back to pitch:\n\n```\ne |--17b19--17--|\n   (bend up a whole step, release)\n```\n\nThe release is as important as the bend — control of the speed of release determines the emotional quality.\n\n## BB-Style Lick in A Minor (fret 17-20 area)\n\n```\ne |--17b19--17--15--17b19--17--|\nB |----------------------------|\n   (string 1, around the BB box)\n```\n\n## Practice Protocol\n\n1. One string, one note: practice bending fret 17 (string 1) up a whole step to 19 and releasing, 10 minutes with a drone on A\n2. Add vibrato: bend to 19, then apply vibrato at the top\n3. Add the BB move: bend-release-bend with varying speeds",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In BB King's vibrato technique, what body part drives the string movement for the widest, most expressive vibrato?",
+      "choices": [
+        "The fingertip alone",
+        "The wrist and forearm, not just the finger",
+        "The elbow",
+        "The shoulder"
+      ],
+      "answer": 1,
+      "explanation": "BB King's vibrato is driven by the wrist and forearm — a rotational/push motion that moves the entire hand, allowing much wider pitch oscillation than finger vibrato alone. This mechanical advantage creates his characteristic wide, singing vibrato.",
+      "srs": true
+    }
+  ]
+}

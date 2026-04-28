@@ -1,0 +1,54 @@
+{
+  "id": "03-minor-triads",
+  "title": "Minor Triads",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Minor Triads\n\nIf the major triad is music's expression of brightness and resolution, the **minor triad** is its emotional counterpart — darker, more introspective, often melancholic or tense. Yet the difference between them is just **one half step**.\n\n### Anatomy of a Minor Triad\n\nA minor triad uses a different stacking order than the major triad:\n\n- **Root** to **third**: a **minor third** — 3 half steps\n- **Third** to **fifth**: a **major third** — 4 half steps\n- **Root** to **fifth**: a **perfect fifth** — 7 half steps (3 + 4)\n\nThe fifth is still a perfect fifth — the same as in a major triad. Only the middle note (the third) changes. A **minor triad = major triad with the third lowered by one half step**.\n\n### Common Minor Triads\n\n| Chord | Root | Third | Fifth |\n|-------|------|-------|-------|\n| **A minor** | A | C | E |\n| **D minor** | D | F | A |\n| **E minor** | E | G | B |\n| **B minor** | B | D | F# |\n\n### The One Half-Step Difference\n\nConsider C major (C–E–G) and C minor (C–Eb–G). The only difference is that E becomes Eb — a single half step lower. Yet that tiny change completely transforms the emotional quality of the chord. This remarkable sensitivity to one pitch demonstrates how powerfully our ears respond to interval relationships.\n\n### Minor Triads in the Major Scale\n\nIn any major key, **minor triads occur on scale degrees ii, iii, and vi**. In C major:\n- **ii** = D minor (D–F–A)\n- **iii** = E minor (E–G–B)\n- **vi** = A minor (A–C–E)\n\nThe **vi chord** (vi = 'six minor') holds special significance: it is the **relative minor** — the minor key that shares all the same notes as the major key. A minor is the relative minor of C major.\n\n### Emotional Context\n\nMinor triads appear in an enormous range of emotional contexts — not just sadness. Minor chords can express:\n- **Introspection** — quiet, thoughtful passages\n- **Drama** — tension before a resolution\n- **Mystery** — harmonically ambiguous moments\n- **Strength** — minor key anthems can feel powerful and determined\n\nContext, tempo, rhythm, and instrumentation all shape how a minor triad is perceived.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many half steps are between the root and the third of a minor triad?",
+      "choices": ["2", "3", "4", "5"],
+      "answer": 1,
+      "explanation": "A minor third spans 3 half steps. This is one half step smaller than the major third (4 half steps) that appears in a major triad. That single half-step difference produces the minor quality.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the simplest way to convert a major triad to a minor triad?",
+      "choices": [
+        "Raise the fifth by a half step",
+        "Lower the root by a half step",
+        "Lower the third by a half step",
+        "Raise the third by a half step"
+      ],
+      "answer": 2,
+      "explanation": "Lowering the third by one half step converts any major triad to a minor triad. C major (C–E–G) becomes C minor (C–Eb–G) by lowering the E to Eb. The root and fifth stay the same.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "On which scale degrees of the major scale do minor triads naturally occur?",
+      "choices": [
+        "I, IV, and V",
+        "II, III, and VI",
+        "III, V, and VII",
+        "I, II, and IV"
+      ],
+      "answer": 1,
+      "explanation": "In any major key, minor triads occur naturally on scale degrees ii, iii, and vi. The vi chord is especially significant as the relative minor — it shares all the same notes as the major key.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What are the notes of an E minor triad?",
+      "choices": ["E, G#, B", "E, G, B", "E, Gb, B", "E, G, Bb"],
+      "answer": 1,
+      "explanation": "E minor is E–G–B. The minor third above E is G (3 half steps: E→F→F#→G), and the perfect fifth above E is B (7 half steps). E major would have G# instead of G.",
+      "srs": true
+    }
+  ]
+}

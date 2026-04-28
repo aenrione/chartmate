@@ -1,0 +1,43 @@
+{
+  "id": "04-comping-behind-a-soloist",
+  "title": "Comping Behind a Soloist",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Art of Accompaniment — Less Is More\n\nThe most important skill in jazz comping is knowing **when not to play**. Great accompanists (Jim Hall, Freddie Green, Joe Pass when accompanying) make the soloist sound better — not by playing more, but by playing less.\n\n## The Conversation Model\n\nThink of comping as a **conversation**:\n- The soloist speaks\n- You listen\n- You respond when they pause\n- You don't talk over them\n\n## What Great Accompanists Do\n\n### Jim Hall (guitarist par excellence with Bill Evans, Sonny Rollins)\n- Minimal chords — often just one chord stab per bar\n- Responds melodically to the soloist\n- Uses silence as much as sound\n- Every chord has a specific rhythmic purpose\n\n### Herbie Hancock (Miles Davis Quintet, 1964–1968)\n- \"Anti-gravitational\" comping — chords don't always land on expected beats\n- Responds to Miles's phrases with the perfect answer chord\n- Sparse but purposeful\n\n## Active Listening Exercise\n\n1. Play a backing track of a jazz standard\n2. Listen to the melody for 2 full choruses WITHOUT playing\n3. Then play — but only when you hear a phrase end or a pause\n4. Count the number of chords you played\n5. Aim to play fewer chords each time while still supporting the harmony",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does the 'conversation model' of jazz comping mean?",
+      "choices": [
+        "Playing chords on every beat to fill all space",
+        "Listening to the soloist and responding during their pauses, not talking over them",
+        "Playing countermelodies against the soloist",
+        "Copying the soloist's phrases exactly"
+      ],
+      "answer": 1,
+      "explanation": "The conversation model treats comping as dialogue: the soloist speaks, you listen and respond during pauses. This means using silence strategically and only playing when it adds to the music, not filling every gap with sound.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Rhythmic Placement Techniques\n\nWhere you place your chord stabs dramatically affects the musical outcome:\n\n## On the Beat (\"Square\")\nChords on beats 1, 2, 3, 4 — predictable, supportive, good for beginners.\n\n## Before the Beat (\"Anticipation\")\nChord arrives half a beat early — creates forward momentum, urgency. Used a lot in bebop.\n```\nBeat: 1   2   3   4\nComp: .  X.  .  X.  (X = anticipation of next beat)\n```\n\n## Behind the Beat (\"Lay Back\")\nChord arrives slightly after the beat — creates a lazy, swinging feel. Common in slow jazz ballads.\n\n## Off-Beat (\"& of 2\" and \"& of 4\")\nChords on the upbeats — classic jazz comping rhythm. Creates swing and pushes the music forward.\n\n## Practice Drill\n\nUsing one chord (Cmaj7), practice placing it:\n1. On every beat (4 chords per bar)\n2. Only on beats 2 and 4\n3. Only on the \"and\" of 2 and \"and\" of 4\n4. Randomly — wherever feels right\n\nRecord each and compare how each placement changes the feel.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In jazz comping, what is an 'anticipation'?",
+      "choices": [
+        "Waiting a full beat before playing the chord",
+        "Playing the chord half a beat before the expected beat, creating forward momentum",
+        "Repeating the same chord twice in a row",
+        "Playing the chord in a higher octave"
+      ],
+      "answer": 1,
+      "explanation": "An anticipation in jazz comping means playing the chord half a beat (or a beat) early, before its expected arrival. This creates forward momentum and energy, commonly used in bebop-style comping.",
+      "srs": true
+    }
+  ]
+}

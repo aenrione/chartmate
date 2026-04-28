@@ -1,0 +1,40 @@
+{
+  "id": "04-trading-fours",
+  "title": "Trading Fours",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Trading Fours: Conversation in Jazz\n\nTrading fours (or 'trading') is a jazz performance tradition where the drummer and a soloist alternate 4-bar phrases. The soloist plays 4 bars, the drummer solos for 4 bars, back and forth.\n\n**The unwritten rules:**\n1. **Keep the time** — even when soloing, the listener should be able to feel exactly where beat 1 is\n2. **Respond to what was played** — reference the soloist's melodic ideas or rhythmic motifs\n3. **Leave space** — the most powerful moments are often the silences\n4. **End your phrase** — arrive at beat 1 with something that feels like a landing\n\n**Trading eights** (8-bar trades) gives more time to develop an idea — often more musical than trying to cram everything into 4 bars.\n\n**Trading twos** at fast tempos is a high-level challenge — only 2 bars to say something meaningful before handing back.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Ride Groove for Trading (Rhythm Section Side)",
+      "description": "The groove you play during the soloists' 4 bars. Consistent ride, supportive comping, laying the harmonic and rhythmic foundation before you take your own 4.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 144,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-xx-xx-"},
+        {"name": "Hi-Hat", "pattern": "--x---x-"},
+        {"name": "Snare",  "pattern": "----x---"},
+        {"name": "Kick",   "pattern": "x-------"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Building a 4-Bar Solo\n\nA well-constructed 4-bar trading phrase has structure:\n\n**Bar 1:** Statement — introduce an idea (a rhythmic motif, a tone color, a dynamic gesture)\n**Bar 2:** Development — elaborate on the statement, build intensity\n**Bar 3:** Continuation or contrast — either push further or provide a counterpoint\n**Bar 4:** Resolution — land cleanly on beat 1 of bar 5 so the soloist knows exactly where they are\n\n**Common vocabulary:**\n- Paradiddle-based patterns broken across the kit\n- Metric displacement (playing a 3-note pattern over a 4/4 grid)\n- Dynamic swells from pp to ff and back\n- Quoting rhythmic ideas from the head of the tune\n\n**The most important thing:** listen to the band. Your solo should feel like a continuation of the music, not a departure from it.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the most important rule when trading fours in jazz?",
+      "choices": ["Play as many notes as possible to impress the audience", "Keep the time so the listener can always feel beat 1", "Always play louder than the soloist", "Never use the snare drum"],
+      "answer": 1,
+      "explanation": "Maintaining clear time is paramount when trading. The band and audience need to know exactly where beat 1 is at all times, even during your most creative moments.",
+      "srs": true
+    }
+  ]
+}

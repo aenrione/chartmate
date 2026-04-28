@@ -1,0 +1,48 @@
+{
+  "id": "02-metal-grooves",
+  "title": "Metal Grooves",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Metal Groove Vocabulary\n\nMetal drumming encompasses a vast spectrum of grooves across sub-genres. Each sub-genre has its own rhythmic identity:\n\n**Heavy metal** (Sabbath, Maiden): Primarily 4/4 with strong backbeats. Kick on beats 1 and 3, snare on 2 and 4. Power and consistency over complexity.\n\n**Thrash metal** (Metallica, Slayer): Fast 16th note double bass, snare often on every beat or on 2 and 4, hi-hat or ride driving 8th or 16th notes. Lars Ulrich's work on 'Master of Puppets' is the textbook.\n\n**Progressive metal** (Tool, Dream Theater): Complex time signatures, polyrhythms, and sophisticated arrangements. Danny Carey (Tool) is the benchmark.\n\n**Death metal**: Extreme tempo, blast beats, constant 32nd-note double bass at 220+ BPM. Blast beats are the defining technique.\n\n**The common thread:** heaviness comes from the relationship between kick and guitar riff, not just speed. The kick and guitar must lock together precisely.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Heavy Metal Groove",
+      "description": "Classic heavy metal beat: alternating 8th notes on the hi-hat, snare on beats 2 and 4, kick on 1 and the 'and' of 3. This is the Sabbath/Maiden template — powerful and direct.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 130,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "xxxxxxxx"},
+        {"name": "Snare",  "pattern": "--x---x-"},
+        {"name": "Kick",   "pattern": "x---x-x-"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Thrash Metal Groove",
+      "description": "Fast thrash beat: 16th notes on the ride, snare on 2 and 4, continuous double bass 16th notes. This is the 'Master of Puppets' template — relentless 16th note drive with a powerful snare backbeat.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 168,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-x-x-x-x-x-x-x-"},
+        {"name": "Snare",  "pattern": "----X-------X---"},
+        {"name": "Kick",   "pattern": "xxxxxxxxxxxxxxxx"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the most critical relationship in creating genuine metal heaviness?",
+      "choices": ["The snare and hi-hat patterns matching perfectly", "The kick drum and guitar riff locking together precisely", "Playing as fast as possible", "The cymbal volume overpowering the drums"],
+      "answer": 1,
+      "explanation": "In metal, heaviness comes primarily from the lock between the kick drum and the guitar riff. When these two voices align precisely on the same rhythmic figures, it creates the crushing, powerful feel that defines heavy metal.",
+      "srs": true
+    }
+  ]
+}

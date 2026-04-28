@@ -1,8 +1,8 @@
-// src/lib/local-db/learn.ts
 import type {Kysely} from 'kysely';
 import {getLocalDb} from './client';
-import {todayIso, shouldIncrementStreak, shouldResetStreak} from '@/lib/learn/gamification';
+import {todayIso} from '@/lib/learn/gamification';
 import type {DB} from './types';
+import {DEFAULT_DAILY_GOAL_XP} from '@/lib/progression/xp';
 
 export interface LearnProgress {
   id: number;
@@ -26,25 +26,6 @@ function rowToProgress(row: {
     lessonId: row.lesson_id,
     completedAt: row.completed_at,
   };
-}
-
-/** Insert a default streak row with zero counters. Used in both setDailyGoalTarget and syncStreakAfterXp. */
-async function insertDefaultStreakRow(
-  db: Kysely<DB>,
-  today: string,
-): Promise<void> {
-  const now = new Date().toISOString();
-  await db
-    .insertInto('learn_streaks')
-    .values({
-      current_streak: 0,
-      longest_streak: 0,
-      last_active_date: today,
-      daily_goal_target: 10,
-      updated_at: now,
-      singleton: 1,
-    })
-    .execute();
 }
 
 export async function markLessonCompleted(
@@ -105,146 +86,6 @@ export async function getCompletedLessonIds(
   return new Set(rows.map(r => r.lesson_id));
 }
 
-export async function recordXp(
-  amount: number,
-  source: 'lesson' | 'heart_bonus',
-  instrument: string,
-  lessonId: string,
-): Promise<void> {
-  const db = await getLocalDb();
-  // Idempotent: skip if the same (instrument, lesson_id, source) was already recorded today.
-  const startOfToday = new Date();
-  startOfToday.setHours(0, 0, 0, 0);
-  const startOfTomorrow = new Date(startOfToday);
-  startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
-
-  const existing = await db
-    .selectFrom('learn_xp_ledger')
-    .select('id')
-    .where('instrument', '=', instrument)
-    .where('lesson_id', '=', lessonId)
-    .where('source', '=', source)
-    .where('earned_at', '>=', startOfToday.toISOString())
-    .where('earned_at', '<', startOfTomorrow.toISOString())
-    .executeTakeFirst();
-
-  if (existing) return;
-
-  await db
-    .insertInto('learn_xp_ledger')
-    .values({
-      amount,
-      source,
-      instrument,
-      lesson_id: lessonId,
-      earned_at: new Date().toISOString(),
-    })
-    .execute();
-}
-
-export async function syncStreakAfterXp(): Promise<{
-  dailyGoalMet: boolean;
-  newStreak: number;
-  todayXp: number;
-  dailyGoalTarget: number;
-}> {
-  const db = await getLocalDb();
-  const today = todayIso();
-
-  return db.transaction().execute(async trx => {
-    // Sum today's XP from ledger using ISO string range (avoids SQLite date() function)
-    const startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0);
-    const startOfTomorrow = new Date(startOfToday);
-    startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
-
-    const xpResult = await trx
-      .selectFrom('learn_xp_ledger')
-      .select(eb => eb.fn.sum<number>('amount').as('total'))
-      .where('earned_at', '>=', startOfToday.toISOString())
-      .where('earned_at', '<', startOfTomorrow.toISOString())
-      .executeTakeFirst();
-    const todayXp = Number(xpResult?.total ?? 0);
-
-    // Get streak row (may not exist yet)
-    const streakRow = await trx
-      .selectFrom('learn_streaks')
-      .selectAll()
-      .executeTakeFirst();
-    const dailyGoalTarget: number = streakRow?.daily_goal_target ?? 10;
-
-    // Get or create today's daily_goal row
-    const goalRow = await trx
-      .selectFrom('learn_daily_goal')
-      .selectAll()
-      .where('date', '=', today)
-      .executeTakeFirst();
-
-    if (!goalRow) {
-      await trx
-        .insertInto('learn_daily_goal')
-        .values({date: today, target_xp: dailyGoalTarget, xp_earned: todayXp, completed: 0})
-        .execute();
-    } else {
-      await trx
-        .updateTable('learn_daily_goal')
-        .set({xp_earned: todayXp})
-        .where('date', '=', today)
-        .execute();
-    }
-
-    // Check if daily goal was just met for the first time today
-    const alreadyCompleted = goalRow?.completed === 1;
-    const goalJustMet = todayXp >= dailyGoalTarget && !alreadyCompleted;
-    let newStreak = streakRow?.current_streak ?? 0;
-
-    if (goalJustMet) {
-      await trx
-        .updateTable('learn_daily_goal')
-        .set({completed: 1})
-        .where('date', '=', today)
-        .execute();
-
-      const lastActive: string | null = streakRow?.last_active_date ?? null;
-      if (shouldIncrementStreak(lastActive, today)) {
-        newStreak = (streakRow?.current_streak ?? 0) + 1;
-      } else if (shouldResetStreak(lastActive, today)) {
-        newStreak = 1;
-      }
-      const longestStreak = Math.max(streakRow?.longest_streak ?? 0, newStreak);
-      const now = new Date().toISOString();
-
-      if (!streakRow) {
-        await trx
-          .insertInto('learn_streaks')
-          .values({
-            current_streak: newStreak,
-            longest_streak: longestStreak,
-            last_active_date: today,
-            daily_goal_target: dailyGoalTarget,
-            updated_at: now,
-            singleton: 1,
-          })
-          .execute();
-      } else {
-        await trx
-          .updateTable('learn_streaks')
-          .set({
-            current_streak: newStreak,
-            longest_streak: longestStreak,
-            last_active_date: today,
-            updated_at: now,
-          })
-          .execute();
-      }
-    }
-
-    // dailyGoalMet uses the DB persisted value OR just-set-now to avoid re-firing celebration
-    const dailyGoalMet = goalRow?.completed === 1 || goalJustMet;
-    return {dailyGoalMet, newStreak, todayXp, dailyGoalTarget};
-  });
-}
-
 export async function getLearnStats(): Promise<{
   streak: number;
   longestStreak: number;
@@ -269,10 +110,120 @@ export async function getLearnStats(): Promise<{
   return {
     streak: streakRow?.current_streak ?? 0,
     longestStreak: streakRow?.longest_streak ?? 0,
-    dailyGoalTarget: streakRow?.daily_goal_target ?? 10,
+    dailyGoalTarget: streakRow?.daily_goal_target ?? DEFAULT_DAILY_GOAL_XP,
     todayXp: goalRow?.xp_earned ?? 0,
     dailyGoalCompleted: goalRow?.completed === 1,
   };
+}
+
+/** Map of lessonId → stars (1..3) for an instrument's unit. Used by SkillTree to render ★★☆. */
+export async function getLessonStarsForUnit(
+  instrument: string,
+  unitId: string,
+): Promise<Map<string, 1 | 2 | 3>> {
+  const db = await getLocalDb();
+  const rows = await db
+    .selectFrom('lesson_stars')
+    .select(['lesson_id', 'stars'])
+    .where('instrument', '=', instrument)
+    .where('unit_id', '=', unitId)
+    .execute();
+  return new Map(rows.map(r => [r.lesson_id, r.stars as 1 | 2 | 3]));
+}
+
+export interface InstrumentLevelView {
+  instrument: string;
+  cum_xp: number;
+  level: number;
+  xp_into_level: number;
+  xp_to_next: number;
+}
+
+/**
+ * Daily XP totals across the given inclusive date range. Keys are YYYY-MM-DD (local).
+ * Includes ALL surfaces (lessons + non-learn). Used by the calendar overlay.
+ */
+export async function getDailyXpForRange(
+  fromDate: string,
+  toDate: string,
+): Promise<Map<string, number>> {
+  const db = await getLocalDb();
+  // earned_at is an ISO datetime string. We bucket by the local-time date prefix using
+  // ISO date math and group in JS — keeps the SQL portable across SQLite versions.
+  const start = new Date(`${fromDate}T00:00:00`);
+  const endExclusive = new Date(`${toDate}T00:00:00`);
+  endExclusive.setDate(endExclusive.getDate() + 1);
+  const rows = await db
+    .selectFrom('learn_xp_ledger')
+    .select(['amount', 'earned_at'])
+    .where('earned_at', '>=', start.toISOString())
+    .where('earned_at', '<', endExclusive.toISOString())
+    .execute();
+  const out = new Map<string, number>();
+  for (const r of rows) {
+    const localDate = new Date(r.earned_at).toLocaleDateString('sv'); // YYYY-MM-DD local
+    out.set(localDate, (out.get(localDate) ?? 0) + r.amount);
+  }
+  return out;
+}
+
+/** Set of YYYY-MM-DD dates within range where the daily goal was met. */
+export async function getGoalMetDatesForRange(
+  fromDate: string,
+  toDate: string,
+): Promise<Set<string>> {
+  const db = await getLocalDb();
+  const rows = await db
+    .selectFrom('learn_daily_goal')
+    .select('date')
+    .where('date', '>=', fromDate)
+    .where('date', '<=', toDate)
+    .where('completed', '=', 1)
+    .execute();
+  return new Set(rows.map(r => r.date));
+}
+
+/** Set of YYYY-MM-DD dates within range where an achievement was earned. */
+export async function getAchievementDatesForRange(
+  fromDate: string,
+  toDate: string,
+): Promise<Set<string>> {
+  const db = await getLocalDb();
+  const start = new Date(`${fromDate}T00:00:00`);
+  const endExclusive = new Date(`${toDate}T00:00:00`);
+  endExclusive.setDate(endExclusive.getDate() + 1);
+  const rows = await db
+    .selectFrom('earned_achievements')
+    .select('earned_at')
+    .where('earned_at', '>=', start.toISOString())
+    .where('earned_at', '<', endExclusive.toISOString())
+    .execute();
+  return new Set(rows.map(r => new Date(r.earned_at).toLocaleDateString('sv')));
+}
+
+/** All three instrument level rows (or empty if not seeded yet). */
+export async function getAllInstrumentLevels(): Promise<InstrumentLevelView[]> {
+  const db = await getLocalDb();
+  const rows = await db.selectFrom('instrument_levels').selectAll().execute();
+  return rows.map(r => ({
+    instrument: r.instrument,
+    cum_xp: r.cum_xp,
+    level: r.level,
+    xp_into_level: r.xp_into_level,
+    xp_to_next: r.xp_to_next,
+  }));
+}
+
+/** Map of (unit_id) → minimum-stars-across-its-lessons. A unit with min=3 has gold-pip status. */
+export async function getUnitMinStars(instrument: string): Promise<Map<string, number>> {
+  const db = await getLocalDb();
+  const rows = await db
+    .selectFrom('lesson_stars')
+    .select(['unit_id', eb => eb.fn.min<number>('stars').as('min_stars')])
+    .where('instrument', '=', instrument)
+    .groupBy('unit_id')
+    .execute();
+  return new Map(rows.map(r => [r.unit_id, Number(r.min_stars)]));
 }
 
 export async function setDailyGoalTarget(targetXp: number): Promise<void> {

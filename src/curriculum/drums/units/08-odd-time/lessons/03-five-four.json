@@ -1,0 +1,20 @@
+{
+  "id": "03-five-four",
+  "title": "5/4 Time",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# 5/4 — 5 Beats Per Measure\n\n5/4 is the most common 'odd' time signature. Feel it as **3+2** or **2+3**:\n\n**3+2 grouping:**\nCount: **1 2 3 | 4 5 | 1 2 3 | 4 5**\n\n**Famous 5/4 songs:**\n- 'Mission Impossible' theme\n- 'Take Five' (Dave Brubeck) — 5/4 jazz classic\n- 'Seven Nation Army' sections (White Stripes)\n\n**Practice tip:** Tap your foot on 1 and 4 (the two strong beats) while counting.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the most common way to feel/group 5/4 time?",
+      "choices": ["5 equal beats", "As 3+2 or 2+3 groupings", "As two measures of 2.5", "Same as 4/4 with one extra beat"],
+      "answer": 1,
+      "explanation": "5/4 is most naturally felt as either 3+2 (three-feel then two-feel) or 2+3 depending on the music. Treating all 5 as equal rarely works — grouping them helps maintain feel.",
+      "srs": true
+    }
+  ]
+}

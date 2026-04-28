@@ -1,0 +1,38 @@
+{
+  "id": "05-score-analysis",
+  "title": "Score Analysis",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Analyzing Film and Game Scores\n\nScore analysis — studying how specific composers achieve specific effects — is essential training for any aspiring film or game composer. It builds a personal vocabulary of techniques.\n\n### How to Analyze a Score\n\n1. **Watch the scene silently first**: Understand the dramatic content, pacing, emotion without music\n2. **Watch with music and note**: What key moments does the music hit? When does it stay underneath vs. come forward?\n3. **Listen without picture**: Hear the music as pure music — what harmonic language, instrumentation, form does it use?\n4. **Transcribe**: Write down the main themes, key harmonic moves, orchestration choices\n5. **Ask 'Why?'**: For each choice — why this key? Why this instrument? Why this dynamic?\n\n### Case Study 1: John Williams, *Schindler's List* (1993)\n\nThe theme played by Itzhak Perlman on solo violin is a masterwork of emotional economy:\n\n**Key**: D minor (appropriate — the key of grief and loss in baroque/classical tradition)\n**Melody**: Begins on the 5th (A), rises chromatically, falls — a lament pattern\n**Harmony**: Modal mixture extensively — major and minor coexist (life coexisting with death)\n**Instrumentation**: Solo violin + orchestra. The violin is intimate, human, individual — one voice among millions\n**Silence**: Phrases are separated by silence — grief is inarticulate, speechless\n\n### Case Study 2: Yasunori Mitsuda, *Chrono Trigger* (1995)\n\nThe *Chrono Trigger* score is considered the greatest RPG score ever written:\n\n**'Corridors of Time'** (Zeal theme): 5/4 meter creating a timeless, floating quality; parallel minor 9ths; flute + synth texture suggesting ancient/futuristic simultaneously\n**'Frog's Theme'**: Heroic, medieval-influenced with modal Mixolydian harmony — the b7 chord appears throughout, giving the medieval knight a blues-influenced nobility\n**'Main Theme (Chrono Trigger)'**: AABA form, polytonal ending (major and minor simultaneously at the final note), triumphant but complex\n\n### Case Study 3: Ennio Morricone, *The Good, the Bad and the Ugly* (1966)\n\n**Main title**: Call-and-response between coyote howl, whistling, and orchestra. The 'non-musical' sounds (howl, whip cracks) integrated into the musical structure — blurring the line between score and sound design.\n**Harmonic language**: Open fifths (Dorian/Mixolydian flavor) — evokes wide-open Western landscapes\n**Form**: Verse-chorus with a built-in escalation structure — each repeat of the main theme is more elaborate",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why does John Williams choose solo violin (rather than a full orchestra) for the main Schindler's List theme?",
+      "choices": [
+        "Because solo violin is easier to record than full orchestra",
+        "Because the solo violin represents one individual human voice among millions — intimate, personal, and deeply human against the enormity of the Holocaust",
+        "Because the key of D minor sounds better on violin than other instruments",
+        "Because Itzhak Perlman's name recognition would market the film"
+      ],
+      "answer": 1,
+      "explanation": "The choice of solo violin is a profound dramatic and symbolic one. The Holocaust destroyed millions of individual human lives. The solo violin represents one individual voice — intimate, vulnerable, personal — against the weight of historical enormity. The moment where the orchestra joins the violin represents the community, the collective tragedy. Williams has spoken about this choice directly: it is about making the abstract concrete through the most human of instruments.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The 'Corridors of Time' from Chrono Trigger uses 5/4 meter. What effect does this unusual meter create?",
+      "choices": [
+        "It makes the music difficult to dance to — matching the game's non-danceable setting",
+        "It creates a floating, unsettled quality where the listener cannot fully predict the downbeat — appropriate for a kingdom unstuck in time",
+        "5/4 is faster than 4/4, creating urgency for the time-travel gameplay",
+        "It is a mistake by the composer that was kept because players liked it"
+      ],
+      "answer": 1,
+      "explanation": "5/4 meter has an odd number of beats per bar — unlike the predictable 4/4 or 3/4, the listener never quite settles into a comfortable groove. This floating, slightly disorienting quality makes '5/4' perfect for the Kingdom of Zeal in Chrono Trigger — a civilization with mastery of time itself, literally 'out of time' with the rest of the world. The meter embodies the theme's content.",
+      "srs": true
+    }
+  ]
+}

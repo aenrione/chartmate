@@ -1,0 +1,27 @@
+{
+  "id": "02-e-shape-major",
+  "title": "E-Shape Major Barre",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The E-Shape Barre Chord\n\nTake your E major chord shape, move it up the neck, and barre at the new root:\n\n**F major (E shape at fret 1):**\n- Index finger: barre all 6 strings at fret 1\n- Ring: string 5, fret 3\n- Pinky: string 4, fret 3\n- Middle: string 3, fret 2\n\n**Move up one fret = F# major, two frets = G major, etc.**",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "F",
+      "frets": [1, 1, 2, 3, 3, 1],
+      "fingers": [1, 1, 2, 4, 3, 1],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "If the E-shape barre is at fret 5, what chord is it?",
+      "choices": ["E major", "A major", "G major", "B major"],
+      "answer": 1,
+      "explanation": "The E-shape barre chord's root is the note on string 6 under your index finger. Fret 5 on string 6 = A. So it's A major.",
+      "srs": true
+    }
+  ]
+}

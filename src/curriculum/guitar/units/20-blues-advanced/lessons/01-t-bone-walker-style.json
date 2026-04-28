@@ -1,0 +1,50 @@
+{
+  "id": "01-t-bone-walker-style",
+  "title": "T-Bone Walker Style",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# T-Bone Walker — The Father of Electric Blues Guitar\n\n**T-Bone Walker** (1910–1975) invented the vocabulary of electric blues guitar. Every blues and rock guitarist owes a debt to him — BB King, Chuck Berry, Jimi Hendrix, and Eric Clapton all learned from his innovations.\n\n## T-Bone's Innovations\n\n1. **First major electric blues guitarist** — plugged in before anyone else was doing it\n2. **Jazz-influenced chord voicings** — used sophisticated harmony borrowed from jazz\n3. **Jump blues rhythm** — combined Texas blues with swing jazz rhythms\n4. **Showmanship** — played guitar behind his head, did splits on stage in the 1940s\n\n## The T-Bone Sound\n\n- Hollow-body electric guitar (Gibson ES-250, ES-5)\n- Clean or slightly distorted tone\n- Jazzy chord-based improvisation mixed with single-note lines\n- Double stops (two notes simultaneously) for rich texture\n- Sophisticated use of the chord's 6th and 9th\n\n## Essential T-Bone Recordings\n\n- \"Call It Stormy Monday\" (1947) — the blues standard\n- \"T-Bone Shuffle\" (1950) — quintessential jump blues\n- \"I Got a Break Baby\" — early electric blues\n- *Complete Capitol/Black & White Recordings* (1940s)\n\n## Stormy Monday Chord Progression\n\nThe sophisticated chord changes of \"Stormy Monday\" were revolutionary:\n```\n| Bb9   | Eb9   | Bb9   | Cm9 F9 |\n| Eb9   | Edim9 | Bb9   | G9     |\n| Cm9   | F9    | Bb9 G9| Cm9 F9 |\n```",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What was T-Bone Walker's most significant contribution to blues guitar?",
+      "choices": [
+        "Inventing slide guitar technique",
+        "Being among the first to play electric blues with sophisticated jazz harmony and single-note lines",
+        "Developing the pentatonic scale",
+        "Creating the 12-bar blues form"
+      ],
+      "answer": 1,
+      "explanation": "T-Bone Walker was one of the earliest and most influential electric blues guitarists, fusing Texas blues with jazz-influenced voicings and single-note improvisation. His jazz harmony awareness (9th chords, passing chords, sophisticated turnarounds) set the template for all subsequent blues and rock guitar.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# T-Bone Walker Vocabulary — Double Stops and 9th Chords\n\n## Double Stops\n\nT-Bone frequently used double stops (two notes simultaneously) for a full, horn-like sound. Key double stop patterns:\n\n### 3rd-based double stops in Bb blues:\n```\ne |---5--6--8--10---|\nB |---5--6--8--10---| (parallel thirds)\n(Bb: Bb-D, C-Eb, D-F, Eb-G)\n```\n\n### 6th-based double stops:\n```\ne |---5--6--8------|\nG |---7--9--10-----| (string skip, 6ths)\n```\n\n## 9th Chord Shapes (T-Bone style)\n\nT-Bone loved big, jazzy 9th chords:\n\n### Bb9 (T-Bone's bread and butter)\n```\ne |--6--|\nB |--6--|\nG |--7--|\nD |--8--|\nA |--6--|\nE |--x--|\n```\nFrets: (-1, 6, 7, 8, 6, 6)\n\n## The T-Bone Lick\n\nHis signature: an ascending run ending on a bent major 3rd:\n```\ne |------6b8--6----|\nB |--6-8-----------|\nG |--7-------------|\n   D  F  Bb-Bb (major 3rd of Bb, bent for emphasis)\n```",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "Bb9 (T-Bone Walker style)",
+      "frets": [-1, 6, 7, 8, 6, 6],
+      "fingers": [0, 1, 2, 3, 1, 1],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'double stop' in guitar playing?",
+      "choices": [
+        "Playing the same note twice in a row",
+        "Two notes played simultaneously on adjacent or non-adjacent strings",
+        "A technique for stopping the strings from ringing",
+        "Playing a chord and immediately muting it"
+      ],
+      "answer": 1,
+      "explanation": "A double stop is two notes played at the same time, creating a partial chord. T-Bone Walker used them extensively — especially parallel thirds and sixths — to create a full, orchestral sound that anticipated rock and roll's twin-guitar harmonies.",
+      "srs": true
+    }
+  ]
+}

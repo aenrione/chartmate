@@ -1,0 +1,25 @@
+{
+  "id": "04-flam",
+  "title": "Flams & Drags",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Flam\n\nA **flam** is a grace note immediately before the main stroke:\n\n- Soft grace note (low stick) followed by a full accent stroke\n- Written as a small note before the main note\n- Creates a 'fat' sound: **fla-m**\n\n**Technique:** One hand is low (2 inches from drum), the other is high (8–10 inches). Both play together — the low hand hits a fraction earlier.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Drag\n\nA **drag** (or ruff) is two rapid grace notes before the main stroke:\n\n- Two soft notes + one accented note\n- Pattern: lr R (grace notes are small, main note is full)\n- Creates a rolling, embellished sound\n\nDrags appear constantly in military drumming, jazz, and any style that needs rhythmic embellishment.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes a flam different from a regular stroke?",
+      "choices": ["It's played with the foot", "It has a grace note just before the main stroke", "It requires two sticks on the same drum simultaneously", "It's only used in jazz"],
+      "answer": 1,
+      "explanation": "A flam has a soft grace note (low stick) landing just before the full main stroke (high stick). The near-simultaneous 'fla-m' creates a thicker, more resonant sound.",
+      "srs": true
+    }
+  ]
+}

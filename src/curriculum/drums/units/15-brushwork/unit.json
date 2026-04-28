@@ -1,0 +1,8 @@
+{
+  "id": "15-brushwork",
+  "title": "Brushwork",
+  "description": "Brush sweeps, press rolls, jazz brushwork patterns, and ballad feel",
+  "icon": "music",
+  "prerequisites": ["11-jazz-drumming"],
+  "lessons": ["01-brush-basics", "02-sweep-patterns", "03-brush-comping", "04-ballad-brushwork", "05-brush-fills"]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "01-score-reading",
+  "title": "Score Reading",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Score Reading: From Page to Sound\n\nReading a full orchestral score — a page with 30+ staves of simultaneous music — is an advanced skill that takes years to develop. But even basic score-reading ability dramatically accelerates musical understanding.\n\n### The Score Layout\n\nOrchestral scores are laid out top-to-bottom in this order (standard):\n\n1. **Woodwinds** (top): Piccolo, Flute, Oboe, Cor Anglais, Clarinet, Bass Clarinet, Bassoon, Contrabassoon\n2. **Brass**: Horns, Trumpets, Trombones, Tuba\n3. **Percussion**: Timpani, Battery, Pitched percussion\n4. **Harp** (if present)\n5. **Strings** (bottom): Violin I, Violin II, Viola, Cello, Double Bass\n\nEach instrument has its own staff. Instruments in the same family are grouped with a bracket.\n\n### Reading the Vertical Slice\n\nAt any moment in the score, reading vertically tells you what every instrument is playing simultaneously. Developing the ability to hear this vertical slice mentally — to 'hear' the score in your head — is the ultimate goal of score reading.\n\nProcess for beginners:\n1. Start with just strings — read Violin I and Cello (melody + bass)\n2. Add woodwind melody\n3. Add brass harmony\n4. Eventually read all parts simultaneously\n\n### Transposing Instruments in Scores\n\nIn traditional transposed scores, Bb clarinet sounds a major second lower than written. When reading across a vertical moment:\n- A written C in Bb clarinet + a written C in F horn sounds: Bb (clarinet) + F (horn) = interval of a perfect fourth\n- The 'true' harmony is not visible at first glance without mentally transposing\n\nThis is why many conductors prefer **concert pitch scores** — everything is written at actual sounding pitch, making the vertical analysis immediate.\n\n### Reduction: Score to Piano\n\nA key score-reading exercise: **reduction**. Take an orchestral score and reduce it to a playable piano part, keeping the essential harmonies and melodic lines while omitting doublings.\n\nReduction forces you to identify what is essential in the score — which voices carry the harmony, which are ornamental, which are doublings. This skill directly develops the ability to hear the harmonic skeleton of any music.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a standard orchestral score, what is the order of instrument families from top to bottom?",
+      "choices": [
+        "Strings, Brass, Woodwinds, Percussion",
+        "Woodwinds, Brass, Percussion, Harp, Strings",
+        "Melody instruments, harmony instruments, rhythm section",
+        "Alphabetical by instrument name"
+      ],
+      "answer": 1,
+      "explanation": "Standard orchestral score order (top to bottom): Woodwinds (flute, oboe, clarinet, bassoon), Brass (horns, trumpets, trombones, tuba), Percussion (timpani, battery), Harp (if present), Strings (Violin I, Violin II, Viola, Cello, Bass). This order reflects register (woodwinds highest, strings/bass lowest) and historical convention.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'score reduction,' and why is it a valuable learning exercise?",
+      "choices": [
+        "Making a score smaller in font size for easier carrying",
+        "Creating a simplified version of a full score for a smaller ensemble",
+        "Reducing a full orchestral score to a playable piano part — identifying essential harmonic and melodic content by deciding what is structural vs. ornamental",
+        "Removing all dynamics from a score to focus on pitch"
+      ],
+      "answer": 2,
+      "explanation": "A score reduction condenses a full orchestral score into a piano part that captures the essential musical content. The process forces you to identify what is structurally important (harmonic skeleton, main melodies) versus ornamental (doublings, subsidiary voices, embellishments). This develops analytical listening and score-reading simultaneously — you cannot reduce what you don't understand.",
+      "srs": true
+    }
+  ]
+}

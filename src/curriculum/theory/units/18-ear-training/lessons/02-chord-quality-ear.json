@@ -1,0 +1,38 @@
+{
+  "id": "02-chord-quality-ear",
+  "title": "Chord Quality by Ear",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Recognizing Chord Quality by Ear\n\nChord quality recognition — hearing whether a chord is major, minor, dominant, diminished, or half-diminished — is an essential skill for transcribing music, playing by ear, and improvising.\n\n### Major vs. Minor: The First Distinction\n\nThe difference between major and minor is the **third**:\n- **Major third** (4 semitones above root): bright, open, stable\n- **Minor third** (3 semitones above root): darker, slightly compressed, introspective\n\nTo train this: play major and minor triads repeatedly on piano or guitar, singing the chord while you play. Say 'major' and 'minor' aloud for each. The goal is to develop an immediate, gut-level recognition — like recognizing a friend's voice.\n\n### The Seventh: Maj7 vs. Dom7 vs. Min7\n\nOnce you can hear major vs. minor triads, add the seventh:\n- **Cmaj7** (C–E–G–B): Lush, dreamy, no tension. The major 7th (B) is close to the octave — creates a rich, floating sound.\n- **C7** (C–E–G–Bb): Tense, blues-inflected, wants to resolve. The dominant seventh (Bb) is a whole step below the octave.\n- **Cm7** (C–Eb–G–Bb): Dark but smoother than diminished. Minor quality + flat seventh.\n\n### Diminished and Half-Diminished\n\n- **Cdim** (C–Eb–Gb): Very tense, dissonant. Two stacked minor thirds — the diminished fifth (tritone) gives it instability.\n- **Cm7b5 / Cø** (C–Eb–Gb–Bb): Similar to diminished but with a minor seventh on top — slightly softer, still tense. This is the half-diminished sound.\n- **Cdim7 / C°7** (C–Eb–Gb–Bbb/A): Fully symmetrical — four notes all equidistant. Highly unstable, wants to resolve in multiple directions.\n\n### Practical Recognition Strategies\n\n1. **Start with the bass note** — identify the root first\n2. **Is the third major or minor?** — this is the most audible quality marker\n3. **Is there a seventh?** — does the chord have a 'floating' (maj7) or 'tense' (dom7) quality, or a smooth but slightly unresolved (min7) quality?\n4. **Is there a tritone?** — diminished and dominant chords both contain tritones; it creates a dissonant buzz\n\n### Training with Real Music\n\nFor ear training, listen actively to recordings and identify chord qualities:\n- **Bill Evans Trio** recordings: excellent for hearing maj7, min7, and dom7 distinctly voiced\n- **Bach chorales**: clear SATB voicing makes it easy to identify chord qualities\n- **Blues recordings**: dominant seventh chords are ubiquitous — train your ear on B.B. King",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the single most audible feature that distinguishes major from minor chord quality?",
+      "choices": [
+        "The bass note — major chords use the root in bass; minor chords use the fifth",
+        "The third — a major third (4 semitones) sounds brighter; a minor third (3 semitones) sounds darker",
+        "The fifth — major chords have a perfect fifth; minor chords have a diminished fifth",
+        "The rhythm — major chords are played on downbeats; minor chords on upbeats"
+      ],
+      "answer": 1,
+      "explanation": "The third is the defining interval of chord quality. A major third (4 semitones above the root) creates the bright, stable major sound. A minor third (3 semitones above the root) creates the darker, more introspective minor sound. Training yourself to hear this interval immediately — and automatically associate it with major or minor — is the core of chord quality ear training.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How can you distinguish a dominant seventh chord (G7) from a major seventh chord (Gmaj7) by ear?",
+      "choices": [
+        "G7 is louder; Gmaj7 is quieter",
+        "G7 has a tense, 'want to resolve' quality (minor seventh = whole step below octave); Gmaj7 has a lush, floating quality (major seventh = half step below octave)",
+        "G7 is in root position; Gmaj7 is in first inversion",
+        "They sound identical — the difference is only on paper"
+      ],
+      "answer": 1,
+      "explanation": "G7 has a Bb (minor seventh) — one whole step below the octave G. This creates audible tension that pulls toward resolution. Gmaj7 has a B natural (major seventh) — only one half step below the octave G. This proximity creates a smooth, close-interval sound that feels resolved and lush. The difference in quality between Bb and B natural is very audible.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "04-identifying-the-key",
+  "title": "Identifying the Key",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Identifying the Key at a Glance\n\nQuick identification of key signatures is a core professional skill. Whether you are a sight-reader, a transcriber, or an arranger, you need to read a key signature in under two seconds. Here is the complete system.\n\n### The Three Rules\n\n**Rule 1 — No sharps, no flats:** The key is **C major** (or its relative A minor).\n\n**Rule 2 — Sharp key signatures:** Look at the **last (rightmost) sharp**. Go **one half step up**. That is the key.\n- Last sharp = F# → key is **G major** (F# + half step = G)\n- Last sharp = C# → key is **D major**\n- Last sharp = G# → key is **A major**\n- Last sharp = D# → key is **E major**\n- Last sharp = A# → key is **B major**\n- Last sharp = E# → key is **F# major**\n- Last sharp = B# → key is **C# major**\n\n**Rule 3 — Flat key signatures:** The key is named by the **second-to-last flat**. Exception: one flat (Bb only) = **F major**.\n- Bb, Eb → key is **Bb major** (Bb is second-to-last)\n- Bb, Eb, Ab → key is **Eb major**\n- Bb, Eb, Ab, Db → key is **Ab major**\n- Bb, Eb, Ab, Db, Gb → key is **Db major**\n- Bb, Eb, Ab, Db, Gb, Cb → key is **Gb major**\n- All seven flats → key is **Cb major**\n\n### Beyond the Key Signature: Context Clues\n\nKey signatures tell you the *likely* key, but context confirms it. Two important confirmation techniques:\n\n1. **Final cadence**: Most tonal pieces end on the **tonic chord (I chord)**. The last measure almost always confirms the key. If a piece has two flats and ends on a Bb chord, it is in Bb major.\n\n2. **First and last notes**: Melodies frequently begin and end on the tonic. If the melody in a two-flat key consistently returns to Bb as a point of rest, Bb is the tonic.\n\n### Enharmonic Keys in Practice\n\nThree pairs of key signatures look different but sound the same:\n- B major (5#) / Cb major (7b)\n- F# major (6#) / Gb major (6b)\n- C# major (7#) / Db major (5b)\n\nWhen you see 5 or more sharps or flats, always ask whether the enharmonic spelling would be simpler for the performer. A pianist will almost always prefer Db major to C# major.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "A key signature has two sharps (F# and C#). Using the identification rule, what is the major key?",
+      "choices": [
+        "G major",
+        "D major",
+        "A major",
+        "C# major"
+      ],
+      "answer": 1,
+      "explanation": "With two sharps, the last (rightmost) sharp is C#. Go one half step above C# and you reach D. The key is D major. The rule works because C# is the leading tone (7th degree) of D major, sitting one half step below the tonic D.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "A key signature has four flats: Bb, Eb, Ab, Db. What major key is this?",
+      "choices": [
+        "Db major",
+        "Bb major",
+        "Eb major",
+        "Ab major"
+      ],
+      "answer": 3,
+      "explanation": "With four flats (Bb, Eb, Ab, Db), the second-to-last flat is Ab. The key is Ab major. The last flat (Db) is the 4th scale degree of Ab major. Verify: Ab major has four flats: Bb, Eb, Ab, Db — correct.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which technique helps confirm a key when the key signature alone could mean either major or relative minor?",
+      "choices": [
+        "Counting the total number of notes in the piece",
+        "Looking at the final cadence — pieces in tonal music typically end on the tonic chord",
+        "Checking the time signature",
+        "Reading the tempo marking at the top of the score"
+      ],
+      "answer": 1,
+      "explanation": "The key signature tells you which sharps or flats are in use, but it does not distinguish between a major key and its relative minor (which share the same signature). The final cadence (the last chord) almost always lands on the tonic, confirming whether the piece is in the major key or its relative minor.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why might a composer choose to write in Db major (5 flats) rather than C# major (7 sharps), even though they sound identical?",
+      "choices": [
+        "Db major has a richer sound than C# major",
+        "Db major is five flats while C# major is seven sharps — fewer accidentals makes the notation significantly easier to read",
+        "C# major is not a real key signature",
+        "Db major is reserved for piano; C# major is for strings"
+      ],
+      "answer": 1,
+      "explanation": "Db major (5 flats) and C# major (7 sharps) are enharmonic equivalents — identical in sound. Db major requires only 5 symbols in the key signature, while C# major requires 7, including the rare E# and B#. Fewer accidentals means a cleaner, more readable score, which is why Db major is vastly more common in printed music.",
+      "srs": true
+    }
+  ]
+}

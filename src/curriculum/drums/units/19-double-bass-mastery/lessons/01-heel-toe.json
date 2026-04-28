@@ -1,0 +1,34 @@
+{
+  "id": "01-heel-toe",
+  "title": "Heel-Toe Technique",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Heel-Toe: Two Notes, One Motion\n\nThe heel-toe technique allows a single foot to produce two consecutive bass drum strokes in one motion — effectively doubling the foot's note output without alternating feet.\n\n**The mechanics:**\n1. Start with the heel on the footboard of the pedal\n2. **First stroke**: Depress the toe end of the beater by rocking forward — this drives the beater into the head\n3. The heel rises as the toe depresses\n4. **Second stroke**: Allow the heel to fall back down onto the footboard — this pulls the board back and fires the beater again\n5. The result: two strokes from one rocking foot motion\n\n**Why this matters:**\n- At 180+ BPM, alternating RLRL double bass becomes physically taxing\n- Heel-toe on a single foot can sustain these rates with less effort\n- When combined with standard alternation, heel-toe allows complex patterns that would be impossible otherwise\n\n**Setup requirements:** Heel-toe requires a pedal with enough board length to fit the full foot. Spring tension should be medium to light — very heavy springs make the return stroke too stiff.\n\n**The 'swivel' vs. 'heel-toe' debate:** Some drummers use a lateral swivel motion rather than a front-to-back rock. Both achieve two strokes per motion; which works better is physiologically individual.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Heel-Toe Practice Pattern",
+      "description": "Groups of two 16th-note kicks followed by two rests — these pairs simulate the heel-toe motion output. At this tempo, feel the rocking motion: forward (toe) then back (heel). The paired 16ths should be perfectly even.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 90,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x-x-x-x-x-x-x-x-"},
+        {"name": "Snare",  "pattern": "----x-------x---"},
+        {"name": "Kick",   "pattern": "xx--xx--xx--xx--"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What produces the second stroke in the heel-toe technique?",
+      "choices": ["The toe pressing down a second time", "The heel falling back onto the footboard, pulling the board back and re-firing the beater", "Alternating to the other foot", "Spring tension alone"],
+      "answer": 1,
+      "explanation": "In heel-toe technique, the first stroke comes from the toe depressing the pedal board. The second stroke comes from the heel falling back onto the board — this rocks the board backward, and the spring tension uses this motion to fire the beater a second time.",
+      "srs": true
+    }
+  ]
+}

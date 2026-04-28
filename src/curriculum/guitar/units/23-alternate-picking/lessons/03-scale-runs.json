@@ -1,0 +1,43 @@
+{
+  "id": "03-scale-runs",
+  "title": "Scale Runs",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Scale Runs — 3-Note-Per-String Patterns\n\n3-note-per-string (3NPS) scales are the preferred pattern for fast scale runs in rock, metal, and fusion guitar. Unlike 2NPS (CAGED patterns), 3NPS:\n- Creates **consistent 6-note groups** across 2 strings\n- Allows fluid, fast alternate picking without disruption\n- Covers more range per position\n- Used by John Petrucci, Steve Hahn, Shawn Lane, Guthrie Govan\n\n## 3NPS E Natural Minor (Aeolian)\n\n```\ne |--12--14--15--|\nB |--12--13--15--|\nG |--12--14--16--|\nD |--12--14--16--|\nA |--12--14--15--|\nE |--12--14--15--|\n```\n\nStarting from the low E, 3 notes per string across 6 strings = 18 notes, covering two octaves.\n\n## Pick Stroke Count\n\nWith 3 notes per string, each string crossing happens at an **odd-count** point:\n- String 6: D-U-D (3 notes)\n- String 5: U-D-U (crosses on an upstroke = outside pick)\n- String 4: D-U-D\n- Continue alternating...\n\nThis \"outside picking\" at every string transition is the challenging part of 3NPS runs.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why do 3-note-per-string (3NPS) patterns produce an 'outside pick' at every string crossing?",
+      "choices": [
+        "Because 3 is an odd number — starting a new string always continues the alternation in a specific direction",
+        "Because 3NPS is designed for upstrokes only",
+        "It depends on which string you're on",
+        "3NPS doesn't produce outside picks"
+      ],
+      "answer": 0,
+      "explanation": "With 3 notes per string, if you start string 6 with a downstroke (D-U-D), string 5 begins with an upstroke (U-D-U), string 4 with a downstroke again. The odd number of notes per string means the starting stroke alternates — creating outside picks at each crossing when ascending.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Classic Scale Run Patterns\n\n## The \"Sequences\" Approach\n\nRunning scales in sequenced patterns (not just straight up-down) creates more musical runs:\n\n### Sequence: Groups of 4 (1234, 2345, 3456...)\n```\nE minor, starting from low E:\nE F# G A | F# G A B | G A B C | ...\n```\n\n### Sequence: Groups of 3 (123, 234, 345...)\n```\nE F# G | F# G A | G A B | ...\n```\n(This creates a triple-feel, very common in jazz and fusion)\n\n### Sequence: Thirds (skip 1, play 3)\n```\nE G | F# A | G B | A C | ...\n```\n\n## Guthrie Govan's Approach to Scale Runs\n\nGuthrie Govan (often cited as the most technically complete modern guitarist) emphasizes:\n- Scale runs must be **musical** — they should phrase like a melody\n- Even at 200 BPM, there must be intention behind the notes\n- Practice runs in musical contexts (over chord changes, not just a drone)\n- The goal: \"melodic improvisation at high velocity\" — not just speed",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'sequences' approach to scale runs?",
+      "choices": [
+        "Playing the scale in different keys",
+        "Running the scale in groups (1234, 2345; or 123, 234) instead of straight up-down",
+        "Playing every other note of the scale",
+        "Using legato instead of picks for scale passages"
+      ],
+      "answer": 1,
+      "explanation": "Sequences are patterns applied to scales — instead of running straight up, you play groups: 1234, 2345, 3456 (groups of 4), or 123, 234, 345 (groups of 3). This creates more musical, melodic-sounding runs and develops the ear for scale structure.",
+      "srs": true
+    }
+  ]
+}

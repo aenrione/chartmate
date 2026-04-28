@@ -1,0 +1,43 @@
+{
+  "id": "04-two-hand-independence",
+  "title": "Two-Hand Independence",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Two-Hand Independence — Playing Two Parts Simultaneously\n\nAdvanced tapping goes beyond the basic T-po-po by having **both hands operate as independent melodic voices** — the right hand playing a melody while the left hand plays a bassline.\n\n## The Classical Piano Approach on Guitar\n\nStanley Jordan (b. 1959) pioneered full two-hand tapping where both hands play melody and accompaniment simultaneously — each hand has its own fully melodic content, like a pianist's two hands.\n\n## The Two-Voice Tapping Setup\n\n**Left hand**: Plays bassline on strings 5-6, using only hammer-ons (no picking)\n**Right hand**: Plays melody on strings 1-3, using tapping\n\nNeither hand picks — the guitar is played entirely with hammers and taps.\n\n## Example — Two-Voice Pattern\n\n```\ne |--T5-h7-h8------T5-h7-h8---|\nB |-------------------T5-h8---|\nG |------------------------T9-|\nA |--5-h7-h9----5-h7-h9-------| (left hand bass)\nE |----------------------------|\n```\n\nLeft hand hammers a bass arpeggio; right hand taps a treble melody.\n\n## Why This Is Incredibly Difficult\n\nThe two voices are metrically independent — left hand may be in triplets while right hand plays 16th notes, or vice versa. Developing this independence requires starting extremely slowly with just 2-note sequences before adding complexity.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes Stanley Jordan's two-hand tapping approach different from standard tapping?",
+      "choices": [
+        "He uses a different type of guitar",
+        "Both hands operate as fully independent melodic voices simultaneously — like a pianist — rather than one hand supporting the other",
+        "He only taps on electric guitar",
+        "He invented standard single-string tapping"
+      ],
+      "answer": 1,
+      "explanation": "Stanley Jordan plays the guitar like a keyboard — both hands independently tap full melodic and harmonic content. The left hand plays bass lines and chord voicings; the right hand plays melody. Neither hand relies on the other for support, requiring extraordinary two-hand independence.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Building Two-Hand Independence\n\n## Stage 1: Basic Two-Voice Exercise\n\nLeft hand alone: hammer A-C-E on strings 5-4-3\nRight hand alone: tap G-B-D on strings 3-2-1\n\nCombine: left hand hammers bass arpeggio, right hand simultaneously taps treble arpeggio. \n\n## The Metric Independence Challenge\n\nTry this:\n- Left hand: groups of 3 (triplets)\n- Right hand: groups of 4 (16th notes)\n\nThis creates a 3-against-4 polyrhythm — the hands are in different metric cycles simultaneously.\n\n## The Pianist's Practice Method\n\nJazz pianists develop hand independence using a specific method:\n1. **One hand at a time**: Learn each voice separately until fully automatic\n2. **Slow combination**: Combine at 40% normal tempo\n3. **\"Ignore\" one hand**: Try to focus on one voice while the other plays automatically\n4. **Switch focus**: Focus on the other voice, let the first play automatically\n5. **True independence**: When you can focus on EITHER hand independently while the other runs\n\nApply this exact method to two-hand tapping.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the key test for true two-hand independence in tapping?",
+      "choices": [
+        "Both hands playing at the same volume",
+        "Being able to focus attention on either hand independently while the other continues automatically",
+        "Playing at high speed with both hands",
+        "Using the same notes in both hands"
+      ],
+      "answer": 1,
+      "explanation": "True independence means each hand operates autonomously — you can shift your mental focus to either hand while the other keeps playing without thinking about it. When both hands require conscious attention simultaneously, they're not truly independent yet.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "04-harmonic-fingerprints",
+  "title": "Harmonic Fingerprints",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Harmonic Fingerprints: Identifying Composers by Sound\n\nEvery great composer has harmonic habits so consistent and distinctive that you can often identify them by ear within a few bars. These harmonic fingerprints are the concrete manifestation of musical personality.\n\n### Beethoven's Harmonic Fingerprint\n\n- **Sforzando accents on unexpected chords**: A sudden loud attack on the 'wrong' beat or the 'wrong' harmony\n- **Subito piano after forte**: Sudden quiet after loud — not a gradual fade, an instant cut\n- **Neapolitan (bII) chords**: Beethoven uses the Neapolitan chord (Db in C minor) frequently for dramatic effect\n- **Long pedal points**: Sustained dominant notes under developing harmony\n- **Sudden key shifts to iii and VI**: Beethoven shifts to the mediant key dramatically (C major → E major)\n\n**Test**: Listen to the opening of Symphony No. 5 — the famous fate motif. Then listen to how Beethoven handles the second theme. The sudden quiet and the harmonic sidestep to Eb major are unmistakably Beethoven.\n\n### Debussy's Harmonic Fingerprint\n\n- **Parallel chords** (planing): Identical chord shapes moving in parallel\n- **Whole-tone scale passages**: All whole-step motion creating a dreamlike quality\n- **Non-resolution**: Chords appear and disappear without functional resolution\n- **Modal scales** (Phrygian, Lydian, Pentatonic): Exotic scales outside the major/minor system\n- **Pedal tones**: Static bass notes under shifting harmonies above\n\n### Radiohead's Harmonic Fingerprint\n\n- **Major chords followed by unrelated major/minor chords**: Chromatic mediant relationships (E major → C minor)\n- **Modal Dorian and Phrygian progressions**: Slow, dark, with b7 and b2 chords\n- **Static harmony with moving melody**: A chord held for 4+ bars while a complex melody floats above\n- **Microtonality in recordings**: Pitch bending and detuning as a harmonic technique\n\n### Developing Your Own Fingerprint\n\nHarmonic habits develop from:\n- The first music you deeply loved (it programs your 'normal')\n- Instruments you play (guitar players think in open tunings; pianists in stacked thirds)\n- Teachers and influences you absorbed\n- Problems you repeatedly tried to solve\n\nA useful exercise: analyze 10 pieces you have written and identify which chord progressions, voicings, or modes appear in multiple pieces. These recurrences are your fingerprint in formation.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'harmonic fingerprint' in the context of musical analysis?",
+      "choices": [
+        "A unique chord voicing that only one composer ever used",
+        "A pattern of recurring harmonic choices so distinctive and consistent that they can identify a composer by ear",
+        "The key signature used most frequently by a composer",
+        "The physical sensation of playing chords on an instrument"
+      ],
+      "answer": 1,
+      "explanation": "A harmonic fingerprint is a composer's set of habitual, recurring harmonic choices — specific progressions, voicings, modes, or chord types that appear consistently across their work. These habits are so distinctive that experienced listeners can often identify a composer by ear within a few bars. Beethoven's Neapolitan chords and subito dynamics; Debussy's parallel chords and whole-tone passages — these are fingerprints.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why does a musician's primary instrument affect their harmonic fingerprint?",
+      "choices": [
+        "Different instruments play in different keys, so the available chords differ",
+        "The physical layout of each instrument makes certain voicings and patterns naturally accessible — guitarists think in chord shapes and open strings; pianists in stacked thirds and voice leading",
+        "Only professional-grade instruments affect harmonic thinking",
+        "Instruments have no effect on harmonic choices — only music theory education does"
+      ],
+      "answer": 1,
+      "explanation": "Every instrument has a physical layout that makes certain musical patterns physically natural and others awkward. Guitarists naturally reach for open-string voicings and barre chord shapes — these create specific voicings. Pianists physically stack thirds in each hand, making tertian extensions natural. A bassist thinks horizontally (single notes, bass lines). These physical habits directly shape harmonic thinking and become part of each musician's fingerprint.",
+      "srs": true
+    }
+  ]
+}

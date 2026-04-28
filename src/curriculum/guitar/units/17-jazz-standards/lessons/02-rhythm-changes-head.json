@@ -1,0 +1,43 @@
+{
+  "id": "02-rhythm-changes-head",
+  "title": "Playing the Rhythm Changes Head",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Rhythm Changes Head\n\nIn jazz, \"the head\" means playing the composed melody of a standard (as opposed to improvising). Playing the head is usually how jazz tunes begin and end.\n\n## \"I Got Rhythm\" in Bb\n\nThe melody of \"I Got Rhythm\" is rhythmically angular and swing-driven:\n\n```\nBb: Bb Bb | D C Bb | Bb D C Bb | G . - |\nF  Eb D C | Bb . - - | ...\n```\n\nThe melody uses mostly chord tones — scale degrees 1, 3, and 5 of each chord — which is typical of Gershwin's melodic writing.\n\n## Head Arrangement Structure\n\nA typical jazz performance:\n1. **Head in** (play melody once through, 32 bars)\n2. **Solos** (any number of choruses, ad lib)\n3. **Head out** (play melody again to close)\n\nThe head is played by the lead instrument (guitar, trumpet, saxophone) while the rhythm section comps.\n\n## Playing the Head on Guitar\n\nFor a guitarist playing the head:\n- Use chord-melody to harmonize the melody\n- Or play single-note melody line above a comping guitarist\n- First option: richer, better for solo performance\n- Second option: standard in ensemble playing\n\n## Rhythm Changes Vocabulary\n\nThe A section uses a simple I-vi-ii-V turnaround:\n```\n| Bb6  | Gm7  | Cm7  | F7   |\n| Bb6  | Gm7  | Cm7  | F7   |\n```\n\nMaster this turnaround in Bb and you have the A section.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In jazz performance, what is 'the head'?",
+      "choices": [
+        "The first bar of a chorus",
+        "The composed melody of the standard, played at the beginning and end",
+        "The chord progression only",
+        "The drum intro"
+      ],
+      "answer": 1,
+      "explanation": "The head is the composed melody of the standard. A typical jazz performance follows the format: head in (melody) → improvised solos → head out (melody again). The head frames the performance.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Turnaround — I vi ii V\n\nThe turnaround is a 4-bar (or 2-bar) progression at the end of a section that \"turns\" back to the top.\n\n## Classic I-vi-ii-V in Bb:\n```\n| Bb6  Gm7  | Cm7  F7 |\n```\n\nThis progression is so fundamental that it appears in:\n- Rhythm Changes (the A section)\n- \"Heart and Soul\" (1938)\n- \"I Got You (I Feel Good)\" (James Brown)\n- \"Stand By Me\" (Ben E. King)\n- Hundreds of doo-wop songs\n\n## Turnaround Variations\n\nJazz musicians constantly vary the turnaround:\n\n### Tritone Substitution Version:\n```\n| Bb6  Gm7  | Cm7  B7 |  (F7 → B7 tritone sub)\n```\n\n### Backcycled Version:\n```\n| Bb  D7  | Gm  C7  | Cm  F7  | Bb  (|) |\n```\n\n### Chromatic Version:\n```\n| Bb  B7  | Bb  Bb7 | Eb  Edim | Bb  |\n```\n\n## Practice\n\nPlay the turnaround in Bb, 100 BPM, with a click on beats 2 and 4 (jazz feel). Comp the changes, then improvise over them.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What function does a 'turnaround' serve at the end of a jazz section?",
+      "choices": [
+        "It signals the end of the song",
+        "It leads the harmony back to the beginning (top) of the form",
+        "It introduces a new key",
+        "It provides a spot for the drummer to solo"
+      ],
+      "answer": 1,
+      "explanation": "A turnaround is a harmonic progression (typically I-vi-ii-V or a variation) at the end of a section that creates tension leading back to the top of the form. It's the musical equivalent of a comma — not a period.",
+      "srs": true
+    }
+  ]
+}

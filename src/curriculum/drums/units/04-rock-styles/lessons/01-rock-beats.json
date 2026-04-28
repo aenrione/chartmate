@@ -1,0 +1,20 @@
+{
+  "id": "01-rock-beats",
+  "title": "Essential Rock Beats",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Rock Beat Variations\n\nBeyond the basic beat, rock drumming uses 16th note hi-hat patterns:\n\n**16th note rock beat:**\n```\nHH: xxxxxxxxxxxx (16th notes)\nSn: ----x-------x---\nKD: x-------x-------\n```\n\nCount: **1 e + a 2 e + a 3 e + a 4 e + a**\n\nThe constant 16th notes on hi-hat create a driving, relentless energy. Open the hi-hat on beat 2 and 4 for a classic rock sound.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a 16th note rock beat, the hi-hat plays how many notes per beat?",
+      "choices": ["1", "2", "4", "8"],
+      "answer": 2,
+      "explanation": "16th notes = 4 per beat (counted 1-e-and-a). The hi-hat plays on all four 16th-note subdivisions of each beat.",
+      "srs": true
+    }
+  ]
+}

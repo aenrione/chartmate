@@ -1,0 +1,64 @@
+{
+  "id": "03-ties-and-dots",
+  "title": "Ties & Dotted Notes",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Ties: Connecting Notes Across Time\n\nA **tie** is a curved line connecting two noteheads of the **same pitch**. The rule: play the first note and **hold it through the duration of the second note without re-attacking**. Only one sound is produced, lasting the combined length of both notes.\n\n### Why Ties Exist\n\nTies solve two problems that notation would otherwise struggle with:\n\n1. **Spanning a bar line**: a note that begins on beat 4 but lasts into the next measure cannot be written as a single note crossing the bar line. A tie connects the note value before the bar to a note value after it.\n\n2. **Creating durations not covered by a single note value**: combining a quarter note and an eighth note with a tie gives you a three-eighth-note duration that has no single symbol in standard notation (this is also solved by dotted notes).\n\n### Ties in Practice: Counting\n\nWhen you see a tied note, count the second note's value but do not re-attack:\n\nExample: quarter note (beat 1) tied to a quarter note (beat 2) in 4/4\n> Count: **1 (hold) 3 4** — attack on 1, hold through 2, new notes on 3 and 4\n\n### Ties Across Bar Lines\n\nThis is one of the most important uses of ties. In the measure before a bar line:\n\n> Beat 4: quarter note **tied** to a quarter note on beat 1 of the next measure\n\nThe sustained note creates **rhythmic anticipation** — the note arrives one beat \"early,\" before the next measure officially begins. This is the foundation of syncopation.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Dotted Notes: Built-In Extension\n\n### The Dot Rule\n\nA **dot placed after a notehead adds half of that note's value** to its duration:\n\n| Note | Base value | + half | Total |\n|------|------------|--------|-------|\n| Dotted whole | 4 beats | + 2 | **6 beats** |\n| Dotted half | 2 beats | + 1 | **3 beats** |\n| Dotted quarter | 1 beat | + 1/2 | **1.5 beats** |\n| Dotted eighth | 1/2 beat | + 1/4 | **3/4 beat** |\n\nThe dotted half note is extremely common in 3/4 time — a single note filling an entire three-beat measure.\n\n### Double Dots\n\nA **double dot** adds half of the original value, plus half of the added dot:\n\n> Dotted-dotted quarter = 1 + 1/2 + 1/4 = **1.75 beats**\n\nDouble dots appear most often in Baroque and Classical music, especially in French overture style.\n\n### Dotted Notes in Compound Meter\n\nIn 6/8, the **dotted quarter note** is the primary beat unit — it equals three eighth notes. The time signature 6/8 has 6 eighth-note beats, organized as two dotted-quarter beats. Every measure of 6/8 contains exactly two dotted-quarter notes' worth of content.\n\n### Ties vs. Slurs: A Critical Distinction\n\nTies and slurs look almost identical — both are curved lines connecting noteheads. The difference:\n\n- **Tie**: connects **two notes of the same pitch**. Means hold, do not re-attack.\n- **Slur**: connects **two or more notes of different pitches**. Means play them smoothly (**legato**), without a break in sound, but each pitch is distinct.\n\nMisreading a slur as a tie (or vice versa) is a common notation mistake. Always check whether the connected noteheads are the same pitch or different pitches.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does a dot placed after a notehead do?",
+      "choices": [
+        "Doubles the note's duration",
+        "Adds half of the note's value to its duration",
+        "Indicates the note should be played staccato",
+        "Raises the pitch by a half step"
+      ],
+      "answer": 1,
+      "explanation": "A dot adds half of the note's own value to its duration. A dotted quarter note (normally 1 beat) gets an extra half beat, lasting 1.5 beats total.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How long does a dotted half note last in 4/4 time?",
+      "choices": ["2 beats", "2.5 beats", "3 beats", "4 beats"],
+      "answer": 2,
+      "explanation": "A half note lasts 2 beats. A dot adds half of that (1 beat). 2 + 1 = 3 beats total for a dotted half note.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the key difference between a tie and a slur?",
+      "choices": [
+        "A tie is used only in piano music; a slur is for all instruments",
+        "A tie connects notes of the same pitch (hold); a slur connects notes of different pitches (play smoothly)",
+        "A slur stops the sound; a tie lets it ring",
+        "Ties appear in 4/4 only; slurs appear in compound meter"
+      ],
+      "answer": 1,
+      "explanation": "A tie connects two noteheads of the same pitch — you hold the note through both values without re-attacking. A slur connects notes of different pitches and indicates legato (smooth, connected) playing. The visual symbol is almost identical, so always check the pitches.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "A tie is used to connect a note across a bar line. What rhythmic effect does this typically create?",
+      "choices": [
+        "Staccato phrasing",
+        "A natural accent on beat 1 of the next measure",
+        "Rhythmic anticipation — the note 'arrives early'",
+        "A rest on beat 1 of the next measure"
+      ],
+      "answer": 2,
+      "explanation": "When a tie spans a bar line, the note sounds before the bar line and is held through beat 1 of the next measure, suppressing the natural accent on that strong beat. This creates rhythmic anticipation — the note arrived early — which is the basis of syncopation.",
+      "srs": true
+    }
+  ]
+}

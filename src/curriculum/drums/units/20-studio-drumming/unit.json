@@ -1,0 +1,8 @@
+{
+  "id": "20-studio-drumming",
+  "title": "Studio Drumming",
+  "description": "Click track playing, reading charts, dynamic control, and session mindset",
+  "icon": "layers",
+  "prerequisites": ["16-funk-mastery", "07-advanced-technique"],
+  "lessons": ["01-click-track-mastery", "02-reading-drum-charts", "03-dynamic-control", "04-consistency-training", "05-session-mindset"]
+}

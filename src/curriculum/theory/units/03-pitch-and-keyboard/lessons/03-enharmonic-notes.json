@@ -1,0 +1,59 @@
+{
+  "id": "03-enharmonic-notes",
+  "title": "Enharmonic Equivalents",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Enharmonic Equivalents: Same Sound, Different Name\n\n**Enharmonic equivalents** are notes that sound identical — occupy the same physical key on the piano or the same fret on the guitar — but are **spelled differently**. The sound is the same; the name and notation context differ.\n\n### The Complete Enharmonic Table\n\n| Sharp spelling | = | Flat spelling |\n|----------------|---|---------------|\n| C# | = | Db |\n| D# | = | Eb |\n| E# | = | F |\n| F# | = | Gb |\n| G# | = | Ab |\n| A# | = | Bb |\n| B# | = | C |\n\nAnd in reverse:\n| Flat spelling | = | Sharp spelling |\n|---------------|---|----------------|\n| Cb | = | B |\n| Fb | = | E |\n\n### Why Do Enharmonic Spellings Exist?\n\nIn an equal-tempered tuning system (the standard for modern keyboards and fretted instruments), C# and Db are the same frequency. So why have two names?\n\nThe answer is **function**: a note's name should reflect its **role in the harmony**. When you are in **G major** (one sharp: F#), you write F#, not Gb. When you are in **Db major** (five flats), you write Db, not C#. The spelling communicates the note's relationship to the tonal center and to the other notes in the key.\n\n### A Practical Example\n\nImagine you're building a C major scale starting from C:\n> C — D — E — F — G — A — B — C\n\nNow build an A major scale starting from A:\n> A — B — C# — D — E — F# — G# — A\n\nYou write C#, not Db, because C is the third scale degree of A major. Writing Db would skip the letter C entirely, giving you: A — B — Db — D (two D's and no C). That is incorrect notation, even if the piano keys are identical.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Enharmonic Keys and the Circle of Fifths\n\n### Enharmonic Key Signatures\n\nEntire keys can be enharmonic:\n- **B major** (5 sharps) = **Cb major** (7 flats) — same 12 keys, different spelling\n- **F# major** (6 sharps) = **Gb major** (6 flats) — same 12 keys, different spelling\n- **C# major** (7 sharps) = **Db major** (5 flats) — same 12 keys, different spelling\n\nComposers choose between them based on which requires fewer accidentals (fewer ledger lines, easier to read) or which better reflects the musical context. Db major (5 flats) is far more common in print than C# major (7 sharps).\n\n### Enharmonic Equivalents and the Guitar\n\nGuitarists encounter enharmonic equivalents constantly because tablature obscures them entirely — tab shows only fret numbers, not pitch names. This is one reason many guitarists struggle to communicate with other musicians who read notation. Saying \"I'm playing that thing on fret 4 of the D string\" is not the same as knowing you are playing F# (or Gb — and which one matters, depending on the key of the song).\n\n### When Enharmonic Spelling Matters Most\n\n1. **Writing lead sheets and charts**: correct spelling ensures the chord symbols make sense (F# chord vs. Gb chord look the same on guitar, but mean different things in notation)\n2. **Communicating with horn players**: horn players read transposing instruments and need correct spellings to transpose accurately\n3. **Describing chord function**: the diminished seventh chord relies on enharmonic equivalents to resolve in multiple directions — each note can be respelled as a different function\n4. **Sight-reading**: recognizing that Ab and G# are the same pitch but may appear in different contexts stops you from being confused when you see the same sound notated two different ways",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "C# and Db are enharmonic equivalents. When would you use Db instead of C#?",
+      "choices": [
+        "When the note is in a high register",
+        "When you are in a flat key (like Db major or Bb major)",
+        "When the tempo is slow",
+        "When playing guitar rather than piano"
+      ],
+      "answer": 1,
+      "explanation": "You use the spelling that fits the key you're in. In flat keys like Db major or Bb major, you write Db. In sharp keys like B major or E major, you write C#. The spelling communicates the note's harmonic function.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "If you are building an A major scale and need the third scale degree, you write _____ not Db, even though they sound identical.",
+      "choices": ["B#", "C#", "D", "Cb"],
+      "answer": 1,
+      "explanation": "The scale degrees of A major must use each letter name exactly once: A-B-C#-D-E-F#-G#-A. The third degree must be 'some kind of C' — and because it is raised, it is C#, not Db (which would give you two D's and skip C entirely).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "F# major and Gb major are enharmonic key signatures. How many sharps does F# major have?",
+      "choices": ["5", "6", "7", "4"],
+      "answer": 1,
+      "explanation": "F# major has 6 sharps (F# C# G# D# A# E#). Gb major has 6 flats (Bb Eb Ab Db Gb Cb). Both key signatures produce scales using the same 12 pitches, spelled differently.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does it mean when two notes are enharmonic equivalents?",
+      "choices": [
+        "They are the same letter name but in different octaves",
+        "They sound the same but are spelled differently",
+        "They are one half step apart",
+        "They are always the same note regardless of key"
+      ],
+      "answer": 1,
+      "explanation": "Enharmonic equivalents are notes that sound identical (same frequency, same key on the piano) but have different names and spellings. The correct spelling is determined by the harmonic and key context.",
+      "srs": true
+    }
+  ]
+}

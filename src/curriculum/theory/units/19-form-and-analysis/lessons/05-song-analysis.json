@@ -1,0 +1,38 @@
+{
+  "id": "05-song-analysis",
+  "title": "Song Form Analysis",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Analyzing Pop Song Form\n\nPop and rock songs use a vocabulary of formal sections that have developed since the 1950s. Understanding these sections allows you to analyze any song structurally.\n\n### The Core Sections\n\n**Verse**: The main narrative section. Lyrics change each verse; music is consistent. Establishes the song's story/emotion. Usually ends with a pre-chorus or directly into the chorus.\n\n**Chorus** (or Refrain): The emotional climax. Lyrics are the same every time (the 'hook'). Typically louder, higher, and more rhythmically active than the verse. Contains the song's title.\n\n**Pre-chorus** (or 'Lift' or 'Channel'): Optional section between verse and chorus. Builds tension before the chorus release. Often raises energy through harmonic instability.\n\n**Bridge**: A contrasting section, typically appearing once in the song (after the second chorus). Provides harmonic and lyrical contrast before a final chorus return.\n\n**Intro/Outro**: Framing sections. The intro establishes mood; the outro closes.\n\n### Standard Pop Song Structures\n\n**Verse-Chorus (VC)**: Simple, repeated. Verse → Chorus → Verse → Chorus → Chorus\n\n**Verse-Chorus with Bridge (VCVCBC)**: Most common. Verse → Chorus → Verse → Chorus → Bridge → Chorus\n\n**AABA (32-bar)**: Verse=A; Bridge=B; each 8 bars. Classic Tin Pan Alley standard.\n\n**Through-composed**: No repeating sections; each section is new. Rare but used for dramatic effect (e.g., 'Bohemian Rhapsody' sections).\n\n### Case Study: 'Hey Jude' (Beatles, 1968)\n\n**Form**: Extended verse-chorus with 'na-na' outro\n\n- **Verse 1**: F major (slow, sparse — solo piano+voice)\n- **Verse 2**: Same music, new lyrics\n- **Chorus** (bridge by Beatles' own terminology): 'And anytime you feel the pain...'\n- **Verse 3**: Continues narrative\n- **Final chorus + Bridge** — 'So let it out and let it in'\n- **Outro coda** ('na-na-na'): 4+ minutes of repeated coda section — unprecedented at the time (7:11 total length)\n\nThe unprecedented length of the 'na-na' coda made 'Hey Jude' a statement: songs did not need to be 3 minutes long. The repetition becomes hypnotic and participatory.\n\n### Analyzing Harmony in Song Form\n\nFor each section, note:\n1. **Key**: Does it stay in the home key or modulate?\n2. **Chord progression**: What is the repeating progression of this section?\n3. **Harmonic rhythm**: How often do chords change (fast in chorus, slow in verse = more drive at chorus)\n4. **Borrowed chords**: Any modal mixture?\n5. **Cadences**: How does each section end?",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What distinguishes a 'chorus' from a 'verse' in pop song form?",
+      "choices": [
+        "The chorus is always in a different key than the verse",
+        "The chorus has changing lyrics each repetition; the verse has the same lyrics",
+        "The chorus has the same lyrics each time it appears (the hook) and is typically the emotional high point; the verse carries the changing narrative",
+        "The chorus is always louder; the verse is always quieter"
+      ],
+      "answer": 2,
+      "explanation": "The chorus uses the same lyrics every time (that's what makes it the 'hook') and typically represents the song's emotional peak — higher register, fuller arrangement, more energy. The verse carries the changing narrative (Verse 1 sets up, Verse 2 develops). This distinction between fixed-lyric chorus and changing-lyric verse is the fundamental distinction in pop song form.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What function does a 'pre-chorus' serve in the song structure?",
+      "choices": [
+        "It introduces new melody material before the verse",
+        "It provides harmonic and energy buildup between the verse and chorus, increasing anticipation",
+        "It is a section where the chorus melody is played without lyrics",
+        "It summarizes the story of all previous verses"
+      ],
+      "answer": 1,
+      "explanation": "The pre-chorus (also called 'lift,' 'rise,' or 'channel') builds energy and anticipation between the verse and chorus. It often uses harmonically unstable material — a half cadence, a secondary dominant, or a simple II chord — that makes the arrival of the chorus feel earned and exciting. Without it, the jump from quiet verse to loud chorus can feel abrupt; the pre-chorus smooths and energizes that transition.",
+      "srs": true
+    }
+  ]
+}

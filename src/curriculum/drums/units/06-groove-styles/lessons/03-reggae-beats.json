@@ -1,0 +1,39 @@
+{
+  "id": "03-reggae-beats",
+  "title": "Reggae & Latin Grooves",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Reggae Drumming\n\nReggae's defining characteristic: the kick and snare flip the normal rock pattern.\n\nIn reggae's **one-drop** pattern, beats 1 and 2 are mostly silent — the drop lands on beat 3 where kick and snare hit together. This creates the hypnotic, laid-back reggae feel.\n\nThe hi-hat or ride plays steady 8th notes to hold time, but the entire rhythmic gravity shifts to beat 3 rather than beats 1 and 3 as in rock.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Reggae One-Drop Pattern",
+      "description": "The one-drop: kick and snare land together on beat 3 only. Beats 1 and 2 are wide open. Hi-hat carries steady 8th notes. The emptiness on beats 1 and 2 is what creates reggae's floating, hypnotic feel.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 75,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "xxxxxxxx"},
+        {"name": "Snare",  "pattern": "----x---"},
+        {"name": "Kick",   "pattern": "----x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Clave\n\nLatin music is built on the **clave** — a 2-bar rhythmic pattern that everything else locks into.\n\n**Son clave (3-2):**  \nBar 1: 3 hits (beats 1, 2-and, 4)  \nBar 2: 2 hits (beats 2, 3)\n\nEvery Latin style — mambo, samba, bossa nova — is organized around the clave. The drummer must feel it even if not explicitly playing it. Playing 'with' or 'against' the clave changes the entire character of the music.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In reggae's one-drop pattern, where does the kick drum typically land?",
+      "choices": ["Beat 1 only", "Beats 1 and 3", "Beat 3 (together with the snare)", "Every 8th note"],
+      "answer": 2,
+      "explanation": "In the one-drop, the kick hits on beat 3 (simultaneously with the snare), and beats 1 and 2 are mostly empty. This unusual placement creates reggae's distinctive loping, hypnotic feel.",
+      "srs": true
+    }
+  ]
+}

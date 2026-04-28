@@ -1,0 +1,20 @@
+{
+  "id": "05-chart-writing",
+  "title": "Writing Drum Charts",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Writing Readable Drum Charts\n\nWriting clear drum charts is a professional skill — a well-written chart allows any competent drummer to understand the song's structure and key moments without being fully notated.\n\n**Essential elements of a drum chart:**\n1. **Title, artist, and key information** at the top (tempo, time signature, any special instructions)\n2. **Form map** (often a list or grid of section names and bar counts)\n3. **Groove indications** for each section ('driving 4 on the floor,' 'half-time,' 'brushes,' etc.)\n4. **Written hits** — any specific accented moments where the whole band plays together\n5. **Fill indications** — location and length of fills\n6. **Dynamics** — where the level changes\n7. **Repeat signs** where sections repeat\n\n**Shorthand notation:**\n- '/' = repeat the previous bar\n- '%' = repeat the previous bar (alternate symbol)\n- 'x8' after a section = play that section 8 times\n- 'D.S. al Coda' = go back to the segno sign, then take the coda\n- 'Fine' = the end\n\n**The test of a good chart:** Give it to a competent drummer who's never heard the song. Can they perform a convincing version based on the chart alone? If yes, the chart is doing its job.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does 'x8' mean in a drum chart?",
+      "choices": ["Play this note with 8x the normal velocity", "Repeat this section 8 times", "Use 8th note groove throughout", "Add 8 drums to the standard kit"],
+      "answer": 1,
+      "explanation": "In chart notation, 'x8' (or '×8') after a section marker or repeat sign means play that section 8 times. This shorthand eliminates the need to write out 8 identical bars, keeping charts concise and easy to read at a glance.",
+      "srs": true
+    }
+  ]
+}

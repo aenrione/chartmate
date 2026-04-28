@@ -1,0 +1,35 @@
+{
+  "id": "04-ballad-brushwork",
+  "title": "Ballad Brushwork",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Playing a Jazz Ballad\n\nA jazz ballad (40-70 BPM) with brushes is one of the most exposed, demanding contexts in drumming. Every nuance is audible. There is nowhere to hide.\n\n**The ballad drummer's priorities:**\n1. **Timekeeping without metronome feel**: The tempo must be absolutely secure, but it must breathe and flex with the soloist. This is the paradox of ballad drumming — perfect time that sounds perfectly free.\n\n2. **Dynamic restraint**: Most ballad drumming sits at ppp-pp. The instinct to add more must constantly be checked. The best moment in a ballad is often complete silence.\n\n3. **Tonal variety**: With sticks, most notes sound similar. With brushes, you have a vast palette — open sweeps, press sounds, pointed taps, cymbal touch-and-lift, hi-hat swell. Use this vocabulary thoughtfully.\n\n4. **Supporting the singer/soloist**: The brushwork should feel like a cushion or cloud beneath the melody — present, supportive, warm, but never distracting.\n\n**Classic ballad recordings to study:**\n- Bill Evans Trio — 'Peace Piece' (Paul Motian, brushes)\n- Miles Davis — 'It Never Entered My Mind' (Philly Joe Jones)\n- Chet Baker — 'Almost Blue' (any version with sensitive brushwork)",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Slow Ballad Brush Pattern",
+      "description": "Very slow (50 BPM), gentle brush pattern: ride plays the swing pattern lightly, hi-hat foot on 2 and 4, minimal kick and snare. The pattern skeleton — actual ballad playing is far more fluid and textural than any grid can show.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 50,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-xx-xx-"},
+        {"name": "Hi-Hat", "pattern": "--x---x-"},
+        {"name": "Snare",  "pattern": "--------"},
+        {"name": "Kick",   "pattern": "x-------"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the fundamental paradox of jazz ballad drumming?",
+      "choices": ["Playing very loudly while maintaining a soft sound", "Maintaining perfect time security while sounding completely free and breathing with the soloist", "Playing brushes that sound like sticks", "Using complex fills in a slow tempo context"],
+      "answer": 1,
+      "explanation": "The ballad drummer must hold perfect, unwavering tempo security internally while making the performance sound free, flexible, and fully responsive to the soloist's phrasing. The time is there — it just doesn't sound mechanical.",
+      "srs": true
+    }
+  ]
+}

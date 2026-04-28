@@ -1,0 +1,43 @@
+{
+  "id": "03-tarrega-lagrima",
+  "title": "Tárrega: Lágrima",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Francisco Tárrega — The Father of Modern Classical Guitar\n\n**Francisco Tárrega** (1852–1909) transformed the guitar from a parlor instrument into a concert vehicle. He:\n- Developed modern right-hand technique (still standard today)\n- Transcribed Bach, Beethoven, Chopin for guitar\n- Composed defining pieces: \"Recuerdos de la Alhambra,\" \"Capricho Árabe,\" \"Lágrima\"\n- Taught the teachers who taught the 20th century\n\n## Lágrima (Teardrop) — Musical Overview\n\n\"Lágrima\" (1882) is one of Tárrega's most beloved short pieces. It's 32 bars in two contrasting sections:\n\n### Section A: E major (bright, hopeful)\n- Key: E major\n- Character: Tender, intimate, lyrical\n- Texture: Melody on string 1, arpeggiated accompaniment\n\n### Section B: E minor (dark, yearning)\n- Key: E minor (relative minor)\n- Character: Melancholic, deeper — this is the \"tear\"\n- Texture: Similar but harmonically richer\n\n## Why This Piece Is Essential\n\nLágrima teaches:\n1. **Tonal balance**: melody vs. accompaniment\n2. **Position shifting**: clean and silent\n3. **Contrast**: major vs. minor sections\n4. **Musical phrasing**: long melodic lines\n5. **Nuance**: dynamics within a small-scale piece",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the structural and emotional contrast in Tárrega's 'Lágrima'?",
+      "choices": [
+        "Fast section vs. slow section",
+        "E major section (bright, hopeful) contrasting with E minor section (melancholic, the 'tear')",
+        "High register vs. low register",
+        "Loud section vs. soft section"
+      ],
+      "answer": 1,
+      "explanation": "Lágrima is built on the contrast between an E major section (tender, hopeful) and an E minor section (melancholic — the 'teardrop' of the title). This major/minor contrast is the emotional core of the piece.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Learning Lágrima — Section A\n\n## The Opening (E major, bars 1-16)\n\n```\ne |--0------2------0------0------|\nB |---1--1---1--1---1--0---0--0--|\nG |--0------2------0------0------|\nD |---2--2---2--2-----------2--2-|\nA |--2------0---------0----------|\nE |------------------------------|\n   E      F#m/E    E  B7  E\n   (simplified representation)\n```\n\n## Key Left-Hand Moments\n\n1. **Bars 1-4**: All in first position, accessible\n2. **Bars 9-12**: Shift to second position for C# and higher notes\n3. **Bar 15-16**: Return to first position with a half barré\n\n## The Right-Hand Character\n\nTárrega specified legato (connected) for the melody and delicate for the accompaniment:\n- Melody: rest stroke for the top notes (string 1 primarily)\n- Accompaniment: free stroke, very light\n- The accompaniment should be barely audible — the melody sings alone\n\n## Fingering Recommendation\n\nFor the melody notes on string 1, use alternating I-M (rest stroke). For the sustained accompaniment chords, use A for string 1 and free stroke for strings 2-3.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Who did Francisco Tárrega primarily influence, and why does that matter?",
+      "choices": [
+        "He influenced Fernando Sor and Carulli",
+        "He taught teachers who shaped 20th-century classical guitar — including the lineage leading to Segovia, Bream, and Williams",
+        "He only influenced flamenco guitarists",
+        "He had no direct influence — his music was discovered after his death"
+      ],
+      "answer": 1,
+      "explanation": "Tárrega's students included Emilio Pujol and Miguel Llobet, who in turn influenced Andrés Segovia. Segovia then taught the next generation (John Williams, Oscar Ghiglia, etc.). Tárrega's technical and musical ideals flow directly through this lineage into modern classical guitar.",
+      "srs": true
+    }
+  ]
+}

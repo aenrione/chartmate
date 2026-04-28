@@ -1,0 +1,39 @@
+{
+  "id": "02-snare-and-hihat",
+  "title": "Snare & Hi-Hat",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Drum Kit Basics\n\nA standard drum kit has these key components:\n\n- **Bass drum (kick)** — played with right foot pedal, low 'thud'\n- **Snare drum** — center piece, played with sticks, sharp 'crack'\n- **Hi-hat** — two cymbals on a stand, played with sticks and left foot pedal\n- **Crash cymbal** — accents, start of phrases\n- **Ride cymbal** — sustained rhythm, jazz and rock patterns\n- **Tom-toms** — melodic fills and accents",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Backbeat\n\nThe **backbeat** is the snare on beats 2 and 4 — it's the defining sound of rock, pop, and soul.\n\nWhen someone claps along to a pop song, they're clapping the backbeat.\n\nThe hi-hat plays on every 8th note (8 times per bar). The kick anchors beats 1 and 3. Together these three voices make the fundamental groove.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "The Backbeat",
+      "description": "The foundational rock beat: hi-hat on every 8th note, snare on beats 2 and 4, kick on beats 1 and 3. This pattern underlies thousands of songs.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 80,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "xxxxxxxx"},
+        {"name": "Snare",  "pattern": "--x---x-"},
+        {"name": "Kick",   "pattern": "x---x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "On which beats does the snare fall in a standard backbeat?",
+      "choices": ["Beats 1 and 3", "Beats 2 and 4", "Every beat", "Every 8th note"],
+      "answer": 1,
+      "explanation": "The backbeat is snare on beats 2 and 4. This is the defining rhythmic feel of rock, pop, and most modern music.",
+      "srs": true
+    }
+  ]
+}

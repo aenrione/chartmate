@@ -1,0 +1,20 @@
+{
+  "id": "03-metal-basics",
+  "title": "Metal Drumming Basics",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Metal Drumming\n\nMetal drumming is characterized by:\n- **Fast tempos** (160–250+ BPM)\n- **Double bass** — two kick drums or a double pedal\n- **Heavy snare** — often on every beat or 16th notes\n- **Blast beats** — hi-hat or ride on every 16th, snare on every 8th\n\n**The half-time heavy beat (beginner metal):**\n```\nCr: x-------x-------\nSn: --------x-------\nKD: x-x-x-x-x-x-x-x  (16th notes on kick)\n```",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a blast beat?",
+      "choices": ["A fill using only floor toms", "Rapid alternating hits on snare and kick at maximum speed", "A pattern with 16th notes on cymbal and 8th notes on snare", "A technique using two snare drums"],
+      "answer": 2,
+      "explanation": "A blast beat features extremely fast alternating snare and bass drum hits (or 16th note cymbal with 8th note snare), played at maximum speed. It's the defining rhythmic pattern of death metal.",
+      "srs": true
+    }
+  ]
+}

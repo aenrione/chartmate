@@ -1,0 +1,69 @@
+{
+  "id": "02-sharp-keys",
+  "title": "Sharp Key Signatures",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Sharp Key Signatures\n\n### The Order of Sharps\n\nSharps do not appear in key signatures randomly — they are always added in the same fixed order:\n\n**F# — C# — G# — D# — A# — E# — B#**\n\nThe classic mnemonic is: **Father Charles Goes Down And Ends Battle** (or some prefer *Fat Cats Go Down Alleys Eating Birds*). Whatever phrase you use, the initials **F C G D A E B** must become automatic. Each major key signature is simply the first *n* sharps from this sequence.\n\n### Reading the Sharp Keys\n\n| Key | Sharps | Key Signature |\n|-----|--------|---------------|\n| G major | 1 | F# |\n| D major | 2 | F#, C# |\n| A major | 3 | F#, C#, G# |\n| E major | 4 | F#, C#, G#, D# |\n| B major | 5 | F#, C#, G#, D#, A# |\n| F# major | 6 | F#, C#, G#, D#, A#, E# |\n| C# major | 7 | all seven sharps |\n\n### The Golden Rule: One Half Step Above the Last Sharp\n\nTo identify the major key from a sharp key signature, look at the **last (rightmost) sharp** and go **one half step higher**. That note is the tonic — the key name.\n\n- Last sharp is F#? One half step up = G. You are in **G major**.\n- Last sharp is C#? One half step up = D. You are in **D major**.\n- Last sharp is G#? One half step up = A. You are in **A major**.\n- Last sharp is D#? One half step up = E. You are in **E major**.\n\nThis rule works for all seven sharp keys.\n\n### Why This Rule Works\n\nThe last sharp added is always the **7th degree (leading tone)** of the new key. The leading tone is one half step below the tonic — so going one half step above the leading tone lands you directly on the tonic. The rule is not a coincidence; it is baked into the structure of the major scale itself.\n\n### Visualizing on the Staff\n\nEach sharp occupies a specific line or space on the staff, and they always appear in the same positions. In the treble clef, the order of positions is: F# on the top line (5th line), C# in the third space, G# above the staff (ledger line area), D# on the 4th line, A# on the 2nd space, E# on the 4th space, B# on the 3rd line. Repetition and score reading will burn these positions into visual memory.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## The Circle of Fifths: Sharp Side\n\n### Moving by Perfect Fifths\n\nLook at the sequence of sharp key centers: C → G → D → A → E → B → F# → C#. Each key is a **perfect fifth above** the previous one. This is not a coincidence — it is the architecture of the **circle of fifths**, the most important map in Western music theory.\n\nEach time you go up a perfect fifth, you add exactly one new sharp. The new sharp is the 7th scale degree of the new key, and it is always one note higher than the previous last sharp.\n\n### The Pattern in the Sharps Themselves\n\nNot only do the key centers move by fifths — the sharps themselves follow the same interval: F# → C# → G# → D# → A# → E# → B#. Each successive sharp is a perfect fifth above the previous one (F to C is a fifth; C to G is a fifth; and so on). This is why the order of sharps is the same as the order of keys: the sharps *are* the circle of fifths, just starting from F.\n\n### Practical Shortcuts\n\nFor very fast identification in performance or sight-reading:\n- **One sharp = G major** (the most common sharp key in folk, bluegrass, and many songs)\n- **Two sharps = D major** (extremely common in rock, country, and classical)\n- **Three sharps = A major** (common in pop and rock)\n- **Four sharps = E major** (very common in guitar-based music)\n\nWith time, you will recognize the visual \"shape\" of each key signature at a glance, before consciously counting sharps.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the correct order in which sharps are added to key signatures?",
+      "choices": [
+        "B, E, A, D, G, C, F",
+        "F, C, G, D, A, E, B",
+        "C, G, D, A, E, B, F",
+        "G, D, A, E, B, F, C"
+      ],
+      "answer": 1,
+      "explanation": "Sharps are always added in the order F# C# G# D# A# E# B# — remembered as 'Father Charles Goes Down And Ends Battle.' This order is fixed and universal across all sharp key signatures. Each new sharp adds to the end of the sequence.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "A key signature has four sharps: F#, C#, G#, D#. What major key is this?",
+      "choices": [
+        "A major",
+        "B major",
+        "D major",
+        "E major"
+      ],
+      "answer": 3,
+      "explanation": "With four sharps, the last (rightmost) sharp is D#. Go one half step above D# and you reach E. The key is E major. The rule: the last sharp is always the leading tone (7th degree) of the key, which is one half step below the tonic.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is the last sharp in a key signature always the leading tone of that key?",
+      "choices": [
+        "It is an arbitrary convention established in the Baroque era",
+        "Because each new key in the sharp direction is a perfect fifth higher, and the 7th degree of the new scale is always the newly added sharp",
+        "Because the leading tone is the easiest note to identify visually",
+        "Because the last sharp is always F#, which is the leading tone of G"
+      ],
+      "answer": 1,
+      "explanation": "Moving up by a perfect fifth to reach a new sharp key means the new scale's 7th degree (leading tone) falls exactly one half step below the new tonic. That 7th degree is precisely the note that needs to be raised from the previous key — so it becomes the new sharp. This structural relationship means the last sharp is always the leading tone.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many sharps are in the key of B major?",
+      "choices": [
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "answer": 2,
+      "explanation": "B major has five sharps: F#, C#, G#, D#, A#. Counting up the sharp keys in order — G(1), D(2), A(3), E(4), B(5) — confirms this. You can also verify using the rule: the 5th sharp is A#, and one half step above A# is B.",
+      "srs": true
+    }
+  ]
+}

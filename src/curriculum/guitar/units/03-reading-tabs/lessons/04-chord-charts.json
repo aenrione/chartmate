@@ -1,0 +1,25 @@
+{
+  "id": "04-chord-charts",
+  "title": "Chord Charts",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Reading Chord Charts\n\nA chord chart shows a song's structure with chord symbols above the lyrics.\n\n```\n[Verse]\nG              D\nSomething told me it was over\nEm             C\nWhen I saw you and her talking\n```\n\nSwitch to the new chord when you reach that word in the lyric.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Nashville Number System\n\nProfessional musicians often use **numbers** instead of chord names:\n\n- In the key of G: G=**1**, Am=**2m**, Bm=**3m**, C=**4**, D=**5**, Em=**6m**\n\nA chart that says **1–5–6m–4** works in ANY key just by shifting your starting point.\n\nThis is why capos are so powerful — same numbers, different key.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the key of G, which chord is the IV (4) chord?",
+      "choices": ["D major", "C major", "A minor", "E minor"],
+      "answer": 1,
+      "explanation": "Counting up from G: G(1) A(2) B(3) C(4). So C major is the IV chord in the key of G.",
+      "srs": true
+    }
+  ]
+}

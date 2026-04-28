@@ -1,0 +1,32 @@
+{
+  "id": "04-stick-heights",
+  "title": "Stick Heights & Dynamics",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Stick Height = Dynamic Level\n\nThe height of the stick before impact directly controls how loud the note will be. Higher stick = more velocity = louder sound.\n\n**The five dynamic zones:**\n1. **ppp (touch):** 1-2 inch stick height — barely touching the surface, ghost notes\n2. **pp-p (soft):** 3-5 inch height — light strokes, inner voices, brushwork feel with sticks\n3. **mp-mf (medium):** 6-9 inch height — standard conversational playing\n4. **f (loud):** 10-14 inch height — driving rock/pop playing\n5. **ff (fortissimo):** Full arm height — accents, crashes, maximum volume\n\n**The mistake:** Using high stick heights for everything. A drummer who plays everything loudly has no dynamic range — they can't shape phrases, support verses, or make the chorus feel bigger.\n\n**The exercise:** Practice a single stroke roll where you crescendo from ppp to ff over 32 beats, then decrescendo back. The stick height should visibly increase and decrease like a wave.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Ghost Notes vs. Accents on Snare",
+      "description": "Alternating ghost notes (o, 1 inch height) with full accents (X, full arm height). The extreme contrast between the two dynamic levels is the goal. In practice, this translates to ghost-note funk playing and accent patterns.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 80,
+      "tracks": [
+        {"name": "Snare", "pattern": "o-o-X-o-o-o-X-o-"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What physical factor most directly controls the dynamic level of a drum stroke?",
+      "choices": ["The force applied at the moment of impact only", "The height of the stick before impact (determines velocity)", "The angle of the wrist", "The type of stick being used"],
+      "answer": 1,
+      "explanation": "Stick height before impact determines the velocity of the beater at the moment of contact. More height = more gravitational potential energy = higher velocity = louder sound. The height is the primary dynamic control, not extra muscular effort at impact.",
+      "srs": true
+    }
+  ]
+}

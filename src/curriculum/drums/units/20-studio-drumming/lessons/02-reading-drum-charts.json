@@ -1,0 +1,20 @@
+{
+  "id": "02-reading-drum-charts",
+  "title": "Reading Drum Charts",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Reading Charts: The Professional Standard\n\nA drum chart is a shorthand notation used in professional recording and live performance contexts. Unlike fully-notated drum parts, charts use a combination of roadmap symbols, written hits, and shorthand groove indications.\n\n**Essential chart symbols:**\n- **Repeat sign (%% or slash marks)**: Repeat the last bar or groove\n- **Two-bar repeat (𝄎)**: Repeat the last two bars\n- **Section labels**: Intro, Verse, Pre-Chorus, Chorus, Bridge, Outro\n- **Written hits**: Specific accents where all instruments hit together\n- **Hit notation**: 'Kick' or 'K' under a note = kick hit; 'Sn' = snare hit\n- **Fills**: Written out rhythmically, or indicated with 'Fill' over an area\n- **Dynamics**: pp, p, mp, mf, f, ff plus crescendo/diminuendo hairpins\n- **Tempo indications**: BPM number, metronome marking\n\n**Reading strategy:**\n1. Before playing, scan the entire chart for form (how many times does the verse repeat? Where is the bridge?)\n2. Identify all written hits and memorize them\n3. Identify tempo changes, time signature changes, and dynamic shifts\n4. Play through at reduced tempo to test chart comprehension before full tempo\n\n**Nashville Number System:** In Nashville session work, charts often use numbers instead of chord names. The drummer reads rhythmic information alongside the number chart to understand where hits fall within the harmony.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the first thing a professional drummer should do when receiving a new chart?",
+      "choices": ["Play through it immediately at full speed", "Scan the entire chart for form — verse count, section order, tempo changes, written hits — before playing", "Look only at the first page", "Memorize every note individually"],
+      "answer": 1,
+      "explanation": "Before playing, scanning the complete chart gives you a mental map of the song: how many verses, where the bridge is, any tempo or time signature changes, and all written hits. Attempting to sight-read page by page without knowing the form often leads to missed hits or wrong section lengths.",
+      "srs": true
+    }
+  ]
+}

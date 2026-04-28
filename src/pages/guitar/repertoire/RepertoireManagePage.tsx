@@ -16,6 +16,7 @@ const ITEM_TYPE_LABELS: Record<ItemType, string> = {
   song_section: 'Section',
   composition: 'Composition',
   exercise: 'Exercise',
+  theory: 'Theory',
 };
 
 const ITEM_TYPE_COLORS: Record<ItemType, string> = {
@@ -23,6 +24,7 @@ const ITEM_TYPE_COLORS: Record<ItemType, string> = {
   song_section: 'bg-purple-500/20 text-purple-400',
   composition: 'bg-emerald-500/20 text-emerald-400',
   exercise: 'bg-amber-500/20 text-amber-400',
+  theory: 'bg-violet-500/20 text-violet-400',
 };
 
 export default function RepertoireManagePage() {
@@ -131,7 +133,10 @@ export default function RepertoireManagePage() {
               const isDueToday = item.nextReviewDate === today;
               return (
                 <div key={item.id} className="flex items-center px-6 py-3 gap-4 hover:bg-surface-container/50 group">
-                  <div className="flex-1 min-w-0">
+                  <Link
+                    to={`/guitar/repertoire/session?item=${item.id}`}
+                    className="flex-1 min-w-0 cursor-pointer"
+                  >
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-medium text-on-surface truncate">{item.title}</p>
                       <span className={cn(
@@ -144,7 +149,7 @@ export default function RepertoireManagePage() {
                     {item.artist && (
                       <p className="text-xs text-on-surface-variant mt-0.5">{item.artist}</p>
                     )}
-                  </div>
+                  </Link>
                   <div className="text-right text-xs shrink-0 hidden sm:block">
                     <p className={cn(
                       'font-medium',

@@ -1,0 +1,45 @@
+{
+  "id": "04-dadgad-tuning",
+  "title": "DADGAD Tuning",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# DADGAD — Celtic Guitar's Open Secret\n\nDADGAD tuning (D-A-D-G-A-D from low to high) was popularized by **Davy Graham** in the 1960s after he heard Moroccan Gnawa music in Marrakech. It became the standard tuning for Celtic and folk fingerstyle.\n\n## How to Tune to DADGAD\n\nFrom standard tuning (EADGBe):\n- String 6 (E): tune DOWN a whole step → **D**\n- String 5 (A): stays the same → **A**\n- String 4 (D): stays the same → **D**\n- String 3 (G): stays the same → **G**\n- String 2 (B): tune DOWN a whole step → **A**\n- String 1 (E): tune DOWN a whole step → **D**\n\n## Why DADGAD Works So Well\n\n1. **Open strings form Dsus4** (D-A-D-G-A-D) — a chord with no major/minor quality, perfect for modal music\n2. **All strings resonate together** — playing any melody note has the open D and A strings sympathetically vibrating\n3. **Easy drones** — the low D and high D strings can ring open under almost any melody\n4. **Pentatonic patterns become diagonal** — the re-tuning creates new diagonal shapes across the neck\n\n## Famous DADGAD Recordings\n\n- **Pierre Bensusan**: \"Pres de Paris\" — the DADGAD master\n- **Jimmy Page**: \"Kashmir\" (Zeppelin) and acoustic parts of \"The Rain Song\"\n- **Davy Graham**: \"Angi\" — the original DADGAD composition\n- **John Renbourn**: British folk-classical fusion",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which strings change pitch when going from standard tuning to DADGAD?",
+      "choices": [
+        "Strings 1, 2, 3",
+        "Strings 1, 2, 6",
+        "Strings 4, 5, 6",
+        "Only string 6"
+      ],
+      "answer": 1,
+      "explanation": "In DADGAD, strings 6 (E→D), 2 (B→A), and 1 (E→D) are all tuned down a whole step. Strings 3, 4, and 5 remain the same (G, D, A).",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Essential DADGAD Chord Shapes\n\n## Dsus2 / D Open\n```\ne |--0--| (D)\nB |--0--| (A)\nG |--2--| (A)\nD |--4--| (D)\nA |--0--| (A)\nE |--0--| (D)\n```\nFrets: (0, 0, 2, 4, 0, 0)\n\n## G Major in DADGAD\n```\ne |--2--| (E)\nB |--3--| (C)\nG |--0--| (G)\nD |--0--| (D)\nA |--2--| (B)\nE |--3--| (G)\n```\nFrets: (2, 3, 0, 0, 2, 3)\n\n## A Minor in DADGAD\n```\ne |--0--| (D - adds color)\nB |--2--| (B)\nG |--2--| (A)\nD |--2--| (E)\nA |--0--| (A)\nE |--x--|\n```\n\n## The Drone Technique\n\nIn Celtic fingerstyle, you often hold a **drone note** (usually the open D or A strings) while playing a melody on the upper strings. The drone never stops — it creates the bagpipe-like sound of Celtic music.\n\nTry: melody on strings 1 and 2, while strings 6 and 5 ring open throughout.",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "Dsus4 open (DADGAD all open)",
+      "frets": [0, 0, 0, 0, 0, 0],
+      "fingers": [0, 0, 0, 0, 0, 0],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What chord do all 6 open strings form in DADGAD tuning?",
+      "choices": ["D major", "D minor", "Dsus4 (suspended 4th)", "D7"],
+      "answer": 2,
+      "explanation": "Open DADGAD strings (D-A-D-G-A-D) form a Dsus4 chord. Sus4 means the third is replaced by the fourth (G is the 4th of D major). This ambiguous, neither major nor minor quality makes it ideal for modal folk and Celtic music.",
+      "srs": true
+    }
+  ]
+}

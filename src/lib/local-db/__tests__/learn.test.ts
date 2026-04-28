@@ -80,7 +80,7 @@ vi.mock('../client', () => ({
 }));
 
 import {getLocalDb} from '../client';
-import {markLessonCompleted, recordXp} from '../learn';
+import {markLessonCompleted} from '../learn';
 
 // ── Tests ────────────────────────────────────────────────────────────────────
 
@@ -145,57 +145,3 @@ describe('markLessonCompleted', () => {
   });
 });
 
-describe('recordXp', () => {
-  let db: ReturnType<typeof makeDbMock>;
-  let selectBuilder: ReturnType<typeof makeQueryBuilder>;
-  let insertBuilder: ReturnType<typeof makeQueryBuilder>;
-
-  beforeEach(() => {
-    selectBuilder = makeQueryBuilder(null) as ReturnType<typeof makeQueryBuilder>; // no existing record
-    insertBuilder = makeQueryBuilder() as ReturnType<typeof makeQueryBuilder>;
-    db = makeDbMock({
-      selectBuilder: selectBuilder as Record<string, unknown>,
-      insertBuilder: insertBuilder as Record<string, unknown>,
-    });
-    vi.mocked(getLocalDb).mockResolvedValue(db as never);
-  });
-
-  it('inserts into learn_xp_ledger with correct fields', async () => {
-    await recordXp(10, 'lesson', 'guitar', 'lesson-1');
-    expect(db.insertInto).toHaveBeenCalledWith('learn_xp_ledger');
-    expect(insertBuilder.values).toHaveBeenCalledWith(
-      expect.objectContaining({
-        amount: 10,
-        source: 'lesson',
-        instrument: 'guitar',
-        lesson_id: 'lesson-1',
-      }),
-    );
-  });
-
-  it('does not insert when duplicate entry exists today', async () => {
-    // Return an existing record from the select check
-    const existingRecord = {id: 42};
-    const selectWithExisting = makeQueryBuilder(existingRecord) as ReturnType<typeof makeQueryBuilder>;
-    db.selectFrom = vi.fn(() => selectWithExisting);
-    vi.mocked(getLocalDb).mockResolvedValue(db as never);
-
-    await recordXp(10, 'lesson', 'guitar', 'lesson-1');
-    // insertInto should NOT have been called since duplicate exists
-    expect(db.insertInto).not.toHaveBeenCalled();
-  });
-
-  it('inserts with correct source field for heart_bonus', async () => {
-    await recordXp(5, 'heart_bonus', 'guitar', 'lesson-2');
-    expect(insertBuilder.values).toHaveBeenCalledWith(
-      expect.objectContaining({source: 'heart_bonus'}),
-    );
-  });
-
-  it('includes earned_at timestamp in insert', async () => {
-    await recordXp(10, 'lesson', 'guitar', 'lesson-1');
-    expect(insertBuilder.values).toHaveBeenCalledWith(
-      expect.objectContaining({earned_at: expect.any(String)}),
-    );
-  });
-});

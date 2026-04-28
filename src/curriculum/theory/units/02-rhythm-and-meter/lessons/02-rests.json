@@ -1,0 +1,59 @@
+{
+  "id": "02-rests",
+  "title": "Rests",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Rests: The Notation of Silence\n\nOne of the most profound things a music student learns is that **silence is not the absence of music — it is music**. In jazz, funk, and Latin styles, rests are where the groove lives. A rest tells the performer: stop producing sound, but do not stop counting.\n\n### Every Note Value Has a Corresponding Rest\n\n| Rest | Duration in 4/4 | Symbol Description |\n|------|----------------|--------------------|\n| **Whole rest** | 4 beats | Rectangular block **hanging below** a line (like a hat upside-down) |\n| **Half rest** | 2 beats | Rectangular block **sitting on top of** a line (like a hat right-side up) |\n| **Quarter rest** | 1 beat | A squiggly or zigzag symbol |\n| **Eighth rest** | 1/2 beat | A numeral-7-like symbol with a filled dot |\n| **Sixteenth rest** | 1/4 beat | Two filled dots with two hooks |\n\n### The Memory Trick: Hats\n\nWhole rest vs. half rest is a common source of confusion. Here is a reliable trick:\n- The **whole rest** hangs **below** the line — think of it as a heavy block that has fallen down (it is \"full\" and heavy)\n- The **half rest** sits **above** the line — lighter, only halfway full, so it floats up\n\n### Rests Must Fill the Measure\n\nJust like notes, rests must account for all the beats in a measure. A measure of 4/4 must always add up to exactly four beats of notes and/or rests. If the last two beats of a measure are silent, you write a half rest — not empty space.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Counting Rests and Rhythmic Tension\n\n### How to Count Rests\n\nWhen a rest appears in the count, you simply **say the syllable silently** (or lift your hand, or tap your foot) — you do not stop counting. The internal count must keep going through rests; they are part of the rhythmic fabric, not a break from it.\n\nExample in 4/4 (quarter note, quarter rest, half note):\n> Play on **1**, rest on **2**, play on **3** and hold through **4**\n\nCount out loud: **1 — (2) — 3 — (4)** — the parentheses represent beats where you count but don't play.\n\n### Rests as Rhythmic Events\n\nIn many musical styles, rests are the most expressive element:\n- **Jazz**: the space between notes (\"the notes you don't play\") defines a player's style\n- **Funk**: short, punchy notes followed by rests create the rhythmic texture of a groove\n- **Reggae**: the guitar skank plays on the offbeats, creating the characteristic rhythm through what is *not* played on the downbeat\n- **Call and response**: a melodic phrase followed by silence invites another instrument to fill the space\n\nMiles Davis famously said: \"It takes a long time to play like yourself.\" A big part of what makes a musician sound like themselves is where they choose silence.\n\n### Common Mistakes\n\n- **Rushing out of rests**: players often speed up when they are not playing, because the internal pulse lapses. The metronome disciplines this.\n- **Adding beats**: forgetting to count through a rest and coming in early is one of the most common ensemble errors.\n- **Omitting rests from written music**: in student notation exercises, every beat must be accounted for — leaving empty space instead of writing a rest is incorrect notation.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which rest hangs below a staff line and lasts for four beats in 4/4?",
+      "choices": ["Half rest", "Whole rest", "Quarter rest", "Eighth rest"],
+      "answer": 1,
+      "explanation": "The whole rest (four beats in 4/4) hangs below a staff line like an upside-down hat. The half rest (two beats) sits on top of a line like a right-side-up hat.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In 4/4 time, you have a quarter note on beat 1 and a half note on beat 3. What must appear on beat 2?",
+      "choices": [
+        "Nothing — it can be left empty",
+        "A whole rest",
+        "A quarter rest",
+        "A half rest"
+      ],
+      "answer": 2,
+      "explanation": "Every beat must be accounted for with a note or rest. If beat 2 is silent, it must be written as a quarter rest. Leaving the beat empty is incorrect notation.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What should you do when you encounter a rest while counting rhythm out loud?",
+      "choices": [
+        "Stop counting and wait until the next note",
+        "Skip the beat number and continue from the next beat",
+        "Continue counting internally through the rest without playing",
+        "Tap your foot twice on every rest"
+      ],
+      "answer": 2,
+      "explanation": "You must keep counting through a rest — the internal pulse never stops. The rest is a rhythmic event; you count the beat but do not produce sound. Stopping the internal count leads to errors in timing.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which musical style is particularly associated with using silence (rests) as a central expressive element?",
+      "choices": ["Baroque counterpoint", "Jazz", "Renaissance polyphony", "Gregorian chant"],
+      "answer": 1,
+      "explanation": "Jazz is renowned for its use of space and silence as expressive tools. The notes you don't play define phrasing and style. Funk, reggae, and Latin music also place heavy emphasis on the rhythmic function of rests.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "03-sample-layering",
+  "title": "Sample Layering",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Sample Layering: Building Signature Sounds\n\nSample layering combines multiple sounds triggered simultaneously to create a composite sound that's greater than any individual element.\n\n**Common layering strategies:**\n\n**Kick layering:**\n- Acoustic kick (attack and thud) + sub-bass sine sample (deep 60-80 Hz fundamental) = the stadium kick sound\n- Acoustic kick + 'click' or 'beater' sample = added attack articulation for genres that need definition in the mix\n\n**Snare layering:**\n- Acoustic snare + snare crack sample at slight delay (3-5ms) = the 'double snare' wall of sound\n- Acoustic snare + clap sample = the classic pop/R&B snare layering\n- Acoustic snare + electronic snare at different pitch = creates tuning character in the snare sound\n\n**Tom layering:**\n- Acoustic tom + pitched tom sample = creates specific pitches for melodic fills\n- Acoustic tom + room sample = adds space and size to small toms in live contexts\n\n**Phase relationships in layering:**\nWhen two sounds are combined, their phase relationship determines whether they reinforce or cancel each other. In live contexts, check each layer in isolation and together — if the combined sound is thinner than either alone, phase cancellation is occurring. Flip the phase of one layer to correct.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the 'stadium kick' sound typically created by?",
+      "choices": ["Playing the acoustic kick very loudly", "Layering an acoustic kick with a sub-bass sine wave sample (60-80 Hz) to add deep low-frequency weight", "Using a larger bass drum", "Adding heavy compression to the acoustic kick alone"],
+      "answer": 1,
+      "explanation": "The 'stadium kick' sound is created by layering an acoustic kick (which provides attack and thud character) with a sub-bass sine wave sample around 60-80 Hz. The sine wave adds deep low-frequency weight that carries across large spaces. This is why major concert kicks feel physically powerful at distance.",
+      "srs": true
+    }
+  ]
+}

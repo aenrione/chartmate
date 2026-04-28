@@ -1,0 +1,43 @@
+{
+  "id": "05-playing-a-full-12-bar-solo",
+  "title": "Playing a Full 12-Bar Solo",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Complete Blues Solo — All Elements Together\n\nThis lesson synthesizes everything in Units 18-20 into a complete approach for playing a full, expressive 12-bar blues solo.\n\n## The Blueprint\n\n### Bars 1-4 (over I chord, E7)\n- **Start low**: Begin in the middle register, simple phrases\n- **Call-and-response**: Short lick, pause, answer\n- **Target the 3rd** (G#) and b7th (D)\n- **Dynamics**: Start at medium intensity\n\n### Bars 5-6 (over IV chord, A7)\n- **Recognize the change**: Land on C# (3rd of A7) at bar 5\n- **Color the IV chord** with major pentatonic notes\n- **Phrase across the bar line** (start on beat 4 of bar 4, land in bar 5)\n\n### Bars 7-8 (back to I chord, E7)\n- **Build intensity**: Phrases should be slightly higher/more intense\n- **Call that demands an answer** — set up bar 9\n\n### Bars 9-10 (V and IV, B7 - A7)\n- **Peak moment**: The V chord is the most tension\n- **Highest register**: This is where SRV and BB go to the top of the neck\n- **Strong bend on the V chord**: A full-step bend up on B string\n\n### Bars 11-12 (turnaround)\n- **Resolve**: Come back down to the root\n- **Choose your turnaround** from the vocabulary in Lesson 5\n- **Leave space**: Let the last note ring",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why should a blues solo typically start in the middle register and build to higher registers later?",
+      "choices": [
+        "Because the lower strings are easier to play",
+        "To create an emotional arc — building intensity and reaching a peak, like a story with a climax",
+        "Higher notes are harder, so save them for when you're warmed up",
+        "It's a jazz convention, not blues"
+      ],
+      "answer": 1,
+      "explanation": "Starting low and building to a peak creates an emotional arc that mirrors storytelling. The solo begins intimately, builds through the IV chord changes, reaches maximum intensity over the V chord in bars 9-10, then resolves back to earth in the turnaround.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Recording and Evaluating Your Solo\n\n## Why Recording Is Essential\n\nYou cannot objectively evaluate your own playing while you're playing it. Recording creates the necessary distance.\n\n## What to Listen For\n\n1. **Arc**: Does the solo build and resolve?\n2. **Call-and-response**: Are there clear phrases with space between them?\n3. **Chord awareness**: Can you hear yourself tracking the chord changes?\n4. **Vibrato and bends**: Do they sound controlled and expressive, or shaky and unintentional?\n5. **Dynamics**: Is there variation in volume and intensity?\n\n## The Self-Evaluation Scorecard\n\n| Element | 1-5 Rating |\n|---------|------------|\n| Emotional arc | |\n| Clear phrases with space | |\n| Tracking chord changes | |\n| Vibrato quality | |\n| Dynamic variation | |\n| Originality | |\n\nBe honest. A 2 on originality means you need to develop more personal vocabulary.\n\n## Final Assignment\n\n1. Record a 5-chorus (60-bar) blues solo over a backing track in E or A\n2. Listen back and score yourself\n3. Identify the one weakest element\n4. Spend one week focused only on that element\n5. Record again and compare",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When self-evaluating a recorded blues solo, which element is most difficult to assess while playing but becomes clear on listening back?",
+      "choices": [
+        "Pitch accuracy",
+        "Emotional arc and phrase structure — whether the solo tells a coherent story",
+        "String names",
+        "How many notes were played"
+      ],
+      "answer": 1,
+      "explanation": "While playing, musicians are focused on note choices and technical execution. The macro-level arc — whether the solo builds logically, has good phrase structure, and tells a story — is nearly impossible to evaluate in real time. Recording creates the perspective needed to assess this.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "03-country-lick",
+  "title": "Country Chicken-Pickin' Lick",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Country Guitar Sound\n\nCountry lead guitar uses the **major pentatonic** and lots of **double stops** (two notes together).\n\n**A major pentatonic** (position 1, fret 2):\n```\ne |--2--5--|\nB |--2--5--|\nG |--2--4--|\nD |--2--4--|\nA |--2--4--|\nE |--2--5--|\n```\n\n**Chicken-pickin':** Alternates pick and middle finger (hybrid picking) to get a snappy, percussive attack on the high strings.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What scale does country lead guitar primarily use?",
+      "choices": ["Minor pentatonic", "Major pentatonic", "Dorian mode", "Harmonic minor"],
+      "answer": 1,
+      "explanation": "Country lead uses the major pentatonic — it's brighter and 'happier' sounding than the minor pentatonic, fitting the upbeat nature of most country music.",
+      "srs": true
+    }
+  ]
+}

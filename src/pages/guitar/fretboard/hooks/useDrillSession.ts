@@ -10,6 +10,7 @@ import type {DrillQuestion, DrillConfig, PositionWeight} from '../drills/types';
 import type {DrillDescriptor} from '../drills/types';
 import type {DrillType, AttemptStatus} from '@/lib/local-db/fretboard';
 import {createFretboardSession, saveAttempts} from '@/lib/local-db/fretboard';
+import {recordEventSafely} from '@/lib/progression';
 
 // ── Re-export for consumers ──────────────────────────────────────────────────
 
@@ -131,6 +132,23 @@ export function useDrillSession() {
           };
         }),
       );
+
+      const responseTimes = results
+        .map(r => r.responseTimeMs)
+        .filter((n): n is number => typeof n === 'number' && !Number.isNaN(n))
+        .sort((a, b) => a - b);
+      const medianMs = responseTimes.length > 0
+        ? responseTimes[Math.floor(responseTimes.length / 2)]
+        : 0;
+      await recordEventSafely({
+        kind: 'fretboard_session_finished',
+        drillType: drill.type as string,
+        difficulty: (drill.difficulty as 'easy' | 'medium' | 'hard') ?? 'medium',
+        correct: correctCount,
+        total: totalQuestions,
+        medianMs,
+        sessionId,
+      });
 
       return sessionId;
     },

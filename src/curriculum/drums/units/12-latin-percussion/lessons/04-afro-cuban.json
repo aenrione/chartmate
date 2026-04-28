@@ -1,0 +1,34 @@
+{
+  "id": "04-afro-cuban",
+  "title": "Afro-Cuban 6/8",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Afro-Cuban 6/8: The Sacred Groove\n\nAfro-Cuban 6/8 rhythms come from the Yoruba religious music brought to Cuba by enslaved West Africans. These rhythms underpin Cuban rumba and the Santería ceremonial music called Lucumí.\n\n**6/8 vs. 4/4 in Afro-Cuban music:**\nThese rhythms exist in a 6/8 or 12/8 framework, but they're often felt as two against three — a constant tension between duple and triple feel.\n\n**The 6/8 clave:** In 6/8 time, the clave has a different shape than the son clave:\n- Bar 1 (3-side in 6/8): hits on beat 1, the 'and' of 2, and beat 4\n- Bar 2 (2-side in 6/8): hits on beats 2 and 4\n\n**The bell pattern (agogô):** The bell plays a continuous 12-pulse pattern that serves as the rhythmic compass for all other instruments. Learning to hear and internalize the bell is essential before playing any Afro-Cuban music.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Afro-Cuban 6/8 Bell Pattern",
+      "description": "The foundational bell (agogô) pattern in 6/8 — 12 16th-note subdivisions per bar, with accents on specific positions. This is the rhythmic compass of Afro-Cuban music. Internalize this before adding any other voices.",
+      "timeSignature": "6/8",
+      "subdivisions": 12,
+      "bpm": 80,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "X-xX-x-X-x-"},
+        {"name": "Snare",  "pattern": "--x---x---x-"},
+        {"name": "Kick",   "pattern": "x-----x-----"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the cultural origin of Afro-Cuban 6/8 rhythms?",
+      "choices": ["Spanish flamenco traditions", "Indigenous Cuban rhythms", "Yoruba religious music from West Africa brought to Cuba", "Jazz influences from the United States"],
+      "answer": 2,
+      "explanation": "Afro-Cuban 6/8 rhythms derive from Yoruba religious music brought to Cuba by enslaved West Africans. These rhythms are sacred to the Lucumí (Santería) tradition and have profoundly shaped Cuban popular music.",
+      "srs": true
+    }
+  ]
+}

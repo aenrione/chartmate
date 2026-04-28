@@ -1,0 +1,64 @@
+{
+  "id": "03-jazz-chord-symbols",
+  "title": "Jazz Chord Symbols",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Reading Jazz Chord Symbols\n\nJazz lead sheets and Real Book charts use a dense shorthand for chord symbols. Learning to read them quickly is an essential professional skill.\n\n### The Core Symbol Grammar\n\nA jazz chord symbol has layers:\n1. **Root letter** (C, D#, Gb, etc.)\n2. **Quality** (major, minor, dominant, diminished, half-diminished)\n3. **Seventh** (implied or explicit)\n4. **Extensions** (9, 11, 13)\n5. **Alterations** (b9, #9, #11, b13)\n6. **Added tones** (add2, add4)\n7. **Bass note** (slash chord: C/E = C major with E in bass)\n\n### Quality Symbols\n\n| Symbol | Meaning | Example |\n|--------|---------|--------|\n| (nothing) | Major triad | C = C–E–G |\n| m or − | Minor triad | Cm = C–Eb–G |\n| 7 | Dominant seventh | G7 = G–B–D–F |\n| maj7 or Δ7 | Major seventh | Cmaj7 = C–E–G–B |\n| m7 or −7 | Minor seventh | Am7 = A–C–E–G |\n| m7b5 or ø | Half-diminished | Bø7 = B–D–F–A |\n| dim7 or °7 | Fully diminished | B°7 = B–D–F–Ab |\n| aug or + | Augmented | Caug = C–E–G# |\n| sus2 | Suspended 2nd (no 3rd, add 2nd) | Csus2 = C–D–G |\n| sus4 | Suspended 4th (no 3rd, add 4th) | Csus4 = C–F–G |\n\n### Extension and Alteration Reading\n\n- **C9** = Cmaj with dominant 7th AND 9th: C–E–G–Bb–D (if written without 'maj', the 7th is dominant)\n- **Cmaj9** = Cmaj7 + 9th: C–E–G–B–D\n- **Cm9** = Cm7 + 9th: C–Eb–G–Bb–D\n- **C13** = C7 + 13th (implies 9th and 11th omitted): C–E–G–Bb–A\n- **C7#11** = C7 + sharp 11th: C–E–G–Bb–F#\n- **C7b9** = C7 + flat 9th: C–E–G–Bb–Db\n- **C7alt** = C7 with all altered extensions (b9, #9, #11, b13)\n\n### Slash Chords\n\nA slash chord (C/E) means: play the chord before the slash (C major) with the note after the slash (E) in the bass. Used for:\n- Smooth bass lines: G/B means G major with B in bass — good voice leading before C\n- Inversions: Cmaj7/E = first inversion\n- Polychords and pedal tones: D/C = D major over a C bass pedal\n\n### Common Shortcuts\n\n- **Δ** = major seventh (comes from a 'delta' triangle)\n- **ø** = half-diminished (Ø symbol, sometimes written ø)\n- **°** = fully diminished\n- When you see just a number like 9, 11, or 13 after a root, the 7th is *always* the dominant seventh (minor seventh) unless 'maj' is explicitly written.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What chord does 'Am7b5' (also written Aø7) contain?",
+      "choices": [
+        "A–C#–E–G (A major seventh)",
+        "A–C–Eb–G (A fully diminished seventh)",
+        "A–C–Eb–G# (A augmented chord with seventh)",
+        "A–C–Eb–G (A half-diminished seventh = A–C–Eb–G)"
+      ],
+      "answer": 3,
+      "explanation": "Am7b5 = A half-diminished seventh. Start from Am7 (A–C–E–G) and lower the 5th by a half step: E → Eb. Result: A–C–Eb–G. This chord is also written Aø7. It appears as ii7 in minor keys (e.g., as Bø7 in C minor) and is one of the four basic seventh chord qualities in jazz.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the difference between C9 and Cmaj9?",
+      "choices": [
+        "C9 has a major seventh; Cmaj9 has a dominant seventh",
+        "C9 has a dominant seventh (Bb); Cmaj9 has a major seventh (B)",
+        "C9 has no 9th; Cmaj9 has both 9th and 11th",
+        "They are identical — both symbols mean C major ninth"
+      ],
+      "answer": 1,
+      "explanation": "C9 = C–E–G–Bb–D. The '9' without 'maj' implies a dominant seventh (Bb). Cmaj9 = C–E–G–B–D. The 'maj' specifies a major seventh (B natural). This is a critical distinction: a dominant 9th chord (C9) wants to resolve; a major 9th chord (Cmaj9) is stable and used as a tonic color.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does the slash chord G/B mean?",
+      "choices": [
+        "G major divided by B (mathematical notation)",
+        "G major chord with B natural in the bass voice",
+        "G minor with a B major chord on top",
+        "A chord between G and B — an augmented chord"
+      ],
+      "answer": 1,
+      "explanation": "A slash chord X/Y means: play chord X with note Y as the bass. G/B = G major (G–B–D) with B in the bass. B is the major third of G major, so this is G major in first inversion. Common use: C → G/B → Am creates a smooth stepwise bass line (C→B→A).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "If a chart shows 'Δ7' after a root note, what chord quality does this indicate?",
+      "choices": [
+        "Dominant seventh",
+        "Diminished seventh",
+        "Major seventh",
+        "Minor seventh"
+      ],
+      "answer": 2,
+      "explanation": "The delta triangle (Δ or △) is shorthand for 'major seventh.' So CΔ7 or C△7 = Cmaj7 = C–E–G–B. This notation is common in the Real Book and in professional lead sheets. The regular '7' without a triangle means dominant seventh (C7 = C–E–G–Bb).",
+      "srs": true
+    }
+  ]
+}

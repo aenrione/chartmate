@@ -1,0 +1,25 @@
+{
+  "id": "02-finger-control",
+  "title": "Finger Control",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Finger Technique: Speed Without Tension\n\nAt high speeds (160+ BPM 16th notes), the wrist alone cannot keep up — it reaches a physical ceiling. Finger technique allows the fingers to take over the motion of bouncing the stick, extending speed capability significantly.\n\n**The finger technique principle:**\nAt high tempos, the wrist becomes the 'carrier' and the fingers supply the primary momentum. The stick is pressed forward by the middle, ring, and pinky fingers against the palm while the index finger and thumb serve as the fulcrum.\n\n**Moeller + fingers combination:**\n1. Large slow movements: arm Moeller (whole arm whip)\n2. Medium movements: wrist Moeller\n3. Fast movements: finger control takes over\n\n**The Ney Rosauro / Dom Famularo approach:**\nThink of the stick as a bouncing ball — each time it hits the head, the rebound energy is captured and amplified by the fingers, then redirected for the next stroke. You're 'throwing' the stick down and catching the rebound rather than 'hitting' each note.\n\n**Key exercise:** Practice controlled, even bounces at increasing tempos on a practice pad. The goal is to play 16th notes at 120 BPM using only fingers — no wrist movement at all.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Matched vs. Traditional Grip\n\n**Matched grip** (both palms facing down): Symmetrical, natural for most people. Standard in rock and pop contexts. Allows easy incorporation of Moeller and finger technique symmetrically.\n\n**Traditional grip** (left hand palm up, right hand palm down): Developed for marching snare drums tilted away from the body. Still widely used in jazz. The left hand in traditional grip activates different muscles and produces a unique tone quality.\n\n**Which to learn first?** Either is valid. Many professionals use matched grip exclusively; many jazz drummers use traditional. The most important thing is learning your chosen grip deeply — shallow knowledge of both is less useful than deep mastery of one.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "At very high tempos (160+ BPM 16th notes), what primarily drives the stroke?",
+      "choices": ["Large arm movements", "Only wrist rotation", "Finger control using the stick's rebound energy", "Shoulder muscles"],
+      "answer": 2,
+      "explanation": "At extreme tempos the wrist reaches a physical ceiling. Finger technique takes over — the fingers capture and amplify the stick's rebound energy from each stroke, redirecting it into the next note. This is why high-speed drumming looks almost motionless from a distance.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "id": "02-four-against-three",
+  "title": "4 Against 3",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# 4:3 — Expanding the Polyrhythmic Grid\n\nFour against three (4:3) requires a 12-pulse common framework: one voice divides 12 into 4 groups of 3 (landing on 1, 4, 7, 10), while the other divides 12 into 3 groups of 4 (landing on 1, 5, 9).\n\n**The 12-pulse grid:**\n```\nPulse: 1 2 3 4 5 6 7 8 9 10 11 12\nVoice of 4:  x . . x . . x . .  x  .  .\nVoice of 3:  x . . . x . . . x  .  .  .\n```\n\n**The mnemonic for 4:3:** 'Pass the god damn butter': each word corresponds to one beat of the 3-pattern; within each word the syllables give the 4-pattern.\n\nAlternatively: count to 12 with emphasis on 1, 4, 7, 10 (the 4-pattern) while a foot taps 1, 5, 9 (the 3-pattern).\n\n**Musical applications:**\n- Steve Reich's phasing compositions exploit this directly\n- Indian classical music (particularly Carnatic) uses this in tala frameworks\n- Chopin's piano music often features right-hand triplets against left-hand 16th notes — the same polyrhythm\n- In drumming: 4:3 creates dense, layered groove textures in progressive jazz and world music",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "4 Against 3 (Ride vs. Kick)",
+      "description": "Ride plays 4 equally spaced notes (quarter notes in 4/4), while kick plays 3 equally spaced notes across the bar (each landing on beat 1, the 'and' of beat 2, and beat 4). The two patterns intersect only on beat 1, creating a rotating polyrhythmic feel.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 90,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-x-x-x-"},
+        {"name": "Kick",   "pattern": "x---x--x"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What common pulse framework is used to notate a 4:3 polyrhythm?",
+      "choices": ["A 6-pulse framework", "An 8-pulse framework", "A 12-pulse framework", "A 16-pulse framework"],
+      "answer": 2,
+      "explanation": "4:3 uses a 12-pulse common framework because 12 is the lowest common multiple of 4 and 3. This 12-pulse grid accommodates both the 4-note pattern (landing on 1, 4, 7, 10) and the 3-note pattern (landing on 1, 5, 9) simultaneously.",
+      "srs": true
+    }
+  ]
+}

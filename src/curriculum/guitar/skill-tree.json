@@ -1,6 +1,6 @@
 {
   "instrument": "guitar",
-  "version": "1.0",
+  "version": "2.0",
   "units": [
     {
       "id": "01-open-chords",
@@ -8,7 +8,215 @@
       "description": "Your first chord shapes — the foundation of every song",
       "icon": "guitar",
       "prerequisites": [],
-      "lessons": ["01-intro", "02-g-chord", "03-c-chord"]
+      "lessons": ["01-intro", "02-g-chord", "03-c-chord", "04-d-chord", "05-a-chord", "06-e-minor", "07-am-chord", "08-chord-progressions"]
+    },
+    {
+      "id": "02-rhythm-strumming",
+      "title": "Rhythm & Strumming",
+      "description": "Turn chords into music with essential strum patterns",
+      "icon": "music",
+      "prerequisites": ["01-open-chords"],
+      "lessons": ["01-rhythm-basics", "02-down-up-strumming", "03-common-patterns", "04-muting-and-dynamics"]
+    },
+    {
+      "id": "03-reading-tabs",
+      "title": "Reading Tabs & Charts",
+      "description": "Unlock any song with guitar tablature and chord charts",
+      "icon": "file-music",
+      "prerequisites": ["02-rhythm-strumming"],
+      "lessons": ["01-intro-to-tabs", "02-reading-tab-notation", "03-tablature-rhythms", "04-chord-charts", "05-the-capo"]
+    },
+    {
+      "id": "04-color-chords",
+      "title": "Color Chords",
+      "description": "Add emotion and sophistication with sus, 7th, and add9 chords",
+      "icon": "sparkles",
+      "prerequisites": ["03-reading-tabs"],
+      "lessons": ["01-why-color-chords", "02-sus-chords", "03-seventh-chords", "04-add9-and-more"]
+    },
+    {
+      "id": "05-pentatonic-soloing",
+      "title": "Soloing with the Pentatonic",
+      "description": "Play your first solo with the most essential scale on guitar",
+      "icon": "zap",
+      "prerequisites": ["04-color-chords"],
+      "lessons": ["01-intro-to-scales", "02-pentatonic-scale", "03-playing-solos", "04-scale-positions", "05-soloing-genres"]
+    },
+    {
+      "id": "06-barre-chords",
+      "title": "Barre Chords",
+      "description": "Play any major or minor chord anywhere on the neck",
+      "icon": "grip",
+      "prerequisites": ["05-pentatonic-soloing"],
+      "lessons": ["01-what-are-barre-chords", "02-e-shape-major", "03-e-shape-minor", "04-a-shape-barre", "05-barre-workout"]
+    },
+    {
+      "id": "07-expressive-techniques",
+      "title": "Expressive Techniques",
+      "description": "Infuse emotion with hammer-ons, pull-offs, slides, bends, and vibrato",
+      "icon": "heart",
+      "prerequisites": ["06-barre-chords"],
+      "lessons": ["01-hammer-ons", "02-pull-offs", "03-slides", "04-bends", "05-vibrato", "06-muting"]
+    },
+    {
+      "id": "08-iconic-licks",
+      "title": "Iconic Licks",
+      "description": "Sound like the greats — 7 classic licks across rock, blues, and country",
+      "icon": "star",
+      "prerequisites": ["07-expressive-techniques"],
+      "lessons": ["01-blues-lick", "02-rock-lick", "03-country-lick", "04-hendrix-lick", "05-make-your-own"]
+    },
+    {
+      "id": "09-scales-and-theory",
+      "title": "Scales & Music Theory",
+      "description": "Understand the fretboard with major/minor scales and diatonic chords",
+      "icon": "layers",
+      "prerequisites": ["08-iconic-licks"],
+      "lessons": ["01-major-scale", "02-natural-minor-scale", "03-diatonic-chords", "04-keys-and-capo"]
+    },
+    {
+      "id": "10-advanced-practice",
+      "title": "The Complete Guitarist",
+      "description": "Build a practice routine and chart your path forward",
+      "icon": "trophy",
+      "prerequisites": ["09-scales-and-theory"],
+      "lessons": ["01-practice-routine", "02-playing-with-others", "03-gear-basics", "04-next-steps"]
+    },
+    {
+      "id": "11-fingerpicking-basics",
+      "title": "Fingerpicking Basics",
+      "description": "Travis picking, alternating bass, PIMA notation and essential fingerstyle patterns",
+      "icon": "hand",
+      "prerequisites": ["02-rhythm-strumming"],
+      "lessons": ["01-pima-notation", "02-alternating-bass", "03-travis-picking", "04-fingerstyle-patterns", "05-combining-patterns"]
+    },
+    {
+      "id": "12-chord-melody-intro",
+      "title": "Chord-Melody Intro",
+      "description": "Play melody and chords simultaneously — solo guitar arrangements",
+      "icon": "music-2",
+      "prerequisites": ["11-fingerpicking-basics", "04-color-chords"],
+      "lessons": ["01-what-is-chord-melody", "02-voice-leading", "03-simple-arrangements", "04-harmonizing-melody", "05-first-arrangement"]
+    },
+    {
+      "id": "13-fingerstyle-advanced",
+      "title": "Advanced Fingerstyle",
+      "description": "Campanella, harmonics, DADGAD tuning, and Chet Atkins-style techniques",
+      "icon": "sparkles",
+      "prerequisites": ["12-chord-melody-intro"],
+      "lessons": ["01-campanella", "02-natural-harmonics", "03-artificial-harmonics", "04-dadgad-tuning", "05-chet-atkins-style"]
+    },
+    {
+      "id": "14-jazz-chords",
+      "title": "Jazz Chord Vocabulary",
+      "description": "Drop-2 voicings, shell voicings, rootless chords, and essential jazz shapes",
+      "icon": "layers",
+      "prerequisites": ["04-color-chords", "06-barre-chords"],
+      "lessons": ["01-shell-voicings", "02-drop2-voicings", "03-rootless-voicings", "04-chord-inversions", "05-jazz-chord-workout"]
+    },
+    {
+      "id": "15-jazz-comping",
+      "title": "Jazz Comping",
+      "description": "Freddie Green style, ii-V-I patterns, rhythm changes and chord-melody comping",
+      "icon": "music",
+      "prerequisites": ["14-jazz-chords"],
+      "lessons": ["01-freddie-green-style", "02-ii-v-i-patterns", "03-rhythm-changes", "04-comping-behind-a-soloist", "05-chord-substitutions"]
+    },
+    {
+      "id": "16-jazz-improvisation",
+      "title": "Jazz Improvisation",
+      "description": "Bebop scales, chord-tone soloing, approach notes and jazz phrasing",
+      "icon": "zap",
+      "prerequisites": ["15-jazz-comping", "09-scales-and-theory"],
+      "lessons": ["01-chord-tone-soloing", "02-bebop-scales", "03-approach-notes", "04-jazz-phrasing", "05-improvising-over-changes"]
+    },
+    {
+      "id": "17-jazz-standards",
+      "title": "Jazz Standards",
+      "description": "Rhythm changes, Autumn Leaves, ii-V-I over changes and reharmonization",
+      "icon": "star",
+      "prerequisites": ["16-jazz-improvisation"],
+      "lessons": ["01-autumn-leaves", "02-rhythm-changes-head", "03-reharmonization", "04-playing-the-changes", "05-building-your-repertoire"]
+    },
+    {
+      "id": "18-blues-rhythm",
+      "title": "Blues Rhythm Guitar",
+      "description": "Shuffle feel, 12-bar variations, Texas shuffle, and Albert King-style rhythm",
+      "icon": "music",
+      "prerequisites": ["06-barre-chords", "08-iconic-licks"],
+      "lessons": ["01-shuffle-feel", "02-12-bar-variations", "03-texas-shuffle", "04-dominant-7-rhythm", "05-blues-turnarounds"]
+    },
+    {
+      "id": "19-blues-soloing",
+      "title": "Blues Soloing",
+      "description": "Minor pentatonic deep dive, blues scale, hybrid picking, call-and-response phrasing",
+      "icon": "zap",
+      "prerequisites": ["08-iconic-licks", "07-expressive-techniques"],
+      "lessons": ["01-minor-pentatonic-deep-dive", "02-blues-scale", "03-hybrid-picking", "04-call-and-response", "05-target-notes"]
+    },
+    {
+      "id": "20-blues-advanced",
+      "title": "Advanced Blues",
+      "description": "T-Bone Walker, BB King, and SRV styles — deep technique and iconic vocabulary",
+      "icon": "trophy",
+      "prerequisites": ["18-blues-rhythm", "19-blues-soloing"],
+      "lessons": ["01-t-bone-walker-style", "02-bb-king-style", "03-srv-style", "04-creating-your-blues-vocabulary", "05-playing-a-full-12-bar-solo"]
+    },
+    {
+      "id": "21-classical-technique",
+      "title": "Classical Guitar Technique",
+      "description": "Right-hand technique, rest vs free stroke, scales and arpeggios from the classical tradition",
+      "icon": "hand",
+      "prerequisites": ["11-fingerpicking-basics"],
+      "lessons": ["01-right-hand-technique", "02-rest-vs-free-stroke", "03-classical-scales", "04-classical-arpeggios", "05-posture-and-position"]
+    },
+    {
+      "id": "22-classical-repertoire",
+      "title": "Classical Repertoire",
+      "description": "Carulli studies, Sor etudes, Tarrega pieces and simple classical works",
+      "icon": "music-2",
+      "prerequisites": ["21-classical-technique"],
+      "lessons": ["01-carulli-study", "02-sor-etude", "03-tarrega-lagrima", "04-romanza", "05-performance-approach"]
+    },
+    {
+      "id": "23-alternate-picking",
+      "title": "Alternate Picking Mastery",
+      "description": "Economy vs alternate picking, speed building, string crossing and scale runs",
+      "icon": "zap",
+      "prerequisites": ["10-advanced-practice"],
+      "lessons": ["01-alternate-picking-fundamentals", "02-string-crossing", "03-scale-runs", "04-economy-picking", "05-speed-building"]
+    },
+    {
+      "id": "24-legato-technique",
+      "title": "Legato Technique",
+      "description": "Hammer-ons, pull-offs, legato scale patterns and Holdsworth/Gambale-style fluidity",
+      "icon": "music",
+      "prerequisites": ["10-advanced-practice"],
+      "lessons": ["01-legato-fundamentals", "02-legato-scale-patterns", "03-three-note-per-string", "04-holdsworth-style", "05-combining-legato-picking"]
+    },
+    {
+      "id": "25-tapping",
+      "title": "Two-Hand Tapping",
+      "description": "Van Halen technique, tapping patterns, arpeggios and two-hand independence",
+      "icon": "star",
+      "prerequisites": ["23-alternate-picking", "24-legato-technique"],
+      "lessons": ["01-tapping-basics", "02-tapping-patterns", "03-tapping-arpeggios", "04-two-hand-independence", "05-eruption-technique"]
+    },
+    {
+      "id": "26-composition",
+      "title": "Composition & Songwriting",
+      "description": "Writing songs, chord progressions, riff construction and arrangement",
+      "icon": "pen-tool",
+      "prerequisites": ["17-jazz-standards", "20-blues-advanced", "13-fingerstyle-advanced"],
+      "lessons": ["01-harmonic-frameworks", "02-riff-writing", "03-melodic-development", "04-arrangement-and-form", "05-finishing-a-song"]
+    },
+    {
+      "id": "27-master-guitarist",
+      "title": "Master Guitarist",
+      "description": "Synthesis of all paths — signature style, performance preparation and musical identity",
+      "icon": "award",
+      "prerequisites": ["25-tapping", "22-classical-repertoire", "26-composition"],
+      "lessons": ["01-finding-your-voice", "02-cross-genre-fluency", "03-performance-preparation", "04-recording-and-production", "05-teaching-and-giving-back"]
     }
   ]
 }

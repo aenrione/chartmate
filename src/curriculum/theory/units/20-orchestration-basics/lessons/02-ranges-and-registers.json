@@ -1,0 +1,38 @@
+{
+  "id": "02-ranges-and-registers",
+  "title": "Instrument Ranges & Registers",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Instrument Ranges and Register Characteristics\n\nKnowing an instrument's range — and more importantly, the character of different registers — is essential for effective orchestration.\n\n### String Ranges and Register Character\n\n| Instrument | Written/Sounding Range | Character Notes |\n|---|---|---|\n| Violin I | G3–A7 | Low strings: warm, rich; High strings: brilliant, penetrating |\n| Viola | C3–E6 | Low: dark, reedy ('alto' quality); High: nasal |\n| Cello | C2–C6 | Low: deep, somber; Tenor range: singing, warm; High: brilliant |\n| Double Bass | E1–C4 | Foundation; low notes: dark; upper range: reedy |\n\n### Woodwind Registers\n\nMost woodwinds have distinct register character:\n\n**Clarinet** is the most extreme:\n- **Chalumeau register** (lowest, C3–E4): Dark, mysterious, hollow\n- **Throat tones** (F4–Ab4): Slightly nasal, slightly weak\n- **Clarino register** (Bb4–C6): Bright, singing, the 'normal' clarinet sound\n- **Altissimo** (above C6): Shrill, penetrating\n\n**Flute**:\n- Low register (C4–C5): Breathy, soft, not powerful\n- Middle register (C5–C6): Clear, pure, flexible\n- High register (C6–C7): Brilliant, piercing\n\n**Oboe**: All registers have clear presence; low is slightly weak; middle is the ideal singing range.\n\n### Brass Register Considerations\n\n**Horn**: \n- Low notes (below C3): Difficult to project in full orchestra\n- Middle (C3–C5): Rich, warm — the characteristic horn sound\n- High (above C5): Heroic, brilliant but taxing\n\n**Trumpet**:\n- Low (below G4): Mellow but weak\n- Middle/High (G4–C6): Brilliant, cutting — the classical trumpet range\n- Extreme high: Tiring and risky\n\n### The Comfortable Range\n\nAlways distinguish between **written range** (what the player can technically produce) and **comfortable/practical range** (what sounds good and is sustainable). Orchestral writing typically stays within the comfortable middle range except for climactic moments.\n\n**General rule**: Avoid the extremes of any instrument's range unless you specifically want the timbral character of the extreme register.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the 'chalumeau register' of the clarinet, and what is its timbral character?",
+      "choices": [
+        "The high register (above C6) — shrill and penetrating",
+        "The lowest register (C3–E4) — dark, mysterious, and slightly hollow",
+        "The middle register — clear, singing, and flexible",
+        "The throat tones — slightly nasal and weak"
+      ],
+      "answer": 1,
+      "explanation": "The chalumeau register is the lowest range of the clarinet (roughly C3 to E4). It has a dark, mysterious, somewhat hollow quality quite different from the bright clarino register above it. Composers use the chalumeau for eerie, low-register effects — Schubert uses it memorably in his 'Unfinished Symphony' and Brahms in his clarinet works.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why do orchestrators generally avoid writing in the extreme high register of instruments during sustained passages?",
+      "choices": [
+        "Because high notes are always out of tune",
+        "Because extreme high registers are physically taxing and difficult to sustain, limiting the player's stamina and increasing the risk of missed notes",
+        "Because high notes cannot be heard in a full orchestra",
+        "Because the audience finds extreme high notes unpleasant"
+      ],
+      "answer": 1,
+      "explanation": "Writing in the extreme high register is risky for two reasons: (1) it is physically taxing — brass players especially tire quickly in the extreme high register; (2) intonation and tone quality suffer in the extremes. Extreme high notes are used for climactic moments or special effects, not for sustained passages. Good orchestrators save these registers for maximum impact.",
+      "srs": true
+    }
+  ]
+}

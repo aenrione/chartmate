@@ -1,0 +1,20 @@
+{
+  "id": "01-notation-key",
+  "title": "The Drum Notation Key",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Reading Drum Notation\n\nDrum notation uses a standard 5-line staff. Each line/space = a different drum:\n\n| Symbol | Drum/Cymbal |\n|--------|-------------|\n| × on top space | Hi-hat |\n| × above staff | Open hi-hat |\n| × on 3rd space | Ride cymbal |\n| × above top line | Crash cymbal |\n| ○ on 3rd line | Snare drum |\n| ○ on 2nd space | Hi tom |\n| ○ on 1st space | Floor tom |\n| ○ below staff | Bass drum |\n\nX-shaped noteheads = cymbals. Round noteheads = drums.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does an X-shaped notehead represent in drum notation?",
+      "choices": ["A drum hit", "A cymbal hit", "A rest", "A ghost note"],
+      "answer": 1,
+      "explanation": "X-shaped noteheads (×) represent cymbals (hi-hat, crash, ride). Round noteheads (○) represent drums (snare, kick, toms).",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "05-vibrato",
+  "title": "Vibrato",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Vibrato: Your Vocal Tone\n\nVibrato is rapid, controlled oscillation of a note's pitch — like a singer's wobble. It gives sustained notes life and expression.\n\n**Guitar vibrato technique:**\n1. Fret a note\n2. Rapidly push/pull the string repeatedly (like very fast small bends in alternation)\n3. Keep the pitch variation **even** — up and down the same amount\n\n**Style variations:**\n- **Slow, wide** — blues, emotional (think BB King)\n- **Fast, narrow** — classical, restrained\n- **Fast, wide** — rock (think David Gilmour)",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does vibrato do to a sustained guitar note?",
+      "choices": ["Mutes the string", "Raises pitch permanently", "Creates rapid pitch oscillation for expression", "Slides to the next note"],
+      "answer": 2,
+      "explanation": "Vibrato rapidly oscillates the pitch of a held note up and down, adding vocal-like expressiveness to sustained notes.",
+      "srs": true
+    }
+  ]
+}

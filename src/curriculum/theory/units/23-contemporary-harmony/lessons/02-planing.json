@@ -1,0 +1,38 @@
+{
+  "id": "02-planing",
+  "title": "Planing",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Planing: Parallel Voice Motion\n\n**Planing** (also called **parallel voice leading** or **parallel harmony**) is the technique of moving all voices of a chord in parallel motion — the chord 'planes' through pitch space with all voices moving together.\n\nThis deliberately violates the classical voice-leading prohibition on parallel motion. Planing is used for coloristic effect rather than functional harmony.\n\n### Diatonic Planing vs. Chromatic Planing\n\n**Diatonic planing**: All voices stay within the scale — the chord quality changes as you move through the scale degrees.\n\nExample: C major scale, diatonic planing of triads up the scale:\nC major → D minor → E minor → F major → G major → A minor → B dim → C\n\nThe chord structure changes (major, minor, diminished) to stay diatonic. This is characteristic of **Impressionist** music (Debussy, Ravel).\n\n**Chromatic planing**: All voices move by the same interval, preserving chord quality exactly.\n\nExample: C major triad → Db major → D major → Eb major (all major triads, moving up by half step)\n\nChromatic planing was used by Debussy, who was influenced by non-Western scales. The chord quality doesn't change — only the pitch level does.\n\n### Planing in Impressionist Music\n\nClaude Debussy (1862–1918) pioneered planing in Western classical music:\n\n**'La cathédrale engloutie' (The Sunken Cathedral)**: Parallel fifths and octaves in the lower register suggest massive cathedral bells. The parallel motion creates a timeless, non-functional quality — no V→I resolution, just sound washing over you.\n\n**'Préludes' Book I, No. 6 ('Des pas sur la neige')**: Chromatic planing of minor chords in the inner voices.\n\n### Planing in Jazz and Pop\n\nGuitarists use planing naturally when barring (playing a chord shape and sliding it): \n- A barre chord on fret 5 (A major shape) slid to fret 7 (B major) is chromatic planing\n- The guitar's uniform fret spacing makes chromatic planing physically natural\n\n**Neo-soul and R&B**: D'Angelo, Erykah Badu, Thundercat — frequently use chromatic planing of major 7ths or minor 7ths to create a warm, modern sound:\n\nCmaj7 → Dbmaj7 → Dmaj7 (planing major sevenths up chromatically) — this appears in 'Unshaken' (Red Dead Redemption 2 soundtrack) and countless neo-soul productions.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the difference between 'diatonic planing' and 'chromatic planing'?",
+      "choices": [
+        "Diatonic planing is for jazz; chromatic planing is for classical music",
+        "Diatonic planing keeps voices in the scale but allows chord quality to change; chromatic planing preserves chord quality exactly while moving all voices by the same chromatic interval",
+        "Diatonic planing uses parallel fifths; chromatic planing uses parallel thirds",
+        "They are the same — 'diatonic' and 'chromatic' refer to the tempo, not the voice leading"
+      ],
+      "answer": 1,
+      "explanation": "Diatonic planing moves chord voices within a scale — the voicing changes quality as it passes through different scale degrees (e.g., C major → D minor → E minor as you ascend the scale). Chromatic planing moves all voices by the same interval, preserving chord quality (e.g., C major → Db major → D major, all major triads moving up by half step). Both create parallel motion; the difference is whether the chord quality is preserved.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Debussy used parallel fifths and octaves in 'La cathédrale engloutie' to create what effect?",
+      "choices": [
+        "A confusing harmonic ambiguity that obscures the tonality",
+        "A massive, timeless quality suggesting cathedral bells — the parallel motion creates non-functional sound that evokes a physical space rather than harmonic progression",
+        "A jazz-like quality by using forbidden intervals deliberately",
+        "A march-like rhythm from the consistent parallel motion"
+      ],
+      "answer": 1,
+      "explanation": "Debussy used parallel fifths and octaves to create the sound of massive cathedral bells reverberating through water and stone. The parallel motion abandons functional harmonic direction (no V→I pulls) and creates a static, luminous sound-world. The technical 'violation' of parallel fifths is precisely what achieves this effect: it bypasses harmonic logic in favor of pure sonic imagery.",
+      "srs": true
+    }
+  ]
+}

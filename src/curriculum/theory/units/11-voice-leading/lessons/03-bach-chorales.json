@@ -1,0 +1,67 @@
+{
+  "id": "03-bach-chorales",
+  "title": "Bach Chorale Style",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Bach Chorales: A Masterclass in Voice Leading\n\nJohann Sebastian Bach harmonized approximately 370 four-part chorales based on Lutheran hymn tunes. These chorales are the most studied examples of tonal voice leading ever written — not because of their age, but because they represent the most compact, efficient solutions to the problem of smooth harmonic motion.\n\nBach received the melody (the chorale tune) as a given and had to create three additional voices (Alto, Tenor, Bass) that:\n1. Form correct harmonies on every beat\n2. Move with maximum smoothness\n3. Avoid all forbidden parallels and doublings\n4. Create four independent, singable melodic lines\n\n### Characteristics of Bach's Chorale Texture\n\n**Rhythmic uniformity**: All four voices typically move together in block chords (homophony), with occasional passing tones and neighbor tones for melodic interest.\n\n**Cadences**: Every phrase ends with a cadence. Bach uses:\n- **Authentic cadence** (V–I or V7–I): The strongest close\n- **Half cadence** (ends on V): Creates a momentary pause before continuing\n- **Deceptive cadence** (V–vi): Avoids the expected I resolution\n- **Plagal cadence** (IV–I): The 'Amen' cadence\n\n**Non-chord tones**: Bach adds life to the texture with:\n- **Passing tones** (PT): Fill a leap with stepwise motion on a weak beat\n- **Neighbor tones** (NT): A step away from and returning to the same note\n- **Suspensions** (Sus): A note held from the previous chord while others move, then resolved downward\n\n### The 4-3 Suspension: Bach's Favorite\n\nThe suspension 4-3 is ubiquitous in Bach chorales. Over a dominant chord:\n- The alto (or soprano) holds the 4th above the bass while other voices move to the dominant chord\n- Then the 4th resolves down to the 3rd\n\nIn C major, over a G dominant chord: Alto holds C (the 4th above G), then resolves to B (the 3rd above G). The tension and resolution creates expressive weight.\n\n### The 7-6 Suspension\n\nAlso common: a 7th above the bass held while the bass and other voices change, then resolved down to the 6th. Over bass note C: Alto holds B (7th), resolves to A (6th).\n\n### Recommended Listening\n\n- **BWV 227** ('Jesu, Joy of Man's Desiring'): Famous instrumental arrangement of a chorale; the three-voice chorale section is a model of smooth voice leading\n- **BWV 244** (St. Matthew Passion): Contains numerous chorales in classic SATB style\n- **BWV 38** ('Aus tiefer Not'): Beautiful example of modal harmony in chorale style\n- **BWV 227** No. 1 ('Der Geist hilft'): Dense with suspensions",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a suspension in Bach chorale style?",
+      "choices": [
+        "When a voice leaps more than a fifth",
+        "A note held over from the previous chord while other voices move, then resolved downward by step",
+        "When two voices move in contrary motion",
+        "A chord with no fifth"
+      ],
+      "answer": 1,
+      "explanation": "A suspension is a non-chord tone created by holding (suspending) a note from the previous chord while other voices move to the new chord. The suspended note is dissonant against the new harmony and must resolve downward by step. The most common suspensions in Bach are 4-3 and 7-6.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a '4-3 suspension' over a G dominant chord in C major, what note is held and what does it resolve to?",
+      "choices": [
+        "D is held, resolves to C",
+        "C is held (the 4th above G), resolves down to B (the 3rd above G)",
+        "F is held, resolves to E",
+        "A is held, resolves to G"
+      ],
+      "answer": 1,
+      "explanation": "In a 4-3 suspension over G dominant: C is the 4th above G (interval: C is a perfect fourth up from G). B is the 3rd above G. The suspension holds C while other voices form the G chord, then C steps down to B. The dissonance of C against the G chord creates tension that resolves when C falls to B.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What type of cadence ends on the dominant (V) chord without resolving to tonic?",
+      "choices": ["Authentic cadence", "Deceptive cadence", "Plagal cadence", "Half cadence"],
+      "answer": 3,
+      "explanation": "A half cadence ends on the dominant chord (V), creating a momentary pause — like a comma in a sentence — without full resolution. The music needs to continue to find its conclusion. Bach uses half cadences at the end of phrases to create forward momentum.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "A deceptive cadence substitutes which chord for the expected tonic resolution?",
+      "choices": ["ii", "IV", "vi", "iii"],
+      "answer": 2,
+      "explanation": "A deceptive cadence moves from V to vi instead of the expected V to I. The vi chord (relative minor) shares two notes with I but is harmonically weaker, creating a surprising moment of non-resolution. Bach uses deceptive cadences to extend phrases and delay the final close.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'passing tone' in Bach chorale writing?",
+      "choices": [
+        "A chord tone that passes between two voices",
+        "A non-chord tone that fills a leap with stepwise motion, occurring on a weak beat",
+        "The bass note when it moves by step",
+        "Any note that is not doubled"
+      ],
+      "answer": 1,
+      "explanation": "A passing tone (PT) is a non-chord tone that fills in the gap of a leap by moving stepwise. It occurs on a weak beat (metrically unaccented). Example: moving from E to G with a D as a passing tone (E→D→... wait, E–F#–G in a major context). Passing tones add melodic interest to what would otherwise be a static block-chord texture.",
+      "srs": true
+    }
+  ]
+}

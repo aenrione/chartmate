@@ -1,0 +1,34 @@
+{
+  "id": "02-16th-note-funk",
+  "title": "16th Note Funk",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The 16th Note Grid: Funk's Foundation\n\nFunk operates on a 16th note grid — 16 subdivisions per bar. Every note lands on a specific position within this grid, and the power of funk comes from choosing exactly which positions to emphasize.\n\n**16th note position names:**\n1-e-and-ah, 2-e-and-ah, 3-e-and-ah, 4-e-and-ah\n\n**Funk kick positions beyond 1 and 3:**\n- Beat 1 'and' (position 3 of 16): the 'skip' kick\n- Beat 2 'e' (position 5): creates forward pull\n- Beat 4 'ah' (position 16): anticipates beat 1\n- Beat 3 'and' (position 11): mid-groove anchor variation\n\n**The Clyde Stubblefield vocabulary:** James Brown's drummer Clyde Stubblefield innovated kick patterns that move through multiple non-standard positions. His groove on 'Funky Drummer' (1970) has been sampled over 1,100 times.\n\n**Building 16th-note funk:**\n1. Start with steady 16th notes on the hi-hat\n2. Add ghost notes on all non-accent snare positions\n3. Build the kick pattern independently\n4. Combine slowly until all three voices feel natural together",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Funky Drummer-Style Pattern",
+      "description": "Inspired by Clyde Stubblefield's 'Funky Drummer' groove. Hi-hat on all 16th notes, ghost-heavy snare with strong backbeat accents, kick hits on beats 1, 'and' of 2, and 3. The density of ghost notes creates the legendary pocket.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 98,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "xxxxxxxxxxxxxxxx"},
+        {"name": "Snare",  "pattern": "o-o-X-o-o-o-X-o-"},
+        {"name": "Kick",   "pattern": "x---x-x-x-------"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In funk's 16th note grid, what syllable naming is used for subdivisions?",
+      "choices": ["1 and 2 and 3 and 4 and (8th note counting)", "1-e-and-ah, 2-e-and-ah, 3-e-and-ah, 4-e-and-ah", "1 trip-let 2 trip-let 3 trip-let 4 trip-let", "One-two-three, two-two-three"],
+      "answer": 1,
+      "explanation": "16th notes are counted 1-e-and-ah, 2-e-and-ah, 3-e-and-ah, 4-e-and-ah — giving each of the 16 subdivisions a unique name. This allows precise communication about which position a note falls on within the bar.",
+      "srs": true
+    }
+  ]
+}

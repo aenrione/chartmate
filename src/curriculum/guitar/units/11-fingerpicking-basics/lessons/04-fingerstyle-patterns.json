@@ -1,0 +1,38 @@
+{
+  "id": "04-fingerstyle-patterns",
+  "title": "Essential Fingerstyle Patterns",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Six Essential Fingerstyle Patterns\n\nThese patterns cover the most commonly used fingerstyle approaches. Master all six and you'll have the vocabulary to handle most folk, pop, and country fingerstyle material.\n\n## Pattern 1 — Simple Arpeggio (P-I-M-A)\n```\ne |----3---------|\nB |--0-----------|\nG |----0---------|\nD |--------------|  on G chord\nA |--0-----------|\nE |--3-----------|\n   P  I  M  A\n```\n\n## Pattern 2 — Reverse Arpeggio (P-A-M-I)\n```\nP A M I P A M I\n6 1 2 3 6 1 2 3\n```\nUsed in bolero and Spanish-influenced music.\n\n## Pattern 3 — Travis Syncopated (P-I-P-M pattern)\nSee Lesson 3 for full breakdown.\n\n## Pattern 4 — 3/4 Waltz (P-I-M / P-I-M)\n```\n3/4 time: P on 1, I on 2, M on 3\n```\nUsed in \"House of the Rising Sun\" (The Animals), waltzes, ballads.\n\n## Pattern 5 — Broken Chord (P+I+M+A simultaneously, then arpeggiate)\nStrike all four voices at once, then let them ring — harp effect.\n\n## Pattern 6 — Pinch Pattern (P+A simultaneously, then I, M)\nTwo-string simultaneous attack on bass + treble, then fill in middle voices.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In 3/4 time fingerpicking (waltz pattern), which finger plays on beat 1?",
+      "choices": ["Index (I)", "Middle (M)", "Thumb (P)", "Ring (A)"],
+      "answer": 2,
+      "explanation": "In a 3/4 waltz pattern, the Thumb (P) plays the bass note on beat 1, followed by I on beat 2 and M on beat 3. This creates the classic waltz feel.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Applying Patterns to Chord Progressions\n\nThe real skill is keeping a pattern flowing through chord changes without stopping or hesitating.\n\n## The G–Em–C–D Progression\n\nApply Pattern 1 (P-I-M-A) continuously:\n\n```\n| G (4 beats) | Em (4 beats) | C (4 beats) | D (4 beats) |\n  P I M A       P I M A        P I M A       P I M A\n```\n\n## Bass Note Changes Per Chord\n\n- **G**: P on string 6\n- **Em**: P on string 6\n- **C**: P on string 5\n- **D**: P on string 4\n\n## Tips for Smooth Changes\n\n1. Anticipate the chord change — start forming the new shape on the last beat of the previous chord\n2. Let the bass note ring through the transition\n3. If you miss a note during a change, keep the pattern going — don't stop\n4. Practice the transition between just two chords (G→C) at 50 BPM before adding others",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When fingerpicking through chord changes, what should you do if you miss a note?",
+      "choices": [
+        "Stop and restart from the beginning",
+        "Keep the pattern going without stopping",
+        "Switch to strumming temporarily",
+        "Play extra notes to compensate"
+      ],
+      "answer": 1,
+      "explanation": "Musical continuity is more important than hitting every note perfectly. Keep the rhythmic pattern going — stopping is more disruptive to the music than a missed note. Your accuracy will improve with practice.",
+      "srs": true
+    }
+  ]
+}

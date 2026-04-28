@@ -1,0 +1,38 @@
+{
+  "id": "05-blues-gospel-analysis",
+  "title": "Blues & Gospel Analysis",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Analyzing Blues and Gospel: Case Studies\n\n### Case Study 1: Robert Johnson, 'Cross Road Blues' (1936)\n\nKey: A major. 12-bar blues structure.\n\n| Bar | Chord |\n|-----|-------|\n| 1-4 | A7 (I7) |\n| 5-6 | D7 (IV7) |\n| 7-8 | A7 (I7) |\n| 9 | E7 (V7) |\n| 10 | D7 (IV7) |\n| 11-12 | A7 / E7 (turnaround) |\n\nRobert Johnson's guitar style features:\n- **Bass-treble alternation**: Thumb plays bass notes while fingers pluck melody — a self-contained two-voice texture\n- **Blue note bends**: Slides between C# and C (b3) constantly\n- **Vocal call-response with guitar**: Voice calls; guitar answers in the breaks between vocal phrases\n\n### Case Study 2: Thomas A. Dorsey, 'Precious Lord, Take My Hand' (1932)\n\nKey: Bb major. This is not 12-bar blues — it is a 16-bar hymn form.\n\nKey features:\n- **Plagal motion throughout**: I → IV → I returns multiple times\n- **Minor subdominant** (Ebm = iv in Bb major) for emotional weight at the lyrical peak\n- **Secondary dominant**: C7 (V7/ii = V7 of Fm) before moving to IV\n- **Chromatic passing chords**: Smooth connections between diatonic chords\n\nDorsey wrote this after the death of his wife and newborn son in 1932 — one of the most emotionally powerful pieces of sacred music in any tradition. The harmonic language mirrors the lyrical content: longing (IV), brief darkness (iv), resolution (I).\n\n### Case Study 3: Aretha Franklin's Vocal Harmony\n\nAretha Franklin's gospel-influenced vocal style uses 'note substitution' — singing the 9th, 11th, or blue note against the chord rather than the chord tone:\n- Over a Bb major chord, she might sing Ab (the b7 — making it Bb7)\n- Over F major, she might sing Eb (b7 of F = F7), giving a blues quality to the tonic\n\nThis is the blues/gospel approach to melody: the singer brings blue notes to any chord, not just designated 'blue' moments.\n\n### The Blues-Gospel Continuum\n\nBlues and gospel share:\n- Dominant sevenths on all primary chords\n- Blue note vocabulary (b3, b5, b7)\n- Call-and-response structure\n- The 12-bar form (or related forms)\n\nThey differ in:\n- **Blues**: Secular, individual expression of suffering and sensuality\n- **Gospel**: Sacred, communal expression of faith and transcendence\n\nBut the harmonic language is so similar that many artists moved between the two traditions: Ray Charles, Sam Cooke, Aretha Franklin, B.B. King — all formed in gospel, performed blues and R&B.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Robert Johnson's 'Cross Road Blues' uses what characteristic two-voice guitar technique?",
+      "choices": [
+        "All notes on a single string for cleanliness",
+        "Bass-treble alternation — thumb plays bass notes while fingers pluck melody, creating a self-contained two-voice texture",
+        "Full six-string chord strumming throughout",
+        "Slide guitar (bottle-neck) for the entire piece"
+      ],
+      "answer": 1,
+      "explanation": "Robert Johnson used the Delta blues fingerpicking style: the thumb alternates between bass strings, playing the harmonic foundation, while fingers pluck the upper strings for the melody. This creates a self-contained musical texture — bass voice and treble voice simultaneously from a single guitar. This technique directly influenced generations of blues, folk, and acoustic guitarists.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Thomas Dorsey wrote 'Precious Lord, Take My Hand' after a personal tragedy. How does the harmonic language of the song reflect its emotional content?",
+      "choices": [
+        "The song stays entirely in a minor key to express sadness",
+        "The song uses constantly changing keys to express confusion and grief",
+        "Plagal motion (I→IV→I) expresses longing; the minor subdominant (iv) intensifies emotional weight; resolution to I represents faith and surrender",
+        "The song uses dissonant jazz extensions to express complex grief"
+      ],
+      "answer": 2,
+      "explanation": "In 'Precious Lord,' the harmonic language mirrors the lyrical content: the repeated I→IV→I plagal motion expresses longing (reaching toward God), the minor iv chord creates the emotional weight of suffering and loss, and the return to I represents faith and surrender ('take my hand'). This connection between harmonic choice and emotional meaning is characteristic of the best gospel songwriting.",
+      "srs": true
+    }
+  ]
+}

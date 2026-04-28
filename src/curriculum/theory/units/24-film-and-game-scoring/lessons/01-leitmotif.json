@@ -1,0 +1,38 @@
+{
+  "id": "01-leitmotif",
+  "title": "Leitmotifs",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Leitmotifs: Musical Identity Tags\n\nA **leitmotif** (German: 'leading motive') is a recurring musical theme, melody, harmony, or sound associated with a specific character, place, emotion, idea, or object. When the leitmotif returns, it triggers the audience's memory of its associated element.\n\n### The Wagnerian Origin\n\nRichard Wagner (1813–1883) systematized the leitmotif in his four-opera cycle *Der Ring des Nibelungen*. Wagner assigned dozens of leitmotifs to characters, objects, and concepts:\n\n- **The Ring Motif**: A single ascending horn call representing the cursed ring\n- **The Sword Motif**: Heroic fanfare whenever Siegfried's sword Nothung is mentioned\n- **The Curse Motif**: Dark, threatening brass figure attached to the ring's curse\n- **Siegfried Motif**: Lyrical, heroic melody representing the hero\n\nWhen characters or concepts interact dramatically, Wagner combines their leitmotifs in counterpoint — a musical argument mirroring the dramatic one.\n\n### John Williams and the Leitmotif in Film\n\nJohn Williams is the most celebrated leitmotif composer of the 20th century. His scores for Spielberg and Lucas are masterclasses:\n\n**Star Wars (1977)**:\n- **The Force Theme**: Warm, slow, major — associated with hope and the Force\n- **The Imperial March** (Empire Strikes Back, 1980): Minor, heavy, militaristic — Darth Vader/Empire\n- **Luke's Theme** (Main Title): Heroic, rising fifth — adventure and destiny\n- **Princess Leia's Theme**: Lyrical, French horn — nobility and romance\n\nNote: The Imperial March is the same key area as Luke's theme but in minor — they are harmonically related as parallel major/minor, mirroring the Force/Dark Side relationship.\n\n**Harry Potter (2001)**: The 'Hedwig's Theme' is not simply Harry's theme — it is the theme of the wizarding world itself, with its distinctive off-kilter waltz meter (3/4 with irregular accents) suggesting magic and wonder.\n\n### Compositional Techniques\n\nLeitmotifs are often **transformed** to reflect dramatic development:\n- **Augmentation**: The motif played in longer note values — grandeur, memory\n- **Diminution**: Shorter values — urgency, anxiety\n- **Inversion**: The motif upside down — character transformation or opposition\n- **Fragmentation**: Just a piece of the motif — a hint, a memory\n- **Harmonization**: The same melody harmonized differently — changed emotional context",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a leitmotif, and what is its function in opera and film?",
+      "choices": [
+        "A very short song used between scenes as a transition",
+        "A recurring musical theme associated with a specific character, place, or idea — triggering the audience's memory of that element when it returns",
+        "The main title theme of a film or opera",
+        "A technique where the melody leads the harmony"
+      ],
+      "answer": 1,
+      "explanation": "A leitmotif (German: 'leading motive') is a recurring musical idea — melody, harmony, rhythm, or texture — that the composer associates with a specific element (character, place, emotion, object). When the leitmotif returns, even transformed, the audience subconsciously or consciously associates it with its original referent. Wagner systematized this in the Ring cycle; John Williams perfected it in films.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How does John Williams's 'Imperial March' relate harmonically to Luke's 'Main Title' theme in Star Wars?",
+      "choices": [
+        "They are unrelated — different keys and no harmonic connection",
+        "They are in parallel major and minor — same key area but one is major (heroic/hopeful) and the other is minor (dark/imperial) — mirroring the Force/Dark Side opposition",
+        "The Imperial March is in a lower register only — same notes, different octave",
+        "They share the same rhythm but completely different notes"
+      ],
+      "answer": 1,
+      "explanation": "Luke's Main Title is in Bb major (heroic, ascending perfect fifth opening). The Imperial March is in G minor — the same key area but in minor mode. This parallel major/minor relationship is not accidental: it musically encodes the relationship between the Light Side and Dark Side. They come from the same harmonic world but are opposites within it — a brilliant use of modal parallel contrast as dramatic meaning.",
+      "srs": true
+    }
+  ]
+}

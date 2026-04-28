@@ -42,6 +42,7 @@ interface TabEditorCanvasProps {
   onPostRenderFinished?: () => void;
   onApiReady?: (api: AlphaTabApi) => void;
   onBeatMouseDown?: (beat: Beat) => void;
+  onBeatMouseUp?: (beat: Beat | null) => void;
   onNoteMouseDown?: (note: Note) => void;
   onPlayerStateChanged?: (state: number) => void;
   onPlayerReady?: () => void;
@@ -69,6 +70,7 @@ const TabEditorCanvas = forwardRef<TabEditorCanvasHandle, TabEditorCanvasProps>(
     onPostRenderFinished,
     onApiReady,
     onBeatMouseDown,
+    onBeatMouseUp,
     onNoteMouseDown,
     onPlayerStateChanged,
     onPlayerReady,
@@ -164,6 +166,7 @@ const TabEditorCanvas = forwardRef<TabEditorCanvasHandle, TabEditorCanvasProps>(
           onPostRenderFinished={onPostRenderFinished}
           onApiReady={onApiReady}
           onBeatMouseDown={onBeatMouseDown}
+          onBeatMouseUp={onBeatMouseUp}
           onNoteMouseDown={onNoteMouseDown}
           onPlayerStateChanged={onPlayerStateChanged}
           onPlayerReady={onPlayerReady}

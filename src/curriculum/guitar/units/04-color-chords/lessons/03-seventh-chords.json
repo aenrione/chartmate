@@ -1,0 +1,32 @@
+{
+  "id": "03-seventh-chords",
+  "title": "7th Chords",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Dominant 7th Chords\n\nA **dominant 7th** (e.g. G7, D7) adds a note a flat 7th above the root. Sounds bluesy and unresolved — it strongly wants to move to the next chord.\n\n**G7:** x 3 2 1 0 1\n- Add your pinky to string 1, fret 1 vs. the open G chord\n\n**D7:** x x 0 2 1 2\n- Move your middle finger, add index on B string fret 1",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "G7",
+      "frets": [1, 0, 0, 0, 2, 3],
+      "fingers": [1, 0, 0, 0, 2, 3],
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Major 7th vs. Dominant 7th\n\n- **Gmaj7** — dreamy, jazz/pop warmth (raised 7th: F#)\n- **G7** — bluesy tension, wants to resolve (flat 7th: F)\n\n**Gmaj7:** x x 4 4 3 2 (or the open position: 2 0 0 0 2 3)\n\nListening test: Gmaj7 sounds peaceful; G7 sounds like it needs to go somewhere.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What kind of 7th chord is used most in blues to create tension?",
+      "choices": ["Major 7th", "Minor 7th", "Dominant 7th", "Diminished 7th"],
+      "answer": 2,
+      "explanation": "Dominant 7th chords (e.g. G7, A7, D7) contain a flat 7th that creates strong harmonic tension — the core sound of blues.",
+      "srs": true
+    }
+  ]
+}

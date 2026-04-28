@@ -1,0 +1,38 @@
+{
+  "id": "01-pima-notation",
+  "title": "PIMA: The Language of Fingerpicking",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# PIMA Notation — Naming Your Right-Hand Fingers\n\nClassical and fingerstyle guitarists use a system borrowed from Spanish to label right-hand fingers:\n\n| Letter | Spanish | Finger |\n|--------|---------|--------|\n| **P** | *pulgar* | Thumb |\n| **I** | *índice* | Index |\n| **M** | *medio* | Middle |\n| **A** | *anular* | Ring |\n\nThe little finger (pinky) is rarely used and labeled **C** (*chico*), but most patterns stay within PIMA.\n\n## String Assignments\n\nIn a standard fingerstyle setup:\n- **P (thumb)** covers strings 6, 5, 4 (bass strings)\n- **I (index)** covers string 3\n- **M (middle)** covers string 2\n- **A (ring)** covers string 1\n\nThis assignment isn't rigid — advanced players shift freely — but it gives you a reliable starting point.\n\n## Why Not Just Use a Pick?\n\nFingerpicking lets you play **melody, harmony, and bass simultaneously**. A pick can only be in one place at a time. Once you internalize PIMA, you'll hear the guitar as a small orchestra rather than a single-voice instrument.\n\n## First Exercise\n\nOn an open G chord, practice this sequence slowly:\n```\nP – I – M – A – M – I\n(6) (3) (2) (1) (2) (3)\n```\nKeep wrist relaxed, fingers slightly curved, nails trimmed or shaped (more on this in Unit 21).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In PIMA notation, which letter represents the ring finger?",
+      "choices": ["P", "I", "M", "A"],
+      "answer": 3,
+      "explanation": "A stands for 'anular' (Spanish for ring finger). P=thumb, I=index, M=middle, A=ring.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Hand Position for Fingerpicking\n\n## Right Hand Setup\n\nYour right hand position is the foundation of clean fingerpicking tone:\n\n1. **Wrist**: Slightly arched away from the body, 1–2 cm off the soundboard\n2. **Fingers**: Gently curved, like holding a small ball\n3. **Thumb**: Slightly ahead of the fingers, angled toward the headstock\n4. **Anchor**: Many players rest their pinky lightly on the soundboard for stability (debated in classical technique, common in steel-string)\n\n## Tone Production\n\nThe point of contact on your fingertip affects tone:\n- **More flesh** → warmer, rounder tone\n- **More nail** → brighter, projecting tone\n- **Nail edge** (at an angle) → balanced, professional tone\n\n## Common Mistakes to Avoid\n\n- Collapsing the wrist so it rests on the strings\n- Plucking with just the fingertip (stiff motion)\n- Using only downward strokes on all fingers — use a slight inward curl\n- Tense shoulders transferring tension into the wrist\n\n**Reference**: Watch Tommy Emmanuel or Chet Atkins footage for ideal right-hand position on steel-string guitar.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does the thumb (P) typically cover in standard fingerpicking string assignment?",
+      "choices": ["Strings 1, 2, 3", "Strings 4, 5, 6", "String 6 only", "All strings equally"],
+      "answer": 1,
+      "explanation": "The thumb covers the bass strings (6, 5, 4), leaving the index, middle, and ring fingers for strings 3, 2, and 1 respectively.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Your First Fingerpicking Pattern\n\nLet's apply PIMA to a simple Arpeggio Pattern 1 in G major:\n\n```\nChord: G major (320003)\n\ne |--3-----------3---|\nB |----0-------0-----|\nG |------0---0-------|\nD |--------0---------|\nA |------------------|\nE |--3---------------|\n  P  I  M  A  M  I\n```\n\nBeat by beat:\n1. **P** hits low E (string 6)\n2. **I** hits G string (string 3)\n3. **M** hits B string (string 2)\n4. **A** hits high e (string 1)\n5. **M** hits B string again\n6. **I** hits G string again\n\n## Practice Tips\n\n- Start at 40 BPM with a metronome\n- Each note should be equal volume — the bass note often overpowers at first\n- Practice without looking at your right hand once the pattern is memorized\n- Apply this to C, Am, F, G7 for an instant fingerpicking song",
+      "srs": true
+    }
+  ]
+}

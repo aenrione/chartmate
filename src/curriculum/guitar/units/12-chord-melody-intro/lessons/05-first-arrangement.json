@@ -1,0 +1,43 @@
+{
+  "id": "05-first-arrangement",
+  "title": "Your First Complete Arrangement",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Putting It All Together\n\nHere is a complete chord-melody arrangement of the first 8 bars of \"Greensleeves\" — a perfect first arrangement because the melody is memorable and the harmonization is naturally beautiful.\n\n## \"Greensleeves\" — Chord-Melody in Am (3/4 time)\n\n```\ne |--0-------0---1--3--|\nB |----1---1---1-------|\nG |------2---2---------|\nD |--2---------0-------|\nA |----0---------------|\nE |--------------------|\n   Am      C    (beat 1, 2, 3)\n\ne |--5-------5---3--2--|\nB |----5---5---5-------|\nG |------4---4---------|\nD |--0---------4-------|\nA |----0---------------|\nE |--------------------|\n   Am      G\n```\n\n## What Makes This Work\n\n1. **Melody on string 1** (E string) throughout\n2. **Bass on beats 1** — single thumb stroke\n3. **Inner chord tones** fill strings 2–4\n4. **3/4 feel**: bass on 1, fingers on 2 and 3\n\n## Practice Approach\n\n1. Play just the melody (string 1 only) in time\n2. Add just the bass notes\n3. Combine melody + bass\n4. Finally add inner voices",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the recommended order for learning a chord-melody arrangement?",
+      "choices": [
+        "Full chord-melody from bar 1, straight through",
+        "Melody alone → bass alone → melody+bass → add inner voices",
+        "Bass first, then chords, then melody last",
+        "Inner voices first to build the harmony framework"
+      ],
+      "answer": 1,
+      "explanation": "Learning melody alone first lets you internalize the tune. Then adding bass creates the rhythmic framework. Combining them builds independence. Finally adding inner voices completes the arrangement. This layered approach prevents confusion between the voices.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Arranging Tips from the Masters\n\n## From Joe Pass\n\n\"Keep it simple. The melody is everything. The chords are just there to color it.\"\n\n## From Ted Greene\n\nUse **contrary motion** between melody and bass when possible — melody goes up while bass goes down, or vice versa. This creates maximum harmonic interest with minimum complexity.\n\n## From Martin Taylor\n\n\"Breathe in your arrangements. Leave space. The silence between notes is as musical as the notes themselves.\"\n\n## From Tommy Emmanuel\n\nPerform chord-melody pieces with the feel of a **song, not an exercise**. The technique must serve the emotion — never the other way around.\n\n## Your Next Steps\n\n1. Arrange one new song per week\n2. Start with short (8-bar) pieces with simple harmonies\n3. Record yourself and listen back critically\n4. Study transcriptions of Joe Pass's *Virtuoso* (Pablo Records, 1974)\n5. Progress to Unit 13 (Advanced Fingerstyle) for campanella and harmonics techniques",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'contrary motion' in chord-melody arranging?",
+      "choices": [
+        "Both melody and bass moving in the same direction",
+        "Melody moving in the opposite direction to the bass",
+        "The melody staying on one note while bass moves",
+        "Random movement with no relation between voices"
+      ],
+      "answer": 1,
+      "explanation": "Contrary motion means the melody moves in the opposite direction to the bass — when the melody ascends, the bass descends, and vice versa. This creates harmonic interest and independence between the voices, making the arrangement feel richer.",
+      "srs": true
+    }
+  ]
+}

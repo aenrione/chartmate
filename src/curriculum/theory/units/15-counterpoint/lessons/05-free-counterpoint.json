@@ -1,0 +1,51 @@
+{
+  "id": "05-free-counterpoint",
+  "title": "Free Counterpoint",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Free Counterpoint: Integrating All Species\n\nFifth species (also called 'florid counterpoint' or 'free counterpoint') combines all previous species in free rhythmic mixture. Whole notes, half notes, quarter notes, and tied notes (suspensions) all appear in the same counterpoint, flowing like a real vocal line.\n\n### The Freedom and Constraints\n\nIn free counterpoint, the rhythmic restrictions of each species are removed, but the dissonance treatment rules remain:\n- **Whole notes**: Must be consonant\n- **Half notes on downbeats**: Must be consonant\n- **Half notes on upbeats**: May be passing tones\n- **Quarter notes**: May be passing tones, neighbor tones, or cambiata\n- **Tied notes**: Must be suspensions (prepare → suspend → resolve)\n\n### Characteristics of Good Free Counterpoint\n\n**Melodic shape**: The line should have a single climactic peak and generally move through a stepwise range of a sixth to an octave. Like a Bach soprano line, it should be singable and have its own musical logic.\n\n**Rhythmic variety**: Mix longer and shorter values. Long durations at phrase endings create repose; quarter-note runs create momentum.\n\n**Climax placement**: Place the highest note about 2/3 through the piece — too early and the line collapses; too late and there is no time to descend gracefully.\n\n**Avoiding monotony**: Do not repeat pitches, stay too long in one registral area, or repeat rhythmic patterns mechanically.\n\n### The Broader Relevance\n\nFree counterpoint as practiced in 16th-century polyphony became the foundation for:\n- **Baroque fugue and invention** (Bach's two- and three-part inventions are free counterpoint exercises)\n- **Classical development sections** (competing melodic lines in development are contrapuntal)\n- **Jazz improvisation** (two or more musicians improvising simultaneously practice free counterpoint in real time)\n\n### Palestrina vs. Bach: Two Counterpoint Styles\n\n**Palestrina style** (modal, Renaissance):\n- Avoids chromaticism entirely\n- Very smooth melodic lines, mostly stepwise\n- Dissonances extremely controlled\n\n**Bach style** (tonal, Baroque):\n- Freely uses chromaticism, leading tones, and secondary dominants\n- Larger leaps, more angular lines\n- Richer dissonance vocabulary including fully diminished seventh chords\n\nStudying both develops flexibility in contrapuntal thinking.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In free counterpoint (fifth species), when a tied note occurs, what must it always function as?",
+      "choices": [
+        "A pedal tone (repeated through multiple measures)",
+        "A suspension — prepared as a consonance, tied into a dissonant position, resolved downward by step",
+        "A common tone held between two chords",
+        "A passing tone between two consonances"
+      ],
+      "answer": 1,
+      "explanation": "In fifth species, any tied note is treated as a suspension: the note must be prepared as a consonance on the weak beat, tied over to the strong beat where it is dissonant, then resolved downward by step to a consonance. This is the only way to create a tied dissonance in strict counterpoint style.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the recommended placement of the melodic climax (highest note) in a free counterpoint line?",
+      "choices": [
+        "At the very beginning, then descend throughout",
+        "At the very end, for maximum dramatic effect",
+        "Approximately 2/3 through the piece, leaving time for a graceful descent to the close",
+        "Exactly in the middle — perfectly symmetrical"
+      ],
+      "answer": 2,
+      "explanation": "Classical counterpoint pedagogy recommends placing the climax (highest note of the melodic arch) approximately two-thirds through the piece. Too early and the line drags after the peak; too late and there is insufficient time to descend gracefully to the final cadence. The 2/3 proportion is also related to the golden ratio in musical form — a naturally pleasing asymmetry.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Bach's two-part inventions are best described as exercises in which type of writing?",
+      "choices": [
+        "Pure first species counterpoint",
+        "Free (fifth species) counterpoint — blending rhythmic values with imitative entries",
+        "Chordal, harmonic writing (homophony)",
+        "Second species only — two notes against one throughout"
+      ],
+      "answer": 1,
+      "explanation": "Bach's two-part inventions are models of free counterpoint. They feature imitation (one voice imitates the other's opening figure), all rhythmic species mixed together, suspensions, passing tones, neighbor tones, and sequences. Bach described their purpose as teaching musicians to 'develop a singing style in playing and at the same time a strong foretaste of composition.'",
+      "srs": true
+    }
+  ]
+}

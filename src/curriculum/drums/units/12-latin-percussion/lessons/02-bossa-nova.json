@@ -1,0 +1,34 @@
+{
+  "id": "02-bossa-nova",
+  "title": "Bossa Nova",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Bossa Nova: Brazil Meets Jazz\n\nBossa nova emerged in late-1950s Rio de Janeiro, fusing traditional samba rhythms with jazz harmony. João Gilberto's guitar and voice, Antonio Carlos Jobim's compositions, and Stan Getz's saxophone defined the genre internationally.\n\n**Rhythmic character:**\n- Gentle, laid-back feel — never aggressive\n- The underlying pulse is in 2 (half-note feel) even when counted in 4/4\n- Syncopation against the clave creates the characteristic 'lift'\n- Brushes or extremely light sticks are mandatory for authentic tone\n\n**On the drum kit:**\n- Hi-hat foot plays the syncopated bossa pattern (often called the 'partido alto' derivative)\n- Snare: light rim clicks or brushed taps on beats 2 and 4\n- Kick: very light, often just beats 1 and 3 feathered\n- Rim click on the snare side (cross-stick) is the most authentic sound",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Bossa Nova Drum Pattern",
+      "description": "Hi-hat plays the syncopated clave-derived pattern, snare plays soft cross-stick on 2 and 4, kick feathers beat 1. The syncopation between hi-hat and kick creates the floating bossa feel. Play this very quietly — think brushes.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 126,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x---x-x-x---x-x-"},
+        {"name": "Snare",  "pattern": "----o-------o---"},
+        {"name": "Kick",   "pattern": "x-------x-x-----"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What sound best represents the snare drum in authentic bossa nova?",
+      "choices": ["Heavy backbeat crack", "Rim shot with full snare resonance", "Light cross-stick (rim click) or brushed tap", "Open rim shot"],
+      "answer": 2,
+      "explanation": "In bossa nova, the snare drum plays a light cross-stick (rim click) or soft brushed tap. The style requires extreme delicacy — heavy backbeats are completely antithetical to bossa nova's gentle, intimate character.",
+      "srs": true
+    }
+  ]
+}

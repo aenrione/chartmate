@@ -1,0 +1,35 @@
+{
+  "id": "02-jazz-swing",
+  "title": "Jazz Swing",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Swing Feel\n\nSwing eighth notes are **not equal** — they're triplet-based:\n\n**Straight 8ths:** equal spacing  \n**Swing 8ths:** long-short-long-short (like a shuffle)\n\nThe ride cymbal carries the swing pattern: beat 1 (long), skip, beat 2 (short), beat 2-and (long), skip, beat 3 (short)...\n\nSnare and kick are **comping** instruments in jazz — they respond to the music, accent phrases, and converse with soloists. A jazz drummer never repeats a fixed 4/4 kick pattern; they listen and react.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Jazz Ride Pattern (Swing Feel)",
+      "description": "The classic jazz ride pattern written in 8th-note grid approximation. In practice the 'and' beats are played slightly behind, creating the triplet 'swing' feel. Hi-hat foot keeps 2 and 4. Snare and kick comp lightly.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 120,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-xx-xx-"},
+        {"name": "Hi-Hat", "pattern": "--x---x-"},
+        {"name": "Snare",  "pattern": "--------"},
+        {"name": "Kick",   "pattern": "x-------"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How is swing feel different from straight eighth notes?",
+      "choices": ["Swing is slower", "Swing eighth notes have a long-short triplet feel instead of equal spacing", "Swing uses 16th notes instead of 8th notes", "There is no difference"],
+      "answer": 1,
+      "explanation": "Swing eighths are triplet-based: the first eighth note of each pair is longer (2/3 of a beat), the second shorter (1/3). This creates the characteristic 'bouncy' jazz feel.",
+      "srs": true
+    }
+  ]
+}

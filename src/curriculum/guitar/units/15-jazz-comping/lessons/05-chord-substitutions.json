@@ -1,0 +1,43 @@
+{
+  "id": "05-chord-substitutions",
+  "title": "Chord Substitutions",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Chord Substitutions — Adding Harmonic Color\n\nChord substitution replaces a chord with another that shares common tones or serves a similar harmonic function. This is how jazz musicians create fresh variations on familiar standards.\n\n## The Three Main Substitution Types\n\n### 1. Tritone Substitution\nReplace a dominant 7th chord with the dominant 7th a tritone (b5) away.\n\n**Example**: Replace G7 with Db7\n- G7 has: G B D F (3rd=B, 7th=F)\n- Db7 has: Db F Ab Cb/B (3rd=F, 7th=Cb=B)\n- They share the same 3rd and 7th! (just swapped)\n\nResult: Db7 → Cmaj7 instead of G7 → Cmaj7. The half-step bass movement (Db → C) is smooth and sophisticated.\n\n### 2. Relative Minor/Major Substitution\nI can be substituted with vi, IV can be substituted with ii.\n\n**Example**: Cmaj7 ↔ Am7 (they share 3 of 4 notes)\n\n### 3. Passing Diminished\nInsert a diminished chord between two diatonic chords:\n```\n| Cmaj7 | C#dim7 | Dm7 | G7 |\n```\nThe C#dim7 chromatic approach makes the movement to Dm7 more interesting.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In tritone substitution, why does Db7 work as a substitute for G7?",
+      "choices": [
+        "They are in the same key",
+        "They share the same root",
+        "They share the same 3rd and 7th (just inverted — the guide tones swap roles)",
+        "They have the same rhythm"
+      ],
+      "answer": 2,
+      "explanation": "G7's 3rd (B) and 7th (F) are the same notes as Db7's 7th (B/Cb) and 3rd (F). These guide tones swap positions, creating a seamless harmonic substitution with the smooth half-step bass movement from Db down to C.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Applying Substitutions in Comping\n\n## The ii-V-I with Tritone Sub\n\nOriginal: Dm7 → G7 → Cmaj7\nWith tritone sub: Dm7 → Db7 → Cmaj7\n\nThe Db7 is a tritone away from G7 (G to Db is a tritone = 3 whole tones). The bass movement Dm → Db → C is chromatic and elegant.\n\n## Backcycling\n\nAdd a ii-V before any target chord:\n```\nOriginal:   | Cmaj7 (2 bars) |\nBackcycled: | Dm7 G7 | Cmaj7 |\n```\n\nYou can backcycle repeatedly:\n```\n| Em7 A7 | Dm7 G7 | Cmaj7 |\n```\n\nThis creates harmonic interest from a static chord.\n\n## Comping Etiquette\n\n**Important**: Don't use substitutions if they clash with what the soloist is implying. Always listen first. Substitutions are a tool to use **in conversation** with other musicians — not to impose your own harmonic agenda.\n\nStart by asking: \"Does the soloist's note fit over my substitution?\" If no, keep the original chord.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'backcycling' in jazz chord substitution?",
+      "choices": [
+        "Playing chords backwards in time",
+        "Adding a ii-V before a target chord to create stronger harmonic movement toward it",
+        "Substituting every chord with its relative minor",
+        "Playing the chord progression in reverse order"
+      ],
+      "answer": 1,
+      "explanation": "Backcycling inserts a ii-V progression before any target chord, creating a stronger harmonic pull toward it. For example, adding Em7–A7 before Dm7–G7 creates a chain of ii-V movements that builds momentum.",
+      "srs": true
+    }
+  ]
+}

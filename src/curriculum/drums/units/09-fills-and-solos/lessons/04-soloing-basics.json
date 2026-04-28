@@ -1,0 +1,20 @@
+{
+  "id": "04-soloing-basics",
+  "title": "Drum Soloing Basics",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Musical Drum Soloing\n\nA great drum solo tells a story:\n\n1. **Introduction** — establish a motif, simple and clear\n2. **Development** — vary the motif, add complexity\n3. **Climax** — most intense moment, fastest or loudest\n4. **Resolution** — return to simplicity, resolve to beat 1\n\n**The biggest mistake:** playing as fast as possible non-stop. Tension requires release — the quieter moments make the loud ones hit harder.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'motif' in the context of a drum solo?",
+      "choices": ["A type of rudiment", "A recurring rhythmic idea that organizes the solo", "The tempo of the solo", "A specific fill pattern"],
+      "answer": 1,
+      "explanation": "A motif is a short, recognizable rhythmic idea. Introducing one at the start of a solo and varying it throughout gives the solo structure and makes it memorable rather than random.",
+      "srs": true
+    }
+  ]
+}

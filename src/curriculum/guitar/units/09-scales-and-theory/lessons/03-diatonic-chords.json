@@ -1,0 +1,20 @@
+{
+  "id": "03-diatonic-chords",
+  "title": "Diatonic Chords",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Chords Built From a Scale\n\nEvery note of a scale can be a chord root. In a major key the quality pattern is:\n\n| Degree | Quality | In C major |\n|--------|---------|------------|\n| I | Major | C |\n| ii | minor | Dm |\n| iii | minor | Em |\n| IV | Major | F |\n| V | Major | G |\n| vi | minor | Am |\n| vii° | diminished | Bdim |\n\nThis explains why G–D–Em–C works so well — those are I, V, vi, IV in the key of G.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a major key, the ii chord is always which quality?",
+      "choices": ["Major", "Minor", "Diminished", "Augmented"],
+      "answer": 1,
+      "explanation": "In every major key, the chord built on the 2nd degree (ii) is always minor. In C major: D minor. In G major: A minor.",
+      "srs": true
+    }
+  ]
+}

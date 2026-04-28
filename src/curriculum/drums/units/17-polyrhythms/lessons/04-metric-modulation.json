@@ -1,0 +1,34 @@
+{
+  "id": "04-metric-modulation",
+  "title": "Metric Modulation",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Metric Modulation: Changing Tempo Through Subdivision\n\nMetric modulation is a technique of changing the perceived tempo by redefining which subdivision becomes the new beat. The 'new' tempo is mathematically derived from a subdivision of the 'old' tempo.\n\n**Example — triplet to quarter note modulation:**\nIf you're playing at 120 BPM quarter notes, triplet 8th notes = 180 BPM 8th notes. If you suddenly declare 'these triplet 8ths are now my new quarter notes,' you've modulated to 180 BPM.\n\n**Mathematical relationship:**\nNew BPM = (old BPM × subdivision numerator) ÷ subdivision denominator\n\nFor triplet-to-quarter: 120 × 3 ÷ 2 = 180 BPM\nFor 16th-to-quarter: 120 × 4 ÷ 4 = 120 (no change)\nFor dotted 8th-to-quarter: 120 × 3 ÷ 4 = 90 BPM\n\n**Elliot Carter's system:** The American composer Elliot Carter developed metric modulation as a compositional technique. In drumming, it was popularized by: Billy Cobham (Mahavishnu Orchestra), Dave Weckl, and particularly Tony Williams whose metric superimpositions with Miles Davis in the mid-1960s remain the most recorded examples.\n\n**Practice approach:** Learn one modulation at a time. The triplet-to-quarter modulation (×3/2) is the most common. Practice it until you can execute the shift without a pause or stumble.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Pre-Modulation Groove (120 BPM)",
+      "description": "The groove before the metric modulation. At 120 BPM, feel the triplet subdivision strongly — the triplet 8ths will become the new quarter notes after the modulation. Count the triplets explicitly: 1-trip-let, 2-trip-let, 3-trip-let, 4-trip-let.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 120,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-xx-xx-"},
+        {"name": "Snare",  "pattern": "--x---x-"},
+        {"name": "Kick",   "pattern": "x-------"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "If you modulate from a triplet subdivision to a new quarter note feel at 120 BPM, what is the new tempo?",
+      "choices": ["90 BPM", "120 BPM", "160 BPM", "180 BPM"],
+      "answer": 3,
+      "explanation": "Triplet-to-quarter modulation: new BPM = old BPM × 3/2 = 120 × 1.5 = 180 BPM. The triplet 8th notes (which were cycling at 180 per minute) become the new quarter notes, and the perceived tempo jumps from 120 to 180 BPM.",
+      "srs": true
+    }
+  ]
+}

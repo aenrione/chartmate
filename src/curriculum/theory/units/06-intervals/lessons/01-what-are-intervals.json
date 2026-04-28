@@ -1,0 +1,64 @@
+{
+  "id": "01-what-are-intervals",
+  "title": "What Are Intervals?",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## What Are Intervals?\n\n### The Building Blocks of Music\n\nAn **interval** is the distance in pitch between two notes. Intervals are the fundamental unit of musical measurement — the atoms from which melodies, harmonies, and chords are constructed. Every relationship between notes in music is an interval relationship. Understanding intervals means understanding how music is built.\n\n### Melodic vs. Harmonic Intervals\n\n**Melodic intervals**: the two notes are played one *after* the other — heard in sequence, as in a melody.\n**Harmonic intervals**: the two notes are played *simultaneously* — heard together, as in a chord or a two-voice harmony.\n\nThe same interval (say, a major third) can be either melodic or harmonic depending on context, but its identity — its size and quality — is the same regardless.\n\n### Two Components: Number and Quality\n\nEvery interval is described by two things:\n\n1. **Number (generic interval size)**: How many letter names are spanned, counting both the starting and ending notes. This gives the *general* size.\n2. **Quality**: Whether the interval is major, minor, perfect, augmented, or diminished. This gives the *exact* size in half steps.\n\nFor example: C to E is a **third** (C=1, D=2, E=3, counting three letter names). But what *kind* of third? Count the half steps: C to C# (1), C# to D (2), D to D# (3), D# to E (4) — that is 4 half steps, which is a **major third**. Both pieces of information are required for a complete interval name.\n\n### Counting Intervals\n\nTo find the number of an interval:\n1. Name the lower note 1\n2. Count upward, assigning consecutive numbers to consecutive letter names\n3. The number you reach on the upper note is the interval size\n\nC to G: C(1) D(2) E(3) F(4) G(5) = a **fifth**\nC to F: C(1) D(2) E(3) F(4) = a **fourth**\nC to C: both = 1, so this is a **unison** (1)\nC to the C one octave up: C(1) D(2) E(3) F(4) G(5) A(6) B(7) C(8) = an **octave** (8)\n\nThe number tells you the general shape; the quality tells you the precise distance in half steps. You need both.\n\n### Why Intervals Matter\n\nIntervals are the vocabulary of music. Recognizing intervals by ear is the core of **ear training** — the skill that lets musicians identify pitches, transcribe music, and improvise fluently. Recognizing intervals visually on the staff is the core of **sight-reading**. Chords are stacks of intervals. The quality of a chord (major, minor, diminished) is determined entirely by the specific intervals stacked within it.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What are the two components needed to fully name any interval?",
+      "choices": [
+        "Duration and pitch",
+        "Number (how many letter names are spanned) and quality (major, minor, perfect, etc.)",
+        "Octave register and clef",
+        "Volume and timbre"
+      ],
+      "answer": 1,
+      "explanation": "A complete interval name requires both a number (how many letter names are spanned, counting both notes — giving the generic size) and a quality (major, minor, perfect, augmented, or diminished — giving the exact size in half steps). For example, 'major third' requires both components: 'third' is the number and 'major' is the quality.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the interval number from C up to A?",
+      "choices": [
+        "A fifth",
+        "A seventh",
+        "A sixth",
+        "An octave"
+      ],
+      "answer": 2,
+      "explanation": "To count the interval, start at C=1 and count each letter name upward: C(1) D(2) E(3) F(4) G(5) A(6). The interval from C to A spans six letter names — it is a sixth. The quality (major or minor) requires counting half steps, but the number is a sixth.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the difference between a melodic interval and a harmonic interval?",
+      "choices": [
+        "Melodic intervals are larger; harmonic intervals are smaller",
+        "Melodic intervals occur in major keys; harmonic intervals occur in minor keys",
+        "Melodic intervals are the two notes played in sequence (one after the other); harmonic intervals are the two notes played simultaneously",
+        "Melodic intervals are only found in the melody; harmonic intervals are only found in chords"
+      ],
+      "answer": 2,
+      "explanation": "The distinction is about timing, not size. A melodic interval occurs when the two notes are heard in sequence — one after the other, as in a scale or melody. A harmonic interval occurs when both notes are sounded at the same time — as in a chord or two-part harmony. The interval C to E is a major third whether C and E are played sequentially (melodic) or simultaneously (harmonic).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why are intervals considered the 'atoms' of music theory?",
+      "choices": [
+        "Because intervals are the smallest unit of rhythm",
+        "Because all chords, melodies, and harmonies are built from interval relationships — understanding intervals means understanding how all musical structures are constructed",
+        "Because intervals cannot be divided into smaller units",
+        "Because Pythagoras used atomic theory to explain intervals"
+      ],
+      "answer": 1,
+      "explanation": "Intervals are fundamental because every musical structure reduces to them. A major chord is a major third plus a minor third stacked together. A melody is a sequence of intervals. Harmonic progressions involve intervallic relationships between chord roots. Ear training is largely the skill of recognizing intervals. Once you know intervals, you have the vocabulary to analyze and understand any musical structure.",
+      "srs": true
+    }
+  ]
+}

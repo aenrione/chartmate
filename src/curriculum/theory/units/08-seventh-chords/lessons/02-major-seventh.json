@@ -1,0 +1,59 @@
+{
+  "id": "02-major-seventh",
+  "title": "The Major Seventh Chord",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## The Major Seventh Chord\n\nThe **major seventh chord** (Maj7) is one of the most beautiful and immediately recognizable sounds in Western harmony. It carries a warm, sophisticated, slightly dreamlike quality that makes it a cornerstone of jazz, bossa nova, and neo-soul.\n\n### Formula\n\nA Maj7 chord = major triad + major seventh:\n\n- **Root** to **3rd**: major third — 4 half steps\n- **3rd** to **5th**: minor third — 3 half steps\n- **5th** to **7th**: major third — 4 half steps\n- **Root** to **7th**: major seventh — **11 half steps**\n\nC Maj7 in full: **C–E–G–B**\n\nThe B natural (major seventh) sits just one half step below the octave C. This 'almost there' quality gives the chord its dreamy, slightly unresolved warmth.\n\n### More Examples\n\n| Chord | Notes |\n|-------|-------|\n| **C Maj7** | C, E, G, B |\n| **F Maj7** | F, A, C, E |\n| **G Maj7** | G, B, D, F# |\n| **D Maj7** | D, F#, A, C# |\n\n### Chord Symbols\n\nMaj7 appears in several notations depending on the context:\n- **CMaj7** — most common in pop/rock charts\n- **Cmaj7** — common in jazz and educational contexts\n- **CΔ7** or **CΔ** — the triangle (delta) symbol, favored in jazz lead sheets\n\n### Where Maj7 Occurs Naturally\n\nIn any major key, Maj7 chords appear on **scale degrees I and IV**. In C major:\n- **I Maj7** = C Maj7 (C–E–G–B)\n- **IV Maj7** = F Maj7 (F–A–C–E)\n\nThese are chords of pure, consonant rest — the most stable seventh chords in the key.\n\n### Maj7 vs. Dominant 7 — A Critical Distinction\n\nThis distinction trips up many students. Compare C Maj7 and C7:\n\n- **C Maj7**: C–E–G–**B** (major 7th, 11 half steps)\n- **C7**: C–E–G–**Bb** (minor 7th, 10 half steps)\n\nThe difference is one half step — B vs. Bb — but the harmonic function is completely different. C Maj7 is a resting, consonant tonic chord. C7 is a tense dominant chord that wants to resolve to F major. Confusing them is a common and significant mistake.\n\n### The Sound\n\nMaj7 chords define the sound of: bossa nova (think 'Girl from Ipanema'), jazz ballads, neo-soul (D'Angelo, Erykah Badu), and ambient/chillout music. Their warm, floating quality makes them ideal for expressing nostalgia, romance, and introspection.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What are the notes of a C major seventh chord (CMaj7)?",
+      "choices": ["C, E, G, Bb", "C, E, G, B", "C, Eb, G, B", "C, E, G#, B"],
+      "answer": 1,
+      "explanation": "CMaj7 is C–E–G–B. The major seventh above C is B natural (11 half steps). C7 (dominant seventh) would be C–E–G–Bb, with a minor seventh (Bb). The B vs. Bb distinction is crucial.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "On which scale degrees of the major scale do Maj7 chords occur naturally?",
+      "choices": [
+        "I and V",
+        "I and IV",
+        "IV and V",
+        "II and VI"
+      ],
+      "answer": 1,
+      "explanation": "In any major key, major seventh chords occur naturally on scale degrees I and IV. In C major: CMaj7 (I) and FMaj7 (IV). These are the two points of full harmonic rest — stable Maj7 chords built entirely from scale tones.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does the triangle symbol (Δ) mean in chord notation?",
+      "choices": [
+        "Diminished chord",
+        "Augmented chord",
+        "Major seventh chord",
+        "Minor chord"
+      ],
+      "answer": 2,
+      "explanation": "The triangle (Δ) is a jazz shorthand for 'major seventh.' CΔ or CΔ7 means C major seventh (CMaj7). This symbol is especially common in jazz lead sheets and real books.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the key difference between CMaj7 and C7?",
+      "choices": [
+        "CMaj7 has a major third; C7 has a minor third",
+        "CMaj7 has a major seventh (B); C7 has a minor seventh (Bb)",
+        "CMaj7 has four notes; C7 has three notes",
+        "CMaj7 is a minor chord; C7 is a major chord"
+      ],
+      "answer": 1,
+      "explanation": "Both CMaj7 and C7 have the same root, major third (E), and perfect fifth (G). The only difference is the seventh: CMaj7 has B (major 7th, 11 half steps) while C7 has Bb (minor 7th, 10 half steps). CMaj7 is a resting chord; C7 is a tension chord that resolves to F.",
+      "srs": true
+    }
+  ]
+}

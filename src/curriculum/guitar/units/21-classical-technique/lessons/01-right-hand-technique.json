@@ -1,0 +1,43 @@
+{
+  "id": "01-right-hand-technique",
+  "title": "Classical Right-Hand Technique",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Classical Guitar Right-Hand Technique\n\nClassical guitar right-hand technique is a highly developed system refined over centuries. It prioritizes **tone quality, control, and independence** above all else.\n\n## The Classical Position\n\n1. **Wrist**: Slightly arched, 2-3 cm above the soundboard\n2. **Forearm**: Rests lightly on the guitar's lower bout — not the wrist\n3. **Fingers**: Curved, entering the strings at roughly 45 degrees\n4. **Nails**: Filed at an angle — right side longer than left, smooth curved edge\n5. **No anchoring**: Classical technique discourages anchoring the pinky on the soundboard (unlike steel-string fingerstyle)\n\n## The Stroke Types\n\n### Rest Stroke (apoyando)\nThe finger plays through the string and **rests on the adjacent string**. Creates:\n- Maximum tone projection\n- Dark, warm, assertive sound\n- Used for melodies and scale passages\n\n### Free Stroke (tirando)\nThe finger plays through the string and **doesn't touch the next string**. Creates:\n- Lighter, more transparent sound\n- Used for arpeggios and chord accompaniment\n- More common overall\n\n## The Nail — Your Tone Generator\n\nIn classical guitar, the right-hand nail is carefully shaped and maintained:\n- **Shape**: Smooth curved edge, filed from underneath\n- **Length**: 2-3mm beyond the fingertip\n- **Maintenance**: Crystal nail file, not metal — smooth, not jagged",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the difference between rest stroke (apoyando) and free stroke (tirando) in classical guitar?",
+      "choices": [
+        "Rest stroke uses a pick; free stroke uses fingers",
+        "Rest stroke plays through to rest on the adjacent string (louder, warmer); free stroke doesn't touch the next string (lighter, more transparent)",
+        "Rest stroke is for bass notes; free stroke is for treble only",
+        "They are different names for the same technique"
+      ],
+      "answer": 1,
+      "explanation": "Rest stroke (apoyando) plays through the string and rests on the adjacent string — producing maximum tone and projection, used for melody. Free stroke (tirando) doesn't contact the adjacent string — producing a lighter tone, used for arpeggios and chord playing.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Independence Exercise — Separating PIMA\n\nClassical technique demands that each right-hand finger operate independently — no sympathetic movement.\n\n## The Basic Independence Test\n\nWith the right hand hovering over the strings:\n1. Move only the index (I) — other fingers stay still\n2. Move only the middle (M) — other fingers stay still\n3. Move only the ring (A) — other fingers stay still\n4. Move only the thumb (P)\n\nIf other fingers move when you move one, you have **sympathy movement** — the common right-hand problem.\n\n## The Segovia Scales\n\nAndrés Segovia (1893–1987) developed a chromatic scale exercise using alternating I-M rest strokes. It's the most fundamental classical scale practice:\n\n```\ne |--1--2--3--4--|\nB |--1--2--3--4--|\nG |--1--2--3--4--|\nD |--1--2--3--4--|\nA |--1--2--3--4--|\nE |--1--2--3--4--|\n   i  m  i  m  (alternating)\n```\n\n## Practice Rule\n\nFocus on tone quality above all. **One beautiful note is worth more than ten careless ones**. Segovia, Bream, and Williams all emphasized this in their masterclasses.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'sympathy movement' in classical right-hand technique and why is it problematic?",
+      "choices": [
+        "Playing with too much emotion",
+        "When other fingers move in sympathy when you intend to move only one — reducing independence and control",
+        "The sympathetic vibration of open strings",
+        "Playing softer notes for accompaniment"
+      ],
+      "answer": 1,
+      "explanation": "Sympathy movement occurs when attempting to move one finger causes unintended movement in adjacent fingers. This limits independence, reduces control, and creates tension. Classical technique aims to eliminate sympathy movement through targeted exercises.",
+      "srs": true
+    }
+  ]
+}

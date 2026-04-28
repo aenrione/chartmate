@@ -1,0 +1,43 @@
+{
+  "id": "03-melodic-development",
+  "title": "Melodic Development",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Melodic Development — Writing Memorable Melodies\n\nA great melody is the most personal and impactful element a composer can create. Guitar is uniquely suited to melodic composition because of its expressive capabilities (bends, vibrato, slides).\n\n## The Properties of a Memorable Melody\n\n1. **Narrow range**: Most great melodies stay within an octave\n2. **Step motion**: Mostly steps (2nds) with occasional leaps for contrast\n3. **Peak note**: One clear highest note — the emotional climax\n4. **Phrase shape**: Rising toward the peak, falling to resolve\n5. **Rhythm**: Distinctive rhythmic pattern that's separate from the harmony\n6. **Repetition with variation**: A motif that returns, transformed\n\n## The Principle of Contrary Motion\n\nWhen the melody goes up, the bass goes down (and vice versa). This creates maximum melodic independence and interest.\n\n## Beethoven's 5-Note Rule\n\nBeethoven demonstrated in Symphony No. 5 that 4 notes (da-da-da-DUM) could generate an entire symphony. Great melodies are built from small, memorable cells — not from long, complex phrases.\n\nYour melodic cell: 3-5 notes\nYour melody: transformation, development, and return of that cell",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why do great melodies typically stay within a narrow range (under an octave)?",
+      "choices": [
+        "Singers can't sing more than an octave",
+        "Narrow range is easier to remember and hum, making the melody more accessible and emotionally immediate",
+        "Classical rules forbid wider melodies",
+        "Guitar can't play wide-range melodies"
+      ],
+      "answer": 1,
+      "explanation": "Narrow-range melodies are easier for listeners to internalize and sing. Wide leaps are memorable but used sparingly — a melody that constantly jumps wide intervals is difficult to remember and can feel disjointed. The occasional wide leap is effective precisely because the melody mostly stays close.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Melody Writing on Guitar — Practical Approach\n\n## Step 1: Establish Harmonic Context\n\nChoose a chord (let's use G major). Play it slowly, letting it ring. **Listen** until you hear a melody singing in your head over it.\n\n## Step 2: Capture Immediately\n\nRecord everything. Voice memos on your phone. The moment you hear a melodic idea, **record it before evaluating it**. Many great melodies are lost to \"that wasn't good enough.\"\n\n## Step 3: Develop the Idea\n\nOnce you have a 2-4 note idea, develop it:\n- Repeat it over the chord (does it hold up?)\n- Extend it (what note comes next naturally?)\n- Vary it (same rhythmic shape, different notes)\n\n## Step 4: Harmonize\n\nOnce you have a strong melodic line, find the chords that support it. Don't force the melody to fit pre-existing chords — let the melody suggest its harmony.\n\n## Recommended Listening for Guitar Melody\n\n- **BB King**: \"The Thrill Is Gone\" — vocal blues melody on guitar\n- **Dire Straits (Mark Knopfler)**: \"Brothers in Arms\" — lyrical guitar melody\n- **Pink Floyd (David Gilmour)**: \"Comfortably Numb\" solo — long, arching, singing melody\n- **Chet Atkins**: Any instrumental — classic melodic elegance",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When writing a melody, why should you capture ideas immediately before evaluating them?",
+      "choices": [
+        "You might forget the idea before you can evaluate it",
+        "Evaluation mode activates the critical mind, which suppresses creative ideas — many great melodies are lost to self-criticism in the moment",
+        "Recording is mandatory for copyright protection",
+        "Melodies are only created spontaneously"
+      ],
+      "answer": 1,
+      "explanation": "The critical mind (evaluation) and the creative mind operate differently. Switching to evaluation mode while a creative idea is fragile can kill it. Capturing first and evaluating later protects the creative process and retains options.",
+      "srs": true
+    }
+  ]
+}

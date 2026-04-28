@@ -1,0 +1,33 @@
+{
+  "id": "01-three-voice-counterpoint",
+  "title": "Three-Voice Counterpoint",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Three-Voice Counterpoint\n\nMoving from two-voice to three-voice counterpoint introduces new considerations: complete triads, more potential for parallel motion, and the challenge of maintaining three independent, interesting melodic lines simultaneously.\n\n### Chord Completeness in Three Voices\n\nWith three voices, we can form complete triads:\n- Root, third, and fifth are all present\n- The most significant new rule: **avoid the fifth in outer voices approaching a final octave in contrary motion** — this creates a perfect authentic cadence but must be handled carefully\n\n**Preferred three-voice spacing**: Soprano–Alto within an octave; Alto–Bass more flexible, but avoid huge gaps. Generally mirror the two-voice outer spacing rules.\n\n### The Independence Problem\n\nWith three voices, maintaining full independence is harder:\n- If Soprano and Alto move in parallel thirds (allowed in moderation), the Bass must move differently\n- At any given moment, the three voices should be moving in at least two different directions (two ascending, one descending, or vice versa)\n- Avoid all three voices moving in the same direction (parallel motion in all three) — this collapses the texture\n\n### Parallel Fifths and Octaves: Now Harder to Avoid\n\nWith three voices creating six possible pairs, there are six potential locations for parallel fifths or octaves:\n- Soprano–Alto, Soprano–Bass, Alto–Bass (three pairs)\nCheck all three pairs at every chord change.\n\n### The Diminished Third: A New Concern\n\nIn three-voice writing, the **diminished third** (from B to Ab, or similar) becomes possible as a melodic interval. The diminished third must be **avoided as a melodic leap** — it is an augmented second enharmonically and sounds forced/awkward.\n\n**Solution**: If your three-voice writing creates a situation where a voice must leap a diminished third, rewrite the note assignment (change which voice has which chord tone).\n\n### Bach's Three-Voice Inventions\n\nBach's 15 Three-Part Inventions (Sinfonias) are the canonical models for three-voice counterpoint. Key observations:\n\n- **Stretto**: A brief imitation where the second voice enters before the first has finished — creating overlapping melodic entries\n- **Episode**: A sequential passage where the imitative texture opens up briefly into running passages\n- **Pedal point**: A long sustained note (usually in the bass) while the upper voices continue moving — creates tension before a cadence\n\nListen to **Bach's Sinfonia No. 9 in F minor (BWV 795)** — a masterpiece of three-voice counterpoint with dense imitation and extraordinary emotional depth.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When checking for parallel fifths in three-voice counterpoint, how many voice-pairs must be checked at each chord change?",
+      "choices": ["One pair (outer voices only)", "Two pairs (soprano-alto and alto-bass)", "Three pairs (soprano-alto, soprano-bass, and alto-bass)", "Six pairs (all possible combinations)"],
+      "answer": 2,
+      "explanation": "With three voices, there are three possible pairs: Soprano–Alto, Soprano–Bass, and Alto–Bass. All three pairs must be checked for parallel perfect fifths and parallel octaves at each chord change. This is why three-voice counterpoint is more demanding than two-voice — the number of potential parallels triples.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'stretto' in imitative counterpoint?",
+      "choices": [
+        "A fast tempo marking (Italian for 'tight/narrow')",
+        "A technique where a second voice enters with imitation before the first voice has finished its subject, creating overlapping entries",
+        "A harmonics technique in string writing",
+        "A shortened cadential passage at the end of a section"
+      ],
+      "answer": 1,
+      "explanation": "Stretto (Italian: 'pressed together/narrow') is a contrapuntal technique where imitative entries overlap — the second voice begins imitating before the first voice has completed its subject. This creates a sense of increasing intensity and momentum. Stretto is used extensively in fugue development and in Bach's three-voice inventions as a climactic device.",
+      "srs": true
+    }
+  ]
+}

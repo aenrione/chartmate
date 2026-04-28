@@ -1,0 +1,59 @@
+{
+  "id": "05-whole-steps",
+  "title": "Whole Steps",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Whole Steps: The Primary Building Block of Scales\n\nA **whole step** — also called a **tone** or a **major second** — equals exactly **two half steps**. On the piano, two keys are a whole step apart when there is always exactly **one key between them** (whether that key is black or white). On the guitar, **two frets = one whole step**.\n\n### Whole Steps on the White Keys\n\nMost adjacent white-key pairs are a whole step apart:\n\n| Pair | Whole step? | Reason |\n|------|-------------|--------|\n| C — D | Yes | Black key (C#/Db) between them |\n| D — E | Yes | Black key (D#/Eb) between them |\n| E — F | **No** | Natural half step — no black key |\n| F — G | Yes | Black key (F#/Gb) between them |\n| G — A | Yes | Black key (G#/Ab) between them |\n| A — B | Yes | Black key (A#/Bb) between them |\n| B — C | **No** | Natural half step — no black key |\n\nFive whole steps and two half steps in the white-key octave. Those two natural half steps (E-F and B-C) are the defining feature that gives the major scale its characteristic sound.\n\n### Whole Steps on the Guitar\n\nTwo frets up or down on any string:\n- Fret 3 to fret 5: one whole step up\n- Open string (fret 0) to fret 2: one whole step up\n- Fret 7 to fret 5: one whole step down\n\nThe guitar's tuning itself is built largely from whole steps and half steps: standard tuning (E-A-D-G-B-E) uses mostly **perfect fourths** (5 half steps = 2.5 whole steps) between most adjacent strings, with the exception of the G-to-B interval (a major third = 4 half steps = 2 whole steps).",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## The Major Scale Pattern: W-W-H-W-W-W-H\n\n### The DNA of the Major Scale\n\nThe major scale is built by following a specific, fixed sequence of whole steps (W) and half steps (H):\n\n> **W — W — H — W — W — W — H**\n\nThis pattern, applied starting from any pitch, produces a major scale. Let's build two scales to prove it:\n\n**C major** (start at C, follow the pattern):\n> C **W** D **W** E **H** F **W** G **W** A **W** B **H** C\n\nAll white keys — no accidentals needed.\n\n**G major** (start at G, follow the pattern):\n> G **W** A **W** B **H** C **W** D **W** E **W** F# **H** G\n\nThe pattern forces us to use F# (not F natural) — because the step from E to F would be a half step (E-F is a natural half step), but the pattern requires a whole step at that position. So we raise F to F#, creating the needed whole step.\n\n### Why the Half Steps Land Where They Do\n\nThe two half steps in the major scale fall between:\n- **Scale degrees 3 and 4** (E-F in C major)\n- **Scale degrees 7 and 8** (B-C in C major)\n\nThe half step at 7–8 creates the **leading tone** — the powerful pull from scale degree 7 up to the tonic. The half step at 3–4 is part of what distinguishes the major sound from the minor sound (in the natural minor scale, the half steps fall in different positions).\n\n### The Whole Tone Scale\n\nIf you build a scale using **only whole steps** — no half steps at all — you get the **whole tone scale**:\n\n> C — D — E — F# — G# — A# — C\n\nOnly 6 notes per octave. It has a dreamy, ambiguous, unresolved quality because there are no leading tones and no half-step resolution. Debussy used the whole tone scale extensively to create his impressionistic floating harmonies.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "A whole step equals how many half steps?",
+      "choices": ["1", "2", "3", "4"],
+      "answer": 1,
+      "explanation": "A whole step (also called a tone or major second) equals exactly two half steps. On the piano, there is always one key between two notes a whole step apart. On the guitar, two frets equal one whole step.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the major scale pattern W-W-H-W-W-W-H, between which scale degrees do the half steps fall?",
+      "choices": [
+        "Degrees 2–3 and 5–6",
+        "Degrees 3–4 and 7–8",
+        "Degrees 1–2 and 4–5",
+        "Degrees 4–5 and 6–7"
+      ],
+      "answer": 1,
+      "explanation": "The half steps in the major scale fall between scale degrees 3 and 4, and between scale degrees 7 and 8 (the leading tone to tonic). In C major, these are E-F and B-C — the two natural half steps on white keys.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When building G major following the W-W-H-W-W-W-H pattern, which note must be raised by a half step?",
+      "choices": ["C", "D", "E", "F"],
+      "answer": 3,
+      "explanation": "Following the pattern from G: G(W)A(W)B(H)C(W)D(W)E — at this point the pattern requires a whole step, but E to F natural is only a half step. So F must be raised to F#, creating the needed whole step. This is why G major has one sharp: F#.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the whole tone scale, and what quality does it evoke?",
+      "choices": [
+        "A scale built entirely of half steps; it sounds chromatic and tense",
+        "A scale built entirely of whole steps (6 notes per octave); it sounds dreamy and unresolved",
+        "A scale built of alternating whole and half steps; it sounds exotic",
+        "Another name for the major scale; it sounds happy and bright"
+      ],
+      "answer": 1,
+      "explanation": "The whole tone scale consists exclusively of whole steps: C D E F# G# A# C (6 distinct pitches). Because there are no half steps, there are no leading tones and no sense of resolution — giving it a floating, ambiguous, impressionistic quality used by Debussy.",
+      "srs": true
+    }
+  ]
+}

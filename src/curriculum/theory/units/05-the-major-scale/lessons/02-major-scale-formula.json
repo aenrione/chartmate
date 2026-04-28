@@ -1,0 +1,64 @@
+{
+  "id": "02-major-scale-formula",
+  "title": "The Major Scale Formula",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## The Major Scale Formula\n\n### W–W–H–W–W–W–H\n\nEvery major scale — in every key — follows the same pattern of whole steps (W) and half steps (H):\n\n**W – W – H – W – W – W – H**\n\nThis seven-interval formula is what makes a scale sound \"major.\" It is the DNA of the major scale. Memorize it not just as an abstract sequence, but feel it in your hands and your ears.\n\n### Breaking Down the Formula\n\nApplied to C major starting on C:\n\n| From → To | Interval | Step Type |\n|-----------|----------|-----------|\n| C → D | whole step (2 half steps) | W |\n| D → E | whole step | W |\n| E → F | half step (1 half step) | **H** |\n| F → G | whole step | W |\n| G → A | whole step | W |\n| A → B | whole step | W |\n| B → C | half step | **H** |\n\nThe two half steps occur between **scale degrees 3–4** (E–F) and **scale degrees 7–8** (B–C). These positions are not random — they are the structural core of the major scale.\n\n### Why Those Half Steps?\n\nThe half step at degrees 3–4 creates a slight tension that defines the feel of the major scale's lower half. But the critical one is the half step at **7–8**: it creates the **leading tone**.\n\nThe leading tone (scale degree 7, B in C major) is one half step below the tonic. That minimal distance creates an intense gravitational pull upward to the tonic. It is the harmonic equivalent of holding your breath before exhaling. In dominant seventh chords (G7 in C major), the leading tone is what makes the chord feel like it *must* resolve to the tonic.\n\n### Applying the Formula to Any Starting Note\n\nThe formula W–W–H–W–W–W–H works starting on any note. Starting on G:\n- G(W)A(W)B(H)C(W)D(W)E(W)F#(H)G\n\nWhy F#? Because the step from E to F is only a half step (E and F are adjacent on the piano keyboard), but the formula requires a whole step (W) for the 6th degree. So we raise F to F#, creating a whole step from E to F#. Then B to G (skipping over... wait — B to C is a half step, which is what we need for step 7). The formula *forces* the accidentals of each key.\n\n### The Formula as a Universal Constructor\n\nYou can build any major scale on any pitch using this formula alone. No need to memorize all 12 major scales in isolation — just know W–W–H–W–W–W–H and how to count half steps. This is how Berklee students are taught to derive scales from first principles rather than rote memory.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the correct whole-step/half-step formula for a major scale?",
+      "choices": [
+        "W–H–W–W–H–W–W",
+        "W–W–W–H–W–W–H",
+        "W–W–H–W–W–W–H",
+        "H–W–W–W–H–W–W"
+      ],
+      "answer": 2,
+      "explanation": "The major scale formula is W–W–H–W–W–W–H. The two half steps fall between scale degrees 3–4 and 7–8(1). This is the defining pattern of the major scale — the same formula applies to every major scale regardless of starting pitch. Option A is the natural minor scale formula.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Between which scale degrees do the half steps fall in a major scale?",
+      "choices": [
+        "Between degrees 2–3 and 6–7",
+        "Between degrees 3–4 and 7–8 (7 to 1)",
+        "Between degrees 1–2 and 4–5",
+        "Between degrees 4–5 and 7–8"
+      ],
+      "answer": 1,
+      "explanation": "In the major scale, the two half steps occur between scale degrees 3 and 4, and between scale degrees 7 and 8 (which is the same as 7 to 1 when the scale loops). In C major: E–F (degrees 3–4) and B–C (degrees 7–8). These positions are what give the major scale its characteristic sound — especially the 7–8 half step, which creates the leading tone.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "You are building a major scale starting on D. After D(W)E(W)F#(H)G, what comes next according to the formula W–W–H–W–W–W–H?",
+      "choices": [
+        "G# (because you need a half step after G)",
+        "Ab (because flat keys alternate with sharp keys)",
+        "A (whole step from G to A)",
+        "G# or Ab — both are correct"
+      ],
+      "answer": 2,
+      "explanation": "After the half step at degree 3–4 (F# to G), the formula continues with W–W–W–H for the remaining degrees. So from G: G(W)A is the next step — a whole step gives us A as scale degree 5 of D major. The full D major scale is D E F# G A B C# D. Each step follows directly from the W–W–H–W–W–W–H formula.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes scale degree 7 (the leading tone) so harmonically powerful in the major scale?",
+      "choices": [
+        "It is the highest note in the scale and therefore the loudest",
+        "It is a whole step below the tonic, creating a stable resting point",
+        "It is one half step below the tonic, creating intense upward pull toward resolution",
+        "It is the only note in the scale that is always a sharp"
+      ],
+      "answer": 2,
+      "explanation": "Scale degree 7 (the leading tone) is one half step below the tonic. That minimal distance — the smallest possible step in Western music — creates an extremely strong pull upward toward the tonic. This tension-and-resolution is the engine of tonal harmony: the dominant seventh chord (V7) uses the leading tone to drive powerfully toward the tonic (I) chord, which is the foundation of cadences in Western music.",
+      "srs": true
+    }
+  ]
+}

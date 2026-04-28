@@ -1,0 +1,20 @@
+{
+  "id": "03-polyrhythms-intro",
+  "title": "Polyrhythms",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Polyrhythms\n\nA **polyrhythm** is two different rhythmic cycles played simultaneously.\n\n**3:2 polyrhythm** — the most fundamental:\n- Right hand: 3 equal notes\n- Left hand: 2 equal notes\n- Both start and end at the same time\n\nSay: **'not dif-fi-cult'** (3 syllables) while tapping a steady 2-beat pulse.\n\n**African and Brazilian music** are built on polyrhythms — they create the sensation of multiple grooves existing simultaneously.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What defines a polyrhythm?",
+      "choices": ["Playing two different rhythms that never align", "Two different rhythmic cycles played simultaneously over the same time span", "Playing in two time signatures sequentially", "A fill that uses all drums"],
+      "answer": 1,
+      "explanation": "A polyrhythm is two (or more) different rhythms happening at the same time, sharing the same start and end point but with different internal divisions.",
+      "srs": true
+    }
+  ]
+}

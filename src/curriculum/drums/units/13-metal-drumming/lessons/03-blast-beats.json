@@ -1,0 +1,34 @@
+{
+  "id": "03-blast-beats",
+  "title": "Blast Beats",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Blast Beats: Maximum Velocity\n\nBlast beats are the extreme speed technique of death metal and grindcore drumming — every subdivision struck as fast as possible, creating a wall of rhythmic noise.\n\n**Three main blast beat types:**\n\n1. **Traditional blast** (alternating): Snare and kick alternate on every 16th note: Snare-Kick-Snare-Kick. Hi-hat or cymbal plays 8th notes. The most common form.\n\n2. **Bomb blast**: Both snare AND kick hit simultaneously on every 8th note. The simultaneous hit creates maximum impact.\n\n3. **Hammer blast**: Snare plays 16th notes while kick plays 8th notes. The snare doubles the kick's time rate.\n\n**Physical demands:** Blast beats at 200+ BPM require:\n- Optimized double pedal setup with minimal mechanical resistance\n- Moeller technique or finger technique on the snare arm for endurance\n- Extensive conditioning — start at 120 BPM and add only 5 BPM per week\n- Video yourself from the side to check kick beater angle and return speed\n\n**Dave Lombardo** (Slayer), **George Kollias** (Nile), and **Flo Mounier** (Cryptopsy) are the masters of this technique.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Traditional Blast Beat",
+      "description": "Snare and kick alternate on every 16th note (SKSK pattern). Cymbal plays 8th notes. This is the fundamental blast beat — build the speed over months, not days. Even 120 BPM is challenging when done correctly with full volume.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 140,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-x-x-x-x-x-x-x-"},
+        {"name": "Snare",  "pattern": "x-x-x-x-x-x-x-x-"},
+        {"name": "Kick",   "pattern": "-x-x-x-x-x-x-x-x"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a traditional (alternating) blast beat, what is the snare-to-kick relationship?",
+      "choices": ["Both hit simultaneously on every 8th note", "Snare and kick alternate on every 16th note", "Snare plays 8th notes while kick plays 16th notes", "Snare plays every beat and kick plays freely"],
+      "answer": 1,
+      "explanation": "In a traditional blast beat, the snare and kick strictly alternate on every 16th note subdivision — snare on 1, kick on 2, snare on 3, kick on 4, etc. This creates the relentless, dense percussive texture of extreme metal.",
+      "srs": true
+    }
+  ]
+}

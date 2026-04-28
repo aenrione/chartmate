@@ -29,6 +29,8 @@ import {
   updateAnnotation,
   deleteAnnotation,
 } from '@/lib/local-db/playbook';
+import {recordEventSafely} from '@/lib/progression';
+import {findItemBySavedChart, recordReview} from '@/lib/local-db/repertoire';
 
 // ── Context Types ────────────────────────────────────────────────────
 
@@ -236,6 +238,29 @@ export function PlaybookProvider({
     if (!activeItem) return;
     await updateSectionStatus(sectionId, activeItem.id, status);
     await reloadProgress();
+    if (status === 'nailed_it') {
+      const songId = activeItem.chartMd5 ?? `setlist-item-${activeItem.id}`;
+      await recordEventSafely({
+        kind: 'playbook_section_status',
+        songId,
+        sectionId,
+        status: 'nailed_it',
+        // We don't track rewinds yet; default false (no clean-run bonus).
+        noRewinds: false,
+      });
+
+      // Auto-link to RepertoireIQ: if this chart is in the user's repertoire, file a high-quality
+      // SRS review automatically so spaced repetition stays in sync with playbook practice.
+      // Quality 4 ('correct, hesitation') keeps from inflating intervals on every nailed section.
+      if (activeItem.chartMd5) {
+        try {
+          const item = await findItemBySavedChart(activeItem.chartMd5);
+          if (item) await recordReview(item.id, 4, undefined);
+        } catch {
+          // Non-fatal; the playbook event already landed.
+        }
+      }
+    }
   }, [activeItem, reloadProgress]);
 
   const addAnnotationAction = useCallback(async (sectionId: number, content: string) => {

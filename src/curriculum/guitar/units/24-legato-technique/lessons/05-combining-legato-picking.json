@@ -1,0 +1,43 @@
+{
+  "id": "05-combining-legato-picking",
+  "title": "Combining Legato and Picking",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Combining Legato and Picking — The Full Vocabulary\n\nThe most expressive and musical approach isn't pure legato or pure picking — it's **intelligent combination** of both.\n\n## When to Use Each\n\n| Situation | Technique | Why |\n|-----------|-----------|-----|\n| Accent a note | Pick it | Picks add attack and clarity |\n| Smooth connection | Legato | Hammers/pulls are transparent |\n| Fast ascending run | Legato | Faster and smoother than picking |\n| Rhythmic precision | Alternate pick | Picks place notes exactly |\n| Wide interval skip | Pick | Legato wide skips require large hand stretches |\n| Melodic phrasing | Mix | Match the musical need |\n\n## Joe Satriani's Mixed Approach\n\nIn \"Surfing with the Alien,\" Satriani uses a signature approach:\n1. **Pick the melodic peak note** — give it accent\n2. **Legato approaching the peak** — smooth buildup\n3. **Pick after the peak** — rhythmic precision on the way down\n\nThis creates a shape: legato → **accented peak** → picked descent.\n\n## Steve Vai's Method\n\nVai mixes legato and picking to create **articulation contrast**:\n- Picked notes: crisp, percussive, accented\n- Legato notes: fluid, blurred, vocal\n- The contrast between them creates rhythm and texture within a solo",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What musical purpose does mixing legato and alternate picking serve?",
+      "choices": [
+        "It's just a beginner technique before learning pure styles",
+        "Creates articulation contrast — picked notes are crisp and accented, legato notes are fluid, allowing the guitarist to shape melody and rhythm within a solo",
+        "It reduces the number of notes played",
+        "It's only used in jazz guitar"
+      ],
+      "answer": 1,
+      "explanation": "Mixing legato and picking creates articulation variety — the same notes feel different depending on how they're played. Picked notes have attack and presence; legato notes blend and flow. Using both gives the guitarist control over texture, accent, and musical phrasing.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Putting It All Together — A Fusion Phrase\n\nHere's a complete phrase combining alternate picking, legato, and a bend:\n\n## A Minor Fusion Phrase (inspired by Satriani/Vai)\n\n```\ne |--p-12-h15--p-17b19--17--p-15-h17-16--|\nB |-------------------------------------------p-15--|\nG |-------------------------------------------...---|\n   (pick)(legato)(pick)(bend)(pick)(legato)\n```\n\nBreaking it down:\n1. **p-12-h15**: Pick A (fret 12), hammer up to C (fret 15)\n2. **p-17b19**: Pick D (fret 17), bend up to E (fret 17+2)\n3. **17**: Release bend back to D\n4. **p-15**: Pick C, accent\n5. **h17**: Hammer D\n6. **16**: Slide from D to C# (color tone)\n\n## 90-Day Legato Development Plan\n\n| Week | Focus |\n|------|-------|\n| 1-2 | Hammer-on strength drill |\n| 3-4 | Pull-off strength drill |\n| 5-6 | Single-string legato runs |\n| 7-8 | 3NPS ascending scale runs |\n| 9-10 | 3NPS descending scale runs |\n| 11-12 | Full 6-string runs |\n| 13-16 | Combination phrases (legato + picking) |\n| 17-20 | Holdsworth 4-note groups |\n| 21-24 | Musical application in improvisation |",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the fusion phrase example, what is the musical purpose of the bend (b19 notation)?",
+      "choices": [
+        "Bends are used to avoid moving to a different fret",
+        "The bend raises the pitch to create tension (D up to E), which is then released back — creating an emotional push-pull",
+        "Bends make the note louder",
+        "It's just a stylistic decoration with no harmonic function"
+      ],
+      "answer": 1,
+      "explanation": "The bend from D (fret 17) up to E (fret 19 pitch) creates harmonic tension — E is the 5th of A minor and a strong resolution note. The release back to D completes the push-pull gesture, which is a fundamental blues-derived expression tool even in fusion contexts.",
+      "srs": true
+    }
+  ]
+}

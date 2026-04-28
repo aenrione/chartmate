@@ -1,0 +1,20 @@
+{
+  "id": "05-rudiment-applications",
+  "title": "Rudiments on the Kit",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Moving Rudiments Around the Kit\n\nRudiments on a snare drum are exercises. Rudiments on the full kit are music.\n\n**Paradiddle fill across toms:**\n- R = hi tom, L = snare, R = mid tom, R = floor tom\n- Then mirror: L = floor tom, R = snare, L = mid tom, L = hi tom\n\n**Flam on the snare with bass drum accent** — a classic funk and gospel pattern.\n\nTake any rudiment and assign each hand to a different drum or cymbal.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What happens when you assign different drums/cymbals to each hand of a rudiment?",
+      "choices": ["The rudiment breaks", "You create melodic fills and grooves across the kit", "It only works on the snare", "You must use different sticks"],
+      "answer": 1,
+      "explanation": "Mapping rudiments to different drums and cymbals transforms snare exercises into musical fills and grooves. This is the core of creative drumming.",
+      "srs": true
+    }
+  ]
+}

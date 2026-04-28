@@ -1,0 +1,40 @@
+{
+  "id": "01-jazz-ride",
+  "title": "The Jazz Ride Pattern",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Jazz Ride Cymbal\n\nThe ride cymbal is the timekeeping engine of jazz drumming. The classic jazz ride pattern — sometimes called 'spang-a-lang' — establishes the swing feel over which everything else is built.\n\n**Reading the pattern:** Quarter note, 8th rest, 8th note, quarter note, 8th rest, 8th note...\n\nThe key technical points:\n- Strike the cymbal with the shoulder of the stick on the bow (not the bell) for most situations\n- Use the bell for more projecting, cutting tone in louder contexts\n- The wrist does most of the work; relax the grip completely\n- The offbeat 8th notes ('ands') must swing — they land closer to the next beat than the previous one\n\nStudy: Max Roach, Philly Joe Jones, Art Blakey, Jack DeJohnette, Tony Williams.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Spang-a-Lang Ride Pattern",
+      "description": "The fundamental jazz ride pattern. Written as 8th notes but played with a triplet-based swing feel — the 'and' of each beat is late and short. Hi-hat foot on 2 and 4 anchors the time. Start at a comfortable medium-slow tempo.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 120,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-xx-xx-"},
+        {"name": "Hi-Hat", "pattern": "--x---x-"},
+        {"name": "Snare",  "pattern": "--------"},
+        {"name": "Kick",   "pattern": "x-------"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Ride Cymbal Voicing & Touch\n\nThe ride isn't just 'on or off' — it's a spectrum of textures:\n\n- **Bow of the cymbal**: warm, washy, ideal for medium tempos\n- **Bell**: bright, clear articulation, cuts through in loud situations\n- **Edge (crash-riding)**: explosive, used for climactic moments\n\nVolume and touch vary constantly. A master jazz drummer plays the ride at many dynamic levels within a single phrase, mirroring the music's ebbs and flows.\n\n**Ride grip tip:** Hold the stick lightly enough that it could fall. The rebound from the cymbal should do most of the work — you're guiding, not forcing.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In jazz drumming, what is the primary timekeeping instrument?",
+      "choices": ["The snare drum", "The hi-hat", "The ride cymbal", "The bass drum"],
+      "answer": 2,
+      "explanation": "In jazz, the ride cymbal carries the swing time feel. The hi-hat foot plays 2 and 4, and the snare/kick comp freely. The ride is the engine of the jazz drummer's sound.",
+      "srs": true
+    }
+  ]
+}

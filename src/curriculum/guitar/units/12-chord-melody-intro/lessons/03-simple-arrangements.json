@@ -1,0 +1,43 @@
+{
+  "id": "03-simple-arrangements",
+  "title": "Creating Simple Arrangements",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# How to Arrange a Melody for Chord-Melody\n\n## Step-by-Step Process\n\n**Step 1**: Know the melody cold — sing it before you play it.\n\n**Step 2**: Identify the chords that harmonize it (use a lead sheet or chord chart).\n\n**Step 3**: Find positions where the melody notes fall naturally on top of chord shapes.\n\n**Step 4**: Fill in chord tones beneath each melody note.\n\n**Step 5**: Add bass notes where needed.\n\n## A Worked Example: \"Ode to Joy\" (first phrase)\n\nMelody: E E F G | G F E D | C C D E | E. D D\n\nFinding the melody on string 1:\n```\ne |--0--0--1--3--|--3--1--0--0--|\nB |              |\n```\n\nHarmonizing with chord tones (in C major):\n```\ne |--0----0----1----3--|\nB |--1----1----1----3--|\nG |--0----0----2----0--|\n   C    C    F    G\n```\n\n## The \"Shell + Melody\" Approach\n\nFor beginners, use **shell voicings** (just root + one other chord tone) below the melody. This avoids cluttered, unplayable chord shapes.\n\nShell voicing for C: strings 6 and 3 (C and G)\nAdd melody on top: string 1 or 2",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the first step in arranging a melody for chord-melody guitar?",
+      "choices": [
+        "Find chord shapes first",
+        "Know the melody well enough to sing it before playing it",
+        "Write out the TAB immediately",
+        "Choose a key"
+      ],
+      "answer": 1,
+      "explanation": "You must internalize the melody first — know it well enough to sing it. If you don't know the melody, you'll lose it under the chords. The melody is the storyteller; the chords support it.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Melody On Which String?\n\nThe melody can sit on different strings depending on the range:\n\n## High Register (string 1 — high e)\nBest for: melody notes above the 5th fret on string 1\nExample: jazz ballads, upper register melody\n\n## Mid Register (string 2 — B)\nBest for: melody notes in the middle of the neck\nExample: folk melodies, hymns\n\n## Lower Register (strings 3 or 4)\nBest for: dark, rich arrangements; lower melody lines\nExample: classical guitar, some blues arrangements\n\n## The Practical Rule\n\nUse whichever string puts the melody on **top** of all other notes in the chord. If the melody is on string 2, make sure nothing is happening on string 1 (mute it or leave it out).\n\n## Exercise: Harmonize \"Mary Had a Little Lamb\"\n\nMelody in G: E D C D | E E E | D D D | E G G\n\nFind each melody note on string 2 (B string):\n```\ne |--X--X--X--X--|\nB |--3--1--0--1--|\n   E  D  C  D\n```\nThen add G, C, or D chord tones below. Which notes fit? (G=G+B+D, C=C+E+G, D=D+F#+A)",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "If the melody note is on string 2 (B string), what must you ensure about string 1 (high e)?",
+      "choices": [
+        "It should be played open",
+        "It should be muted or omitted so the melody stays on top",
+        "It should double the melody",
+        "It must always be fretted"
+      ],
+      "answer": 1,
+      "explanation": "The melody must be the highest note. If the melody is on string 2, string 1 must be muted or left out — otherwise notes on string 1 would be higher in pitch and would obscure the melody on top.",
+      "srs": true
+    }
+  ]
+}

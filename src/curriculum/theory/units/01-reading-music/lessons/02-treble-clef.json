@@ -1,0 +1,54 @@
+{
+  "id": "02-treble-clef",
+  "title": "The Treble Clef",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## The Treble Clef\n\nThe treble clef — also called the **G clef** — is the most widely used clef in Western music. Its distinctive swirling symbol is not just decorative: the spiral **curls around the second line from the bottom**, and that curl is a definition. It tells you that the second line is **G4** (the G above middle C). Every other note on the staff is calculated from that anchor.\n\n### Line Names: Every Good Boy Does Fine\n\nWith G4 locked on line 2, the lines of the treble clef from bottom to top are:\n\n| Line | Note | Mnemonic |\n|------|------|----------|\n| 1 (bottom) | **E4** | **E**very |\n| 2 | **G4** | **G**ood |\n| 3 | **B4** | **B**oy |\n| 4 | **D5** | **D**oes |\n| 5 (top) | **F5** | **F**ine |\n\nThe mnemonic **Every Good Boy Does Fine** gives you the five line names in order.\n\n### Space Names: FACE\n\nThe four spaces, from bottom to top, spell a word:\n\n| Space | Note |\n|-------|------|\n| 1 (bottom) | **F4** |\n| 2 | **A4** |\n| 3 | **C5** |\n| 4 (top) | **E5** |\n\n**F-A-C-E** — the four spaces in the treble clef spell FACE. This is one of the most useful mnemonic devices in all of music theory.\n\n### Instruments That Use the Treble Clef\n\nThe treble clef is used by virtually every instrument in the middle-to-high range:\n- **Guitar** (sounds an octave lower than written)\n- **Violin**, **flute**, **oboe**, **clarinet**, **trumpet**\n- **Piano right hand**\n- **Soprano, alto, and tenor voice** (tenor uses an 8vb treble clef in choral music)\n\nIf you play any of these instruments, treble clef reading is non-negotiable.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Treble Clef: Above and Below the Staff\n\n### Notes Below the Staff\n\nThe treble clef comfortably covers roughly E4 to F5. For notes below line 1 (E4), ledger lines extend the staff downward:\n\n- **D4** — in the space just below the staff\n- **C4 (middle C)** — on the first ledger line below the staff\n- **B3** — in the space below that ledger line\n\nMiddle C is perhaps the single most important note to memorize — it sits on that first ledger line below the treble clef, and simultaneously on the first ledger line above the bass clef.\n\n### Notes Above the Staff\n\nAbove line 5 (F5), ledger lines extend upward:\n\n- **G5** — in the space just above the staff\n- **A5** — on the first ledger line above\n- **B5** — in the space above that\n- **C6 (high C)** — on the second ledger line above\n\n### A Guitar Player's Note\n\nGuitar is a **transposing instrument** in treble clef: the written pitch sounds one octave lower than notated. So a note written as C4 (middle C) on the first ledger line below the staff sounds as C3 when you play it on guitar. This transposition is built into guitar notation by convention — you don't need to think about it while reading, but it explains why guitarist sheet music doesn't require constant ledger lines below the staff.\n\n### Interval Identification on the Staff\n\nOnce you know the note names, you can identify intervals at a glance:\n- **Line to the next space up** = a second (step)\n- **Line to the next line up** = a third (skip)\n- **Line to two lines up** = a fifth\n\nDeveloping this visual pattern recognition is the path to fluent sight-reading.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What note does the treble clef curl identify on the second line?",
+      "choices": ["F4", "G4", "A4", "E4"],
+      "answer": 1,
+      "explanation": "The treble clef is called the G clef because its curl wraps around the second line of the staff, defining that line as G4. All other note names are derived from this anchor point.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Using the mnemonic 'Every Good Boy Does Fine,' what note is on the third line of the treble clef?",
+      "choices": ["G4", "D5", "B4", "F5"],
+      "answer": 2,
+      "explanation": "'Every Good Boy Does Fine' maps to lines 1–5: E, G, B, D, F. The third line is B4.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Where does middle C (C4) appear relative to the treble clef staff?",
+      "choices": [
+        "On the first space from the bottom",
+        "On the second line from the bottom",
+        "On the first ledger line below the staff",
+        "On the first ledger line above the staff"
+      ],
+      "answer": 2,
+      "explanation": "Middle C sits on the first ledger line below the treble clef staff. It is the same note that appears on the first ledger line above the bass clef staff — that shared position is why it is called 'middle C.'",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The four spaces of the treble clef from bottom to top spell which word?",
+      "choices": ["EGBD", "FACE", "CAGE", "BEAD"],
+      "answer": 1,
+      "explanation": "The four spaces of the treble clef, from bottom to top, are F4, A4, C5, and E5 — spelling FACE. This is one of the most reliable mnemonic devices for reading treble clef.",
+      "srs": true
+    }
+  ]
+}

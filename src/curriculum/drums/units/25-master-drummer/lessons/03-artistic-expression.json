@@ -1,0 +1,20 @@
+{
+  "id": "03-artistic-expression",
+  "title": "Artistic Expression",
+  "xp": 40,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Expression: Making the Instrument Speak\n\nAt the master level, the distinction between 'playing drums' and 'making music' dissolves. The instrument is no longer the focus — it's the vehicle through which music happens.\n\n**What separates expression from execution:**\nExecution is playing the correct notes in the correct places at the correct tempo. Expression is those same notes carrying emotional content — urgency, joy, grief, humor, tension, release. Two drummers can play the same notes; only one makes music.\n\n**The sources of expression on the drums:**\n- **Dynamic nuance**: Not just loud/soft, but the infinite gradations between and the direction of change (crescendo vs. sudden accent vs. gradual decay)\n- **Touch quality**: The character of the sound beyond volume — woody vs. cutting, round vs. sharp, diffuse vs. focused\n- **Timing relationship**: Playing 'into' the time (leaning forward slightly for urgency), 'behind' the time (weight and inevitability), or directly on (stability and confidence)\n- **Choice of what to play**: Every choice to fill a space carries meaning; every choice to leave it empty carries equal meaning\n- **Response to the room**: Playing differently in a small intimate club than in a stadium — matching the space\n\n**Expression as listening:** The most expressive drum performances are the most deeply listening ones. Expression is not projection outward but response to what's happening musically. The music comes through, not from, the drummer.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What primarily separates expression from mere execution in drumming?",
+      "choices": ["Playing more notes per minute", "The technical difficulty of the patterns", "The emotional content carried by the notes — urgency, joy, tension, release — rather than just the correct notes in correct places", "Having a more expensive drum kit"],
+      "answer": 2,
+      "explanation": "Execution means correct notes in correct places at correct tempo. Expression means those notes carry emotional content. Two drummers can play the same pattern; only the expressive one makes music. Expression comes from dynamic nuance, touch quality, timing relationship, careful choice of what to play, and deep listening to the musical context.",
+      "srs": true
+    }
+  ]
+}

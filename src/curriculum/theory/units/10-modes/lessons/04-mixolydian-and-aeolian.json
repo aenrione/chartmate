@@ -1,0 +1,57 @@
+{
+  "id": "04-mixolydian-and-aeolian",
+  "title": "Mixolydian & Aeolian",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Mixolydian & Aeolian\n\nThese two modes are the most widely used modes in popular music beyond the basic major and minor. Mixolydian gives rock, blues, and Celtic music their earthy, grounded feel. Aeolian — the natural minor — is the foundation of nearly all dark pop, rock ballads, and countless other styles.\n\n### Mixolydian (Mode 5) — The Rock and Blues Mode\n\n**Mixolydian** is built on the 5th degree of the major scale. **G Mixolydian** uses C major notes centered on G.\n\n**G Mixolydian**: G A B C D E F G\nInterval pattern: **W–W–H–W–W–H–W**\n\nCompare G Mixolydian to G major (G Ionian): G A B C D E **F#** G\n\n**The one difference: the 7th degree.**\n- G Ionian (major): 7th = **F#** (major 7th)\n- G Mixolydian: 7th = **F natural** (minor 7th, i.e., b7)\n\nMixolydian is like the major scale with one note lowered — the 7th is flat. This **b7** is Mixolydian's signature. It creates a bluesy, slightly unresolved quality while keeping the bright major-scale feel.\n\n**The Mixolydian chord:** The b7 produces the characteristic **bVII chord** — a major chord built a whole step below the root. In G Mixolydian, bVII = **F major**. The progression I–bVII–IV (G–F–C in G Mixolydian) is one of rock's most iconic sounds.\n\n**Examples:**\n- **'Norwegian Wood'** (The Beatles) — G Mixolydian\n- **'Sweet Home Chicago'** (blues standard) — Mixolydian feel throughout\n- Celtic/Irish folk music — the b7 is a characteristic of many Irish reels and jigs\n- Rock guitar solos frequently mix pentatonic with Mixolydian for a bluesy-major sound\n\n### Aeolian (Mode 6) — The Natural Minor Scale\n\n**Aeolian** is built on the 6th degree of the major scale. **A Aeolian** uses C major notes centered on A. This is exactly the **natural minor scale**.\n\n**A Aeolian**: A B C D E F G A\nInterval pattern: **W–H–W–W–H–W–W**\n\nThe two half steps at scale degrees 2–3 (B–C) and 5–6 (E–F) give Aeolian its dark, melancholic quality.\n\n**The Aeolian sound:** Darker than Dorian (which has a raised 6th), more settled than Phrygian (which has the exotic b2). Aeolian is the 'standard dark' — the most common minor mode in rock and pop.\n\n**Characteristic progressions:**\n- **i–VII–VI–VII** (Am–G–F–G): the quintessential Aeolian rock loop\n- **i–VI–III–VII** (Am–F–C–G): epic pop/cinematic minor\n\n**Examples:**\n- Most rock ballads: 'Hotel California' (Eagles), 'Stairway to Heaven' (Led Zeppelin) — Aeolian\n- Modern dark pop: countless songs in A minor or E minor use pure Aeolian harmony\n- Metal: the heaviness of minor key metal is usually Aeolian-based",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What single note difference distinguishes G Mixolydian from G major (Ionian)?",
+      "choices": [
+        "Mixolydian has a flat 3rd (Bb instead of B)",
+        "Mixolydian has a flat 6th (Eb instead of E)",
+        "Mixolydian has a flat 7th (F natural instead of F#)",
+        "Mixolydian has a raised 4th (C# instead of C)"
+      ],
+      "answer": 2,
+      "explanation": "G Mixolydian differs from G major only in the 7th degree: F natural (b7) instead of F#. This flat 7th is Mixolydian's defining feature. It gives the mode its bluesy, earthy quality and produces the characteristic bVII chord (F major in G Mixolydian).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Aeolian mode is equivalent to which commonly known scale?",
+      "choices": ["The major scale", "The harmonic minor scale", "The natural minor scale", "The pentatonic minor scale"],
+      "answer": 2,
+      "explanation": "Aeolian (mode 6) is identical to the natural minor scale. A Aeolian (A B C D E F G) is the same as A natural minor. They share the same notes, the same interval pattern (W–H–W–W–H–W–W), and the same sound.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In G Mixolydian, what is the bVII chord?",
+      "choices": ["E minor", "C major", "F major", "D minor"],
+      "answer": 2,
+      "explanation": "In G Mixolydian, the 7th scale degree is F natural. The major chord built on F (F–A–C) is the bVII chord. The motion G → F → C (I–bVII–IV) using this F major chord is one of the most recognizable sounds in rock guitar.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The progression i–VII–VI–VII (Am–G–F–G) is characteristic of which mode?",
+      "choices": ["Dorian", "Mixolydian", "Phrygian", "Aeolian"],
+      "answer": 3,
+      "explanation": "The i–VII–VI–VII loop is the characteristic Aeolian (natural minor) progression. In A Aeolian: Am–G–F–G. The major VII chord (G in A minor) is natural to Aeolian — if the 7th were raised to G#, it would indicate harmonic minor instead.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which interval pattern correctly describes the Aeolian (natural minor) mode?",
+      "choices": ["W–W–H–W–W–W–H", "W–H–W–W–H–W–W", "H–W–W–W–H–W–W", "W–W–W–H–W–W–H"],
+      "answer": 1,
+      "explanation": "Aeolian follows W–H–W–W–H–W–W. The half steps fall between scale degrees 2–3 and 5–6 (in A Aeolian: B–C and E–F). This pattern with two half steps placed in these positions is what gives natural minor its characteristic dark sound.",
+      "srs": true
+    }
+  ]
+}

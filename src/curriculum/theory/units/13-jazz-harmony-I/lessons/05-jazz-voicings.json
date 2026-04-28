@@ -1,0 +1,46 @@
+{
+  "id": "05-jazz-voicings",
+  "title": "Jazz Voicings in Practice",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Jazz Chord Voicings: From Basics to Sophisticated\n\nA voicing is the specific arrangement of a chord's tones across register and instruments. Jazz has developed a rich vocabulary of voicing techniques over the past century.\n\n### Shell Voicings (1-7-3 or 1-3-7)\n\nThe simplest jazz voicings: root plus guide tones only.\n\n- **Cmaj7**: C (left) + B–E (right) → 1-7-3 shell\n- **Dm7**: D (left) + C–F (right) → 1-7-3 shell\n- **G7**: G (left) + F–B (right) → 1-7-3 shell\n\nShell voicings are the foundation of jazz comping. They are clear, not muddy, and move smoothly from chord to chord.\n\n### Rootless Voicings\n\nWhen a bass player is present, pianists often omit the root entirely, freeing up harmonic space:\n\n- **Cmaj7 rootless**: E–G–B–D (3–5–7–9) in right hand\n- **Dm7 rootless**: F–A–C–E (3–5–7–9) in right hand\n- **G7 rootless**: B–D–F–A (3–5–7–9) in right hand — this is a B diminished triad + A: upper structure!\n\nRootless voicings make the pianist's comping less cluttered and allow the bass to carry the fundamental.\n\n### The 'So What' Chord (McCoy Tyner / Bill Evans)\n\nMiles Davis's 'So What' (1959) features a signature voicing built entirely in fourths plus a major third on top:\n\nD minor 'So What' voicing: A–D–G–C–E (bottom to top)\n- A to D: fourth\n- D to G: fourth\n- G to C: fourth\n- C to E: major third\n\nThis quartal voicing (built in fourths) has a floating, ambiguous quality — neither traditionally major nor minor. It is the defining sound of modal jazz.\n\n### The Kenny Barron Voicing\n\nA sophisticated ii–V–I voicing scheme:\n- **ii chord (Dm7)**: Left hand = A (5th); Right hand = C–F–E (7–3–9 cluster)\n- **V chord (G7)**: Left hand = D (5th/9th); Right hand = F–B–E (7–3–13 spread)\n- **I chord (Cmaj7)**: Left hand = G (5th); Right hand = B–E–D (7–3–9)\n\n### Voice Leading Between Jazz Voicings\n\nThe guide tones (3 and 7) create smooth voice leading between ii–V–I:\n- **Dm7**: F (3rd) and C (7th)\n- **G7**: F stays — now the 7th of G7 | B is nearby (2 semitones from C)\n- **Cmaj7**: E (3rd, one step from F) and B stays (7th of Cmaj7)\n\nThis voice-leading efficiency — common tones and small steps — is what makes the ii–V–I the most important progression in jazz.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'rootless voicing' and when is it used?",
+      "choices": [
+        "A voicing where the bass plays the root while the piano omits it, used when a bass player is present",
+        "A voicing where no chord tones are used — only extensions",
+        "A chord without a third, used for suspended sounds",
+        "A two-hand voicing where both hands play the root"
+      ],
+      "answer": 0,
+      "explanation": "A rootless voicing omits the root from the pianist's chord because the bass player is already playing it. This creates a cleaner, less cluttered sound and allows the pianist to use all their notes for guide tones and extensions. Rootless voicings are essential in jazz ensemble playing.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The 'So What' chord from Miles Davis's Kind of Blue is built primarily with which interval?",
+      "choices": ["Major thirds (stacked)", "Perfect fourths (with a major third on top)", "Perfect fifths", "Minor seconds"],
+      "answer": 1,
+      "explanation": "The 'So What' voicing is quartal — built in perfect fourths. The specific voicing is (bottom to top): A–D–G–C–E. The first four intervals are all perfect fourths; the top interval (C to E) is a major third. This stack creates a floating, ambiguous minor sonority characteristic of modal jazz.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a ii–V–I progression (Dm7→G7→Cmaj7), which guide tone movement shows smooth voice leading?",
+      "choices": [
+        "F (3rd of Dm7) stays as F (7th of G7), then moves to E (3rd of Cmaj7)",
+        "C (7th of Dm7) stays as C (5th of G7), then becomes C (root of Cmaj7)",
+        "D (root of Dm7) moves to G (root of G7), then to C (root of Cmaj7)",
+        "A (5th of Dm7) moves to D (5th of G7), then to G (5th of Cmaj7)"
+      ],
+      "answer": 0,
+      "explanation": "F is the 3rd of Dm7. In G7, F is the 7th — a common tone that can stay. Then F (7th of G7) moves down a half step to E, which is the 3rd of Cmaj7. This F → F → E motion is the canonical guide-tone voice leading of ii–V–I. The other guide tones (C in Dm7 → B in G7 → B in Cmaj7) move by half step, reinforcing the smooth connection.",
+      "srs": true
+    }
+  ]
+}

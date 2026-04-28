@@ -1,0 +1,46 @@
+{
+  "id": "01-instrument-families",
+  "title": "Instrument Families",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## The Orchestra: Instrument Families\n\nThe modern symphony orchestra is organized into four families, each with distinct timbral characteristics, playing techniques, and roles.\n\n### Strings\n\nThe largest section: **Violin I, Violin II, Viola, Cello, Double Bass** (in descending pitch order).\n\nStrings are the backbone of the orchestra — they sustain harmony, carry melody, and provide rhythmic drive. Their dynamic range is enormous: from barely audible *ppp* to powerful *fff*.\n\n**Key characteristics**:\n- **Bowing**: Arco (with bow) — sustains notes, allows gradual dynamics\n- **Plucking**: Pizzicato — light, detached, rhythmic\n- **Con sordino**: With mute — soft, veiled quality (Debussy, Ravel use this frequently)\n- **Sul ponticello**: Bow near bridge — glassy, eerie sound\n- **Double stops**: Two strings simultaneously\n- **Harmonics**: Touch the string lightly for flute-like high tones\n\n### Woodwinds\n\n**Flute, Oboe, Clarinet, Bassoon** (plus piccolo, cor anglais, bass clarinet, contrabassoon).\n\nEach woodwind has a distinct timbre:\n- **Flute**: Bright, airy, agile — soprano of woodwinds\n- **Oboe**: Nasal, penetrating, singing — good for lyrical solos\n- **Clarinet**: Warm, flexible, large range — versatile\n- **Bassoon**: Reedy, sonorous — bass/tenor of woodwinds, also lyrical solos\n\n### Brass\n\n**Horn, Trumpet, Trombone, Tuba** (plus cornet, euphonium, Wagner tubas).\n\n- **Horn**: Mellow, hunting-horn quality — can play very softly or very loudly\n- **Trumpet**: Brilliant, assertive, cutting through the orchestra\n- **Trombone**: Noble, powerful, or blazing — slides give unique portamento\n- **Tuba**: Foundation of brass section, the bass\n\n### Percussion\n\n**Pitched**: Timpani, Xylophone, Marimba, Vibraphone, Glockenspiel, Tubular Bells\n**Unpitched**: Snare drum, Bass drum, Cymbals, Triangle, Tam-tam, etc.\n\nThe timpani is the most important percussion instrument in the orchestra — it defines the harmonic rhythm and can dramatically shift the music's energy.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is pizzicato, and which instrument family uses it?",
+      "choices": [
+        "A bowing technique in woodwinds creating a soft tone",
+        "A plucking technique used by string players — creates a light, detached, rhythmic sound",
+        "A muting technique used by brass players",
+        "A harmonics technique in the flute family"
+      ],
+      "answer": 1,
+      "explanation": "Pizzicato (Italian: 'plucked') is a string playing technique where the player plucks the strings with their fingers rather than using the bow. The result is a light, dry, percussive sound — very different from the sustained arco (bowed) tone. Pizzicato is widely used in orchestral, chamber, and solo string music for rhythmic and coloristic effect.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which orchestral woodwind instrument is described as having a 'nasal, penetrating' quality ideal for lyrical solos?",
+      "choices": ["Flute", "Clarinet", "Oboe", "Bassoon"],
+      "answer": 2,
+      "explanation": "The oboe has a distinctive nasal, reedy quality that is penetrating even in a full orchestral texture. Its singing, slightly melancholic tone makes it ideal for lyrical solos — the oboe's A is used to tune the orchestra precisely because its tone is so clear and penetrating. Famous oboe solos: Beethoven Symphony No. 6 (Pastoral), Strauss 'Oboe Concerto'.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is the timpani considered the most important percussion instrument in the orchestra?",
+      "choices": [
+        "Because it is the loudest",
+        "Because it is pitched and can define harmonic rhythm and key, not just provide rhythmic impact",
+        "Because it was invented before all other percussion instruments",
+        "Because it is always placed at the front of the orchestra"
+      ],
+      "answer": 1,
+      "explanation": "The timpani is pitched — it can be tuned to specific notes (typically tonic and dominant). This means timpani can reinforce harmonic rhythm: it plays I when tonic harmony occurs, V when dominant occurs. It can dramatically shift the music's energy and affirm cadences with physical weight. Unpitched percussion (cymbals, snare) can accent but cannot reinforce harmony.",
+      "srs": true
+    }
+  ]
+}

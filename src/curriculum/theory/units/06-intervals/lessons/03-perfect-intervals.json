@@ -1,0 +1,64 @@
+{
+  "id": "03-perfect-intervals",
+  "title": "Perfect Intervals",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Perfect Intervals\n\n### The Four Perfect Intervals\n\nFour interval sizes — **unison, 4th, 5th, and octave** — belong to their own quality category: **perfect**. They do not have major or minor versions. They are simply:\n\n- **Perfect Unison (P1)**: 0 half steps — both instruments on the same pitch\n- **Perfect 4th (P4)**: 5 half steps — C to F\n- **Perfect 5th (P5)**: 7 half steps — C to G\n- **Perfect Octave (P8)**: 12 half steps — C to the C above\n\n### Why \"Perfect\"?\n\nThe term \"perfect\" dates back to medieval European music theory, which was heavily influenced by ancient Greek mathematics (particularly Pythagoras). The ratios of these intervals — 1:1 (unison), 4:3 (fourth), 3:2 (fifth), 2:1 (octave) — were considered mathematically pure and acoustically ideal. They are the most **consonant** intervals in the harmonic series: when you play a perfect fifth, the two pitches blend so smoothly that they almost seem to be a single sound.\n\nIn medieval counterpoint, only perfect intervals were considered truly stable. In early organum (the first polyphonic music), voices moved in parallel perfect octaves, fifths, and fourths. The very concept of \"harmony\" grew out of the consonance of perfect intervals.\n\n### The Perfect 5th: The Foundation of Harmony\n\nThe perfect 5th (P5, 7 half steps) is arguably the most important interval in all of Western music:\n\n- **Acoustics**: the perfect 5th is the first non-unison interval to appear in the natural overtone series, which is why it sounds so stable and pure.\n- **Power chords**: in rock music, a \"power chord\" is simply a root plus a perfect 5th (with optional octave doubling). Its open, unambiguous sound cuts through any mix.\n- **Circle of fifths**: the entire architecture of Western key relationships is organized by perfect 5ths.\n- **Harmony building**: the dominant chord (V) is a perfect fifth above the tonic, the most fundamental harmonic relationship in tonal music.\n\n### The Perfect 4th\n\nThe perfect 4th (P4, 5 half steps) is the inversion of the perfect 5th — if you invert a P5, you get a P4. Historically, the 4th has a more ambiguous status than the 5th: in two-voice counterpoint, a perfect 4th above the bass is treated as dissonant and requires resolution, even though it is technically a perfect interval. Context matters.\n\n### From Perfect to Augmented or Diminished\n\nUnlike major/minor intervals (which convert into each other), perfect intervals convert to **augmented** or **diminished** when altered:\n- Raise a perfect interval by a half step → **augmented**\n- Lower a perfect interval by a half step → **diminished**\n\nAugmented 4th (P4 + half step) = 6 half steps = **tritone** (the most dissonant interval).\nDiminished 5th (P5 − half step) = 6 half steps = also the **tritone**.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many half steps are in a perfect 5th?",
+      "choices": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "answer": 2,
+      "explanation": "A perfect 5th spans 7 half steps. From C: C-C#-D-D#-E-F-F#-G = 7 half steps. C to G is the archetypal perfect 5th. It is one of the most consonant intervals in music — its frequency ratio is 3:2, the simplest ratio after the octave (2:1) and unison (1:1). The perfect 5th is the basis of the circle of fifths and a foundational building block of harmony.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why are certain intervals called 'perfect' rather than 'major' or 'minor'?",
+      "choices": [
+        "Because they are played perfectly in tune by professionals",
+        "Because they have only one quality — they cannot be major or minor — and their simple frequency ratios (1:1, 4:3, 3:2, 2:1) made them the most consonant and 'pure' intervals in historical music theory",
+        "Because they appear in perfectly symmetrical positions in the scale",
+        "Because they were invented during the Classical period when music was considered 'perfect'"
+      ],
+      "answer": 1,
+      "explanation": "The term 'perfect' comes from medieval music theory, which was influenced by ancient Greek mathematics. The frequency ratios of perfect intervals — 1:1 (unison), 4:3 (P4), 3:2 (P5), 2:1 (octave) — are the simplest and most consonant ratios in acoustics. They were considered the purest, most stable intervals. Unlike 2nds, 3rds, 6ths, and 7ths (which have major and minor versions), perfect intervals have only one naturally occurring quality.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What happens to a perfect interval when it is raised by one half step?",
+      "choices": [
+        "It becomes a major interval",
+        "It becomes a diminished interval",
+        "It becomes an augmented interval",
+        "It becomes a minor interval"
+      ],
+      "answer": 2,
+      "explanation": "When a perfect interval is raised by one half step, it becomes augmented. For example, a perfect 4th (C to F, 5 half steps) raised by a half step becomes an augmented 4th (C to F#, 6 half steps) — also known as a tritone. Conversely, lowering a perfect interval by a half step makes it diminished. Perfect intervals cannot become 'major' or 'minor' — those qualities only apply to 2nds, 3rds, 6ths, and 7ths.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "A 'power chord' in rock music consists of which intervals?",
+      "choices": [
+        "A root note and a major 3rd",
+        "A root note and a minor 3rd",
+        "A root note and a perfect 5th (with optional octave doubling)",
+        "A root note and a tritone"
+      ],
+      "answer": 2,
+      "explanation": "A power chord is built from a root note and the perfect 5th above it (7 half steps), often with the octave of the root added as a third note. For example: E power chord = E and B (and optionally a higher E). Power chords are neither major nor minor — the absence of a third means no major/minor quality. This ambiguity, combined with the sonic strength of the perfect 5th, gives power chords their characteristic sound in rock and metal.",
+      "srs": true
+    }
+  ]
+}

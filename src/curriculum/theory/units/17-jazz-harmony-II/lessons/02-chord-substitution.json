@@ -1,0 +1,38 @@
+{
+  "id": "02-chord-substitution",
+  "title": "Chord Substitution Techniques",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Chord Substitution: The Art of Harmonic Variation\n\nA **chord substitution** replaces one chord with another that serves the same or similar harmonic function. Beyond tritone substitution, jazz uses several other substitution systems.\n\n### Diatonic Substitution (Function-Based)\n\nChords of the same harmonic function can substitute for each other:\n- **Tonic function** (in C major): I, iii, vi (all have tonic function)\n- **Subdominant function**: ii, IV (both subdominant)\n- **Dominant function**: V, vii° (both dominant)\n\nSo in a I–IV–V–I, you can substitute: vi → ii → vii° → iii (replacing with alternate function chords). The functions are preserved; the specific chords vary.\n\n**Example**: C → F → G → C becomes:\n- Am → Dm → Bdim → Em (all substituted with same-function chords)\n\n### Related ii7 Substitution\n\nEvery dominant chord has a related ii7 a fifth above it. You can add or substitute the ii7 before any dominant:\n- G7 → Cmaj7 becomes Dm7 → G7 → Cmaj7\n- The added Dm7 prepares G7, enriching the ii–V–I structure\n\nThis is less substitution than **elaboration** — inserting a ii7 before every V7 to create a chain of ii–V–I progressions, the foundation of jazz reharmonization.\n\n### Deceptive Resolution Substitution\n\nInstead of resolving V7 to I, resolve to vi (the deceptive cadence):\n- G7 → Cmaj7 becomes G7 → Am7\n- Am7 has tonic function (vi is a tonic substitute)\n- Then continue from Am7 to extend the phrase\n\n### Diminished Passing Chord\n\nA diminished seventh chord between two diatonic chords, moving chromatically:\n- C → Dm becomes C → C#°7 → Dm (chromatic passing diminished)\n- G → Am becomes G → G#°7 → Am\n\nThe diminished seventh chord (°7) is enharmonically equivalent to a V7b9 chord: C#°7 = A7b9 (the dominant seventh flat nine of D). So the diminished passing chord is really a secondary dominant with an extra chromatic twist.\n\n### Side-Slipping (Half-Step Away)\n\nA jazz device: play a chord a half step above or below the target before landing:\n- Cm7 → F7 → Bbmaj7 becomes: Cm7 → F#7 → F7 → Bbmaj7 (F#7 is a half step above F7, creating tension-release)\n\nThis is most common in bebop and post-bop.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In diatonic substitution in C major, which chords can substitute for I (tonic function)?",
+      "choices": [
+        "ii and IV (subdominant function chords)",
+        "iii and vi (also tonic-function chords)",
+        "V and vii° (dominant function chords)",
+        "Any chord in the key — all have tonic function"
+      ],
+      "answer": 1,
+      "explanation": "In C major, tonic-function chords are I (C), iii (Em), and vi (Am). They all share notes with the tonic triad — Em shares E and G with C major; Am shares C and E with C major. These chords can substitute for each other because they all express 'home' or 'rest' in the key.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'diminished passing chord' and what does it secretly represent harmonically?",
+      "choices": [
+        "A chord that passes through diminished quality on the way to a major chord; it has no harmonic function",
+        "A diminished seventh chord inserted between two diatonic chords for chromatic passing motion; it is enharmonically equivalent to a V7b9 secondary dominant",
+        "The vii° chord used as a dominant substitute",
+        "A chord that uses the diminished scale for the melody only"
+      ],
+      "answer": 1,
+      "explanation": "A diminished passing chord (e.g., C#°7 between C and Dm) moves chromatically. C#°7 = C#–E–G–Bb, which is enharmonically A7b9 (A–C#–E–G–Bb). A7b9 is the secondary dominant of D (V7b9/ii). So the 'passing diminished' is really a secondary dominant in disguise — it has strong harmonic pull toward Dm even while appearing to be a smooth chromatic connector.",
+      "srs": true
+    }
+  ]
+}

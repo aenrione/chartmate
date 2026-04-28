@@ -1,0 +1,34 @@
+{
+  "id": "05-mambo",
+  "title": "Mambo",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Mambo: Cuba's Big Band Engine\n\nMambo is the Cuban big-band rhythm that swept the ballrooms of New York and Havana in the 1940s-50s. Pérez Prado and Tito Puente were the defining bandleaders.\n\n**Mambo section of a chart:** In Cuban big-band arrangements, the 'mambo section' is an intensive, rhythmically complex vamp where the entire band locks into interlocking patterns. The drummer must drive the ensemble while staying in strict clave relationship.\n\n**The mambo bell pattern on the hi-hat or cowbell:**\nThe signature mambo bell pattern plays against the clave, creating rhythmic counterpoint. It's a 4-bar repeating figure that cycles through the clave's 2-bar pattern twice.\n\n**Montuno pattern:** The rhythmic ostinato the piano (and rhythm section) plays. The drummer's job is to reinforce the clave while adding fills that accent the horns' written parts — called 'tumbao' coordination.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Mambo Drum Pattern",
+      "description": "The mambo groove: cowbell (mapped to hi-hat) plays the mambo bell pattern against the clave. Kick plays the clave-aligned downbeats, snare punctuates the open beats. High energy, driving forward momentum.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 192,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x-x-x---x-x-x---"},
+        {"name": "Snare",  "pattern": "----x---o---x---"},
+        {"name": "Kick",   "pattern": "x---x-x-----x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In mambo, what determines how the drummer's fills relate to the band?",
+      "choices": ["The drummer plays freely with no relationship to the melody", "The fills must align with the clave and accent the written horn parts (tumbao coordination)", "The drummer follows the piano's rhythm only", "Fills are played on every beat without exception"],
+      "answer": 1,
+      "explanation": "In mambo and Cuban big-band music, fills must be in clave relationship and accent the written horn 'shots' or punctuations. This is called tumbao coordination — the drummer's improvisations are constrained by the arrangement.",
+      "srs": true
+    }
+  ]
+}

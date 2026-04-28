@@ -1,0 +1,20 @@
+{
+  "id": "01-fill-vocabulary",
+  "title": "Fill Vocabulary",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Building a Fill Library\n\nLike a guitarist's lick bank, drummers need a **fill vocabulary** — memorized patterns ready to deploy.\n\n**Beginner fills:**\n- 4 snare hits on beat 4\n- Around the kit (hi tom → mid tom → floor tom)\n\n**Intermediate fills:**\n- Triplet fill (LRK repeating)\n- 16th note single-stroke across all toms\n\n**Advanced fills:**\n- Paradiddle-based tom fills\n- Fills that start on unexpected beats\n- Cross-stick fills",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why should drummers memorize a vocabulary of fills?",
+      "choices": ["So they can solo constantly", "To have musical options ready when a transition needs to be signaled", "To play the same fill in every song", "Fills are required in all musical styles"],
+      "answer": 1,
+      "explanation": "A fill vocabulary gives you musical options at transition points. Having memorized patterns means you can choose the right fill for the moment rather than scrambling or defaulting to the same fill every time.",
+      "srs": true
+    }
+  ]
+}

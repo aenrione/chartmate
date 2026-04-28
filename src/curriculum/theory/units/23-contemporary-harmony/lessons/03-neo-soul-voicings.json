@@ -1,0 +1,38 @@
+{
+  "id": "03-neo-soul-voicings",
+  "title": "Neo-Soul Voicings",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Neo-Soul Harmony: Jazz Extensions Meet R&B Feel\n\nNeo-soul emerged in the 1990s as a genre that combined jazz harmonic sophistication with R&B/soul grooves and lyrical content. Artists like D'Angelo, Erykah Badu, Maxwell, India.Arie, and later Frank Ocean, Anderson .Paak, and H.E.R. define the style.\n\n### The Neo-Soul Harmonic Vocabulary\n\n**Core characteristics**:\n- **Major 7ths with 9ths and 6ths on tonic chords**: Cmaj9, Cmaj7#11, C6/9\n- **Minor 11ths on minor chords**: Dm11, Am11 (very lush)\n- **Dominant 7sus4 / 9sus4**: G7sus4, G9sus4 — avoid the tritone resolution for a floating feeling\n- **Chromatic planing of major 7ths**: Moving whole chords up or down chromatically\n- **Borrowed chords from parallel minor**: iv, bVI, bVII\n\n### The 'No 3rd' Trend: Suspended Chords\n\nOne defining neo-soul technique: avoiding the 3rd of chords to create ambiguity:\n\n**C9sus4**: C–F–G–Bb–D (root, sus4, fifth, b7, 9 — no third)\n\nThe suspended fourth replaces the major or minor third, creating a floating, unresolved feeling that suits the introspective lyrical content of neo-soul.\n\n### D'Angelo's Harmonic Language (*Voodoo*, 2000)\n\n'Voodoo' is the defining neo-soul record harmonically. Key techniques:\n- **Rhodes electric piano**: Creates warm, slightly detuned chord colors\n- **Slow rhythmic smear**: Chords arrive slightly late/early for a sloppy, human feel\n- **Chord clusters**: Close-voiced chords with 9ths, 11ths creating deliberate 'tension'\n- **Soul-jazz roots**: Many voicings come directly from Herbie Hancock's early 70s funk-jazz\n\n### Frank Ocean's Modern Approach (*Blonde*, 2016)\n\nFrank Ocean's harmonic palette on 'Blonde' adds:\n- **Modal ambiguity**: Progressions that don't resolve to a clear tonic\n- **9sus2 chords**: Sus2 and sus4 simultaneously (no 3rd)\n- **Chromatic voice leading in bass**: Bass moves in half steps beneath static upper voicings\n- **Beatle-influenced major/minor shifts**: Sudden shifts from major to minor and back (modal mixture)\n\n### Practical Neo-Soul Voicing Guide\n\nFor piano: Leave out the 5th, emphasize 9th and 6th.\n\nCmaj9: C (bass) | B–E–D (right hand: 7–3–9)\nAm11: A (bass) | G–C–D (right hand: b7–11 [which is the 4th]–9... wait: Am11 = A–C–E–G–B–D; voicing: A | G–C–B–D)\nGm9: G (bass) | F–Bb–A (right hand: b7–3–9... Gm9 = G–Bb–D–F–A; voicing: G | F–Bb–A)",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'suspended chord' (sus4 or sus2) and why does it appear so frequently in neo-soul?",
+      "choices": [
+        "A chord where the musician pauses (is 'suspended') before playing",
+        "A chord where the third is replaced by a fourth (sus4) or second (sus2), creating harmonic ambiguity — fitting neo-soul's introspective, unresolved emotional content",
+        "A chord played with the sustain pedal held down throughout",
+        "A chord borrowed from the parallel minor, creating a dark color"
+      ],
+      "answer": 1,
+      "explanation": "A suspended chord (sus) removes the third and substitutes either a fourth (sus4) or a second/ninth (sus2/sus9). Without the third, the chord cannot be clearly identified as major or minor — it is harmonically 'suspended' without resolution. This ambiguity suits neo-soul's introspective, floating emotional quality. C7sus4 or G9sus4 are extremely common in neo-soul production.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which aspect of D'Angelo's rhythmic approach on 'Voodoo' contributes to its human, organic feel?",
+      "choices": [
+        "Using electronic quantization to make the rhythm perfectly precise",
+        "Deliberately playing slightly behind or ahead of the beat — a rhythmic 'smear' that creates a loose, organic, human groove",
+        "Using polyrhythm (5 against 4) throughout",
+        "Playing all notes staccato for rhythmic clarity"
+      ],
+      "answer": 1,
+      "explanation": "D'Angelo's 'Voodoo' is famous for its deliberately 'sloppy' feel — chords and bass lines that arrive slightly behind or ahead of the strict beat. This is not imprecision; it is a deliberate stylistic choice influenced by James Brown, Sly Stone, and African-American funk traditions where 'sitting in the pocket' means playing slightly behind the beat for maximum groove. The slight imprecision makes it feel human and alive.",
+      "srs": true
+    }
+  ]
+}

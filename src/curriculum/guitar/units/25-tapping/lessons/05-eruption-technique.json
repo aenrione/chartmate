@@ -1,0 +1,43 @@
+{
+  "id": "05-eruption-technique",
+  "title": "Eruption Technique",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Van Halen's \"Eruption\" — The Technique Breakdown\n\n\"Eruption\" from Van Halen's debut album (1978) permanently changed guitar. At 1 minute 42 seconds, it demonstrated techniques most guitarists hadn't heard before.\n\n## What Makes Eruption Special\n\n1. **Clarity at extreme speed**: Every note audible at 200+ BPM\n2. **Musicality**: It's a composition, not just a speed display\n3. **Multiple techniques integrated**: Tapping, sweep picking, tremolo bar, two-handed legato\n4. **Showmanship**: EVH performed this live every night\n\n## The Opening Tapping Pattern\n\nThe iconic opening (simplified):\n```\ne |--T12-po9-po5--T12-po9-po5--T12-po9-po5--T12-po9-po5--|\n   Right hand taps 12, Left hand ring=9, index=5\n```\n\nThis runs for several bars before EVH starts moving the tap:\n```\ne |--T15-po12-po8--T14-po12-po8--T12-po9-po5--|\n   Tap descends: 15 → 14 → 12\n```\n\n## The Tremolo Bar Dive Bombs\n\nEVH uses the Floyd Rose (or his original vibrato bar) for extreme pitch dives:\n- Tap a note\n- While the note sustains, depress the tremolo bar to the body\n- Pitch drops dramatically (\"dive bomb\")\n- Release and let return to pitch\n\n## The Full Range of Eruption\n\nEruption combines:\n1. Two-handed tapping runs\n2. Single-note tremolo bar dives\n3. Harmonics\n4. Fast picking passages\n5. Right-hand strumming (hammer both hands simultaneously)",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What was revolutionary about Eddie Van Halen's tapping in 'Eruption' (1978)?",
+      "choices": [
+        "He was the first person to ever use tapping",
+        "He demonstrated two-hand tapping at extreme speed with clarity and musicality to a mainstream rock audience, inspiring a generation of guitarists",
+        "He used unusual tunings",
+        "The song had no other instruments"
+      ],
+      "answer": 1,
+      "explanation": "While tapping existed before EVH (Emmett Chapman, Harvey Mandel), Eruption brought the technique to a mass audience with unprecedented clarity, speed, and showmanship. It appeared on Van Halen's debut album and immediately inspired thousands of guitarists to develop tapping.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Learning Eruption — A Study Plan\n\n## Phase 1: Isolated Techniques (weeks 1-4)\n- Basic 3-note tapping (T12-po9-po5) at 60 BPM\n- Moving tap up and down scale positions\n- Clean pull-offs on all three notes\n\n## Phase 2: Eruption Sections (weeks 5-8)\n- Learn the opening 8-bar tapping section\n- Learn the moving tap section (tap descends scale)\n- Learn the tremolo bar dive bomb technique\n\n## Phase 3: Full Eruption (weeks 9-12)\n- Connect all sections\n- Practice at 70% speed\n- Record and critique\n\n## The Bigger Lesson — What Eruption Teaches\n\nEruption is significant not just as a technique showcase but as a **lesson in musicality under pressure**. EVH:\n- Maintained perfect rhythm throughout\n- Built the solo with dynamic arc (quiet start → full energy peak)\n- Ended decisively (not just stopping, but landing)\n\nThese musical qualities matter as much as the technical elements.\n\n## The EVH Practice Philosophy\n\nEVH: \"You should be able to play everything at full speed perfectly. Slow practice is for learning — once learned, play it for real.\"\n\nThis is controversial (most teachers advocate slow practice for longer), but EVH's point is valid: **at some point, the practice tempo must match the performance tempo**.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Beyond the technical elements, what musical qualities made Eruption more than just a speed display?",
+      "choices": [
+        "It had conventional verse-chorus structure",
+        "EVH maintained perfect rhythm, built a dynamic arc, and ended decisively — making it a composition with musicality, not just a technique exhibition",
+        "It was played slowly enough to be educational",
+        "It used only blues scales"
+      ],
+      "answer": 1,
+      "explanation": "Eruption succeeds as music because it has an arc: it starts clean and builds to maximum intensity, maintaining perfect rhythm throughout. The decisive ending is compositional. These musical qualities — structure, arc, rhythmic precision — separate it from mere technique demonstration.",
+      "srs": true
+    }
+  ]
+}

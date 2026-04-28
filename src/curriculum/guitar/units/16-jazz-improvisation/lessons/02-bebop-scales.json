@@ -1,0 +1,43 @@
+{
+  "id": "02-bebop-scales",
+  "title": "Bebop Scales",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Bebop Scales — The 8-Note Scale Solution\n\nBebop scales solve a fundamental rhythm problem: standard 7-note scales, when played in even 8th notes, put chord tones on weak beats. Bebop scales add one passing tone to make 8 notes — ensuring chord tones consistently fall on **strong beats (downbeats)**.\n\n## The Dominant Bebop Scale\n\nStart with the Mixolydian mode (G7: G A B C D E F G) and add a chromatic passing tone between the 7th (F) and root (G):\n\n**G Dominant Bebop Scale**: G – A – B – C – D – E – F – F# – G\n\nThe added note is F# (the major 7th), creating a 8-note scale.\n\nNow starting on G, the chord tones (G, B, D, F) land on beats 1, 2, 3, 4 when played as 8th notes:\n```\nBeat:     1   +   2   +   3   +   4   +\nNote:     G   A   B   C   D   E   F   F#\nChordtn:  R           3           5       7\n```\n\nChord tones on the beat — bebop phrasing naturally emerges.\n\n## The Major Bebop Scale\n\nCmaj7 (Ionian: C D E F G A B) + chromatic passing tone between 5th (G) and 6th (A):\n\n**C Major Bebop**: C – D – E – F – G – G# – A – B – C",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What problem do bebop scales solve with standard 7-note scales?",
+      "choices": [
+        "7-note scales are too difficult to play fast",
+        "In 7-note scales played as 8th notes, chord tones fall inconsistently on weak beats; bebop's 8th note keeps chord tones on strong beats",
+        "7-note scales don't contain enough notes",
+        "Bebop scales are easier to memorize"
+      ],
+      "answer": 1,
+      "explanation": "With 7 notes played as continuous 8th notes, chord tones don't consistently land on the downbeats. Adding an 8th note (chromatic passing tone) creates an even-numbered scale where chord tones fall on strong beats (1, 2, 3, 4) when starting on a chord tone.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Bebop Scale Fingering — G Dominant Bebop\n\n## Position on the Guitar (starting on G, string 6)\n\n```\ne |------10-12-13--|\nB |------10-11-13--|\nG |------9--11-12--|\nD |--10-12---------|\nA |--10-12---------|\nE |--3--5--6--8----|\n   G  A  B  C  D  E  F  F# G\n```\n\n## How Charlie Parker Used This Scale\n\nParker's signature bebop lines typically:\n1. Start on a chord tone\n2. Descend or ascend the bebop scale\n3. End on a chord tone on the next downbeat\n4. Add encirclement around target notes (approach from above AND below)\n\n## Encirclement Example\n\nTargeting the note B (3rd of G7):\n```\n... C – A# – C – B  (approach from below and above = encirclement)\n```\n\nThis chromatic encirclement is the bebop vocabulary — the \"Parker sound.\"\n\n## Practice\n\nPlay the G dominant bebop scale descending, starting from G (string 1, fret 3). Count out loud: \"1 AND 2 AND 3 AND 4 AND.\" Notice how G, B, D, F land on the numbers.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the G dominant bebop scale, what chromatic passing tone is added to the Mixolydian mode?",
+      "choices": [
+        "G# (b2nd)",
+        "F# (major 7th, between F and G)",
+        "C# (b4th)",
+        "D# (b5th)"
+      ],
+      "answer": 1,
+      "explanation": "The G Mixolydian mode (G A B C D E F) gets a chromatic passing tone added between the flat 7th (F) and the root (G): this is F# (the major 7th). G Dominant Bebop = G A B C D E F F# G.",
+      "srs": true
+    }
+  ]
+}

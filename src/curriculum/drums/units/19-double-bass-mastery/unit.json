@@ -1,0 +1,8 @@
+{
+  "id": "19-double-bass-mastery",
+  "title": "Double Bass Mastery",
+  "description": "Speed building, coordination, bass drum independence, and heel-toe technique",
+  "icon": "zap",
+  "prerequisites": ["13-metal-drumming"],
+  "lessons": ["01-heel-toe", "02-speed-building", "03-double-bass-coordination", "04-blast-variations", "05-double-bass-grooves"]
+}

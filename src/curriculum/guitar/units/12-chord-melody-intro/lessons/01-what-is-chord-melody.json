@@ -1,0 +1,33 @@
+{
+  "id": "01-what-is-chord-melody",
+  "title": "What Is Chord-Melody?",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Chord-Melody: One Guitar, One Orchestra\n\nChord-melody is the art of playing the **melody notes on top** of **supporting chord voicings** simultaneously — one guitar creating a complete, self-contained musical statement.\n\n## The Concept\n\nIn a band, you have:\n- A singer (melody)\n- A rhythm guitarist (chords)\n- A bassist (bass notes)\n\nIn chord-melody, **you do all three at once**.\n\n## Historical Context\n\nChord-melody is central to:\n- **Jazz solo guitar** (Joe Pass, Wes Montgomery, Ted Greene, Martin Taylor)\n- **Classical guitar** (all classical repertoire is inherently chord-melody)\n- **Fingerstyle pop** (Tommy Emmanuel, Andy McKee)\n- **Acoustic blues** (Robert Johnson's self-accompanied recordings)\n\n## The Basic Principle\n\nThe melody note must be **on top** — it should ring out above the chord. This usually means:\n1. The melody is played on the highest string in the chord\n2. Inner voices (chord tones) fill in below\n3. Bass notes anchor the bottom\n\n## Simple Example\n\nPlaying a C major scale while harmonizing each note with a chord underneath it — this is the foundation of chord-melody arranging.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In chord-melody playing, where must the melody note be positioned in the chord voicing?",
+      "choices": ["On the lowest string", "In the middle of the voicing", "On the highest (top) note", "It can be anywhere"],
+      "answer": 2,
+      "explanation": "The melody note must be on top (the highest-pitched note) so it projects above the chord harmony and is audible as the melody. This is the fundamental rule of chord-melody arranging.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Three Layers of Chord-Melody\n\nThink of a chord-melody arrangement as three layers stacked vertically:\n\n## Layer 1 — Bass (Bottom)\n- Root notes or bass lines\n- Played by the thumb (P)\n- Strings 6, 5, 4\n\n## Layer 2 — Inner Harmony (Middle)\n- Chord tones that fill out the harmony\n- Played by index and middle fingers (I, M)\n- Strings 4, 3, 2\n\n## Layer 3 — Melody (Top)\n- The tune everyone recognizes\n- Played by ring finger (A) or middle (M)\n- Strings 2, 1 most often\n\n## Practical Exercise\n\nTake a C major chord (x32010). Now move just the top note:\n- Fret 0 (E) = melody note E\n- Fret 1 (F) = melody note F  \n- Fret 3 (G) = melody note G\n- Fret 5 (A) = melody note A (but chord shape changes too)\n\nThis concept — moving the top voice while keeping an inner structure — is the essence of chord-melody.\n\n**Joe Pass** was the master of this on jazz guitar. Listen to \"Unforgettable\" from *Virtuoso* (1974).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which famous guitarist is most associated with solo jazz chord-melody playing?",
+      "choices": ["Eric Clapton", "Joe Pass", "Eddie Van Halen", "Andrés Segovia"],
+      "answer": 1,
+      "explanation": "Joe Pass is the quintessential chord-melody jazz guitarist. His solo album *Virtuoso* (1974) is considered the gold standard of unaccompanied jazz guitar. He demonstrated that a single guitar could be a complete musical statement.",
+      "srs": true
+    }
+  ]
+}

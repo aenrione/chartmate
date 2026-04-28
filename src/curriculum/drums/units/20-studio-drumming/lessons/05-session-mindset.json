@@ -1,0 +1,20 @@
+{
+  "id": "05-session-mindset",
+  "title": "The Session Mindset",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Session Drummer's Professional Code\n\nBeing a working session drummer requires a specific professional mindset that prioritizes the music, the artist, and the project above personal expression.\n\n**The session hierarchy:**\n1. **The artist's vision** — your job is to serve their music, not showcase your own\n2. **The producer's direction** — the producer is responsible for the record, not you\n3. **The engineer's technical requirements** — if they ask you to use a different snare or adjust your hi-hat, do it without ego\n4. **Your musical judgment** — this is in service of all the above, not independent of them\n\n**What good session players do:**\n- Arrive early, set up completely, and be ready when the session starts\n- Know the material — listen to reference tracks before arriving\n- Offer suggestions carefully ('Would it help if...?' not 'I think you should...')\n- Take direction without defensiveness\n- Play simply and correctly before adding complexity\n- Make the other musicians feel comfortable and supported\n\n**What gets drummers not called back:**\n- Arriving late or underprepared\n- Overplaying and not listening\n- Arguing with producers or artists about musical decisions\n- Taking too long to learn or adjust the part\n- Being difficult about gear or logistics\n\n**The paradox:** The most musically restricted context (session work) often produces the most revered drum performances, because the constraints force absolute focus on serving the song.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a session context, if a producer asks you to play a simpler part than what you've been playing, what is the correct response?",
+      "choices": ["Refuse and explain why your part is better", "Agree but subtly continue playing your preferred part", "Execute the simpler part immediately and without defensiveness", "Ask the artist for their opinion to override the producer"],
+      "answer": 2,
+      "explanation": "Session work requires immediately executing the producer's direction without ego or defensiveness. The producer is responsible for the record and their decisions — right or wrong by your aesthetic judgment — must be respected. Arguing about musical choices is how drummers stop getting called for sessions.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "04-romanza",
+  "title": "Romanza (Romance)",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Romanza (Romance) — The Most Played Classical Guitar Piece\n\nThe \"Romance\" (also called \"Romanza\" or \"Spanish Romance\") is arguably the most recognized classical guitar piece in existence. Its composer is **unknown** — attributed variously to various Spanish composers of the 19th century.\n\n## Musical Structure\n\n### Section A (E minor — the famous opening)\n- Key: E minor\n- Texture: Melody on string 1, open E drone (string 1 open), arpeggio on strings 2-3\n- The \"guitar effect\": the open high E note rings against fretted melody notes above it (campanella element)\n\n### Section B (E major — the contrasting bright section)\n- Key: E major\n- More elaborate harmonies\n- Similar textural approach but major quality\n\n## The Technical Foundation\n\nThis piece is perfect for early-intermediate players because:\n1. Section A stays mostly in first position\n2. The arpeggio pattern is consistent (P-I-M-A or P-A-M-I)\n3. The melody notes on string 1 are clear targets\n4. Open string drones reduce left-hand complexity\n\n## The Famous Opening Tab\n\n```\ne |--0--2--3--2--0--2--3--2--|\nB |--0--0--0--0--0--0--0--0--|\nG |--0--0--0--0--0--0--0--0--|\nD |-----4--4--4-----------4--|\nA |--0-----0--0--0-----0-----|\nE |--0--0--0--0--0--0--0--0--|\n   Em      Esus4 Em\n```\n\nThe open B and G strings ring throughout — true campanella effect.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What creates the characteristic 'ringing' effect in the Romanza (Romance) opening section?",
+      "choices": [
+        "Using a lot of reverb",
+        "Open string drones (especially open B and G) ringing simultaneously with fretted melody notes",
+        "Playing the melody faster than the accompaniment",
+        "Full chord strums on every beat"
+      ],
+      "answer": 1,
+      "explanation": "The opening of Romanza uses open B and G string drones that ring continuously while the melody moves on string 1. This creates the 'bell-like' campanella effect — a wash of overlapping sustained notes that gives the piece its dreamy quality.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Section B of Romanza — E Major\n\nThe contrasting E major section (bars 17-32) introduces more complex harmonies and a brighter character:\n\n## Key Chord Shapes in Section B\n\n### E major base shape (full chord throughout)\n```\ne |--0--| E\nB |--0--| B\nG |--1--| G#\nD |--2--| E\nA |--2--| B\nE |--0--| E\n```\n\n### A major (IV chord)\n```\ne |--0--| E\nB |--2--| A (partial barre shape)\nG |--2--| E (adjusted)\nD |--2--| A\nA |--0--| A\nE |--x--|\n```\n\n## Musical Character of Section B\n\nThe E major section should feel **brighter and more expansive** than the E minor opening:\n- Slightly louder dynamic (p → mf)\n- More resonant tone — let the E major chords ring\n- The return to E minor (da capo) should feel like coming home\n\n## Performance Practice\n\nRomanza is typically performed with a crescendo in the E major section leading back to a dramatic return to E minor. The da capo (repeat of section A) should feel like a resolved, final statement.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What emotional contrast should a performer create between the A and B sections of Romanza?",
+      "choices": [
+        "Both sections should be equally loud and fast",
+        "Section A (E minor) — introspective and melancholic; Section B (E major) — brighter, more expansive",
+        "Section A faster; Section B slower",
+        "No contrast — play them identically"
+      ],
+      "answer": 1,
+      "explanation": "The contrast between E minor (section A — melancholic, intimate) and E major (section B — bright, expansive) is the emotional heart of Romanza. This tonal contrast — achieved through dynamics, tone quality, and phrasing — makes the piece musically satisfying.",
+      "srs": true
+    }
+  ]
+}

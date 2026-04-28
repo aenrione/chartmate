@@ -1,0 +1,43 @@
+{
+  "id": "04-classical-arpeggios",
+  "title": "Classical Arpeggio Patterns",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Classical Arpeggios — The Soul of Guitar Music\n\nArpeggios (broken chord patterns) form the backbone of classical guitar repertoire. Unlike scales (linear), arpeggios require fingers to move across strings — making them more complex.\n\n## The Five Essential Arpeggio Patterns\n\n### Pattern 1: P-I-M-A (ascending)\n```\nP = bass, I = string 3, M = string 2, A = string 1\n```\n\n### Pattern 2: P-A-M-I (descending)\n\n### Pattern 3: P-I-M-A-M-I (up and back)\nBest for slow, sustained pieces\n\n### Pattern 4: P-I-P-M-A-M (thumb returns midway)\nFrom Bach Lute works\n\n### Pattern 5: P-I-A-M-A-I (alternating)\nRequires excellent ring-middle independence\n\n## The Difficulty Hierarchy\n\nEasiest: P-I-M-A\nHarder: P-A-M-I (descending)\nHardest: Patterns where M and A must move independently\n\n## Mauro Giuliani's 120 Arpeggio Studies\n\nMauro Giuliani (1781–1829) wrote 120 right-hand arpeggio exercises (Op. 1, Studio per la Chitarra). Every classical guitarist studies them — they systematically cover all possible finger combinations.\n\nStudy these in order: Op. 1 No. 1-20 for the first month.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is the P-A-M-I descending arpeggio pattern harder than P-I-M-A ascending?",
+      "choices": [
+        "It uses more strings",
+        "The ring finger (A) must initiate, which is the weakest and least independent finger for most players",
+        "It is played faster",
+        "It requires thumb crossing over the fingers"
+      ],
+      "answer": 1,
+      "explanation": "The ring finger (A) is the weakest and least naturally independent for most people. Starting the descending arpeggio with A requires the ring finger to make a strong, controlled initial stroke — the opposite of what most players' hands naturally do.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Recuerdos de la Alhambra Arpeggio — Tremolo\n\nFrancisco Tárrega's \"Recuerdos de la Alhambra\" (1896) uses a **tremolo** arpeggio — the most advanced and musical of all classical guitar arpeggio techniques.\n\n## Tremolo Technique\n\nThe pattern: **P – A – M – I** (bass thumb, then three fingers in rapid succession)\n\nExecuted at high speed, the three finger notes (A-M-I) create the illusion of a sustained tremolo note, while the thumb plays a melody or bass line.\n\n## The Four-Stroke Tremolo Cycle\n\n```\nBeat: 1       +       2       +\nNotes: P A M I P A M I P A M I\n       (bass)(shake)(bass)(shake)\n```\n\nAt 120 BPM, the A-M-I triplet creates a shimmering, violin-like sustained tone.\n\n## Building Tremolo — The 6-Month Plan\n\n1. **Month 1**: A-M-I on one string, very slow, focus on eveness\n2. **Month 2**: P-A-M-I as a unit at 60 BPM\n3. **Month 3**: Full tremolo at 80 BPM on open strings\n4. **Month 4**: Add left-hand melody on bass strings\n5. **Month 5-6**: Apply to first page of \"Recuerdos\"\n\nTremolo requires the most patience of any guitar technique. Do not rush.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In classical guitar tremolo (as in Recuerdos de la Alhambra), what creates the illusion of a sustained, shimmering note?",
+      "choices": [
+        "Using a sustain pedal",
+        "A-M-I fingers in rapid succession on one string create a repeating note fast enough to sound sustained",
+        "Playing with artificial harmonics",
+        "Open string resonance"
+      ],
+      "answer": 1,
+      "explanation": "Tremolo is A-M-I played so rapidly on the same string that the ear perceives a sustained note rather than three separate strikes — similar to a violin's bow creating continuous tone. Meanwhile, the thumb plays a separate bass melody, creating two voices.",
+      "srs": true
+    }
+  ]
+}

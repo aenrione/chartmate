@@ -1,0 +1,69 @@
+{
+  "id": "05-interval-quality-summary",
+  "title": "Interval Quality Summary",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Interval Quality: Complete Reference\n\n### All 13 Intervals from Unison to Octave\n\n| Half Steps | Interval Name | Abbreviation | Example (from C) |\n|-----------|--------------|--------------|------------------|\n| 0 | Perfect Unison | P1 | C – C |\n| 1 | Minor 2nd | m2 | C – Db |\n| 2 | Major 2nd | M2 | C – D |\n| 3 | Minor 3rd | m3 | C – Eb |\n| 4 | Major 3rd | M3 | C – E |\n| 5 | Perfect 4th | P4 | C – F |\n| 6 | Tritone (Aug 4th / Dim 5th) | TT / A4 / d5 | C – F# / C – Gb |\n| 7 | Perfect 5th | P5 | C – G |\n| 8 | Minor 6th | m6 | C – Ab |\n| 9 | Major 6th | M6 | C – A |\n| 10 | Minor 7th | m7 | C – Bb |\n| 11 | Major 7th | M7 | C – B |\n| 12 | Perfect Octave | P8 | C – C (high) |\n\n### Interval Inversions\n\nAny interval can be **inverted** by raising the lower note an octave (or lowering the upper note an octave). Inversions always add up to 9:\n- m2 inverts to M7 (1 + 11 = 12... no: 1 + 8 = 9: 2 and 7)\n- M2 inverts to m7\n- m3 inverts to M6\n- M3 inverts to m6\n- P4 inverts to P5\n- Tritone inverts to... another tritone (6 + 6 = 12; number: 4 + 5 = 9)\n- P5 inverts to P4\n\nQuality inversion rules: **major ↔ minor**, **perfect ↔ perfect**, **augmented ↔ diminished**. The numbers always sum to 9.\n\n### Ear Training Associations\n\nBerklee-style ear training uses **musical reference songs** to anchor each interval in memory. These are ascending melodic intervals (lower note first):\n\n| Interval | Reference Song |\n|----------|---------------|\n| Minor 2nd (m2) | \"Jaws\" theme — the 2-note shark motif |\n| Major 2nd (M2) | \"Happy Birthday\" (first two notes: \"Hap-py\") |\n| Minor 3rd (m3) | \"Smoke on the Water\" intro / \"Greensleeves\" opening |\n| Major 3rd (M3) | \"When the Saints Go Marching In\" (first leap) |\n| Perfect 4th (P4) | \"Here Comes the Bride\" / \"Amazing Grace\" |\n| Tritone | \"The Simpsons\" theme (first two notes) / \"Maria\" (West Side Story) |\n| Perfect 5th (P5) | \"Twinkle Twinkle Little Star\" / \"Star Wars\" main theme |\n| Minor 6th (m6) | \"The Entertainer\" (main theme) / \"Love Story\" |\n| Major 6th (M6) | \"My Bonnie Lies Over the Ocean\" / \"NBC\" jingle |\n| Minor 7th (m7) | \"Somewhere\" (West Side Story) |\n| Major 7th (M7) | \"Take On Me\" (A-ha) intro / Maj7 chord voicing |\n| Octave (P8) | \"Somewhere Over the Rainbow\" (first leap) |\n\nThe reference-song method works because the interval is embedded in music you already know. When you hear an interval in the wild, you subvocalize the reference song and recognize the match. This is Berklee's core ear training pedagogy.\n\n### Practical Application: Interval Recognition in Context\n\nIn real music, intervals rarely appear in isolation. Context shapes perception:\n- The same 4 half steps can be a major 3rd or a diminished 4th (C to Fb), depending on spelling.\n- Ascending vs. descending intervals feel different — \"Jaws\" is ascending m2; the opening of Beethoven's 5th is a descending minor 3rd.\n- Harmonic (simultaneous) intervals are harder to identify than melodic (sequential) ones for beginners — they require practice with two-voice dictation.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Interval Identification Strategies\n\n### The Major Scale Method\n\nThe fastest method for identifying any interval from a given root:\n\n1. Imagine the major scale of the lower note.\n2. If the upper note is in that major scale, the interval is **major** (for 2nds, 3rds, 6ths, 7ths) or **perfect** (for 4ths, 5ths, octaves).\n3. If the upper note is one half step **lower** than the scale degree, the interval is **minor** (for 2nds, 3rds, 6ths, 7ths) or **diminished** (for 4ths, 5ths).\n4. If the upper note is one half step **higher** than the scale degree, the interval is **augmented**.\n\nExample: G to Eb.\n- G major scale: G A B C D E F# G.\n- G to E is a major 6th (E is in G major).\n- G to Eb is one half step lower than G to E → **minor 6th**.\n\n### Common Harmonic Intervals in Chords\n\nRecognizing intervals in chords is a critical shortcut for chord identification:\n- **Major chord** = M3 (root to 3rd) + P5 (root to 5th)\n- **Minor chord** = m3 (root to 3rd) + P5 (root to 5th)\n- **Diminished chord** = m3 + d5 (root to 5th)\n- **Augmented chord** = M3 + A5 (root to 5th)\n- **Dominant 7th chord** = M3 + P5 + m7 (root to 7th)\n- **Major 7th chord** = M3 + P5 + M7 (root to 7th)\n\nKnowing these interval stacks means you can identify any chord by analyzing the intervals above the root — the core skill of harmonic analysis.\n\n### Consonance to Dissonance Spectrum\n\nFrom most consonant to most dissonant:\n**P8 → P5 → P4 → M3 → m3 → M6 → m6 → M2 → m7 → M7 → m2 → TT**\n\nThis ordering reflects both acoustic physics (simpler ratios = more consonant) and historical stylistic usage. In common-practice tonality, dissonances require preparation and resolution. In 20th-century music, dissonances are often used freely for their expressive quality.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Using the ear training reference-song method, which familiar melody is associated with the perfect 5th?",
+      "choices": [
+        "\"Jaws\" theme",
+        "\"Here Comes the Bride\"",
+        "\"Twinkle Twinkle Little Star\"",
+        "\"My Bonnie Lies Over the Ocean\""
+      ],
+      "answer": 2,
+      "explanation": "\"Twinkle Twinkle Little Star\" opens with a perfect 5th leap: \"Twin-kle\" moves from C up to G — a perfect 5th (7 half steps). \"Here Comes the Bride\" is a perfect 4th. \"My Bonnie Lies Over the Ocean\" is a major 6th. \"Jaws\" is a minor 2nd. The reference-song method anchors each interval to a melody already embedded in your auditory memory.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What interval does a minor 3rd invert to, and how do you verify this?",
+      "choices": [
+        "Major 6th — because 3 + 9 = 12",
+        "Minor 6th — because minor inverts to minor",
+        "Major 6th — because 3 + 6 = 9 (interval numbers add to 9) and minor inverts to major",
+        "Perfect 6th — because 3rds always invert to 6ths"
+      ],
+      "answer": 2,
+      "explanation": "Interval inversion follows two rules: (1) the interval numbers add to 9 (so a 3rd inverts to a 6th: 3 + 6 = 9), and (2) major inverts to minor (and vice versa), while perfect inverts to perfect. A minor 3rd therefore inverts to a major 6th. Verify: m3 = 3 half steps; its inversion spans 12 - 3 = 9 half steps = a major 6th. ✓",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Using the major scale method: what is the interval from G up to Eb?",
+      "choices": [
+        "Major 6th",
+        "Minor 6th",
+        "Diminished 6th",
+        "Augmented 5th"
+      ],
+      "answer": 1,
+      "explanation": "Step 1: G to E is a 6th (G–A–B–C–D–E = 6 letter names). Step 2: In G major, the 6th degree is E (natural). G to E = major 6th. Eb is one half step lower than E. A major 6th lowered by a half step = minor 6th. Therefore G to Eb is a minor 6th (8 half steps). Verify by counting: G–Ab–A–Bb–B–C–Db–D–Eb = 8 half steps. ✓",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which interval stack correctly describes a dominant 7th chord (e.g., G7: G–B–D–F)?",
+      "choices": [
+        "Major 3rd + Perfect 5th + Major 7th",
+        "Minor 3rd + Perfect 5th + Minor 7th",
+        "Major 3rd + Perfect 5th + Minor 7th",
+        "Major 3rd + Augmented 5th + Minor 7th"
+      ],
+      "answer": 2,
+      "explanation": "A dominant 7th chord contains: (1) Major 3rd from root to 3rd — G to B = 4 half steps = M3; (2) Perfect 5th from root to 5th — G to D = 7 half steps = P5; (3) Minor 7th from root to 7th — G to F = 10 half steps = m7. The minor 7th (not major 7th) is what distinguishes a dominant 7th from a major 7th chord. The tritone between the 3rd (B) and 7th (F) — a diminished 5th — is what gives G7 its characteristic tension and drive toward resolution.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "id": "01-what-is-a-chord",
+  "title": "What Is a Chord?",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## What Is a Chord?\n\nA **chord** is three or more notes sounded simultaneously. That definition matters: two notes played together form an **interval** (sometimes called a **dyad**), but it takes a minimum of three distinct pitches to constitute a chord.\n\n### The Triad: The Fundamental Chord\n\nThe most foundational chord type is the **triad** — three notes built in a specific pattern. Triads are constructed by stacking **thirds**:\n\n- The **root**: the note the chord is named after\n- The **third**: a third above the root\n- The **fifth**: a fifth above the root (which is a third above the middle note)\n\nFor example, if the root is **C**, the third is **E**, and the fifth is **G**. Stack those three notes and you have a C triad.\n\n### Chords vs. Arpeggios\n\nWhen the notes of a chord are played **simultaneously**, you have a chord. When those same notes are played **sequentially** — one after another — you have an **arpeggio**. The notes are identical; only the presentation differs. Arpeggios appear constantly in classical music (think Beethoven's Moonlight Sonata) and in guitar fingerpicking patterns.\n\n### Why Chords Matter\n\nChords are the **harmonic vocabulary of music**. They serve three essential roles:\n\n- **Support melody** — chords provide the harmonic context that gives a melody its emotional meaning\n- **Create emotion** — a major chord under a phrase and a minor chord under the same phrase produce entirely different feelings\n- **Define the key center** — the chords used in a passage tell you what key the music is in\n\n### Power Chords: A Special Case\n\nIn rock and metal guitar, **power chords** (written as C5, G5, etc.) consist of just the root and the fifth — technically a dyad. Despite not containing a third, they are derived from the triad concept. The absence of the third makes them sonically neutral — neither major nor minor — which is why heavy distortion works well with them.\n\n### The Building Blocks of Harmony\n\nOnce you understand what a chord is, you can build upward: triads become the foundation for **seventh chords** (4 notes), **ninth chords** (5 notes), and more complex extensions. All of Western harmony — from a Bach chorale to a jazz standard to a pop song — is built from this same stacked-thirds logic.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the minimum number of distinct pitches required to form a chord?",
+      "choices": ["2", "3", "4", "5"],
+      "answer": 1,
+      "explanation": "A chord requires at least three distinct pitches. Two notes played together form an interval or dyad. The most basic chord — the triad — has exactly three notes.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How are the notes of a triad arranged structurally?",
+      "choices": [
+        "By stacking perfect fifths on top of each other",
+        "By stacking thirds on top of each other",
+        "By stacking half steps on top of each other",
+        "By stacking fourths on top of each other"
+      ],
+      "answer": 1,
+      "explanation": "Triads are built by stacking thirds: a root, a third above the root, and a fifth above the root (which is a third above the middle note). This stacked-thirds principle extends to seventh chords and beyond.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When the notes of a chord are played one after another instead of simultaneously, the result is called:",
+      "choices": ["A scale", "A phrase", "An arpeggio", "A motif"],
+      "answer": 2,
+      "explanation": "An arpeggio uses the same notes as a chord but plays them sequentially rather than simultaneously. The word comes from the Italian 'arpeggiare' — to play the harp — because harps naturally arpeggiate chords.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes a 'power chord' different from a standard triad?",
+      "choices": [
+        "It uses four notes instead of three",
+        "It contains only the root and the fifth — no third",
+        "It is always played in the lowest register of the guitar",
+        "It uses a minor third and a diminished fifth"
+      ],
+      "answer": 1,
+      "explanation": "A power chord contains only the root and the perfect fifth — no third at all. Because the third determines whether a chord is major or minor, power chords are harmonically neutral. This makes them ideal for distorted guitar tones.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "01-alternate-picking-fundamentals",
+  "title": "Alternate Picking Fundamentals",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Alternate Picking — The Engine of Speed\n\nAlternate picking is the technique of **strictly alternating down and up pick strokes** for every note. It's the foundation of fast, precise single-note playing.\n\n## Down vs. Up Stroke Characteristics\n\n**Down stroke**: Slightly louder, more aggressive, falls naturally on downbeats\n**Up stroke**: Slightly lighter, more agile, falls on upbeats\n\nIn alternate picking, both strokes must sound **equal in volume and tone** — training the up stroke to match the down is the main technical challenge.\n\n## The Mechanics\n\n1. **Pick angle**: 45 degrees to the string, slight downward tilt\n2. **Grip**: Firm but not tense — pick held between thumb and index\n3. **Motion source**: Small wrist rotation + forearm rotation, NOT elbow\n4. **Pick depth**: No more than 2-3mm through the string\n5. **After the stroke**: Immediate return to neutral position\n\n## The Essential Drill\n\nChromatic exercise, alternate picking:\n```\ne |--1--2--3--4--4--3--2--1--|\nB |--1--2--3--4--4--3--2--1--|\nG |--1--2--3--4--4--3--2--1--|\n   n  n  n  n  (n=down, v=up, alternate)\n   D  U  D  U  D  U  D  U\n```\n\nAll down-up-down-up, 60 BPM, increase by 2 BPM each session.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the primary technical challenge when developing alternate picking?",
+      "choices": [
+        "Developing stronger down strokes",
+        "Training the up stroke to equal the down stroke in volume and tone",
+        "Memorizing which stroke falls on which beat",
+        "Playing faster than 200 BPM"
+      ],
+      "answer": 1,
+      "explanation": "Most players naturally play stronger down strokes. The up stroke tends to be lighter and less controlled. Training both strokes to produce equal volume, tone, and clarity is the core challenge of alternate picking development.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Paul Gilbert's Picking Mechanics\n\n**Paul Gilbert** (Mr. Big, Racer X) is one of the most technically studied alternate pickers. His mechanical approach:\n\n## Gilbert's Key Points\n\n1. **Pick perpendicular** to the string path — minimal resistance\n2. **Shallow pick depth** — don't dig in deep, just skim the string\n3. **Anchoring**: Light contact of ring finger or pinky on the guitar body (controversial in classical, essential in rock)\n4. **\"Sweeping\" feeling** between adjacent strings — strings are close together, so transitions feel like a sweep\n5. **No tension** — any tension in the forearm cuts speed in half\n\n## The Tension Test\n\nWhile playing alternate picking at moderate tempo:\n1. Squeeze your forearm briefly with your other hand\n2. You should feel soft muscle, not rock-hard tension\n3. Rock-hard = you're tense = you're blocking speed\n\n## Speed Development Protocol\n\n- **10 minutes at 70% tempo** (clean, relaxed, perfect)\n- **2-minute burst at 90% tempo** (challenging)\n- **1-minute burst at 100% tempo** (pushing limit)\n- **Return to 70% to recover**\n\nRepeat the cycle. Do NOT practice at 100% tempo for extended periods — you're reinforcing tension.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why should you practice alternate picking mostly at 70% of your maximum tempo?",
+      "choices": [
+        "Slow practice sounds better on recordings",
+        "At 70%, you practice with correct mechanics and no tension — building the neural pathways for speed without injury",
+        "100% tempo practice is too loud",
+        "It's the standard jazz tempo"
+      ],
+      "answer": 1,
+      "explanation": "At 70% of max tempo, you can play correctly and without tension. This is where neural pathways are built efficiently. Sustained practice at 100% tempo introduces tension and reinforces bad mechanics. Speed comes from clean slow practice, not from forcing fast tempo.",
+      "srs": true
+    }
+  ]
+}

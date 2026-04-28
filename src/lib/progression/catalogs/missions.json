@@ -1,0 +1,82 @@
+[
+  {
+    "id": "tempo_climb",
+    "title": "Tempo Climb",
+    "description": "Hit a +10 bpm milestone on any rudiment.",
+    "intensity": "medium",
+    "weight": 2,
+    "target": 1,
+    "xp_reward": 25,
+    "trigger": {"type": "rudiment_milestone"}
+  },
+  {
+    "id": "across_the_neck",
+    "title": "Across the Neck",
+    "description": "Score 85% or higher on three different fretboard drills.",
+    "intensity": "medium",
+    "weight": 2,
+    "target": 3,
+    "xp_reward": 30,
+    "trigger": {"type": "event_count", "surface": "fretboard", "where": {"min_accuracy": 0.85}}
+  },
+  {
+    "id": "repertoire_refresh",
+    "title": "Repertoire Refresh",
+    "description": "Play three different songs end-to-end at target tempo.",
+    "intensity": "easy",
+    "weight": 3,
+    "target": 3,
+    "xp_reward": 25,
+    "trigger": {"type": "event_count", "surface": "repertoire", "where": {"at_target_tempo": true}}
+  },
+  {
+    "id": "ear_sharpener",
+    "title": "Ear Sharpener",
+    "description": "Complete five ear-training sessions at 85% accuracy or better.",
+    "intensity": "hard",
+    "weight": 1,
+    "target": 5,
+    "xp_reward": 35,
+    "trigger": {"type": "event_count", "surface": "ear", "where": {"min_accuracy": 0.85}}
+  },
+  {
+    "id": "path_walker",
+    "title": "Path Walker",
+    "description": "Complete three lessons in your active SkillTree path.",
+    "intensity": "easy",
+    "weight": 3,
+    "target": 3,
+    "xp_reward": 20,
+    "trigger": {"type": "event_count", "surface": "lesson", "where": {"first_play_only": true}}
+  },
+  {
+    "id": "goal_closer",
+    "title": "Goal Closer",
+    "description": "Complete one program goal that's been open for a while.",
+    "intensity": "medium",
+    "weight": 2,
+    "target": 1,
+    "xp_reward": 30,
+    "trigger": {"type": "event_count", "surface": "program_goal"}
+  },
+  {
+    "id": "clean_run",
+    "title": "Clean Run",
+    "description": "Complete a sheet-music song with no rewinds.",
+    "intensity": "medium",
+    "weight": 2,
+    "target": 1,
+    "xp_reward": 20,
+    "trigger": {"type": "event_count", "surface": "playbook", "where": {"no_rewinds": true, "status": "nailed_it"}}
+  },
+  {
+    "id": "two_surface_tuesday",
+    "title": "Cross-Train",
+    "description": "Earn XP on four different surfaces this week.",
+    "intensity": "easy",
+    "weight": 2,
+    "target": 4,
+    "xp_reward": 30,
+    "trigger": {"type": "distinct_surfaces"}
+  }
+]

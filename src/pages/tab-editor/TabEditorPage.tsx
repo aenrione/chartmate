@@ -3,7 +3,8 @@ import {useParams, useNavigate, useLocation} from 'react-router-dom';
 import {AlphaTabApi, model, importer, Settings, StaveProfile} from '@coderline/alphatab';
 import SaveCompositionDialog from './SaveCompositionDialog';
 import {useUnsavedChanges} from './useUnsavedChanges';
-import TabEditorCanvas, {type TabEditorCanvasHandle} from './TabEditorCanvas';
+import {recordEventSafely} from '@/lib/progression';
+import TabEditorCanvas, {type TabEditorCanvasHandle, type PatternOverlay} from './TabEditorCanvas';
 import NoteInputPanel from './NoteInputPanel';
 import TabEditorSidebar from './TabEditorSidebar';
 import FretboardGrid from './FretboardGrid';
@@ -27,6 +28,7 @@ import {
   toggleBend,
   insertMeasureAfter,
   deleteMeasure,
+  clearBar,
   addTrack,
   removeTrack,
   setTrackTuning,
@@ -39,6 +41,7 @@ import {
   type TabSection,
 } from '@/lib/tab-editor/scoreOperations';
 import {voicingToNotes, type ChordVoicing} from '@/lib/tab-editor/chordDb';
+import {DRUM_LANE_COUNT, getDrumLane} from '@/lib/tab-editor/drumMap';
 import {detectPatterns} from '@/lib/tab-editor/patternDetector';
 import {extractAsciiTabMeta} from '@/lib/tab-editor/asciiTabImporter';
 import {
@@ -86,6 +89,8 @@ import type {PlaybackClock} from '@/lib/youtube-sync';
 import YouTubePlayer from '@/components/YouTubePlayer';
 import {exportToGp7} from '@/lib/tab-editor/exporters';
 import {barIndexToTick} from '@/lib/tab-editor/seekUtils';
+import {getKeyInfo} from '@/lib/tab-editor/keyData';
+import KeyChartDialog from './KeyChartDialog';
 import {UndoManager} from '@/lib/tab-editor/undoManager';
 import {loadComposition} from '@/lib/local-db/tab-compositions';
 import {cn} from '@/lib/utils';
@@ -145,6 +150,8 @@ export default function TabEditorPage() {
   const [mutedTracks, setMutedTracks] = useState<Set<number>>(
     () => new Set(_editorUICache.get(id ?? 'new')?.mutedTracks ?? []),
   );
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [showKeyChart, setShowKeyChart] = useState(false);
   const [showYoutubePanel, setShowYoutubePanel] = useState(false);
   const [youtubeFullscreen, setYoutubeFullscreen] = useState(false);
   const ytSyncSuppressRef = useRef(false);
@@ -152,6 +159,7 @@ export default function TabEditorPage() {
   const [showNewTabConfirm, setShowNewTabConfirm] = useState(false);
   const {isDirty, markDirty, markClean, blocker} = useUnsavedChanges();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [selectedBarRange, setSelectedBarRange] = useState<{start: number; end: number} | null>(null);
   const proceedAfterSaveRef = useRef<(() => void) | null>(null);
   const [isResolvingBlockedNavigation, setIsResolvingBlockedNavigation] = useState(false);
   const isDirtyRef = useRef(isDirty);
@@ -404,7 +412,11 @@ export default function TabEditorPage() {
       pendingScoreRenderRef.current = false;
       clearScoreRenderTimer();
       markRenderPending();
-      readyApi.renderScore(currentScore, [activeTrackIndex]);
+      // Clamp — alphaTab's renderScore has an off-by-one (`<=` instead of `<`) that
+      // pushes `undefined` into its tracks list if we pass an out-of-range index,
+      // which then crashes its readyForPlayback handler (`track.playbackInfo`).
+      const clampedIndex = Math.max(0, Math.min(activeTrackIndex, currentScore.tracks.length - 1));
+      readyApi.renderScore(currentScore, [clampedIndex]);
       writePlaybackDiag('renderScore');
       loadMidiForCurrentScore();
       window.setTimeout(() => {
@@ -482,6 +494,16 @@ export default function TabEditorPage() {
       setScore(score);
       setActiveTrackIndex(0);
       setTrackVersion(v => v + 1);
+      // Percussion staves don't carry tablature; force StaveProfile.Score so the
+      // first render produces a visible stave (StaveProfile.Tab on drums => empty
+      // layout => `group.staves` undefined crash).
+      const firstTrackIsDrums = score.tracks[0]?.staves[0]?.isPercussion ?? false;
+      api.settings.display.staveProfile = firstTrackIsDrums
+        ? StaveProfile.Score
+        : staveMode === 'tab' ? StaveProfile.Tab
+        : staveMode === 'notation' ? StaveProfile.Score
+        : StaveProfile.Default;
+      api.updateSettings();
       prepareForScoreRender();
       markRenderPending();
       api.renderScore(score, [0]);
@@ -489,7 +511,7 @@ export default function TabEditorPage() {
       setIsReady(true);
       setDetectedPatternsRef.current(detectPatterns(score));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [getApi, writePlaybackDiag, setScore, prepareForScoreRender, markRenderPending, loadMidiForCurrentScore, setIsReady]),
+    }, [getApi, writePlaybackDiag, setScore, prepareForScoreRender, markRenderPending, loadMidiForCurrentScore, setIsReady, staveMode]),
     onDirty: markDirty,
     onClean: markClean,
     onYoutubeUrl: useCallback((url: string) => { handleYoutubeUrlSubmit(url); }, [handleYoutubeUrlSubmit]),
@@ -623,6 +645,34 @@ export default function TabEditorPage() {
   computeSectionLabelsRef.current = computeSectionLabels;
   computePatternOverlaysRef.current = computePatternOverlays;
 
+  // ── Bar selection overlays ────────────────────────────────────────────────
+  const [selectedBarOverlays, setSelectedBarOverlays] = useState<PatternOverlay[]>([]);
+  useEffect(() => {
+    if (!selectedBarRange) {
+      setSelectedBarOverlays([]);
+      return;
+    }
+    const api = getApi();
+    if (!api?.boundsLookup) return;
+    const overlays: PatternOverlay[] = [];
+    for (const system of api.boundsLookup.staffSystems) {
+      for (const barBounds of system.bars) {
+        const idx = barBounds.index;
+        if (idx >= selectedBarRange.start && idx <= selectedBarRange.end) {
+          const {x, y, w, h} = barBounds.visualBounds;
+          overlays.push({x, y, w, h, color: '#3b82f6', label: ''});
+        }
+      }
+    }
+    setSelectedBarOverlays(overlays);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedBarRange, scoreMutationVersion]);
+
+  const mergedPatternOverlays = useMemo(
+    () => [...selectedBarOverlays, ...patternOverlays],
+    [selectedBarOverlays, patternOverlays],
+  );
+
   // ── Undo / Redo ───────────────────────────────────────────────────────────
   const applyUndoRedo = useCallback((score: Score) => {
     const api = getApi();
@@ -671,6 +721,24 @@ export default function TabEditorPage() {
     if (restored) applyUndoRedo(restored);
     else toast('Nothing to redo');
   }, [applyUndoRedo]);
+
+  // ── Bar selection ─────────────────────────────────────────────────────────
+  const handleSelectAllBars = useCallback(() => {
+    const total = scoreRef.current?.masterBars.length ?? 0;
+    if (total > 0) setSelectedBarRange({start: 0, end: total - 1});
+  }, []);
+
+  const handleClearSelectedBars = useCallback(() => {
+    const score = scoreRef.current;
+    if (!score || !selectedBarRange) return;
+    handleBeforeMutation();
+    for (let i = selectedBarRange.start; i <= selectedBarRange.end; i++) {
+      clearBar(score, activeTrackIndex, cursor.voiceIndex, i);
+    }
+    commitMutation();
+    setSelectedBarRange(null);
+    moveTo({...cursor, barIndex: selectedBarRange.start, beatIndex: 0});
+  }, [selectedBarRange, activeTrackIndex, cursor, handleBeforeMutation, commitMutation, moveTo]);
 
   // ── Render finished callbacks ──────────────────────────────────────────────
   const handlePostRenderFinished = useCallback(() => {
@@ -742,10 +810,31 @@ export default function TabEditorPage() {
     return () => clearTimeout(timer);
   }, [initScore]);
 
+  // ── Beat drag-select ──────────────────────────────────────────────────────
+  const dragStartBeatRef = useRef<InstanceType<typeof model.Beat> | null>(null);
+
+  const getBarIndexFromBeat = useCallback((beat: InstanceType<typeof model.Beat>): number => {
+    const bar = beat.voice?.bar;
+    if (!bar) return -1;
+    return bar.staff.bars.indexOf(bar);
+  }, []);
+
   // ── Beat click with seek ──────────────────────────────────────────────────
   const handleBeatClickWithSeek = useCallback((beat: InstanceType<typeof model.Beat>) => {
+    dragStartBeatRef.current = beat;
     _engineHandleBeatClickWithSeek(beat, handleBeatClick);
   }, [_engineHandleBeatClickWithSeek, handleBeatClick]);
+
+  const handleBeatMouseUp = useCallback((beat: InstanceType<typeof model.Beat> | null) => {
+    const startBeat = dragStartBeatRef.current;
+    dragStartBeatRef.current = null;
+    // Only set selection if drag released on a different beat (not a simple click)
+    if (!beat || !startBeat || beat === startBeat) return;
+    const startBar = getBarIndexFromBeat(startBeat);
+    const endBar = getBarIndexFromBeat(beat);
+    if (startBar < 0 || endBar < 0) return;
+    setSelectedBarRange({start: Math.min(startBar, endBar), end: Math.max(startBar, endBar)});
+  }, [getBarIndexFromBeat]);
 
   // ── Cleanup timers on unmount ──────────────────────────────────────────────
   useEffect(() => {
@@ -787,7 +876,8 @@ export default function TabEditorPage() {
     api.updateSettings();
     prepareForScoreRender();
     markRenderPending();
-    api.renderScore(score, [trackIndex]);
+    const clampedIndex = Math.max(0, Math.min(trackIndex, score.tracks.length - 1));
+    api.renderScore(score, [clampedIndex]);
     loadMidiForCurrentScore();
   }, [getApi, loadMidiForCurrentScore, markRenderPending, prepareForScoreRender, staveMode]);
 
@@ -805,11 +895,13 @@ export default function TabEditorPage() {
     setTrackVersion(v => v + 1);
     setSectionLabels([]);
     const score = scoreRef.current;
+    let isPerc = false;
     if (score && index < score.tracks.length) {
-      const isPerc = score.tracks[index].staves[0]?.isPercussion ?? false;
+      isPerc = score.tracks[index].staves[0]?.isPercussion ?? false;
       applyTrackRender(index, isPerc);
     }
-    moveTo({...cursor, trackIndex: index, barIndex: 0, beatIndex: 0, stringNumber: 1});
+    // Default snare lane (lane 7) for drums; first string for stringed.
+    moveTo({...cursor, trackIndex: index, barIndex: 0, beatIndex: 0, stringNumber: isPerc ? 7 : 1});
   }, [cursor, moveTo, applyTrackRender, setSectionLabels]);
 
   const handleAddTrack = useCallback((instrument: InstrumentType, stringCount: number) => {
@@ -827,7 +919,7 @@ export default function TabEditorPage() {
     setTrackVersion(v => v + 1);
     setSectionLabels([]);
     applyTrackRender(newIndex, instrument === 'drums');
-    moveTo({...cursor, trackIndex: newIndex, barIndex: 0, beatIndex: 0, stringNumber: 1});
+    moveTo({...cursor, trackIndex: newIndex, barIndex: 0, beatIndex: 0, stringNumber: instrument === 'drums' ? 7 : 1});
   }, [cursor, moveTo, applyTrackRender, setSectionLabels]);
 
   const handleRemoveTrack = useCallback((index: number) => {
@@ -1008,12 +1100,21 @@ export default function TabEditorPage() {
     onRedo: handleRedo,
     onScrollUp: () => canvasScrollRef.current?.scrollBy({top: -200, behavior: 'smooth'}),
     onScrollDown: () => canvasScrollRef.current?.scrollBy({top: 200, behavior: 'smooth'}),
+    selectedBarRange,
+    onSelectAllBars: handleSelectAllBars,
+    onClearSelectedBars: handleClearSelectedBars,
+    onClearBarSelection: () => setSelectedBarRange(null),
   });
 
   // ── Save ──────────────────────────────────────────────────────────────────
   const handleSaveComposition = useCallback(async (meta: Parameters<typeof _handleSaveComposition>[0]) => {
     await _handleSaveComposition(meta, {tracks, activeTrackIndex});
-  }, [_handleSaveComposition, tracks, activeTrackIndex]);
+    // Surface event — tab editing earns no recurring XP (composition isn't practice) but gets a
+    // ledger row so the Cartographer achievement can recognise the surface as "touched."
+    if (compositionId) {
+      void recordEventSafely({kind: 'tab_session_finished', compositionId, measuresAdded: 0});
+    }
+  }, [_handleSaveComposition, tracks, activeTrackIndex, compositionId]);
 
   const handleSave = useCallback(() => {
     if (compositionId && isDirty) {
@@ -1141,7 +1242,10 @@ export default function TabEditorPage() {
   }, [scoreMutationVersion, isReady, getSectionsFromScore]);
 
   const stringLabel = useMemo(() => {
-    if (activeTrackIsDrums) return 'Drums';
+    if (activeTrackIsDrums) {
+      const lane = getDrumLane(cursor.stringNumber);
+      return lane ? `${lane.name} (Lane ${cursor.stringNumber})` : 'Drums';
+    }
     const idx = cursor.stringNumber - 1;
     if (idx < 0 || idx >= currentTuning.length) return `String ${cursor.stringNumber}`;
     const midi = currentTuning[idx];
@@ -1501,6 +1605,7 @@ export default function TabEditorPage() {
           <TabEditorSidebar
             tracks={tracks}
             activeTrackIndex={activeTrackIndex}
+            compositionId={compositionId ?? null}
             onTrackSelect={(i) => { handleTrackSelect(i); setIsSidebarOpen(false); }}
             onAddTrack={handleAddTrack}
             onRemoveTrack={handleRemoveTrack}
@@ -1525,6 +1630,9 @@ export default function TabEditorPage() {
             onJumpToBar={handleJumpToBar}
             showPatternColors={showPatternColors}
             onTogglePatternColors={handleTogglePatternColors}
+            selectedKey={selectedKey}
+            onKeyChange={setSelectedKey}
+            onOpenKeyChart={() => setShowKeyChart(true)}
           />
         </div>
 
@@ -1537,13 +1645,18 @@ export default function TabEditorPage() {
               ref={canvasRef}
               cursorBounds={cursorBounds}
               cursorStringNumber={cursor.stringNumber}
-              cursorStringCount={scoreRef.current?.tracks[cursor.trackIndex]?.staves[0]?.stringTuning?.tunings?.length ?? 6}
+              cursorStringCount={
+                activeTrackIsDrums
+                  ? DRUM_LANE_COUNT
+                  : scoreRef.current?.tracks[cursor.trackIndex]?.staves[0]?.stringTuning?.tunings?.length ?? 6
+              }
               sectionLabels={sectionLabels}
-              patternOverlays={patternOverlays}
+              patternOverlays={mergedPatternOverlays}
               onScoreLoaded={handleScoreLoaded}
               onRenderFinished={handleRenderFinished}
               onPostRenderFinished={handlePostRenderFinished}
               onBeatMouseDown={handleBeatClickWithSeek}
+              onBeatMouseUp={handleBeatMouseUp}
               onNoteMouseDown={handleNoteClick}
               onPlayerStateChanged={handlePlayerStateChanged}
               onPlayerReady={handlePlayerReady}
@@ -1569,6 +1682,8 @@ export default function TabEditorPage() {
                   onFretClick={handleFretClick}
                   onClose={() => setShowFretboard(false)}
                   maxFret={MAX_FRET}
+                  scaleNotes={selectedKey ? getKeyInfo(selectedKey)?.scaleNotes : undefined}
+                  rootNote={selectedKey ?? undefined}
                 />
               )}
             </div>
@@ -1588,6 +1703,7 @@ export default function TabEditorPage() {
         onChordNameCommit={handleChordNameCommit}
         onChordClear={handleChordClear}
         onOpenChordFinder={() => setShowChordFinder(true)}
+        isDrumTrack={activeTrackIsDrums}
       />
 
       {/* Status bar — desktop only */}
@@ -1599,6 +1715,12 @@ export default function TabEditorPage() {
         </button>
       </div>
 
+      <KeyChartDialog
+        open={showKeyChart}
+        selectedKey={selectedKey}
+        onSelectKey={setSelectedKey}
+        onClose={() => setShowKeyChart(false)}
+      />
       <EditorHelpDialog open={showHelp} onOpenChange={setShowHelp} />
       <ChordFinderDialog
         open={showChordFinder}

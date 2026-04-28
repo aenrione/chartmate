@@ -1,0 +1,20 @@
+{
+  "id": "02-rock-lick",
+  "title": "AC/DC-Style Rock Lick",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Rock Rhythm Lick (AC/DC Style)\n\nRock licks often combine power chord movement with pentatonic runs:\n\n```\ne |---------------------|\nB |---------------------|\nG |---------------------|\nD |--7--7--5--7---------|\nA |--5--5--3--5---------|\nE |---------------------|\n```\n\nPlay this with palm muting and aggressive downstrokes. The two-string movement (5th chords) is the backbone of classic hard rock.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes rock rhythm licks feel aggressive and driving?",
+      "choices": ["Upstrokes on every note", "Palm muting with heavy downstrokes", "Light fingerpicking", "Playing on the high strings only"],
+      "answer": 1,
+      "explanation": "Palm muting combined with aggressive downstrokes creates the tight, punchy, forward-driving feel that defines classic rock rhythm playing.",
+      "srs": true
+    }
+  ]
+}

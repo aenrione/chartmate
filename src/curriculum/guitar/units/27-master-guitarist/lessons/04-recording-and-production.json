@@ -1,0 +1,43 @@
+{
+  "id": "04-recording-and-production",
+  "title": "Recording and Production",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Recording Guitar — From Bedroom to Professional\n\nModern recording technology means a guitarist can produce professional-quality recordings at home. Understanding the basics lets you capture and share your music effectively.\n\n## Signal Chain Overview\n\n```\nGuitar → (optional: effects) → Audio Interface → DAW (computer) → Speakers\n```\n\n### Audio Interface\nThe audio interface converts your guitar's analog signal to digital. Essential for home recording.\nRecommended entry-level: Focusrite Scarlett 2i2, PreSonus AudioBox, Universal Audio Volt.\n\n### DAW (Digital Audio Workstation)\nSoftware for recording, editing, and mixing:\n- **GarageBand** (free, Mac): Good starting point\n- **Logic Pro**: Professional-grade, Mac\n- **Pro Tools**: Industry standard, cross-platform\n- **Reaper**: Affordable and powerful, cross-platform\n- **Ableton Live**: Production and live performance\n\n## Guitar Recording Methods\n\n### 1. Direct Input (DI)\nGuitar → interface → DI plugin/amp sim. No microphone needed.\nTools: Neural DSP, Positive Grid BIAS, Line 6 Helix Native\n\n### 2. Microphone on Amp\nRecord the actual speaker with a microphone. Requires acoustic space.\nMostly used: Shure SM57 on the speaker cone\n\n### 3. Re-amping\nRecord DI first, then send the DI signal through a real amp later. Best of both worlds.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 're-amping' in guitar recording?",
+      "choices": [
+        "Turning up the amp louder",
+        "Recording a dry DI signal first, then sending that signal through a real amp later for the final tone",
+        "Using multiple amplifiers simultaneously",
+        "Adding reverb and delay in the mix"
+      ],
+      "answer": 1,
+      "explanation": "Re-amping records the raw DI guitar signal without amp coloring, then later plays that signal back through a physical amplifier and re-records it. This separates the performance from the tone choice — you can perfect your playing first, then decide on amp settings.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Basic Recording and Mixing Concepts\n\n## Recording: Getting a Good Take\n\n1. **Tune precisely** (use a tuner, not your ear)\n2. **Check levels**: No clipping (the red LED), but not too quiet either\n3. **Room acoustics**: Avoid parallel walls — furniture, carpet, and soft materials reduce unwanted reflections\n4. **Multiple takes**: Record 3-4 takes of the same passage, choose the best\n5. **Comping**: Cut together the best parts of different takes\n\n## Mixing Guitar\n\n### EQ (Equalization)\n- **Roll off below 80Hz**: Removes low-frequency mud\n- **Notch at 250-400Hz**: Reduces boxiness\n- **Add presence at 3-5kHz**: Clarity and definition\n- **Air at 8-12kHz** (optional): Shimmer and space\n\n### Compression\nCompressors even out dynamic range:\n- Attack: 10-30ms (let the pick transient through)\n- Release: 50-200ms\n- Ratio: 3:1 to 6:1 for guitar\n- Threshold: where it starts working\n\n### Double Tracking\nRecord the same part twice, pan left and right (L hard left, R hard right). Creates a massive guitar sound. Standard in rock/metal production.\n\n## Recommended Workflow\n1. Record reference take\n2. Program drums (or use drum loop) for timing reference\n3. Record bass (DI)\n4. Record rhythm guitars (doubled, L+R)\n5. Record lead guitars (center or slight offset)\n6. Mix and master",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'double tracking' in guitar production and what effect does it create?",
+      "choices": [
+        "Playing twice as fast",
+        "Recording the same guitar part twice with each take panned to opposite sides, creating a wide, powerful stereo sound",
+        "Using two different guitars on the same part",
+        "Recording the guitar on two separate tracks simultaneously"
+      ],
+      "answer": 1,
+      "explanation": "Double tracking records the same part twice — with slight natural timing and tuning variations between takes — then pans each take hard left and right. The slight differences create a full, wide stereo guitar sound that's impossible to achieve with a single recorded track.",
+      "srs": true
+    }
+  ]
+}

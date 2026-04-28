@@ -1,0 +1,20 @@
+{
+  "id": "03-dynamics-and-articulation",
+  "title": "Dynamics & Articulation",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Playing with Dynamics\n\nDynamics = loud/soft. Great drummers use the full dynamic range.\n\n**Dynamic markings:**\n- **pp** (pianissimo) — very soft\n- **p** (piano) — soft\n- **mp** (mezzo-piano) — medium soft\n- **mf** (mezzo-forte) — medium loud\n- **f** (forte) — loud\n- **ff** (fortissimo) — very loud\n\n**Practical tip:** Verse = mp, Pre-chorus = mf, Chorus = f. The music breathes and peaks.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does 'forte' (f) mean in music?",
+      "choices": ["Fast", "Loud", "Soft", "Slow"],
+      "answer": 1,
+      "explanation": "Forte (f) means loud. The Italian dynamic markings are universal across all instruments: piano = soft, forte = loud.",
+      "srs": true
+    }
+  ]
+}

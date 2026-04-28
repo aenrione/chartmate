@@ -1,0 +1,20 @@
+{
+  "id": "06-muting",
+  "title": "Muting Techniques",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Left-Hand Muting\n\nYour fretting hand can mute strings to keep your playing clean:\n\n- **Dead note / ghost note** — touch the string lightly without pressing, then pick = a percussive 'thunk'\n- **String muting between notes** — briefly rest a finger on unwanted strings\n- **Chord cleanup** — unused fingers lightly touch adjacent strings to prevent accidental ringing\n\nClean left-hand muting separates pro playing from amateur playing.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How do you produce a dead note (ghost note) on guitar?",
+      "choices": ["Press the string all the way down and pick hard", "Touch the string lightly without fretting, then pick", "Bend the string up then release before picking", "Use the bridge pickup only"],
+      "answer": 1,
+      "explanation": "A dead/ghost note is made by resting a finger on the string without pressing it to the fretboard, then picking. You get a percussive 'click' instead of a pitch.",
+      "srs": true
+    }
+  ]
+}

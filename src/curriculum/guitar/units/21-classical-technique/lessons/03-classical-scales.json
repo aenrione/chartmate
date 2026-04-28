@@ -1,0 +1,43 @@
+{
+  "id": "03-classical-scales",
+  "title": "Classical Scale Technique",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Classical Scale Technique — The Foundation of Speed and Clarity\n\nClassical scale practice is about **tone consistency, clarity, and evenness** — not raw speed. Speed is a byproduct of perfect technique, not an end in itself.\n\n## The Two-Octave Scale in Closed Position\n\nLearning scales in **three-notes-per-string** patterns (unlike the 2NPS pentatonic) allows smooth, even technique across the neck.\n\n## C Major, Two Octaves (starting on string 5)\n\n```\ne |--1--2--3--5--|\nB |--1--3--5-----|\nG |--2--4--5-----|\nD |--2--3--5-----|\nA |--3--5--------|\n   C  D  E  F  G  A  B  C  D  E  F  G  A  B  C\n```\n\n## The Segovia Fingering Principle\n\nAndrés Segovia established guidelines for left-hand fingering:\n- Each finger covers a specific fret region: finger 1=fret1, 2=fret2, 3=fret3, 4=fret4\n- **Don't reach** — shift hand position instead\n- **Economy of motion**: fingers stay close to the strings even when not playing\n\n## Right-Hand Alternation\n\nAlternate strictly: I-M-I-M (or M-I-M-I). **Never repeat the same finger twice in succession** (called a \"stroke\" or \"nail\" in classical pedagogy).\n\nException: the thumb (P) plays all bass notes regardless of alternation.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In classical scale technique, why is it essential to strictly alternate right-hand fingers (I-M-I-M)?",
+      "choices": [
+        "It sounds better with alternating fingers",
+        "To prevent any single finger from becoming fatigued and to develop even tone quality across both fingers",
+        "Because classical music requires it by rule",
+        "Alternation is faster than using one finger"
+      ],
+      "answer": 1,
+      "explanation": "Strict alternation prevents fatigue in any single finger and develops equal tone quality in both index and middle. Players who use one finger predominantly develop imbalanced technique — the weaker finger's notes are quieter, creating uneven scales.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Scale Tone Quality — The Five Gradations\n\nClassical guitarists practice five tone quality gradations for scales:\n\n1. **Pianissimo** (pp): barely audible — maximum left-hand clarity required\n2. **Piano** (p): soft but clear\n3. **Mezzo-forte** (mf): medium — default practice volume\n4. **Forte** (f): full projection\n5. **Fortissimo** (ff): maximum power\n\n## Why Practice at All Volumes?\n\nScale passages appear at all dynamic levels in repertoire. Playing a scale quietly with perfect tone requires MORE technique than playing it loudly.\n\n## Segovia's Daily Scale Regime\n\nSegovia practiced this sequence every morning:\n1. C major, two octaves, pp → ff crescendo (up), ff → pp diminuendo (down)\n2. A minor, same\n3. G major, same\n4. Chromatic scale in thirds\n5. All major scales in 3rds (parallel thirds = two-string simultaneous scales)\n\n## Practice Recommendation\n\n15 minutes of scale work daily before any repertoire. Start at 60 BPM (quarter = beat), increase by 2 BPM each week. Aim for 120 BPM clean before adding dynamics.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is it actually more technically demanding to play scales at pianissimo than at forte?",
+      "choices": [
+        "Soft playing requires better left-hand articulation and precise right-hand control with no excess force",
+        "Soft playing is always slower",
+        "Pianissimo uses different finger positions",
+        "Forte playing requires more finger independence"
+      ],
+      "answer": 0,
+      "explanation": "Pianissimo requires precise, minimal right-hand force while still producing clear, articulate tone. Any unevenness — a slightly lighter finger, a hesitant stroke — is immediately audible when playing softly. Loud playing covers up many imperfections.",
+      "srs": true
+    }
+  ]
+}

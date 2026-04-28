@@ -1,0 +1,30 @@
+{
+  "id": "02-pentatonic-scale",
+  "title": "The Pentatonic Scale",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Minor Pentatonic Scale\n\nThe **minor pentatonic** is the most-used scale in rock, blues, and pop soloing. It has only 5 notes — which is why it sounds good over so many chords.\n\n**A minor pentatonic — Position 1 (box shape):**\n```\ne |--5--8--|\nB |--5--8--|\nG |--5--7--|\nD |--5--7--|\nA |--5--7--|\nE |--5--8--|\n```\nStart on fret 5, string 6. This is the \"box\" — memorize this shape.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Moving the Box\n\nThe pentatonic box shape is **moveable**. Change the starting fret to change the key:\n\n- Root on fret 5 = A minor pentatonic\n- Root on fret 3 = G minor pentatonic\n- Root on fret 7 = B minor pentatonic\n\nThe shape **never changes** — only the position on the neck.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many notes does the pentatonic scale have?",
+      "choices": ["4", "5", "7", "12"],
+      "answer": 1,
+      "explanation": "'Penta' means five. The pentatonic scale has 5 notes, which is why it sounds good over many different chord combinations.",
+      "srs": true
+    },
+    {
+      "type": "fretboard-drill",
+      "notes": ["A2", "C3", "D3", "E3", "G3"],
+      "requiredCorrect": 5
+    }
+  ]
+}

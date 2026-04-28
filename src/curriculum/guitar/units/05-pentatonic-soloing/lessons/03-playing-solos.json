@@ -1,0 +1,25 @@
+{
+  "id": "03-playing-solos",
+  "title": "Playing Your First Solo",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# From Scale to Solo\n\nA solo is just notes from the scale played in a musical way. You don't play the scale up and down — you **choose notes** with intention.\n\n**3 techniques that turn scale runs into solos:**\n1. **Bends** — push a note up in pitch\n2. **Repetition** — repeat a phrase, then change it\n3. **Space** — silence is part of the solo. Don't fill every moment.\n\nThe best solos often use very few notes.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Targeting the Root\n\nEnd phrases on the **root note** of the key — it gives your solo a sense of resolution and 'coming home'.\n\nFor A minor pentatonic: resolve to A (fret 5, string 6 or fret 5, string 1).\n\nTry this: improvise freely, then end every phrase on the A note. Notice how grounded it sounds.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What creates the sense of resolution at the end of a guitar phrase?",
+      "choices": ["Playing as many notes as possible", "Landing on the root note of the key", "Using only downstrokes", "Playing at maximum volume"],
+      "answer": 1,
+      "explanation": "Landing on the root note 'closes' a phrase harmonically — it gives the listener a sense of arrival and resolution.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "05-jazz-comping",
+  "title": "Jazz Comping",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Comping: Accompanying a Soloist\n\nIn jazz, the drummer's role during a soloist's improvisation is to 'comp' — short for complement or accompany. Unlike rock where the groove repeats, jazz comping is improvisational and reactive.\n\n**What comping means in practice:**\n- Snare and bass drum are conversation partners, not metronomes\n- Listen to the melodic phrases and accent their peaks and endings\n- Add density when the soloist builds, subtract when they retreat\n- Never override the ride cymbal time — the ride keeps playing through all comping\n\n**The ride cymbal + comping relationship:**\n- Ride: continuous, steady swing pulse (the 'clock')\n- Left hand snare: rhythmic responses, accents, color\n- Right foot kick: harmonic punctuation (feathered or accented)\n- Left foot hi-hat: 2 and 4 anchor (optional at higher levels)\n\nMasters to transcribe: Elvin Jones's work with John Coltrane, Tony Williams with Miles Davis, and Jack DeJohnette with Keith Jarrett.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Basic Jazz Comping Pattern",
+      "description": "Ride and hi-hat hold time while snare comps lightly on beats 2 and 4 of bar 2. This is a minimal comp — add complexity gradually as you listen to the soloist.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 120,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-xx-xx-"},
+        {"name": "Hi-Hat", "pattern": "--x---x-"},
+        {"name": "Snare",  "pattern": "--x---x-"},
+        {"name": "Kick",   "pattern": "x-x-----"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Elvin Jones-Style Triplet Comping",
+      "description": "Triplet-based comping with snare anticipating beats (the 'and-a' before each downbeat). This is the driving, polyrhythmic comp style Elvin used with Coltrane. Ride stays steady underneath.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 132,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-xx-xx-"},
+        {"name": "Hi-Hat", "pattern": "--x---x-"},
+        {"name": "Snare",  "pattern": "x-x-x-x-"},
+        {"name": "Kick",   "pattern": "x---x-x-"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When comping behind a jazz soloist, what must always remain consistent?",
+      "choices": ["The snare backbeat pattern", "The bass drum feathering", "The ride cymbal time feel", "The volume of all drums"],
+      "answer": 2,
+      "explanation": "The ride cymbal time feel must remain steady throughout all comping. The ride is the 'clock' that holds the time while the snare and kick comp freely in reaction to the soloist.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "01-brush-basics",
+  "title": "Brush Basics",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Brushes: Anatomy and Grip\n\nA pair of drum brushes consists of a handle (typically wire-wrapped rubber or wood) with 8-12 fan-shaped metal wires extending from the tip. The wires can be retracted into the handle to vary the spread and stiffness.\n\n**Wire spread settings:**\n- **Fully extended** (maximum spread): Soft, diffuse sound; large sweep area; ideal for ballads and quiet passages\n- **Mid-extension**: More articulate, suitable for medium-swing tempos\n- **Nearly retracted**: Click-like, almost stick-like articulation; useful for louder passages\n\n**Grip:** Hold brushes slightly looser than sticks. The wires need freedom to spread on impact — gripping too tightly chokes the sound. For sweep strokes, maintain continuous contact with the head.\n\n**Brush selection:** Lighter, more flexible wires (Regal Tip 550W, Vic Firth WB) produce a softer, washier sound. Stiffer wires produce more articulation. Most jazz brush players prefer light-to-medium wire stiffness.\n\n**The coated head requirement:** As discussed in unit 11, brushes require a coated snare head. The coating creates the friction necessary for the characteristic sweep sound.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What effect does adjusting the wire spread on brushes have on the sound?",
+      "choices": ["Wider spread produces a sharper, more cutting sound", "Wider spread produces a softer, more diffuse sound; narrower spread produces a more articulate click", "Spread has no effect on the sound", "Narrower spread produces a quieter sound"],
+      "answer": 1,
+      "explanation": "Fully extended brush wires create maximum spread, producing the softest, most diffuse wash — ideal for ballads. Narrowing the spread increases articulation and click, moving the sound closer to stick playing.",
+      "srs": true
+    }
+  ]
+}

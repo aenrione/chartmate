@@ -15,6 +15,7 @@ import {
   model,
 } from '@coderline/alphatab';
 import {loadActiveSoundfont, soundfontToUrl} from '@/lib/soundfont-store';
+import {applyAlphaTabTheme} from '@/lib/alphaTabTheme';
 
 type Score = InstanceType<typeof model.Score>;
 type Track = InstanceType<typeof model.Track>;
@@ -100,33 +101,8 @@ export interface AlphaTabWrapperProps {
   enablePlaybackCursor?: boolean;
 }
 
-const DARK_RESOURCES = {
-  mainGlyphColor: '#e4e4e7ff',
-  secondaryGlyphColor: '#a1a1aa66',
-  staffLineColor: '#52525bff',
-  barSeparatorColor: '#71717aff',
-  scoreInfoColor: '#e4e4e7ff',
-  barNumberColor: '#a1a1aaff',
-};
-
-const LIGHT_RESOURCES = {
-  mainGlyphColor: '#000000ff',
-  secondaryGlyphColor: '#00000066',
-  staffLineColor: '#a5a5a5ff',
-  barSeparatorColor: '#222211ff',
-  scoreInfoColor: '#000000ff',
-  barNumberColor: '#c80000ff',
-};
-
-function applyThemeColors(api: AlphaTabApi) {
-  const isDark = document.documentElement.classList.contains('dark');
-  const colors = isDark ? DARK_RESOURCES : LIGHT_RESOURCES;
-  api.settings.fillFromJson({
-    display: { resources: colors },
-  });
-  api.updateSettings();
-  api.render();
-}
+// Theme constants and applyThemeColors live in @/lib/alphaTabTheme so TabSnippet can reuse them.
+const applyThemeColors = applyAlphaTabTheme;
 
 const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
   (
@@ -265,13 +241,8 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
           api.settings.notation.elements.set(NotationElement.EffectMarker, false);
         }
 
-        // Apply theme colors on init (without re-render since first render hasn't happened)
-        const isDark = document.documentElement.classList.contains('dark');
-        const initColors = isDark ? DARK_RESOURCES : LIGHT_RESOURCES;
-        api.settings.fillFromJson({
-          display: { resources: initColors },
-        });
-        api.updateSettings();
+        // Apply theme colors on init (without re-render since first render hasn't happened).
+        applyAlphaTabTheme(api, false);
 
         // Watch for dark mode toggle and re-apply colors
         observer = new MutationObserver(() => {

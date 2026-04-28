@@ -1,0 +1,34 @@
+{
+  "id": "04-thrash-rhythms",
+  "title": "Thrash Rhythms",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Thrash Metal Rhythmic Vocabulary\n\nThrash metal (Metallica, Slayer, Megadeth, Anthrax) developed a distinct rhythmic vocabulary in the early 1980s. Unlike death metal's constant extremity, thrash has groove — it makes you want to headbang.\n\n**The thrash shuffle:** Many thrash rhythms use a gallop figure (8th note + two 16th notes) in the kick to mirror the guitar's muted-string gallop. This creates the forward-charging momentum of thrash.\n\n**Snare placement variations in thrash:**\n- Every beat (quarter notes on snare): maximum aggression\n- Beats 2 and 4: standard approach at faster tempos\n- Backbeat on every other bar: creates half-time feel within fast tempo\n\n**The 'E' and 'ah' syllables:** At 180+ BPM, 16th notes fall on the syllables 1-e-and-ah. Kick often targets the 'e' and 'ah' positions for syncopated thrash figures.\n\n**Cross-referencing:** 'Battery' (Metallica), 'Raining Blood' (Slayer), 'Tornado of Souls' (Megadeth) — transcribe these to understand the vocabulary deeply.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Thrash Gallop Pattern",
+      "description": "The gallop: kick plays an 8th note followed by two 16th notes (the 'da-da-DUM' of thrash). Snare hits hard on beats 2 and 4. Ride drives continuous 8th notes. This mirrors the guitar's palm-muted gallop riff.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 160,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-x-x-x-x-x-x-x-"},
+        {"name": "Snare",  "pattern": "----X-------X---"},
+        {"name": "Kick",   "pattern": "x-xx----x-xx----"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What rhythmic figure defines the 'gallop' pattern in thrash metal?",
+      "choices": ["Three equal 8th notes", "An 8th note followed by two 16th notes", "Four equal 16th notes", "A dotted 8th note followed by a 16th note"],
+      "answer": 1,
+      "explanation": "The thrash gallop is an 8th note followed by two 16th notes — creating the 'da-da-DUM' or 'long-short-short' feel. This mirrors the guitar's palm-muted gallop riff and is the rhythmic signature of thrash metal.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "03-hihat-variations",
+  "title": "Hi-Hat Foot Variations",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Hi-Hat Foot\n\nThe left foot on the hi-hat pedal is often neglected — but it adds depth to your groove.\n\n**Closed hi-hat:** Foot presses pedal down — tight, crisp sound\n**Open hi-hat:** Foot lifts — washy, sustained sound (marked ° in notation)\n\n**Left foot chick on beats 2 and 4:**\nClose the hi-hat with your foot on the backbeats. This adds a subtle percussion layer and helps your internal pulse.\n\nJazz drummers use the left foot constantly for comping and texture.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What sound does an open hi-hat make compared to a closed hi-hat?",
+      "choices": ["Tighter and shorter", "Washier and more sustained", "Louder and sharper", "Identical — the pedal only affects tempo"],
+      "answer": 1,
+      "explanation": "An open hi-hat (foot lifted) produces a sustained, washy crash sound. A closed hi-hat (foot down) produces a tight, short 'tick' or 'chick' sound.",
+      "srs": true
+    }
+  ]
+}

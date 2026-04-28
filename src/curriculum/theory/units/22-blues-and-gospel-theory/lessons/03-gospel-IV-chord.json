@@ -1,0 +1,38 @@
+{
+  "id": "03-gospel-IV-chord",
+  "title": "Gospel Progressions & the IV Chord",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Gospel Harmony: The Power of IV\n\nGospel music developed in African-American churches in the late 19th and early 20th centuries, synthesizing African musical traditions, European hymn harmony, and blues expression. Its harmonic language is both simple and profound.\n\n### The Centrality of the IV Chord in Gospel\n\nIn gospel music, the **IV chord** is given extraordinary weight — arguably more than in any other Western style. The move from I to IV is the most characteristic gospel gesture:\n\n**I → IV → I** in C major: C → F → C (major)\n\nAlso common: **I → IV7 → I** (adding the b7 to IV for a bluesier quality).\n\nThis I → IV motion is called the **'plagal motion'** — moving from tonic to subdominant. The IV chord feels like a 'lift,' a reaching upward harmonically that mirrors the uplifting quality of gospel lyrics.\n\n### The 'Amen' Cadence and Its Gospel Significance\n\nThe plagal cadence (IV → I) is called the 'Amen' cadence because it is used to harmonize the word 'Amen' at the end of hymns. In gospel, this motion appears constantly — the IV lifting to I represents spiritual uplift and homecoming.\n\n### The Gospel 'IV Add9' Sound\n\nGospel pianists particularly love the **IV add9** (Fadd9 in C major: F–A–C–G): the added ninth gives the subdominant a lush, open quality. Combined with a high soprano note on the ninth, the IV add9 is one of gospel's signature sounds.\n\n### The I–IV–I–V7 Gospel Progression\n\nA fundamental gospel two-bar progression:\n\nBar 1: I | IV | I | I (or I | IV | I | V7)\nBar 2: V7 | V7 | I | I\n\nIn C: C | F | C | C | G7 | G7 | C | C\n\n### The 'Steal Away' Cadence: iv → I\n\nGospel also uses the **minor subdominant** (iv → I) for deep emotional moments — the same borrowed chord we saw in modal interchange. In gospel, Fm → C represents longing, the burden of suffering before the arrival of joy.\n\n**Charles Tindley's 'Stand By Me' (1905)** and **Thomas Dorsey's 'Precious Lord'** are foundational gospel pieces that established these harmonic patterns. Ray Charles took gospel harmony directly into secular R&B — his 'Georgia on My Mind' and 'Hit the Road Jack' are gospel harmony with secular lyrics.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why does the IV chord have such special prominence in gospel harmony?",
+      "choices": [
+        "Because IV is the dominant chord in gospel music (different function than classical)",
+        "Because the IV chord is the most consonant chord available in any key",
+        "Because the I→IV (plagal) motion creates a sense of uplift and reaching — the subdominant 'lift' mirrors the spiritual aspirational quality of gospel lyrics",
+        "Because gospel exclusively uses plagal cadences (IV→I) instead of authentic cadences"
+      ],
+      "answer": 2,
+      "explanation": "The IV chord creates a sense of rising, reaching — a harmonic lift that mirrors gospel's spiritual aspiration. The I→IV motion (moving away from home toward the subdominant) feels like reaching upward before returning home. This 'plagal motion' is central to gospel's emotional language. The 'Amen' cadence (IV→I) at the end of hymns reinforces this association of IV with spiritual completion.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the 'plagal cadence' and what is its cultural association in sacred music?",
+      "choices": [
+        "V→I cadence — the standard authentic cadence in all sacred music",
+        "IV→I cadence — the 'Amen' cadence, used to end hymns and deeply associated with sacred closure and completion",
+        "ii→V→I cadence — the jazz approach to sacred music",
+        "bVI→bVII→I cadence — the anthemic rock cadence used in stadium gospel"
+      ],
+      "answer": 1,
+      "explanation": "The plagal cadence is IV→I — called the 'Amen' cadence because it is used to harmonize the word 'Amen' at the end of Christian hymns and sacred pieces. It provides a softer, more gentle close than the authentic V→I cadence. In gospel music, the IV→I motion is not just a closing cadence but a recurring gesture throughout — the constant IV→I motion gives gospel its characteristic warmth and uplift.",
+      "srs": true
+    }
+  ]
+}

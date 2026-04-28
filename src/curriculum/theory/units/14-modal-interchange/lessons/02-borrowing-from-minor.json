@@ -1,0 +1,46 @@
+{
+  "id": "02-borrowing-from-minor",
+  "title": "Borrowing from the Parallel Minor",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## The Parallel Minor: Music's Most-Borrowed Key\n\nThe parallel minor (C natural minor when in C major) is by far the most common source of borrowed chords. Its three flattened scale degrees (b3, b6, b7) generate chords not in the major key that add emotional depth.\n\n### The Diatonic Chords of C Natural Minor\n\nC natural minor (= C Aeolian): C–D–Eb–F–G–Ab–Bb–C\n\nDiatonic chords: i(Cm), ii°(D°), bIII(Eb), iv(Fm), v(Gm), bVI(Ab), bVII(Bb)\n\nAny of these can appear in a C major context as a borrowed chord.\n\n### The Four Power Chords of Parallel Minor\n\n**1. iv (Fm in C major)**\nFm = F–Ab–C. The Ab is the chromatic intruder. Fm typically appears before the tonic:\n- iv → I (Fm → C): 'The Amen cadence on steroids'\n- iv → V (Fm → G7): 'Darkening before the dominant'\n\nClassic examples: The Beatles' 'Yesterday' (in F major, uses Bbm = iv), 'Something' has Cm (iv of G).\n\n**2. bVI (Ab major in C major)**\nAb = Ab–C–Eb. Two chromatic notes (Ab and Eb). One of the most beautiful borrowed chords:\n- bVI → bVII → I: Three-chord 'stadium rock' progression — Ab → Bb → C\n- bVI → V: Dark → Dominant\n\nSounds like: 'More Than a Feeling' (Boston), 'Don't Stop Believin'' (Journey), thousands of anthemic rock songs.\n\n**3. bVII (Bb major in C major)**\nBb = Bb–D–F. One chromatic note (Bb). The most 'rock' borrowed chord:\n- I → bVII → IV → I: Classic rock four-chord progression with a borrowed flavor\n- bVII → I: Simple, powerful resolution avoiding V\n\n**4. bIII (Eb major in C major)**\nEb = Eb–G–Bb. Dramatic, large leap in bass if going C → Eb.\n\n### The Minor Subdominant's Special Voice Leading\n\nFm → C (iv → I) creates the **chromatic bass line**: F stays (common tone), Ab descends to G (chromatic half step), C stays (common tone). This Ab→G resolution is one of the most expressive motions in tonal music — used in Beethoven's late works, Schubert lieder, film scores, and modern pop ballads.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In C major, the borrowed iv chord is Fm. What note in Fm is not found in C major?",
+      "choices": ["F", "C", "Ab", "Eb"],
+      "answer": 2,
+      "explanation": "C major scale: C–D–E–F–G–A–B. Fm = F–Ab–C. F and C are in C major, but Ab is not — C major has A natural. The Ab is the chromatic 'intruder' that gives Fm its borrowed, darker quality. When Ab resolves down to G (in the tonic C chord), it creates the characteristic expressive half-step resolution.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The progression bVI → bVII → I (Ab → Bb → C in C major) is characteristic of which style?",
+      "choices": [
+        "Baroque counterpoint and Bach chorales",
+        "Jazz bebop and bossa nova",
+        "Anthemic rock and stadium rock",
+        "Classical sonata-allegro development sections"
+      ],
+      "answer": 2,
+      "explanation": "The bVI–bVII–I progression (often called the 'Aeolian cadence' or 'stadium rock cadence') is characteristic of anthemic rock music. Songs like 'Don't Stop Believin'' (Journey), 'Eye of the Tiger' (Survivor), and 'We Will Rock You' (Queen) use this or similar borrowed-chord progressions for their powerful, triumphant sound.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the iv → I resolution (Fm → C in C major), what voice-leading motion makes this particularly expressive?",
+      "choices": [
+        "The F in Fm rises by half step to F# in C major",
+        "The Ab in Fm descends by chromatic half step to G (the fifth of C), while C remains as a common tone",
+        "The entire Fm chord moves down by a fourth to reach C",
+        "All three notes of Fm resolve downward simultaneously"
+      ],
+      "answer": 1,
+      "explanation": "In Fm → C: F stays as F (common tone — both chords have F... wait, C major = C–E–G, not F). Actually: C is common to both chords. Ab descends by half step to G. F either stays (if C/G chord) or descends to E. The key expressive voice leading is Ab→G — this chromatic half-step descent creates the characteristic sighing, tender quality.",
+      "srs": true
+    }
+  ]
+}

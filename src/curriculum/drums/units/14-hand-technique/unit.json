@@ -1,0 +1,8 @@
+{
+  "id": "14-hand-technique",
+  "title": "Hand Technique",
+  "description": "Moeller technique, finger control, rebound, stick heights, and wrist vs. fingers",
+  "icon": "activity",
+  "prerequisites": ["03-rudiments"],
+  "lessons": ["01-moeller-technique", "02-finger-control", "03-rebound-strokes", "04-stick-heights", "05-speed-exercises"]
+}

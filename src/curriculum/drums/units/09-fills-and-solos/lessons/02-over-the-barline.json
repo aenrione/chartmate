@@ -1,0 +1,20 @@
+{
+  "id": "02-over-the-barline",
+  "title": "Fills Over the Barline",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Breaking the Phrase Boundary\n\nNovice drummers always fill **within** a measure. Advanced drummers fill **across** the barline.\n\n**Over-the-barline fill:**\nStart the fill on beat 3 of measure 1, continue through beat 1 of measure 2 before the groove resumes.\n\nThis creates tension — the listener doesn't know where 'one' is until the groove hits. Then the resolution is satisfying.\n\nJohn Bonham, Vinnie Colaiuta, and Dave Weckl all use this constantly.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes a 'fill over the barline' different from a regular fill?",
+      "choices": ["It uses different drums", "It starts before the last beat and crosses into the next measure", "It's always a triplet", "It's louder"],
+      "answer": 1,
+      "explanation": "A fill over the barline starts partway through one measure and continues into the next, blurring the phrase boundary and creating anticipatory tension before the groove resolves.",
+      "srs": true
+    }
+  ]
+}

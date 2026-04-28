@@ -1,0 +1,20 @@
+{
+  "id": "03-slides",
+  "title": "Slides",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Slides\n\nA **slide** moves a fretted note up or down the neck while the string keeps ringing.\n\n- **Slide up** `/`: `5/7` — fret 5, slide finger to fret 7\n- **Slide down** `\\\\`: `7\\\\5` — fret 7, slide down to fret 5\n- **Shift slide** `→`: slide in from nowhere (no start note)\n\n**Sound:** Creates a smooth, vocal-like connection between notes — key to blues, country, and rock lead playing.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the key to making a slide sound smooth?",
+      "choices": ["Picking both the start and end note", "Keeping firm pressure on the string throughout the slide", "Lifting the finger at the midpoint", "Using a slide/bottleneck tool"],
+      "answer": 1,
+      "explanation": "Keep your fretting finger pressed firmly the entire way. If you ease up, the note dies before reaching the destination.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "02-riff-writing",
+  "title": "Riff Writing",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Riff Writing — The Guitar's Native Form\n\nA riff is a **short, repeating musical idea** — typically 2-4 bars — that forms the rhythmic and melodic foundation of a guitar-driven song. Riffs are guitar's most powerful compositional tool.\n\n## What Makes a Great Riff?\n\n1. **Recognizability**: Distinct enough to be identified after 2 plays\n2. **Rhythm**: Rhythmically interesting — syncopation, unusual groupings\n3. **Singability**: Most great riffs can be sung or hummed\n4. **Repetition-tolerance**: Can loop without becoming boring\n5. **Space**: Great riffs leave gaps for drums and bass to breathe\n\n## Anatomy of a Classic Riff\n\n\"Smoke on the Water\" (Deep Purple) — the simplest great riff:\n```\nG |--0--3--5--0--3--6-5--0--3--5--3--0--|\n```\nSimple, modal (Mixolydian), easily singable, strong rhythmic displacement.\n\n## Riff Types\n\n1. **Power chord riffs** (Black Sabbath, Metallica): heavy, simple\n2. **Single-note riffs** (Zeppelin, AC/DC): blues-based, lyrical\n3. **Chromatic riffs** (Pantera, Tool): tension through half-steps\n4. **Groove riffs** (RHCP, Hendrix): rhythm-forward, funky\n5. **Pedal tone riffs**: one repeated note + moving notes above/below",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes 'Smoke on the Water' such an enduring riff despite its simplicity?",
+      "choices": [
+        "Its technical complexity",
+        "It's memorable, singable, uses interesting modal intervals (tritones and minor 3rds), and has a strong rhythm",
+        "It uses unusual guitar tuning",
+        "It's the longest riff in rock history"
+      ],
+      "answer": 1,
+      "explanation": "Smoke on the Water uses parallel intervals (minor 3rds and tritone) that create a distinctive sound, is immediately singable, rhythmically memorable, and simple enough for beginners while remaining interesting enough for experienced players. Its very simplicity is compositional strength.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Riff-Writing Process\n\n## Method 1: Rhythm First\n\n1. Tap a rhythm on your knee (without picking up the guitar)\n2. Make the rhythm interesting — syncopation, unusual emphasis\n3. Only then pick up the guitar and find notes\n4. The notes are secondary to the rhythm\n\nResult: riffs with strong rhythmic identity (Rage Against the Machine, RHCP)\n\n## Method 2: Interval First\n\n1. Choose a target interval (minor 3rd, tritone, minor 7th)\n2. Build a riff around that interval\n3. The interval becomes the riff's signature sound\n\nBlack Sabbath used the tritone extensively — its dissonance defined heavy metal's sound.\n\n## Method 3: Bass+Melody\n\n1. Write a bass note pattern (pedal or moving)\n2. Write a counter-melody above it\n3. Combine them into one guitar part (requires chord-melody skill from Unit 12)\n\n## Riff Refinement\n\nRecord your riff immediately. Listen back. Ask:\n- Does it feel locked in rhythmically?\n- Is there a distinctive note or interval that makes it memorable?\n- Would a drummer know where to kick?\n- Does it leave space?\n\nEdit ruthlessly — remove notes until only the essential ones remain.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the 'rhythm first' riff-writing method, why does tapping the rhythm before picking up the guitar help?",
+      "choices": [
+        "It saves time",
+        "It develops the rhythmic idea independently, preventing notes from dominating when rhythm is actually the most important element",
+        "It's the classical composition approach",
+        "Tapping is louder than playing"
+      ],
+      "answer": 1,
+      "explanation": "When you pick up the guitar first, your fingers naturally gravitate to familiar patterns and scales, often producing melodically predictable riffs. Starting with rhythm forces you to develop the rhythmic character first — the defining feature of most great guitar riffs.",
+      "srs": true
+    }
+  ]
+}

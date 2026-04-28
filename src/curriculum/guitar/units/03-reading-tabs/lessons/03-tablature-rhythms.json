@@ -1,0 +1,25 @@
+{
+  "id": "03-tablature-rhythms",
+  "title": "Rhythm in Tab",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Tab Doesn't Show Rhythm\n\nStandard tab shows **which** notes to play but not exactly **when** — that's its biggest limitation.\n\n**How to figure out rhythm:**\n1. Listen to the song and match the notes by ear\n2. Look for rhythm notation above the tab (if provided)\n3. Use spacing as a rough guide — wider gaps = longer notes\n\nAlways listen to the reference recording while reading tab.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Rhythm Tab\n\nSome tabs add rhythm symbols above the numbers:\n\n```\n  ↓  ↓  ↑  ↓  ↑\ne|-0--0--0--0--0-|\n```\n\nOr use standard note values (quarter, eighth, sixteenth) above each number.\n\nWhen learning a riff, count it out: **1 – 2 + 3 – 4 +**",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the main limitation of standard guitar tab?",
+      "choices": ["It only shows 4 strings", "It doesn't show which fingers to use", "It doesn't show exact rhythm", "It only works for acoustic guitar"],
+      "answer": 2,
+      "explanation": "Standard tab shows fret numbers but not note durations or exact timing. Always reference the recording.",
+      "srs": true
+    }
+  ]
+}

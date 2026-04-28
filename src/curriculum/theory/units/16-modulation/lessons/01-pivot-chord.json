@@ -1,0 +1,51 @@
+{
+  "id": "01-pivot-chord",
+  "title": "Pivot Chord Modulation",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Pivot Chord Modulation: The Smoothest Key Change\n\n**Modulation** is the process of changing the tonal center from one key to another within a piece. The most elegant and common method is **pivot chord modulation** — using a chord that belongs to both the old key and the new key as a hinge.\n\n### How It Works\n\nA pivot chord is a chord that:\n1. Functions diatonically in the **departing key**\n2. Also functions diatonically in the **arriving key**\n3. Is heard as belonging to the old key when it appears, then retrospectively understood as belonging to the new key\n\nThe listener does not realize the key has changed until after the pivot chord, when the new key is confirmed by a cadence.\n\n### Example: C Major → G Major\n\nClosely related keys share many chords. C major and G major share five common chords:\n- Em: iii in C, vi in G\n- Am: vi in C, ii in G\n- G: V in C, I in G ← ideal pivot!\n- Bm: vii in neither... wait, not shared\n- D: II (non-diatonic) in C, V in G ← could work as V/V → V\n\nA clean modulation C → G:\n1. Establish C major: I–IV–V–I (C–F–G–C)\n2. Continue: C–Am (vi in C) — **Am is also ii in G** ← pivot here\n3. Now in G: Am (ii) → D7 (V7) → G (I)\n4. Cadence in G confirms the new key\n\nThe Am chord is heard as vi in C, then retrospectively as ii in G. The D7 → G cadence confirms G as the new home.\n\n### Choosing the Best Pivot Chord\n\nThe best pivot chord:\n- Has a clear, stable function in both keys\n- Is not the dominant of either key (dominant chords strongly imply their key and confuse the listener)\n- Is typically a tonic or subdominant function chord in both keys\n\n### Common Closely-Related Key Pairs and Their Pivot Chords\n\n| From → To | Good Pivot Chords |\n|---|---|\n| C major → G major | Am (vi/ii), Em (iii/vi), C (I/IV) |\n| C major → F major | Am (vi/iii), Dm (ii/vi), G (V/II) |\n| C major → A minor | Am (vi/i), Em (iii/v), C (I/III) |\n| C major → E minor | Em (iii/i), Am (vi/iv), G (V/III) |",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes a chord an effective 'pivot chord' for modulation?",
+      "choices": [
+        "It must be the dominant chord of the new key",
+        "It functions diatonically in both the departing key and the arriving key, acting as a hinge",
+        "It must be a diminished seventh chord, which is enharmonically ambiguous",
+        "It must be the same chord as the new tonic"
+      ],
+      "answer": 1,
+      "explanation": "A pivot chord works because it belongs to both keys. The listener hears it in the context of the old key, then the new key is confirmed by subsequent harmony. The pivot chord is the moment where both keys are simultaneously true — the hinge between them. The best pivots are not dominant chords, as those strongly imply one key.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a modulation from C major to G major, what function does the chord Am serve in each key?",
+      "choices": [
+        "Am is ii in C major and vi in G major",
+        "Am is vi in C major and ii in G major",
+        "Am is iii in C major and I in G major",
+        "Am is IV in C major and V in G major"
+      ],
+      "answer": 1,
+      "explanation": "Am is the vi chord in C major (A is the 6th degree of C). Am is also the ii chord in G major (A is the 2nd degree of G major). This dual function makes Am an excellent pivot: heard as vi in C, it transitions smoothly to ii in G, from which a ii→V7→I cadence (Am→D7→G) confirms the new key.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When does the listener typically realize a pivot chord modulation has occurred?",
+      "choices": [
+        "At the pivot chord itself — it sounds immediately different",
+        "Before the pivot chord — the melody signals the key change",
+        "After the pivot chord, when the new key is confirmed by a cadence",
+        "Only at the end of the piece, in retrospect"
+      ],
+      "answer": 2,
+      "explanation": "Pivot chord modulation is smooth precisely because the listener does not notice the key change at the pivot itself — the chord is heard as belonging to the old key. Only when subsequent harmony (especially a clear cadence) confirms the new tonic does the listener realize the key has shifted. The retrospective reinterpretation is what makes pivot modulation feel gradual and natural.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "01-shuffle-feel",
+  "title": "The Shuffle Feel",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Shuffle — Blues' Essential Groove\n\nThe shuffle is the rhythmic foundation of most blues guitar. It takes straight eighth notes and **swings** them — the downbeat 8th note gets longer, the upbeat gets shorter, creating a lilting, rolling feel.\n\n## Straight vs. Swing Notation\n\n**Straight 8ths**: equal length\n```\n1  +  2  +  3  +  4  +\n```\n\n**Shuffle (swung 8ths)**: triplet feel\n```\n1    +   2    +   3    +   4    +\n(long-short long-short)\n```\n\nThink of it as a **dotted 8th note + 16th note** or, more accurately, as the first and third notes of a triplet: \"trip-let trip-let\" = 1-&-a = you play 1 and a, skip &.\n\n## The Guitar Shuffle Rhythm\n\nThe classic guitar shuffle uses **two-string power chord shapes** moving up and down:\n\n```\ne |--0-0--0-0--0-0--0-0--|\nB |--0-0--0-0--0-0--0-0--|\nG |--9-9--9-9--8-8--9-9--|\nD |--9-9--9-9--8-8--9-9--|\nA |--7-7--7-7--7-7--7-7--|\nE |--x-------------------|\n   E9         E7   (shuffle rhythm on A)\n```\n\nThe key is the **sixth interval** moving: root–sixth, root–seventh, root–sixth for each chord.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How does a shuffle rhythm differ from straight eighth notes?",
+      "choices": [
+        "Shuffle uses 16th notes; straight uses eighth notes",
+        "Shuffle swings the eighth notes — downbeat is long, upbeat is short (triplet feel)",
+        "Shuffle is played faster",
+        "Shuffle uses palm muting; straight doesn't"
+      ],
+      "answer": 1,
+      "explanation": "A shuffle swings the eighth notes using a long-short pattern based on the triplet subdivision. The downbeat 8th note gets longer (about 2/3 of a beat), the upbeat gets shorter (about 1/3). This creates the characteristic rolling, swinging feel of blues and rock.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Chicago Blues Shuffle\n\nThe Chicago shuffle (popularized by Muddy Waters, Howlin' Wolf, BB King) uses the **6th-7th-6th** movement on the bass strings:\n\n## E Blues Shuffle Pattern\n\n```\ne |---------------------------------------|\nB |---------------------------------------|\nG |---------------------------------------|\nD |--2-2--4-4--2-2--4-4--(repeat)--------|\nA |--2-2--2-2--2-2--2-2------------------|\nE |--0-0--0-0--0-0--0-0------------------|\n   E5  E6  E5  E6  (shuffle rhythm)\n```\n\nThe low E stays (root), the D string alternates: fret 2 (E5 — B note) → fret 4 (E6 — C# note).\n\n## Moving to the IV Chord (A)\n\n```\nA blues shuffle:\nD |--0-0--2-2--0-0--2-2--|\nA |--0-0--0-0--0-0--0-0--|\nE |----------------------|\n   A5  A6  A5  A6\n```\n\n## Moving to the V Chord (B)\n\n```\nD |--4-4--6-6--4-4--6-6--|\nA |--4-4--4-4--4-4--4-4--|\nE |----------------------|\n   B5  B6  B5  B6\n```\n\n**Practice**: Play the full 12-bar blues using these shuffles at 100 BPM. Increase to 140.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a Chicago-style blues shuffle in E, what movement creates the 'shuffle' feel on the guitar?",
+      "choices": [
+        "The root note alternates between two different pitches",
+        "The open bass note stays while an upper string alternates between a 5th and 6th above the root",
+        "All strings are strummed up and down",
+        "The guitar is palm muted throughout"
+      ],
+      "answer": 1,
+      "explanation": "The classic Chicago shuffle holds the open root on the low string while a higher string alternates between the 5th and 6th (or 6th and flat 7th) of the chord, in a shuffled rhythm. This creates the characteristic 'chug' of Chicago blues guitar.",
+      "srs": true
+    }
+  ]
+}

@@ -14,6 +14,8 @@ import ZoomControl from '@/components/shared/ZoomControl';
 import { type FillEntry, inferFillSticking } from './fillsData';
 import { generateFillChartText } from './generateFillChartText';
 import { recordFillSession, getFillStats, type FillStats } from '@/lib/local-db/fill-trainer';
+import {recordEventSafely} from '@/lib/progression';
+import {useActivityContext} from '@/contexts/ActivityTrackerContext';
 
 type ParsedChart = ReturnType<typeof parseChartFile>;
 
@@ -34,6 +36,7 @@ export default function FillPracticeView({
   fill: FillEntry;
 }) {
   useHideHeaderOnMobile();
+  useActivityContext('fill');
 
   // Settings state
   const [bpm, setBpm] = useState(120);
@@ -57,12 +60,14 @@ export default function FillPracticeView({
   const [marking, setMarking] = useState(false);
   const [markedDone, setMarkedDone] = useState(false);
 
-  // Track whether this play session has been recorded
+  // Track whether this play session has been recorded + when practice started
   const hasRecordedRef = useRef(false);
+  const practiceStartedAtRef = useRef<number | null>(null);
 
   // Reset tracking state when fill changes
   useEffect(() => {
     hasRecordedRef.current = false;
+    practiceStartedAtRef.current = null;
     setIsPlaying(false);
     setIsPlayerReady(false);
   }, [fill.id]);
@@ -153,7 +158,8 @@ export default function FillPracticeView({
     if (!isPlayerReady) return;
     if (!hasRecordedRef.current) {
       hasRecordedRef.current = true;
-      recordFillSession(fill.id, bpm, false).catch(() => {});
+      practiceStartedAtRef.current = Date.now();
+      recordFillSession(fill.id, bpm, false, 0).catch(() => {});
     }
     alphaTabHandleRef.current?.playPause();
   }, [isPlayerReady, fill.id, bpm]);
@@ -182,7 +188,11 @@ export default function FillPracticeView({
   // Mark as learned handler
   const handleMarkLearned = async () => {
     setMarking(true);
-    await recordFillSession(fill.id, bpm, true);
+    const elapsedMs = practiceStartedAtRef.current
+      ? Math.max(0, Date.now() - practiceStartedAtRef.current)
+      : 0;
+    await recordFillSession(fill.id, bpm, true, elapsedMs);
+    await recordEventSafely({kind: 'fill_practiced', fillId: fill.id, bpm, clean: true});
     setMarkedDone(true);
     setMarking(false);
     const newStats = await getFillStats(fill.id);

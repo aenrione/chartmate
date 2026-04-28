@@ -1,0 +1,25 @@
+{
+  "id": "02-down-up-strumming",
+  "title": "Down-Up Strumming",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The All-Down Strum\n\nStart by strumming **down only** on every beat:\n\n**↓ ↓ ↓ ↓** (counts: 1 – 2 – 3 – 4)\n\nTips:\n- Keep your wrist loose\n- Strum from the wrist, not the elbow\n- Aim for all strings on a G chord first",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Adding the Upstrum\n\nNow add upstrums on the \"and\" of each beat:\n\n**↓ ↑ ↓ ↑ ↓ ↑ ↓ ↑**\n(1 + 2 + 3 + 4 +)\n\n**Key insight:** your arm never stops moving. Even when you skip a strum, the arm still moves through the strings — you simply don't let the pick make contact.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When should you strum upward?",
+      "choices": ["On every beat (1, 2, 3, 4)", "On the 'and' between beats", "Only on beat 1", "Only on beat 3"],
+      "answer": 1,
+      "explanation": "Upstrums land on the 'and' counts between beats. Downstrums land on the numbered beats.",
+      "srs": true
+    }
+  ]
+}

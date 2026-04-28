@@ -1,0 +1,20 @@
+{
+  "id": "03-brush-comping",
+  "title": "Brush Comping",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Comping with Brushes\n\nBrush comping at medium-swing tempos (120-160 BPM) combines the sweep technique with articulated tap strokes, giving the drummer both texture and rhythmic precision.\n\n**The tap stroke with brushes:** At medium tempos, the left hand transitions from full sweeps to shorter, more directed strokes — essentially tapping with the brush while maintaining some sweep motion. This preserves the wash quality while adding more rhythmic definition.\n\n**Brush comping vocabulary:**\n1. **Tap accents**: Light snare hits on the upbeat 8th positions ('and' of 2, 'and' of 4)\n2. **Drag-sweep combos**: A sweep motion that ends with an accent\n3. **Press strokes**: The brush pressed into the head, then released — produces a swell sound\n4. **Brush buzz**: The wires pressed lightly against the head while rotating — a sustained chord\n\n**Reading the soloist:** Brush comping is even more reactive than stick comping. The softer sound palette means you need to listen more carefully for where the soloist is peaking and pull back to let space breathe.\n\n**Masters to study:** Ed Thigpen, Roy Haynes, Paul Motian — each with a distinctive brush vocabulary.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How does brush comping differ from sweep technique at slow ballad tempos?",
+      "choices": ["Brush comping uses sticks, not brushes", "At medium tempos, shorter directed tap strokes are added alongside sweep motions for more rhythmic definition", "Brush comping eliminates all sweep motion", "Brush comping is only used in rock music"],
+      "answer": 1,
+      "explanation": "At medium-swing tempos for comping, the full oval sweeps of slow ballads transition to shorter, more directed strokes that maintain some wash character while adding rhythmic articulation. The comping vocabulary expands to include tap accents, drag-sweeps, and press strokes.",
+      "srs": true
+    }
+  ]
+}

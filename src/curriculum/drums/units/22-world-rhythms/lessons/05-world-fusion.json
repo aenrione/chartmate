@@ -1,0 +1,34 @@
+{
+  "id": "05-world-fusion",
+  "title": "World Fusion",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Integrating World Rhythms: Fusion Without Appropriation\n\nWorld fusion drumming draws from multiple traditions simultaneously — a Balkan meter with a West African bell pattern and a jazz improvisational approach, for example. Done respectfully, it creates music that is greater than any single tradition.\n\n**The difference between fusion and appropriation:**\nAppropriating a tradition means taking its surface elements without understanding its depth or crediting its origins. True fusion means deep study of each tradition to the point where you understand why it works — then finding genuine intersections.\n\n**Practical fusion principles:**\n1. **Study each tradition on its own terms first** — don't try to fuse until you can play each tradition authentically\n2. **Look for structural similarities** — the West African 12-pulse bell and the Cuban 2-3 clave share the same ancestor\n3. **Find the common 'organizing principle'** — in many traditions it's a foundational ostinato that everything else relates to\n4. **Maintain integrity** — when in a South Indian context, play South Indian music, not 'world fusion'\n\n**Master fusionists:** Trilok Gurtu (Indian jazz fusion), Zakir Hussain (tabla with jazz and rock), Airto Moreira (Brazilian percussion in jazz), Billy Cobham (Mahavishnu Orchestra), Stewart Copeland (The Police — reggae, rock, progressive fusion).",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Fusion Pattern: Indian + Afro-Cuban",
+      "description": "A fusion pattern combining a 12-beat tala cycle with Afro-Cuban bell pattern accents. Hi-hat plays the bell ostinato, kick follows the tala structure, snare marks the 3-against-4 pattern. This type of fusion is the foundation of contemporary global jazz.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 112,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x-xx-x-x-xx-x-x-"},
+        {"name": "Snare",  "pattern": "----x--x----x---"},
+        {"name": "Kick",   "pattern": "x---x-x-----x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What distinguishes genuine world music fusion from mere appropriation of surface elements?",
+      "choices": ["Fusion always sounds louder and faster", "Deep study of each tradition until you understand why it works, then finding genuine intersections", "Using as many different world music elements as possible", "Only playing traditions from your own cultural background"],
+      "answer": 1,
+      "explanation": "True fusion requires deep study of each tradition — playing it on its own terms before attempting to combine it with others. When you understand why West African hocket patterns work the way they do, you can find genuine intersections with Indian tala or Afro-Cuban clave. Superficial borrowing of surface sounds without this understanding is appropriation.",
+      "srs": true
+    }
+  ]
+}

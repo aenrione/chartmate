@@ -1,0 +1,43 @@
+{
+  "id": "02-ii-v-i-patterns",
+  "title": "ii-V-I Comping Patterns",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The ii-V-I — Jazz's Universal Cadence\n\nThe ii-V-I is the most important chord progression in jazz. It appears in virtually every standard and forms the harmonic backbone of the genre.\n\n## In the Key of C\n\n```\nDm7 (ii) → G7 (V) → Cmaj7 (I)\n```\n\n- **Dm7**: supertonic chord — creates tension, implies motion\n- **G7**: dominant — maximum tension, strong pull to resolve\n- **Cmaj7**: tonic — resolution, home, release of tension\n\n## Timing in Standards\n\nThe ii-V-I typically occupies:\n- **2-2-4 bars**: 2 bars of ii, 2 bars of V, 4 bars of I\n- **1-1-2 bars**: 1 bar of ii, 1 bar of V, 2 bars of I (fast changes)\n- **2 beats each**: in fast passages (\"Bird blues\" style)\n\n## Essential Comping Voicings — ii-V-I in C\n\n### Dm7 (shell voicing on strings 6-4-3-2)\n```\nE |--x--|\nB |--6--| C (7th)\nG |--7--| A (5th)\nD |--7--| E... wait—adjust per register\nA |--5--| D (root)\nE |--x--|\n```\n\nPractical approach: use the shells from Unit 14 and add rhythmic variety.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a ii-V-I progression in G major, what are the three chords?",
+      "choices": [
+        "Gm7 – C7 – Fmaj7",
+        "Am7 – D7 – Gmaj7",
+        "Bm7 – E7 – Amaj7",
+        "Em7 – A7 – Dmaj7"
+      ],
+      "answer": 1,
+      "explanation": "In G major: ii = Am7 (built on the 2nd degree A), V = D7 (built on the 5th degree D), I = Gmaj7 (the tonic). The ii-V-I uses the 2nd, 5th, and 1st scale degrees.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Jazz Comping Rhythms\n\nGood jazz comping isn't just about having the right chords — the **rhythm** of your chord stabs is equally important.\n\n## Key Rhythmic Concepts\n\n### \"Kicks\" and \"Punches\"\nSingle chord stabs on specific beats or off-beats that accent the soloist's phrases.\n\n### \"Padding\"\nLong, sustained chords under a soloist — minimal intrusion, harmonic support only.\n\n### \"Trading\"\nAlternating between rhythmic comping and melodic response to the soloist.\n\n## The Charleston Rhythm\n\nOne of the most important jazz comping rhythms:\n```\nBeat: 1  +  2  +  3  +  4  +\nComp: X        X  X\n      (long)   (short short)\n```\n\nThis creates forward motion and swing feel.\n\n## Practice Exercise\n\nOver a ii-V-I backing track:\n1. First chorus: whole notes (one chord per chord change, held)\n2. Second chorus: Charleston rhythm on each chord\n3. Third chorus: free — listen and respond\n4. Record and analyze what worked",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In jazz comping, what is 'padding'?",
+      "choices": [
+        "Playing loud, dense chords to fill every moment",
+        "Sustained, long chords that provide harmonic support without cluttering the soloist's space",
+        "Resting completely for several bars",
+        "Playing only on beats 2 and 4"
+      ],
+      "answer": 1,
+      "explanation": "Padding refers to sustained, minimally intrusive chord playing that supports the soloist harmonically without getting in the way. It's the opposite of dense, rhythmically active comping — it provides a harmonic 'cushion.'",
+      "srs": true
+    }
+  ]
+}

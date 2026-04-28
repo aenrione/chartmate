@@ -1,0 +1,35 @@
+{
+  "id": "02-odd-time-jazz",
+  "title": "Odd-Time Jazz",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Jazz in Non-Standard Meters\n\nOdd-time jazz was pioneered primarily by the Dave Brubeck Quartet ('Take Five' in 5/4, 'Blue Rondo à la Turk' in 9/8) and later by Don Ellis, Jack DeJohnette, and the ECM-school jazz players.\n\n**'Take Five' (5/4) analysis:**\nThe Brubeck Quartet's 1959 hit is in 5/4 with a specific accent structure: the ride pattern groups into 3+2 (three beats + two beats), creating a cyclical feel. Paul Desmond's melody is in 5/4, but it implies different groupings — the polyrhythmic tension is the source of the tune's hypnotic quality.\n\n**Grouping strategies for odd meters in jazz:**\n- **5/4**: Group as 2+3 or 3+2 depending on the musical phrase\n- **7/4**: Most commonly 3+4 or 4+3; sometimes 2+2+3\n- **11/8**: Multiple possibilities; Don Ellis used 3+3+2+3 in some arrangements\n\n**The jazz approach to odd time:**\nUnlike rock where odd-time patterns are often precisely formulaic, jazz in odd meters retains the improvisational, reactive quality of standard-time jazz. The ride still swings; the comping still responds to soloists. Only the number of beats per bar changes.\n\n**Key drummers:** Joe Morello (Brubeck), Trilok Gurtu, Mark Guiliana (for contemporary odd-time jazz-adjacent work).",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Jazz Ride in 5/4 (3+2 Grouping)",
+      "description": "Ride plays the swing pattern grouped as 3+2 in 5/4: the first three beats get the 'ding-a-ding' and the last two beats get a modified pair. Hi-hat foot on beats 2 and 4. The 5th beat creates the characteristic restless quality.",
+      "timeSignature": "5/4",
+      "subdivisions": 10,
+      "bpm": 160,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-xx-xx-x-"},
+        {"name": "Hi-Hat", "pattern": "--x---x---"},
+        {"name": "Snare",  "pattern": "----------"},
+        {"name": "Kick",   "pattern": "x---------"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In 5/4 jazz, what grouping strategy is most commonly used for the ride cymbal pattern?",
+      "choices": ["5 equal beats with no internal grouping", "Groups of 2+3 or 3+2 to create an internal metric feel within the 5-beat bar", "Only even subdivisions (4+1)", "Completely free without any grouping"],
+      "answer": 1,
+      "explanation": "5/4 jazz is most naturally felt by grouping the 5 beats into 2+3 or 3+2. This gives the musician an internal metric reference within the unusual bar length. 'Take Five' uses a 3+2 grouping — three swing beats followed by a two-beat pair.",
+      "srs": true
+    }
+  ]
+}

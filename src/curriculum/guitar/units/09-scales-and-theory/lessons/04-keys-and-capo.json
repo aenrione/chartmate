@@ -1,0 +1,20 @@
+{
+  "id": "04-keys-and-capo",
+  "title": "Keys, Capo & Transposing",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Understanding Keys\n\nThe **key** of a song tells you which scale and chord set to use.\n\n**Guitar-friendly keys (lots of open strings):**\n- E major (E A B)\n- A major (A D E)\n- G major (G C D Em Am)\n- D major (D G A Bm)\n- C major (C F G Am Em)\n\nSongs in Bb, Eb, or Ab are often played with a capo to keep guitarist-friendly shapes.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why do guitarists use a capo for songs in keys like Bb or Eb?",
+      "choices": ["Those keys are too loud", "A capo allows open-chord shapes to work in harder keys", "Bb and Eb don't exist on guitar", "The capo changes string gauges"],
+      "answer": 1,
+      "explanation": "Bb and Eb require lots of barre chords. A capo lets you use open chord shapes (e.g. 'A shape' with capo 1 = Bb). It makes the music playable without complex barre work.",
+      "srs": true
+    }
+  ]
+}

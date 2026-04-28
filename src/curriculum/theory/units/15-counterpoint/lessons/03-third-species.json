@@ -1,0 +1,38 @@
+{
+  "id": "03-third-species",
+  "title": "Third Species Counterpoint",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Third Species: Four Against One\n\nThird species places **four quarter notes** against each whole note of the cantus firmus (4:1 ratio). This creates a flowing, melismatic counterpoint and introduces two new dissonance types: the **cambiata** and the **nota cambiata**.\n\n### Dissonances Allowed in Third Species\n\n**Beat 1**: Always consonant\n**Beats 2, 3, 4**: May be dissonant, but only as:\n1. **Passing tones** (same as second species) — stepwise through a dissonance\n2. **Neighbor tones** — step away from a consonance and back: C–D–C (where D is a neighbor)\n3. **Cambiata (changing note figure)**: A specific four-note figure: consonance → step down to dissonance → skip down a third → step up. Example: E–D–B–C (where D is dissonant but in the cambiata figure, it is allowed)\n\n### Melodic Rules for Third Species\n\n- **Avoid repeating the same note** on consecutive beats — third species must flow\n- **Avoid leaping to or from a dissonance** — dissonances must be approached and left by step (except in the cambiata)\n- **Limit consecutive thirds and sixths** — with four notes per measure, parallel thirds become monotonous quickly\n- **Avoid outlining a seventh in adjacent leaps** — two consecutive leaps that span a seventh create an awkward melodic figure\n\n### The Nota Cambiata\n\nThe *nota cambiata* (changing note) is a special figure: step down, skip of a third down, step up. Specifically: C–B–G–A. B is the dissonant 7th against a C bass, but the figure is so common in 16th-century polyphony that it is treated as idiomatic.\n\n### Character of Third Species\n\nThird species produces the most 'Renaissance polyphony' sound — the flowing quarter-note lines in Palestrina, Victoria, and Lassus are essentially third-species counterpoint. Listen to Palestrina's *Missa Papae Marcelli* for canonical third-species writing in a polyphonic context.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'neighbor tone' in third species counterpoint?",
+      "choices": [
+        "A note that is the same pitch as an adjacent voice",
+        "A non-chord tone that steps away from a consonance and immediately returns to the same consonance",
+        "A note that leads into the next chord by half step",
+        "The pitch shared between two consecutive consonant chords"
+      ],
+      "answer": 1,
+      "explanation": "A neighbor tone (NT) steps away from a consonant note by a half or whole step, then returns to that same note. Example: C–D–C, where D is the neighbor. Neighbor tones add melodic decoration without changing the underlying harmony. They can be approached from above (upper neighbor) or below (lower neighbor).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What specific note pattern defines the 'cambiata' figure in third species?",
+      "choices": [
+        "Step up, step up, leap down, step up",
+        "Step down to dissonance, skip down a third, step up — e.g., E–D–B–C",
+        "Three consecutive passing tones in the same direction",
+        "Consonance, leap up a fifth, step down, consonance"
+      ],
+      "answer": 1,
+      "explanation": "The cambiata (changing note figure) is: consonance → step down to a dissonance → skip down a third → step up back to a consonance. Example: E–D–B–C, where D is the dissonance but is permitted because it is part of this idiomatic Renaissance figure. The cambiata was common in 16th-century polyphony and was codified as an exception to strict dissonance rules.",
+      "srs": true
+    }
+  ]
+}

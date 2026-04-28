@@ -1,0 +1,20 @@
+{
+  "id": "01-what-are-barre-chords",
+  "title": "What Are Barre Chords?",
+  "xp": 10,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Barre Chords: Your Capo Finger\n\nA **barre chord** uses your index finger to press all 6 strings at once — acting like a moveable capo.\n\n**Why they're powerful:**\n- One shape = every major chord\n- One shape = every minor chord\n- No more memorizing a new shape for each key\n\n**Why they're hard:** Your index finger needs to build up strength. This takes weeks of consistent practice — that's normal.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes barre chords different from open chords?",
+      "choices": ["They use a pick", "The index finger presses all strings at one fret", "They only have 3 notes", "They're played on the high strings"],
+      "answer": 1,
+      "explanation": "In barre chords, the index finger lays flat across all strings at a fret (like a moveable capo), while other fingers form the chord shape behind it.",
+      "srs": true
+    }
+  ]
+}

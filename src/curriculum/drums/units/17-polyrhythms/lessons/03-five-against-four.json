@@ -1,0 +1,33 @@
+{
+  "id": "03-five-against-four",
+  "title": "5 Against 4",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# 5:4 — The Challenging Quintuplet Polyrhythm\n\nFive against four (5:4) requires a 20-pulse common framework (LCM of 5 and 4). This creates a pattern that takes a full 20 pulses to cycle back to unison — over one full bar at moderate tempo.\n\n**Practical approach:**\nRather than thinking in the 20-pulse grid, many drummers develop 5:4 by:\n1. Learning to subdivide in 5s (quintuplets) naturally\n2. Layering the quintuplet against a steady 4-beat pulse\n3. Gradually increasing tempo until it feels effortless\n\n**Where you encounter 5:4:**\n- Dave Brubeck's 'Take Five' creates a similar sensation within 5/4 time — the melody implies 4 while the meter is 5\n- Indian music (Carnatic): 'Khanda' gati (5 strokes per beat) against a 4-beat tal\n- Don Ellis Big Band compositions from the 1960s\n- Vinnie Colaiuta's transcriptions show extensive use of quintuplet groupings\n\n**The physical challenge:** Quintuplets don't divide evenly into the standard 8th/16th note grid. Your internal subdivision has to genuinely 'switch modes' rather than feeling like a displaced 16th note.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Quintuplet Snare Pattern",
+      "description": "Five evenly spaced snare notes per beat, played against a steady kick on beats 1 and 3. Approximated in a 16-note grid — the actual quintuplet spacing falls between 16th note positions. Focus on evenness of the 5 notes first.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 70,
+      "tracks": [
+        {"name": "Snare", "pattern": "x--x-x--x-x-----"},
+        {"name": "Kick",  "pattern": "x-------x-------"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the lowest common multiple of 5 and 4, which determines the full cycle length of a 5:4 polyrhythm?",
+      "choices": ["10 pulses", "15 pulses", "20 pulses", "25 pulses"],
+      "answer": 2,
+      "explanation": "The LCM of 5 and 4 is 20. This means a 5:4 polyrhythm returns to unison (both voices on the same pulse) only after 20 pulses — over one full bar at moderate subdivisions.",
+      "srs": true
+    }
+  ]
+}

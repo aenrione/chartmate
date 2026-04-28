@@ -1,0 +1,28 @@
+{
+  "id": "03-transposing-instruments",
+  "title": "Transposing Instruments",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Transposing Instruments: The Great Confusion (Demystified)\n\nTransposing instruments sound at a **different pitch** than written. When a Bb clarinet plays a written C, you hear a Bb. This transposition exists for historical and practical reasons, and every orchestrator must understand it.\n\n### Why Do Instruments Transpose?\n\nHistorically, instruments like horns and trumpets were built in different sizes for different keys. Players developed fingering habits for one key and then transposed mentally when instruments changed. Modern standardization kept the notation convention even after the instruments became chromatic.\n\nToday, the most common reason is: it is **easier for the player**. A Bb clarinet player reads in C (concert Bb appears as written C) — their fingering system is designed for written pitches. If you ask them to read in concert pitch, they must transpose mentally, which creates errors.\n\n### Common Transposing Instruments\n\n| Instrument | Transposition | When player reads C, you hear: |\n|---|---|---|\n| Bb Clarinet | Down a major 2nd | Bb |\n| Bb Trumpet | Down a major 2nd | Bb |\n| Bb Bass Clarinet | Down a major 9th (octave + M2) | Bb (low) |\n| A Clarinet | Down a minor 3rd | A |\n| F Horn | Down a perfect 5th | F |\n| Eb Alto Saxophone | Down a major 6th | Eb |\n| Bb Tenor Saxophone | Down a major 9th | Bb |\n| Piccolo | Up an octave | C (octave higher) |\n| Double Bass | Down an octave | C (octave lower) |\n\n### The Horn: F Horn Specifically\n\nThe **French horn in F** is one of the most important transposing instruments. When the horn reads a C, you hear an F (a perfect fifth lower). If you want the horn to play concert G, you write a D.\n\n**Rule**: To find the written pitch from concert pitch: add the transposition interval. For Bb instruments (like Bb clarinet/trumpet): write a major second higher than the concert pitch. For F horn: write a perfect fifth higher.\n\n### Scores: Concert Pitch vs. Transposed\n\n**Transposed score** (traditional): Each instrument is written in its own transposed key. The orchestrator/conductor must mentally transpose each line to understand concert pitch.\n\n**Concert pitch score** (modern): All instruments are notated in concert pitch. Modern notation software (Sibelius, Finale, Dorico) can toggle between these views. Most contemporary composers prefer concert pitch scores for clarity.\n\n### Memory Aid\n\nFor Bb instruments: Write a step **up** from concert pitch.\nFor F instruments (horn): Write a fifth **up** from concert pitch.\nFor A instruments (A clarinet): Write a minor third **up** from concert pitch.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "A Bb trumpet player reads a written C. What concert pitch sounds?",
+      "choices": ["D", "C", "A", "Bb"],
+      "answer": 3,
+      "explanation": "The Bb trumpet is a transposing instrument: it sounds a major second lower than written. Written C → sounding Bb. To hear concert Bb, write C. To hear concert C (concert pitch C), you must write a D (one major second higher). Remember: Bb instruments sound a major second lower than written.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "If you want a French horn (in F) to play a concert G, what note do you write?",
+      "choices": ["G", "F", "D", "A"],
+      "answer": 2,
+      "explanation": "The French horn in F sounds a perfect fifth lower than written. To find the written pitch, add a perfect fifth up from the concert pitch. Concert G + perfect fifth up = D. So write D, and the horn will play concert G. This is one of the trickiest transpositions because a perfect fifth is a large interval, often creating a key signature change.",
+      "srs": true
+    }
+  ]
+}

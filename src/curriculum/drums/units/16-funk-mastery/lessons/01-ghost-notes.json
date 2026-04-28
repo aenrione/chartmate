@@ -1,0 +1,34 @@
+{
+  "id": "01-ghost-notes",
+  "title": "Ghost Notes",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Ghost Notes: The Invisible Groove\n\nGhost notes are extremely quiet snare hits — so soft they're barely audible, felt more as a presence than heard as distinct notes. They're the secret ingredient in deep funk, R&B, and hip-hop drumming.\n\n**What ghost notes do:**\n- Fill the space between accent notes with constant 16th-note subdivision\n- Create density and 'pocket' feel without adding volume\n- Give the groove an 'organic' quality — it sounds like a human drummer rather than a drum machine\n- Allow the accent notes to project more clearly by contrast\n\n**Technique:**\n- Stick height: 1/2 to 1 inch above the head\n- Velocity: barely make contact — the stick almost falls onto the head\n- No wrist snap — the stick 'droops' onto the head under its own weight\n- The ghost note must be even in volume — inconsistent ghosts are worse than no ghosts\n\n**The ghost note scale:** Think of your snare dynamics as a 10-point scale. Ghosts are 1-2. Normal backbeats are 7. Rim shots are 10. Funk drumming explores the full range.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Ghost Note Funk Pattern",
+      "description": "Ghost notes (o) fill every 16th note position around the main accents (X). The accent on beat 2 and beat 4 contrast sharply with the surrounding ghosts. Hi-hat drives steady 16th notes. Kick on beat 1 and the 'and' of 2.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 92,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "xxxxxxxxxxxxxxxx"},
+        {"name": "Snare",  "pattern": "o-o-X-o-o-o-X-o-"},
+        {"name": "Kick",   "pattern": "x---x-----------"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the primary musical function of ghost notes in funk drumming?",
+      "choices": ["To add volume and fill the room with sound", "To create continuous 16th-note subdivision density and pocket without adding dynamic weight", "To replace the hi-hat pattern", "To signal transitions between sections"],
+      "answer": 1,
+      "explanation": "Ghost notes fill the rhythmic space between accent notes at an extremely soft dynamic, creating the sense of constant 16th-note activity that gives funk its distinctive pocket feel. They add density and organic quality without competing with the main accents.",
+      "srs": true
+    }
+  ]
+}

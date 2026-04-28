@@ -1,0 +1,62 @@
+{
+  "id": "05-minor-key-harmony",
+  "title": "Minor Key Harmony",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Minor Key Harmony\n\nMinor key harmony works on the same stacked-thirds principle as major key harmony, but the natural minor scale produces a different set of chord qualities — and music in minor keys has a distinct harmonic character.\n\n### Diatonic Triads in Natural Minor\n\nHarmonizing the natural minor scale (Aeolian mode) produces this pattern:\n\n| Degree | Quality | Roman Numeral | A minor example |\n|--------|---------|---------------|-----------------|\n| 1 | minor | **i** | Am |\n| 2 | diminished | **ii°** | Bdim |\n| 3 | major | **III** | C |\n| 4 | minor | **iv** | Dm |\n| 5 | minor | **v** | Em |\n| 6 | major | **VI** | F |\n| 7 | major | **VII** | G |\n\nThe pattern: **minor, diminished, major, minor, minor, major, major**.\n\n### The Critical Problem: The v Chord\n\nCompare the V chord in major vs. minor:\n- **C major**: V = **G major** — a strong dominant\n- **A natural minor**: v = **E minor** — lacks the leading tone G#\n\nThe natural minor's v chord is minor, which means the leading-tone pull to the tonic is absent. The E minor chord doesn't create the same urgent resolution to A minor that G major creates toward C major. This weakened dominant is harmonically unsatisfying for conclusive cadences.\n\n### The Solution: Harmonic Minor\n\nTo restore dominant function, composers **raise the seventh scale degree by a half step** — turning G natural into G# in A minor. This transforms the v chord into a **V major chord** (E major), and combined with the minor seventh it becomes **E7** (E dominant seventh).\n\nThe **harmonic minor scale** (natural minor with a raised 7th) exists specifically to solve this problem:\n- A harmonic minor: A B C D E F **G#** A\n- **V7 in A minor**: E7 (E–G#–B–D)\n- E7 → Am = the same powerful V7–i resolution as in major\n\n### Key Progressions in Minor\n\n- **i–iv–V7–i**: the standard minor cadence (Am–Dm–E7–Am)\n- **i–VII–VI–VII**: Aeolian rock progression (Am–G–F–G)\n- **i–VI–III–VII**: Epic/cinematic minor (Am–F–C–G)\n- **ii°–V7–i**: Minor key ii–V–i, using Bø7–E7–Am in jazz\n\n### Uppercase III, VI, VII in Minor\n\nNote the uppercase Roman numerals: the major chords built on scale degrees III, VI, and VII of natural minor are **III**, **VI**, and **VII** (not lowercase). In A minor: C major (III), F major (VI), G major (VII). These are the 'borrowed' major sounds that give natural minor its characteristic warmth — without them, minor key music would be entirely dark and stark.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the chord quality of the v chord (scale degree 5) in the natural minor scale?",
+      "choices": ["Major", "Minor", "Dominant seventh", "Diminished"],
+      "answer": 1,
+      "explanation": "In natural minor, the chord built on scale degree 5 is minor (lowercase v). In A natural minor, v = E minor (E–G–B). The G natural (rather than G#) means there is no leading-tone pull toward A — the chord lacks dominant function.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What change does the harmonic minor scale make compared to the natural minor scale?",
+      "choices": [
+        "It lowers the second degree by a half step",
+        "It raises the seventh degree by a half step",
+        "It raises the sixth degree by a half step",
+        "It lowers the third degree by a half step"
+      ],
+      "answer": 1,
+      "explanation": "The harmonic minor scale raises the seventh scale degree by a half step (G becomes G# in A minor). This creates a leading tone that pulls to the tonic and transforms the v chord (minor) into a V chord (major) or V7 — restoring dominant function.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In A minor, what is the V7 chord when using the harmonic minor scale?",
+      "choices": ["Em7", "E7", "Edim7", "E major"],
+      "answer": 1,
+      "explanation": "Using the harmonic minor scale (with G# instead of G), the dominant seventh in A minor is E7 (E–G#–B–D). The G# is the raised 7th degree that creates the leading tone, giving E7 the strong V7–i pull toward Am.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In A natural minor, what quality is the chord built on scale degree III?",
+      "choices": ["Minor", "Diminished", "Major", "Augmented"],
+      "answer": 2,
+      "explanation": "In A natural minor (A B C D E F G), the triad built on scale degree III uses C–E–G = C major. The uppercase 'III' in Roman numeral notation signals a major chord. The major III chord is one of the characteristic 'borrowed' major sounds in natural minor.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The progression i–VII–VI–VII in A minor (Am–G–F–G) is characteristic of which style?",
+      "choices": [
+        "Jazz harmony",
+        "Classical counterpoint",
+        "Aeolian rock and pop",
+        "Baroque harmonization"
+      ],
+      "answer": 2,
+      "explanation": "The i–VII–VI–VII loop (Am–G–F–G in A minor) is the characteristic sound of Aeolian rock and pop. The natural minor scale's major VII chord (G major in A minor) creates a rolling, powerful feel without the raised leading tone of harmonic minor. Countless rock ballads and modern pop songs use this pattern.",
+      "srs": true
+    }
+  ]
+}

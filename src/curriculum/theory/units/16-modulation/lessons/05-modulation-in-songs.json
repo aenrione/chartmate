@@ -1,0 +1,33 @@
+{
+  "id": "05-modulation-in-songs",
+  "title": "Modulation in Real Songs",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Modulation in Real Songs: Case Studies\n\n### Case Study 1: 'Modulation in Classical Sonata Form'\n\nBeetoven's *Sonata Op. 13 (Pathétique)* in C minor:\n- **Exposition**: Begins in C minor (i), modulates to Eb major (III) for the second theme — the relative major\n- **Development**: Rapid modulation through multiple keys (Ab, F minor, G minor)\n- **Recapitulation**: Returns to C minor; second theme now in C minor/major\n\nThis exposition–development–recapitulation key scheme is the architectural backbone of classical sonata form: **Tonic → Dominant/Relative → Tonic**.\n\n### Case Study 2: 'Yesterday' (Beatles) — F major\n\n'Yesterday' uses a striking internal modulation in the bridge:\n- Verse: F major\n- Bridge begins: Dm → G7 → Bb → F/A → C/E → Dm7 → G7\n- The G7 here briefly suggests C major territory before returning to F\n- This is tonicization of C (the dominant) within F major — not a full modulation, but a strong dominant preparation\n\n### Case Study 3: 'All the Things You Are' (Kern/Hammerstein) — Jazz Standard\n\nThis jazz standard is one of the most modulation-heavy tunes in the Great American Songbook:\n- Begins in Ab major\n- Modulates to C major (relative key of A minor via iv → V → I)\n- Then to Eb major\n- Then briefly to G major\n- Returns to Ab major\n\nEach modulation uses ii–V–I patterns in the new key to confirm the change. 'All the Things You Are' is a classic example for jazz students because studying its harmonic map teaches all the most common modulation types.\n\n### Case Study 4: 'Bohemian Rhapsody' (Queen)\n\nThe piece is famously harmonically complex:\n- Bb major (opening ballad)\n- Shifts to Eb major (the 'operatic' section)\n- Brief Db major passages\n- A major (the rock section)\n- Returns to F major/Bb major\n\nThe modulations are largely direct — abrupt key changes at section boundaries — which contributes to the song's deliberately disjointed, theatrical quality.\n\n### Patterns in Pop Modulation\n\n1. **Closely related keys** (a fifth or third apart): Usually pivot chord\n2. **Distant keys** (tritone, chromatic third): Usually direct or enharmonic\n3. **Half-step up at final chorus**: Always direct (truck driver)\n4. **Bridge key change**: Usually pivot, returning to tonic for the final chorus\n5. **Jazz standard key changes**: Usually ii–V–I in new key, setting up the new tonic",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In classical sonata form, to which key does the second theme typically modulate in a major-key exposition?",
+      "choices": ["The subdominant (IV)", "The dominant (V)", "The mediant (III)", "The supertonic (ii)"],
+      "answer": 1,
+      "explanation": "In a major-key classical sonata exposition, the second theme group traditionally moves to the dominant key (V). If the home key is C major, the second theme appears in G major. This provides harmonic contrast while remaining closely related. In minor-key sonatas (like Pathétique in C minor), the second theme typically modulates to the relative major (III) — Eb major in C minor.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is 'All the Things You Are' (Jerome Kern) particularly useful for studying modulation?",
+      "choices": [
+        "Because it stays in one key throughout, demonstrating diatonic harmony",
+        "Because it uses direct modulation (truck driver) at every chorus",
+        "Because it contains multiple ii–V–I progressions in several different keys, demonstrating pivot chord and ii–V-based modulation",
+        "Because it uses only enharmonic diminished seventh pivots"
+      ],
+      "answer": 2,
+      "explanation": "All the Things You Are moves through Ab major, C major, Eb major, and G major within its 36-bar form, using ii–V–I progressions in each new key to confirm the modulation. This makes it an ideal teaching piece: students can see how a ii–V–I in a new key both confirms that key and provides a clear analytical marker for identifying where the modulation occurs.",
+      "srs": true
+    }
+  ]
+}

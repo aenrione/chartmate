@@ -1,0 +1,46 @@
+{
+  "id": "04-sonata-form",
+  "title": "Sonata Form",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Sonata Form: The Architecture of Classical Music\n\n**Sonata form** (also called sonata-allegro form or first-movement form) is the most important large-scale form in Western classical music from c. 1750–1900. It is the structural template for first movements (and often other movements) of symphonies, string quartets, piano sonatas, and concertos.\n\n### The Three-Part Structure\n\n**Exposition** → **Development** → **Recapitulation** (+ optional Coda)\n\n#### EXPOSITION\n\nThe exposition presents two contrasting theme groups:\n\n**First theme group (P)**: In the **tonic key**. Often energetic, assertive. Ends with a medial caesura (pause or articulation point).\n\n**Transition (TR)**: Modulates from tonic to the subordinate key.\n\n**Second theme group (S)**: In the **subordinate key** (usually the dominant in major, relative major in minor). Often more lyrical, contrasting in character.\n\n**Closing section (C)**: Confirms the subordinate key with a strong cadence.\n\nThe exposition is usually repeated: ||: Exposition :|| — this double statement ensures the themes are memorized before development.\n\n#### DEVELOPMENT\n\nThe development takes the themes from the exposition and:\n- **Fragments** them (uses small motives, not complete themes)\n- **Modulates** through distant keys\n- **Creates tension** through sequences, chromaticism, harmonic instability\n- **Builds energy** toward the dominant or another structural chord\n\nThe development ends with a **retransition** — typically a dominant pedal that creates maximum anticipation for the tonic return.\n\n#### RECAPITULATION\n\nThe recapitulation restores both theme groups in the **tonic key**:\n- **P themes** return in tonic (same as exposition)\n- **S themes** — crucially — also return in **tonic** (they were in dominant in exposition, now tonic)\n\nThis tonic resolution of the S themes is the teleological goal of the entire movement. The sonata form is essentially a large-scale harmonic journey: tension (S in the wrong key) → resolution (S in the right key).\n\n### Listening Guide\n\n- **Beethoven, Sonata Op. 13 (Pathétique), I**: Perfect textbook sonata form. First theme: C minor, aggressive. Second theme: Eb major, lyrical.\n- **Mozart, Symphony No. 40, I**: G minor first theme; Bb major second theme. The recapitulation resolves everything to G minor.\n- **Haydn, String Quartet Op. 33 No. 2, I**: Wit and surprise in sonata form — Haydn plays with formal expectations.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a major-key sonata exposition, to what key does the second theme group typically modulate?",
+      "choices": ["The subdominant (IV)", "The dominant (V)", "The relative minor (vi)", "The mediant (III)"],
+      "answer": 1,
+      "explanation": "In a major-key sonata, the second theme group is traditionally in the dominant key (V). If the home key is C major, the second theme appears in G major. This creates harmonic tension: both themes have been heard, but one is 'misplaced' in the wrong key. The recapitulation resolves this by bringing the second theme back in tonic — the satisfying structural goal of the entire movement.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the structural goal of a sonata recapitulation?",
+      "choices": [
+        "To repeat the exposition exactly as written",
+        "To introduce new themes not heard in the exposition",
+        "To bring both theme groups back in the tonic key, resolving the harmonic tension created by the second theme's subordinate key in the exposition",
+        "To modulate to as many new keys as possible"
+      ],
+      "answer": 2,
+      "explanation": "The recapitulation's defining feature is that the second theme group returns in the tonic. In the exposition, the second theme was in the dominant (or relative major in minor keys) — a harmonic tension. The recapitulation resolves this by bringing it home: same themes, same order, but now ALL in tonic. This large-scale tension-resolution is the central drama of sonata form.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What happens in the development section of sonata form?",
+      "choices": [
+        "New themes are introduced that will appear in the recapitulation",
+        "The exposition themes are fragmented, modulated through distant keys, and the harmonic tension is intensified before a retransition to the dominant",
+        "The movement's main melody is harmonized in the minor key",
+        "The original themes are played again in the home key"
+      ],
+      "answer": 1,
+      "explanation": "The development section takes material from the exposition and develops it: themes are fragmented into motives, the music modulates through distant, unstable keys, and harmonic tension builds through sequences and chromaticism. The development ends with a retransition — typically a dominant pedal that maximizes anticipation before the return of the tonic and the opening themes in the recapitulation.",
+      "srs": true
+    }
+  ]
+}

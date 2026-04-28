@@ -1,0 +1,20 @@
+{
+  "id": "01-trigger-basics",
+  "title": "Trigger Basics",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Triggers: Bridging Acoustic and Electronic\n\nA drum trigger is a piezoelectric sensor attached to an acoustic drum head (or a dedicated electronic pad) that converts the physical strike into an electronic signal. This signal triggers a drum module, which plays a sample.\n\n**Types of triggers:**\n1. **Head triggers** (Ddrum, Roland RT series): Clip onto the acoustic drum head. The acoustic sound and the triggered sample play simultaneously.\n2. **Dedicated electronic pads**: Roland mesh pads, Alesis pad modules — entirely electronic with no acoustic sound.\n3. **Cymbal triggers**: Attach to the edge of an acoustic cymbal to trigger samples from cymbal hits.\n\n**The trigger chain:**\nPhysical strike → Piezo sensor → Trigger module/brain → Sample player → Amplifier/PA\n\n**Sensitivity and crosstalk:** The most common problems:\n- **Under-triggering**: The sensor doesn't register soft hits (ghost notes). Solution: increase sensitivity in the module\n- **Over-triggering**: The sensor registers multiple hits from one stroke (double-triggers). Solution: decrease sensitivity or add a noise gate\n- **Crosstalk**: Vibration from one drum triggers an adjacent sensor. Solution: adjust individual input settings, add physical isolation\n\n**Live vs. studio use:**\n- Live: triggers allow a standard acoustic kit to integrate with backing tracks and electronic sequences\n- Studio: triggers allow sample replacement or layering in post-production (common in modern rock production)",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'crosstalk' in a drum trigger system?",
+      "choices": ["Communication between the drummer and the sound engineer", "Vibration from one drum causing an adjacent sensor to falsely trigger", "The delay between hitting a drum and hearing the triggered sample", "The process of assigning samples to specific pads"],
+      "answer": 1,
+      "explanation": "Crosstalk occurs when vibrations traveling through the drum hardware from one drum reach an adjacent trigger sensor and cause it to falsely fire. For example, a hard kick hit sending vibrations through the bass drum pedal and frame can trigger the snare sensor. Managing crosstalk requires per-input sensitivity adjustment in the trigger module.",
+      "srs": true
+    }
+  ]
+}

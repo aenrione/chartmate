@@ -1,0 +1,34 @@
+{
+  "id": "02-balkan-meter",
+  "title": "Balkan Meter",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Balkan Music: Asymmetric Meter as Home\n\nIn Balkan folk music (Bulgarian, Serbian, Macedonian, Albanian, Greek), asymmetric meters — 5/8, 7/8, 9/8, 11/8 — are the norm rather than the exception. Village musicians have played these rhythms for generations without academic awareness of their 'complexity.'\n\n**Why Balkan meters feel different from jazz odd-time:**\nIn jazz, playing in 7/4 often feels like '4/4 with an extra beat.' In Balkan music, 7/8 is felt as two short beats and one long beat (2+2+3 or 3+2+2). The dancer experiences it as natural; there is no cognitive awareness of '7.'\n\n**Common Balkan patterns:**\n- **5/8**: 2+3 or 3+2 (Bulgarian 'Paidushko')\n- **7/8**: 2+2+3 or 3+2+2 (Bulgarian 'Rachenitsa' — the wedding dance)\n- **9/8**: 2+2+2+3 or 3+2+2+2 (Bulgarian 'Daichovo horo')\n- **11/8**: Multiple groupings, often 2+2+3+2+2\n\n**The physical approach:** Balkan rhythms are best learned by dancing first, then drumming. The body naturally finds the long and short beats before the mind analyzes them.\n\n**Steve Reich's connection:** Reich's interest in Ghanaian and Balinese music led him to discover asymmetric patterns — his minimalist compositions often share structural characteristics with Balkan meters.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Bulgarian Rachenitsa (7/8, 3+2+2 grouping)",
+      "description": "The Rachenitsa is a fast Bulgarian wedding dance in 7/8, grouped 3+2+2. The accents mark the beginning of each group. Hi-hat holds the 8th note pulse, snare and kick mark the group downbeats.",
+      "timeSignature": "7/8",
+      "subdivisions": 7,
+      "bpm": 144,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "xxxxxxx"},
+        {"name": "Snare",  "pattern": "x--x-x-"},
+        {"name": "Kick",   "pattern": "x------"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How do Balkan musicians typically experience their asymmetric meters (7/8, 9/8)?",
+      "choices": ["As intellectually complex challenges requiring academic analysis", "As collections of short (2-count) and long (3-count) beats that feel natural — not as 'odd time'", "As 4/4 with extra beats added artificially", "As random, unstructured rhythms"],
+      "answer": 1,
+      "explanation": "Balkan musicians experience their asymmetric meters as a natural combination of short beats (2 eighth notes) and long beats (3 eighth notes). Village dancers and musicians have internalized these patterns for generations without academic awareness of their 'oddness.' The asymmetry is the normal feel, not a challenge to overcome.",
+      "srs": true
+    }
+  ]
+}

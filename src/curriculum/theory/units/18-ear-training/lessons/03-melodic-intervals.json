@@ -1,0 +1,38 @@
+{
+  "id": "03-melodic-intervals",
+  "title": "Melodic Interval Recognition",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Melodic Intervals: Hearing Horizontal Motion\n\nA **melodic interval** is the distance between two notes played in sequence (one after the other). Unlike harmonic intervals (notes played simultaneously), melodic intervals are heard as movement — a direction and a size.\n\n### Ascending vs. Descending\n\nEvery interval can be heard ascending (bottom note first, then top note) or descending (top note first, then bottom note). The same interval sounds slightly different in each direction — train both.\n\n### The Danger of Context\n\nContext dramatically affects how intervals are perceived. A perfect fifth in:\n- A rock power chord: powerful, open\n- An ascending melody: horn-call quality (Star Wars)\n- A descending melody: stepdown quality\n- As a suspended dissonance: floating, unresolved\n\nDo not rely on a single song association in isolation — practice hearing intervals in multiple contexts.\n\n### Melodic Dictation: Writing What You Hear\n\nMelodic dictation is the skill of hearing a melody and writing it down in notation or solfège. Process:\n\n1. **Listen to the whole melody first** without writing — understand the shape, the high point, the phrase structure\n2. **Identify the first note** (usually given, or you know the key)\n3. **Identify the direction and size** of each subsequent interval\n4. **Write down solfège first** (do, re, mi...) or scale degrees (1, 2, 3...)\n5. **Convert to note names** using the key signature\n\n### Scale Degree Associations\n\nIn a major key, each scale degree has a characteristic sound:\n- **1 (do)**: Home, stability\n- **2 (re)**: Slight tension, wants to resolve to 1 or 3\n- **3 (mi)**: Warmth, the most 'major' feeling\n- **4 (fa)**: Mild tension, subdominant pull\n- **5 (sol)**: Open, stable but not as final as 1\n- **6 (la)**: Nostalgic, slightly melancholy in major context\n- **7 (ti)**: Strong tension — the leading tone, desperately wants to resolve to 1\n\nThese associations (called **functional hearing** or **solfège hearing**) allow you to hear not just pitch but harmonic function in every note of a melody.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In melodic dictation, what is the recommended first step when hearing an unfamiliar melody?",
+      "choices": [
+        "Immediately write down every note as you hear it",
+        "Listen to the whole melody first without writing, to understand its shape and phrase structure",
+        "Identify the key signature by counting sharps and flats",
+        "Play back the melody on your instrument before writing"
+      ],
+      "answer": 1,
+      "explanation": "Professional transcribers always listen to the whole melody first — at least once, usually multiple times. This 'pre-hearing' lets you understand the overall contour (where does it go high? low?), the phrase structure (how many phrases?), and the rhythmic feel. Jumping immediately to note-by-note writing without this overview leads to errors and missed relationships.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In solfège, which scale degree is called the 'leading tone' and why?",
+      "choices": [
+        "La (6) — because it leads to the subdominant",
+        "Ti (7) — because it is a half step below do (1) and strongly wants to resolve upward to the tonic",
+        "Fa (4) — because it leads to mi when the IV chord resolves",
+        "Sol (5) — because it leads the dominant function"
+      ],
+      "answer": 1,
+      "explanation": "Ti (the 7th scale degree) is the leading tone — it is a half step below do (the tonic) and has an extremely strong tendency to resolve upward. This half-step pull is fundamental to tonal harmony: the leading tone is the B in a G dominant chord in C major (G7's B rises to C when V resolves to I). Hearing ti in a melody immediately implies imminent resolution to do.",
+      "srs": true
+    }
+  ]
+}

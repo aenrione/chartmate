@@ -1,0 +1,8 @@
+{
+  "id": "13-metal-drumming",
+  "title": "Metal Drumming",
+  "description": "Double bass, blast beats, metal grooves, and thrash rhythms",
+  "icon": "zap",
+  "prerequisites": ["04-rock-styles", "03-rudiments"],
+  "lessons": ["01-double-bass-basics", "02-metal-grooves", "03-blast-beats", "04-thrash-rhythms", "05-metal-fills"]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "05-blues-turnarounds",
+  "title": "Blues Turnarounds",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Blues Turnarounds — Five Essential Licks\n\nThe turnaround (bars 11-12 of the 12-bar blues) is the guitarist's signature moment — a short, repeating lick that loops back to bar 1. Great blues guitarists have signature turnarounds that are instantly recognizable.\n\n## Turnaround 1 — Robert Johnson Descending Bass\n\n```\ne |---------------------|\nB |---------------------|\nG |---------------------|\nD |---------------------|\nA |---0-4-3-2-1-0-------|\nE |--0--------------3-0-|\n   E               B E\n```\n\nThis descending bass line under a held E is the original blues turnaround.\n\n## Turnaround 2 — Classic Single-String Chromatic\n\n```\ne |--0--4--3--2--1--0--|\n   E     descend      E (root)\n```\n\n## Turnaround 3 — Double-Stop Turnaround (Elmore James style)\n\n```\ne |--0-----------0-----|\nB |------4--3--2--1-0--|\n   hold top, descend B string\n```\n\n## Turnaround 4 — Diminished Walk-Up\n\n```\ne |--9--8--7--6--5--4--3--|\n   (diminished arpeggios descending)\n```\n\n## Turnaround 5 — SRV Style (Texas)\n\nSRV's turnaround in \"Pride and Joy\" uses repeated bent notes with a characteristic push-pull:\n```\ne |--12b13--12b13--12--10--8--|\n```\nBend to the b3rd, release, descend.\n\n## Practice\n\nLearn all five. Choose one for each chorus of a 12-bar jam — by chorus 5 you'll have a complete turnaround vocabulary.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which blues guitarist is most associated with the descending bass line turnaround?",
+      "choices": ["BB King", "Robert Johnson", "Stevie Ray Vaughan", "Buddy Guy"],
+      "answer": 1,
+      "explanation": "Robert Johnson (1911–1938) pioneered the descending bass line turnaround, using chromatic bass movement to connect the V chord back to the I. This turnaround is foundational in Delta blues and influenced every blues guitarist who followed.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Building Your Signature Turnaround\n\nEvery great blues guitarist develops a personal turnaround style. Here's how to develop yours:\n\n## Step 1: Analyze Your Favorites\nTranscribe 3-5 turnarounds from your favorite blues players. Note:\n- Which strings they use\n- Whether it's ascending or descending\n- The rhythmic feel (how swung, any syncopation)\n- The target note at the end (usually the V chord)\n\n## Step 2: Mix and Match\nCombine elements from different turnarounds:\n- Use Robert Johnson's bass string idea with SRV's bending feel\n- Use the Elmore James double-stop concept with your own chromatic line\n\n## Step 3: Add Your Feel\nThe notes matter less than the **feel**. A perfectly played simple turnaround beats a technically complex one played without conviction.\n\n## Step 4: Lock It In\nOnce you've developed a turnaround, play it until it's automatic. A turnaround that requires thought is not ready for performance.\n\n## Recommended Study\n\n- Robert Johnson *Complete Recordings* (1990 compilation)\n- Elmore James *The Sky Is Crying: The History of Elmore James* (1993)\n- Albert King *Born Under a Bad Sign* (1967)\n- SRV *Texas Flood* (1983)",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What note should a well-constructed blues turnaround typically land on at its conclusion?",
+      "choices": [
+        "The IV chord (A in E blues)",
+        "The I chord (root, E in E blues)",
+        "The V chord (B7 in E blues) to set up the next chorus",
+        "The major 7th of the key"
+      ],
+      "answer": 2,
+      "explanation": "A turnaround ends on (or strongly implies) the V chord — in E blues, that's B7. This creates maximum tension pointing back to bar 1 (the I chord). The V → I pull gives the turnaround its function: driving the loop back to the beginning.",
+      "srs": true
+    }
+  ]
+}

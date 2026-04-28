@@ -1,0 +1,20 @@
+{
+  "id": "02-playing-musically",
+  "title": "Playing Musically",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Drummer's Role\n\nThe drummer does three things for any band:\n\n1. **Keep time** — the unwavering pulse everyone else follows\n2. **Define the feel** — groove, swing, funk, straight\n3. **Support the song** — dynamics, fills that serve transitions\n\n**The best drummers are heard and felt, not noticed.** When someone says 'great drummer,' it usually means the song felt incredible — not that the solo was impressive.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the primary role of a drummer in a band?",
+      "choices": ["Performing impressive solos", "Providing the time-keeping pulse and feel that supports all other musicians", "Playing as loudly as possible", "Directing the other musicians"],
+      "answer": 1,
+      "explanation": "The drummer's primary role is to provide a solid, consistent pulse and feel that allows all other musicians to lock in and perform confidently. Everything else is secondary.",
+      "srs": true
+    }
+  ]
+}

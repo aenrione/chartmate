@@ -1,0 +1,43 @@
+{
+  "id": "01-legato-fundamentals",
+  "title": "Legato Fundamentals",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Legato — Playing Smoothly Without Picking\n\nLegato (Italian: \"tied, bound\") in guitar means using **hammer-ons and pull-offs** to play notes without picking each one. The result: a smooth, flowing, connected sound — more like a wind instrument than a percussive one.\n\n## The Two Core Legato Techniques\n\n### Hammer-On (h)\nFretting a note by pressing firmly and quickly — the impact of the finger creates the note without a pick.\n\n1. Pick the first note cleanly\n2. Bring the next finger down with force onto the target fret\n3. The momentum of the hammer creates the note\n4. For best tone: hammer with the very tip of the finger, directly behind the fret\n\n### Pull-Off (p)\nRemoving a finger while simultaneously plucking the string with it:\n\n1. Both notes are already fretted\n2. The higher finger pulls slightly sideways (toward the floor) as it lifts\n3. The lower fretted note sounds\n4. Think of it as a micro-bend as you lift — not just a vertical removal\n\n## The Sound Goal\n\nAll legato notes should be equal in volume to the picked note. This requires:\n- Strong hammers (finger strength)\n- Decisive pull-offs (not timid lifts)\n- Proper left-hand position (curved fingers, finger tips)",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why must a pull-off involve a slight sideways motion rather than a straight vertical lift?",
+      "choices": [
+        "To avoid muting the adjacent string",
+        "The sideways (lateral) micro-pluck generates the string vibration needed to sound the lower note",
+        "Vertical lift is only for hammer-ons",
+        "It prevents string breakage"
+      ],
+      "answer": 1,
+      "explanation": "A straight vertical lift doesn't impart enough energy to the string to sustain a note. The slight sideways motion acts as a micro-pluck, pushing the string sideways and generating vibration. The lower fretted note then rings from this energy.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Legato Strength Exercise\n\nWeak hammers and pull-offs are the most common legato problem. Here is the foundational strength-building exercise:\n\n## Single-Finger Hammer-On Drill\n\nOn any string, fret the 5th fret with your index finger:\n\n```\nStep 1: Pick the open string\nStep 2: Hammer fret 5 with index — no pick\nStep 3: Pick the open string again\nStep 4: Hammer fret 5 with middle finger\nStep 5: Pick open string\nStep 6: Hammer fret 5 with ring finger\nStep 7: Pick open string  \nStep 8: Hammer fret 5 with pinky (hardest)\n```\n\nEach hammer must match the volume of the picked note.\n\n## Pull-Off Strength Exercise\n\nFret fret 7 with middle, fret 5 with index (both down):\n```\nPick fret 7, pull off to 5\nDo 20 repetitions on each string\n```\n\nFocus: the pulled-off note (fret 5) should be as loud as the picked fret 7.\n\n## Typical Timeframe\n\n- Week 1-2: Hammers and pull-offs audible but weak\n- Month 1: Consistent volume on index through ring\n- Month 2-3: Pinky hammer-ons become reliable\n- Month 3-6: Full legato passages at speed",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the main physical requirement for a strong legato hammer-on?",
+      "choices": [
+        "Fast finger speed from high up",
+        "Firm, decisive impact with the fingertip directly behind the fret, using the finger's momentum",
+        "Pressing very slowly onto the fret",
+        "Using the flat of the finger rather than the tip"
+      ],
+      "answer": 1,
+      "explanation": "A strong hammer-on requires decisive impact with the fingertip (curved, right behind the fret). The speed and force of the hammer impact generates the note volume. Slow, tentative hammers produce weak, inaudible notes.",
+      "srs": true
+    }
+  ]
+}

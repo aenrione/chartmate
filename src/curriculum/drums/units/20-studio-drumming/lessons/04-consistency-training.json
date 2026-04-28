@@ -1,0 +1,34 @@
+{
+  "id": "04-consistency-training",
+  "title": "Consistency Training",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Consistency: The Session Drummer's Core Skill\n\nA session drummer may record a single song 10-15 times in one session as the producer and artist refine the arrangement, performance, and feel. Every take must be equally strong. Consistency under pressure is what distinguishes working session players from occasional studio visitors.\n\n**Dimensions of consistency:**\n1. **Tempo consistency**: Every take starts and maintains the same relationship to the click\n2. **Dynamic consistency**: The chorus on take 9 sounds as big as the chorus on take 1\n3. **Groove consistency**: The pocket feel doesn't change between takes as familiarity breeds complacency\n4. **Tone consistency**: Each drum hit has the same character — no tired or tentative hits\n5. **Mental consistency**: Focus doesn't waver through hour 4 of the session\n\n**Training consistency:**\n- **Long-form practice**: Practice a single 4-minute song arrangement 10 times in a row. The 10th run-through must sound as committed as the first.\n- **Record everything**: Listening back to multiple consecutive takes reveals where consistency breaks down\n- **Section targeting**: If the chorus tends to get sloppy, practice just the chorus entry and first 8 bars repeatedly\n\n**Physical endurance:** Session work is a full-body athletic activity. Physical fitness — cardiovascular endurance, core strength, shoulder stability — directly impacts consistency across a long recording day.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Consistency Reference Groove",
+      "description": "A clean, controllable groove to practice repeating identically. Time yourself playing this for 3 minutes without variation — every hit in the same position, same velocity, same feel. This is the consistency standard for session work.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 120,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x-x-x-x-x-x-x-x-"},
+        {"name": "Snare",  "pattern": "----X-------X---"},
+        {"name": "Kick",   "pattern": "x---x-x-x---x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a studio session where a song is recorded 10 times, what is the key consistency requirement?",
+      "choices": ["Each take should be dramatically different so the producer has choices", "Every take must be equally strong in tempo, dynamics, groove, and energy", "Only the first take matters; subsequent takes are just backups", "Consistency only applies to the chorus sections"],
+      "answer": 1,
+      "explanation": "Session drummers must deliver equally strong performances across all takes. The producer or engineer may need the 9th take for technical reasons (a microphone issue on take 1) while preferring it musically. If the 9th take sounds tired compared to the 1st, the session has failed.",
+      "srs": true
+    }
+  ]
+}

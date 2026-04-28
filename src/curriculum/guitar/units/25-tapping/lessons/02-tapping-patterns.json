@@ -1,0 +1,43 @@
+{
+  "id": "02-tapping-patterns",
+  "title": "Tapping Patterns",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Tapping Patterns — Moving the Tap Around\n\nOnce the basic 3-note tap (T-po-po) is solid, the next step is **moving the right-hand tap position** to create melodic variety.\n\n## Moving the Tap — Scalar Tapping\n\nInstead of tapping the same fret, shift the tap up and down a scale:\n\n```\nA minor pentatonic, tapping through:\ne |--T17-po12-po8--T15-po12-po8--T12-po8-po5--|\n   Tap moves: 17 → 15 → 12 (descending scale taps)\n```\n\nLeft hand stays on frets 8 and 12 (A minor pentatonic), right hand taps across different scale positions.\n\n## The 4-Note Tapping Pattern\n\nAdd one more left-hand note between the two:\n\n```\nLeft hand: index on 5, middle on 7, ring on 9\nRight hand: taps 12\n\ne |--T12-po9-po7-po5--T12-po9-po7-po5--|\n```\n\nNow you have 4 notes per group — richer and more musical.\n\n## Scale-Based Tapping in A Minor\n\n```\ne |--T12-po10-po8-po5--|\n   T    po    po   po\n   (C)  (B)   (A)  (E)  — notes of Am7 arpeggio\n```\n\n## Eddie Van Halen's Eruption Pattern\n\nEruption uses the basic 3-note pattern across multiple strings with the tap moving:\n\n```\nOn strings e, B, G simultaneously (rolled)\nLeft hand: root positions\nRight hand: taps descending scale positions\n```",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How does moving the right-hand tap position create melody in tapping patterns?",
+      "choices": [
+        "Moving the tap changes the volume",
+        "The tapped note is the highest pitch in each group — moving it up and down creates a melodic line above the left-hand foundation",
+        "The tap changes the rhythm",
+        "It doesn't — only the left hand creates melody"
+      ],
+      "answer": 1,
+      "explanation": "The tapped note is typically the highest note in each T-po-po group. By moving the right-hand tap up and down scale positions, you create a melodic line out of the highest notes while the left hand provides a consistent harmonic framework.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Tapping Multiple Strings\n\nMoving the tapping pattern across all six strings creates dramatic, sweeping runs.\n\n## Multi-String Arpeggio Tapping\n\nTap an arpeggio shape across 3 strings:\n\n```\nAmaj7 arpeggio (A C# E G#):\ne |--T12(C#)--|\nB |--T12(G#)--|\nG |--T13(C#)--|\n   (each string gets its own tap note)\n   Left hand holds: index=5, ring=9 on each string\n```\n\n## Right-Hand String Control\n\nFor multi-string tapping, the right hand must:\n1. **Mute strings it's not using** with the side of the palm or unused fingers\n2. **Land precisely** — being 1mm off causes the wrong string to sound\n3. **Control pull-off direction** — pull toward the floor, not sideways (to avoid hitting adjacent strings)\n\n## Eddie Van Halen's \"Hot for Teacher\" Intro\n\nThe \"Hot for Teacher\" intro uses single-string tapping across all 6 strings as a sweeping arpeggio. Each string gets one tap while the left hand handles the base notes. This creates the illusion of a 12-string or keyboard.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When tapping across multiple strings, why is right-hand string muting important?",
+      "choices": [
+        "To create a percussive effect",
+        "Unintended string vibration would create unwanted notes, muddying the tapping pattern",
+        "To protect the strings from damage",
+        "It's not important — play all strings"
+      ],
+      "answer": 1,
+      "explanation": "When tapping on one string, adjacent strings can ring sympathetically or be accidentally struck. Muting with the palm or unused right-hand fingers prevents unwanted notes from sounding, keeping the tapping clean and precise.",
+      "srs": true
+    }
+  ]
+}

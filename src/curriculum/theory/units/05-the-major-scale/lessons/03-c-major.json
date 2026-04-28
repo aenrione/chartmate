@@ -1,0 +1,64 @@
+{
+  "id": "03-c-major",
+  "title": "C Major: The Foundation",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## C Major: The Foundation\n\n### All White Keys\n\nC major is the most fundamental scale in Western music — not because it is the most common, but because it is the simplest to understand. It uses only the seven natural notes: **C D E F G A B**, corresponding to the white keys on the piano keyboard. No sharps, no flats. This makes it the ideal scale for internalizing intervals, scale degree relationships, and the sound of major.\n\n### Scale Degrees and Their Names\n\nEvery scale degree in a major scale has a functional name that describes its role in the tonal system:\n\n| Degree | Note (C major) | Name | Solfège |\n|--------|---------------|------|----------|\n| 1 | C | Tonic | Do |\n| 2 | D | Supertonic | Re |\n| 3 | E | Mediant | Mi |\n| 4 | F | Subdominant | Fa |\n| 5 | G | Dominant | Sol |\n| 6 | A | Submediant | La |\n| 7 | B | Leading Tone | Ti |\n| 8 | C | Octave | Do |\n\nThese names are not arbitrary. **Tonic** = home. **Dominant** (G) = the most important non-tonic pitch, a fifth above, the center of harmonic gravity. **Subdominant** (F) = below the dominant, a fourth above tonic. **Leading Tone** (B) = one half step below tonic, \"leading\" upward. **Mediant** = midpoint between tonic and dominant.\n\n### The Dominant: Harmonic Engine\n\nThe **dominant** (scale degree 5, G in C major) is the single most important scale degree after the tonic. The chord built on the dominant (G major or G7) creates the most powerful harmonic tension in tonal music — a tension that *demands* resolution to the tonic chord. The progression V7 → I (dominant seventh to tonic) is the cadential formula at the heart of virtually all Western harmony.\n\nThis is why solfège places G as \"Sol\" — it is the solar center of the scale, the fulcrum around which tonal gravity operates.\n\n### The Leading Tone: Gravitational Half Step\n\nThe **leading tone** (scale degree 7, B in C major) is one half step below the tonic. As discussed in the major scale formula lesson, this creates an almost irresistible pull upward. When you hear B in a C major context, your ear wants to hear C next. This pull is the engine of melodic resolution and is embedded in every authentic cadence.\n\n### Learning C Major First\n\nC major is the template. Once you understand the function of each scale degree in C major — the feel of do-re-mi, the pull of the leading tone, the stability of the dominant — you can transfer that understanding to any major key. The intervals, the functions, and the emotional qualities remain identical in every major key. Only the starting pitch changes.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the functional name for scale degree 5 in a major scale?",
+      "choices": [
+        "Mediant",
+        "Subdominant",
+        "Dominant",
+        "Supertonic"
+      ],
+      "answer": 2,
+      "explanation": "Scale degree 5 is called the Dominant. In C major, the dominant is G. The chord built on the dominant (G or G7) creates the most powerful harmonic tension in tonal music, which resolves to the tonic (C). The dominant-to-tonic (V-I) progression is the most fundamental harmonic motion in Western music.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In C major, what note is the leading tone and why is it given that name?",
+      "choices": [
+        "C, because it is the tonic and 'leads' the scale",
+        "G, because it leads to the octave above",
+        "B, because it is one half step below the tonic and 'leads' upward to C",
+        "F, because it leads downward to the dominant"
+      ],
+      "answer": 2,
+      "explanation": "The leading tone is B (scale degree 7 in C major). It is called the 'leading tone' because it is only one half step below the tonic (C), creating a strong pull — or 'leading' — upward to the tonic. This minimal distance of a half step generates the gravitational tension that makes authentic cadences feel so resolved when they land on the tonic.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the solfège syllable for scale degree 4 (the Subdominant) in a major scale?",
+      "choices": [
+        "Sol",
+        "Mi",
+        "Re",
+        "Fa"
+      ],
+      "answer": 3,
+      "explanation": "Scale degree 4 (the Subdominant, F in C major) is sung as 'Fa' in solfège. The full solfège sequence for the major scale is: Do (1) Re (2) Mi (3) Fa (4) Sol (5) La (6) Ti (7) Do (8). 'Do Re Mi Fa Sol La Ti Do' — the famous sequence from The Sound of Music — maps directly onto scale degrees 1 through 8.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is C major considered the foundational major scale for music theory study?",
+      "choices": [
+        "It is the most commonly used key in all Western music",
+        "It uses only natural notes (no sharps or flats), making the W-W-H-W-W-W-H formula and scale degree functions easy to see and hear without the complication of accidentals",
+        "It was invented first, before any other scale",
+        "It is the only scale that works on all instruments"
+      ],
+      "answer": 1,
+      "explanation": "C major uses only the natural notes C D E F G A B — the white keys on the piano — with no sharps or flats. This makes the intervallic structure (W–W–H–W–W–W–H) and the relationships between scale degrees visible and audible without any accidental complexity. All the principles of scale degree function, interval quality, and harmonic behavior are the same in every major key — C major just lets you study them in their purest, most readable form.",
+      "srs": true
+    }
+  ]
+}

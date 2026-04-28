@@ -1,0 +1,59 @@
+{
+  "id": "04-half-steps",
+  "title": "Half Steps",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Half Steps: The Smallest Interval\n\nA **half step** — also called a **semitone** — is the smallest interval in Western music. It is the distance between any two adjacent keys on the piano with **no key in between**.\n\nOn a standard keyboard, every key has a neighboring key immediately to its right and immediately to its left (with no gap). Move one key in either direction: that is a half step.\n\n### Half Steps on the Guitar\n\nOn a fretted instrument, **one fret = one half step**. This is one of the most important facts in guitar theory:\n- Moving from fret 5 to fret 6 on any string: up one half step\n- Moving from fret 7 to fret 6: down one half step\n- Moving from open string (fret 0) to fret 1: up one half step\n\nThe guitar fretboard is a linear grid of half steps — every fret is a semitone.\n\n### Where Natural Half Steps Occur on the White Keys\n\nMost adjacent white keys have a black key between them, making them a **whole step** apart. But two pairs of adjacent white keys have **no black key between them** — they are naturally a half step apart:\n\n- **E to F** (or F down to E)\n- **B to C** (or C down to B)\n\nThese are called the **natural half steps**. Memorizing their locations is essential because:\n1. They are the source of \"surprise\" in scale patterns (where the whole-step pattern breaks)\n2. They explain why some scales have sharps or flats\n3. They determine where the leading tone falls in any major scale\n\n### The Chromatic Scale\n\nA scale built entirely of half steps — all 12 pitches — is called the **chromatic scale**:\n\n> C — C# — D — D# — E — F — F# — G — G# — A — A# — B — C\n\nTwelve half steps = one octave. The chromatic scale contains every available pitch in Western music.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Half Steps and Their Role in Music Theory\n\n### Half Steps as Building Blocks\n\nEvery interval, scale, and chord in Western music is ultimately built from combinations of half steps. The major scale, for example, is not built from random distances — it follows a specific pattern of whole steps and half steps:\n\n> **W — W — H — W — W — W — H**\n\nThis pattern, starting from any pitch, generates a major scale. The two half steps (H) at positions 3–4 and 7–8 are what give the major scale its characteristic sound.\n\n### The Leading Tone\n\nThe **seventh scale degree** of a major scale is one half step below the octave (the tonic). This note is called the **leading tone** because it \"leads\" — it has a powerful tendency to resolve upward by a half step to the tonic. This half-step pull is one of the defining tensions in tonal music:\n\n> B → C (in C major, B is the leading tone)\n> G# → A (in A major, G# is the leading tone)\n\nThe smaller the interval, the stronger the gravitational pull toward resolution.\n\n### Equal Temperament\n\nIn modern **equal temperament** (the tuning system used on all pianos, guitars, and most Western instruments), all 12 half steps within an octave are **exactly equal in size** — each is the 12th root of 2 (approximately 1.0595) times the frequency of the previous note. This is a slight compromise from the pure mathematical ratios of **just intonation**, but it allows instruments to play in all 12 keys without retuning. When you tune your guitar to standard tuning (EADGBe), you are tuning to equal temperament.\n\n### Half Steps in Chord Construction\n\nChord qualities are defined by the arrangement of half steps between notes:\n- **Major third** = 4 half steps\n- **Minor third** = 3 half steps\n- **Perfect fifth** = 7 half steps\n\nEverything traces back to the half step as the fundamental unit of pitch measurement.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "On a guitar, how many half steps is one fret?",
+      "choices": ["Half a step", "One half step", "Two half steps (one whole step)", "It varies by string"],
+      "answer": 1,
+      "explanation": "On a guitar (or any fretted instrument), moving one fret up or down is exactly one half step, regardless of which string or which fret position you are at.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which two pairs of adjacent white keys are naturally a half step apart (no black key between them)?",
+      "choices": [
+        "C-D and G-A",
+        "D-E and A-B",
+        "E-F and B-C",
+        "C-D and E-F"
+      ],
+      "answer": 2,
+      "explanation": "E-F and B-C are the only pairs of adjacent white keys with no black key between them, making them a natural half step apart. All other adjacent white key pairs have a black key between them and are a whole step apart.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many half steps are in one octave?",
+      "choices": ["7", "8", "10", "12"],
+      "answer": 3,
+      "explanation": "One octave contains 12 half steps. The chromatic scale — which uses all 12 pitches in sequence — demonstrates this: C C# D D# E F F# G G# A A# B C spans 12 half steps from one C to the next.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the 'leading tone' in music theory?",
+      "choices": [
+        "The first note of any scale",
+        "The note one half step below the tonic, which resolves upward",
+        "The highest note of a chord",
+        "Any note that leads into a modulation"
+      ],
+      "answer": 1,
+      "explanation": "The leading tone is the seventh scale degree — one half step below the tonic (octave). It has a strong tendency to resolve upward by a half step to the tonic. In C major, B is the leading tone that resolves to C.",
+      "srs": true
+    }
+  ]
+}

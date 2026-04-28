@@ -1,0 +1,25 @@
+{
+  "id": "03-brushes",
+  "title": "Playing with Brushes",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Brushes: The Softest Voice\n\nBrushes are essential for jazz ballads, small-group playing, quiet rooms, and any context where sticks would overwhelm the music.\n\n**Two main techniques:**\n\n1. **Sweep strokes**: The brush head sweeps in a circular or oval motion on the snare head, producing a continuous 'shhhhhh' sound that simulates a wash of time. This is the ballad technique.\n\n2. **Tap strokes**: The brush taps the head for articulated notes — similar to stick playing but softer. Used for medium-tempo swing.\n\n**Snare head selection:** Brushes require a coated (white) snare head. The texture of the coating creates the friction that produces the characteristic swish sound. A clear head is nearly silent with brushes.\n\n**The classic brush sweep pattern:**\n- Left hand: counterclockwise oval, sweeping beats 1 and 3 (the 'down')\n- Right hand: clockwise oval or tapping the ride pulse\n- The two hands together create a continuous texture with rhythmic articulation on top",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Ballad Brush Pattern\n\nFor a slow ballad (60-80 BPM):\n\n**Left hand** sweeps a large oval counterclockwise:\n- The upstroke of the sweep lands on beat 1 (wrist moves away from you)\n- The downstroke lands on beat 3 (wrist moves toward you)\n- Maintain constant contact — never lift the brush from the head\n\n**Right hand** taps or sweeps the swing pattern:\n- Can tap 'ding-a-ding' on the snare\n- Or sweep the same ride pattern on a cymbal\n- Or a combination depending on the musical context\n\nThe left hand's continuous sweep creates the 'heartbeat' of the ballad — it's why brushes work so beautifully for slow pieces.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why do brushes require a coated snare head to work properly?",
+      "choices": ["Coated heads are harder and more durable", "The coating texture creates friction that produces the characteristic brush swish sound", "Coated heads are louder", "Coated heads have better pitch"],
+      "answer": 1,
+      "explanation": "The coated (white) snare head has a slightly rough texture. When brush wires sweep across it, the friction creates the characteristic 'shhhh' sound. A clear head is nearly smooth and produces almost no brush sound.",
+      "srs": true
+    }
+  ]
+}

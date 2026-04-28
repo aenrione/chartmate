@@ -1,0 +1,43 @@
+{
+  "id": "01-campanella",
+  "title": "Campanella Technique",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Campanella — The Bell Technique\n\nCampanella (Italian for \"little bell\") is a technique where **consecutive scale notes are played on different strings**, allowing each note to ring into the next like bells overlapping.\n\nContrast with normal scale playing:\n- **Normal**: C-D-E-F on one string (each note stops as you move)\n- **Campanella**: C on string 3, D on string 2, E on string 1, F on string 2 higher (notes overlap)\n\n## Why It Sounds So Beautiful\n\nOn a single string, each new note stops the previous one. With campanella fingering, adjacent notes sustain simultaneously, creating a **harp-like wash of overlapping tones**.\n\nThis is the signature sound of guitarists like:\n- **Lenny Breau** (jazz campanella, incredible overtone palette)\n- **Tommy Emmanuel** (fingerstyle campanella runs)\n- **Andrew York** (classical/crossover)\n- **Muriel Anderson** (harp guitar inspired runs)\n\n## C Major Scale in Campanella\n\n```\ne |----------0--2--3--|\nB |------0--1---------|\nG |--0--2-------------|\nD |-------------------|\n   C  D  E  F  G  A  B\n```\n\nNotice: each note is on a different string (or at least a different position) so they can ring together.\n\n## The Challenge\n\nYou need to fret multiple strings simultaneously and **not damp** the previous note. Your left-hand fingers must hold down overlapping notes across strings.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the defining characteristic of the campanella technique?",
+      "choices": [
+        "Playing the same note on multiple strings at once",
+        "Using a bottleneck slide for resonant tones",
+        "Playing consecutive scale notes on different strings so they ring and overlap",
+        "Tapping both hands on the fretboard"
+      ],
+      "answer": 2,
+      "explanation": "Campanella plays consecutive melody notes on different strings, allowing them to sustain and overlap like bells, creating a harp-like resonance. This distinguishes it from regular single-string scales where each new note stops the previous one.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Campanella Fingering Exercise\n\n## The G Major Campanella Scale (Open Position)\n\n```\ne |--------------------2--3--5--|\nB |------------------3----------|\nG |------------0--2-------------|\nD |------0--2-------------------|\nA |--2--------------------------|\nE |-----------------------------|\n   G  A  B  C  D  E  F# G  A\n```\n\n## Left-Hand Strategy\n\nThe key challenge: keep previous fingers down to allow notes to sustain.\n\n1. Play G on string 5, fret 2 — keep this finger down\n2. Play A on string 4, fret 2 — add second finger, keep first\n3. Play B on string 3, open — no new finger needed\n4. Play C on string 3, fret 2 — add finger\n5. Play D on string 2, fret 3 — add ring finger, keep index on D string\n6. Continue...\n\n## Practice Protocol\n\n- Start at 40 BPM (this feels extremely slow — that's correct)\n- Focus on letting each note ring fully\n- Record yourself and listen for overtones blending\n- Gradually increase tempo but never sacrifice the sustain",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is the left-hand technique for campanella more complex than regular scale playing?",
+      "choices": [
+        "You must mute each string after playing it",
+        "Previous fingers must stay down to allow notes to sustain simultaneously",
+        "You play every note with a different finger",
+        "You need to use the thumb on the fretboard"
+      ],
+      "answer": 1,
+      "explanation": "In campanella, the beauty comes from overlapping, sustained notes. To achieve this, your left-hand fingers must hold down previous notes even as you play new ones — like building a chord slowly while playing a scale.",
+      "srs": true
+    }
+  ]
+}

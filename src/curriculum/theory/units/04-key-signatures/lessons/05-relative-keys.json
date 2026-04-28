@@ -1,0 +1,69 @@
+{
+  "id": "05-relative-keys",
+  "title": "Relative Major & Minor",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Relative Major and Minor\n\n### Two Keys, One Key Signature\n\nEvery major key has a **relative minor** — a minor key that uses exactly the same set of notes and thus the same key signature. They are like two sides of the same coin: same notes, same sharps or flats, but different tonal centers and therefore very different emotional characters.\n\n**The relative minor starts on the 6th scale degree of the major scale** — which is always three half steps (a minor third) below the major tonic.\n\n### The Relative Pairs\n\n| Major Key | Relative Minor | Sharps/Flats |\n|-----------|---------------|---------------|\n| C major | A minor | none |\n| G major | E minor | 1# (F#) |\n| D major | B minor | 2# |\n| A major | F# minor | 3# |\n| E major | C# minor | 4# |\n| F major | D minor | 1b (Bb) |\n| Bb major | G minor | 2b |\n| Eb major | C minor | 3b |\n| Ab major | F minor | 4b |\n\n### Finding the Relative Minor\n\nTwo equivalent methods:\n\n1. **Count down 3 half steps** from the major tonic: C → B → Bb → A. So A minor is the relative of C major.\n2. **Go to scale degree 6**: In C major (C D E F G A B), the 6th note is A. A minor is the relative minor.\n\nBoth methods always give the same answer. Use whichever feels more intuitive.\n\n### Same Notes, Different Center\n\nC major and A minor both use only the white keys on the piano (C D E F G A B). But in C major, C is home — it is the note of rest and resolution. In A minor, A is home. Play the notes in the same order but emphasize A as the starting and ending point, and the same notes suddenly sound dark and brooding instead of bright and resolved.\n\nThis shift in tonal center — not the notes themselves — is what defines the relative relationship. Context determines which note is tonic: which note the melody gravitates toward, which chord the piece ends on.\n\n### Why This Matters\n\nUnderstanding relative keys explains why a key signature alone cannot tell you whether music is major or minor. Both C major and A minor have no sharps or flats. You must listen — or look at the final cadence — to determine which note functions as tonic.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Natural Minor and the Sound of Relative Keys\n\n### The Natural Minor Scale\n\nThe relative minor, played from its own tonic, is called the **natural minor scale**. It has the pattern:\n\n**W – H – W – W – H – W – W**\n\n(Compare to major: W–W–H–W–W–W–H)\n\nThe differences:\n- Compared to major, natural minor has a **lowered 3rd, 6th, and 7th** (relative to the major scale of the same root).\n- These lowered degrees give minor its characteristic darker, more introspective quality.\n\n### A Minor vs. C Major\n\nA minor scale: A B C D E F G A\nC major scale: C D E F G A B C\n\nThey use the same seven notes, but:\n- In A minor, C is the **b3** (minor third above A)\n- In A minor, F is the **b6** (minor sixth above A)\n- In A minor, G is the **b7** (minor seventh above A)\n\nThese lowered degrees account for the emotional difference. The minor 3rd (C above A) is the single most defining interval — it is what makes a chord or scale sound \"minor.\"\n\n### Parallel vs. Relative\n\nDo not confuse **relative minor** with **parallel minor**:\n- **Relative minor**: different tonic, SAME key signature. (C major → A minor, both no sharps/flats)\n- **Parallel minor**: SAME tonic, different key signature. (C major → C minor, which has 3 flats)\n\nThe word \"relative\" means \"shares the key signature.\" The word \"parallel\" means \"shares the root (tonic).\" These are two completely different relationships.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the relative minor of G major?",
+      "choices": [
+        "D minor",
+        "B minor",
+        "E minor",
+        "A minor"
+      ],
+      "answer": 2,
+      "explanation": "G major has the scale G A B C D E F# G. The 6th degree is E. Therefore E minor is the relative minor of G major. Both keys share one sharp (F#). You can also find it by counting 3 half steps below G: G → F# → F → E. E minor is the answer.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Both C major and A minor share the same key signature (no sharps or flats). What distinguishes them when reading a piece?",
+      "choices": [
+        "The time signature reveals whether a piece is major or minor",
+        "The tempo marking tells you — slow pieces are minor, fast pieces are major",
+        "The tonal center: which note the melody gravitates toward and which chord the piece ends on",
+        "Nothing — C major and A minor are identical in every way"
+      ],
+      "answer": 2,
+      "explanation": "Since relative major and minor share the same key signature, the key signature alone cannot distinguish them. The tonal center — which note functions as home and resolution — is what defines the key. Listening for which note the melody resolves to, and observing the final chord, reveals whether the tonic is C (C major) or A (A minor).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the difference between a 'relative minor' and a 'parallel minor'?",
+      "choices": [
+        "They are the same thing — both terms refer to the minor key sharing the same key signature",
+        "Relative minor shares the same key signature but has a different tonic; parallel minor shares the same tonic but has a different key signature",
+        "Relative minor has the same tonic; parallel minor has the same key signature",
+        "Parallel minor is only used in classical music; relative minor is used in jazz"
+      ],
+      "answer": 1,
+      "explanation": "The relative minor shares the KEY SIGNATURE with the major key but starts on a different tonic (the 6th degree). For example, C major and A minor are relatives — same notes, different tonic. The parallel minor shares the TONIC but uses a different key signature — C major and C minor both start on C, but C minor has 3 flats. These are distinct relationships.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "A piece has a key signature of two flats (Bb and Eb) and ends on a G minor chord. What key is the piece most likely in?",
+      "choices": [
+        "Bb major",
+        "G minor",
+        "Eb major",
+        "D minor"
+      ],
+      "answer": 1,
+      "explanation": "Two flats = Bb major OR its relative G minor. Since the piece ends on a G minor chord (G is the tonal center), the piece is in G minor. Bb major and G minor share the same key signature. The final chord confirms G as the tonic, making this G minor. This is exactly how relative key ambiguity is resolved in practice: look at the ending.",
+      "srs": true
+    }
+  ]
+}

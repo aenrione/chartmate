@@ -1,0 +1,25 @@
+{
+  "id": "01-finding-your-voice",
+  "title": "Finding Your Voice",
+  "xp": 40,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Artistic Voice: What Makes You You\n\nEvery great drummer is instantly recognizable. You can hear two bars of John Bonham and know it's Bonham. Four notes from Tony Williams and know it's Williams. Elvin Jones's sound is unmistakable in any context.\n\nThis recognition comes not from any single technical choice, but from the totality of how they approach the instrument:\n- The tempo they naturally gravitate toward\n- The way they feel the subdivision (ahead, behind, right on)\n- The sounds they prefer (heavy vs. light, dry vs. wet, woody vs. cutting)\n- What they leave out as much as what they put in\n- The musical vocabulary that comes instinctively\n\n**How artistic voice develops:**\nVoice is not invented or chosen — it's discovered. It emerges from:\n1. Deep absorption of the music you love (listening extensively)\n2. Consistent practice that builds a personalized technical approach\n3. Playing in diverse musical situations that reveal your natural tendencies\n4. Years of making choices under pressure that crystallize into preferences\n\n**The paradox of influence:** To find your own voice, you must first deeply imitate others. Transcribing and copying great players isn't a failure of originality — it's the education from which originality eventually emerges.\n\n**When you've found it:** You're not thinking about what to play — you're responding. The music comes through you rather than from a mental catalog of options.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# What Masters Say About Voice\n\n**Max Roach**: 'The drums are a language. You have to find your own accent.'\n\n**Tony Williams**: 'I want to play something that you've never heard before — but that sounds completely natural when you hear it.'\n\n**Billy Cobham**: 'Technical ability is the vocabulary. Your character is the voice that speaks it.'\n\n**Jack DeJohnette**: 'Music is about revealing something true about yourself in real time. If you're hiding, the audience feels it.'\n\n**The common thread:** All of these masters speak of the drum kit as a vehicle for self-expression, not an end in itself. Technique serves expression; it doesn't replace it.\n\n**The ongoing development:** Artistic voice isn't static. Every great drummer's sound evolves throughout their career as life experience, new listening, and new technical discoveries reshape their musical personality. Finding your voice is not a destination — it's an ongoing process.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the paradox of developing an original artistic voice on the drums?",
+      "choices": ["You must avoid all influences and develop in isolation", "You must deeply imitate others first — transcribing and copying is the education from which originality emerges", "Artistic voice can only be taught by a private teacher", "Technical mastery automatically produces an artistic voice"],
+      "answer": 1,
+      "explanation": "Developing an original voice requires first deeply absorbing the voices of others. Transcribing, copying, and imitating great players is not a failure of originality — it's the musical education that builds a vocabulary. Original voice emerges from this absorbed vocabulary filtered through a unique personality and life experience.",
+      "srs": true
+    }
+  ]
+}

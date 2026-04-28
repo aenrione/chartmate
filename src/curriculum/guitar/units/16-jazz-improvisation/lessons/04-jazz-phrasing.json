@@ -1,0 +1,43 @@
+{
+  "id": "04-jazz-phrasing",
+  "title": "Jazz Phrasing",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Jazz Phrasing — Making Your Solo Breathe\n\nPhrasing is how you organize notes into **musical statements** — questions, answers, breaths, and silences. Without good phrasing, even technically correct notes sound like exercises.\n\n## The Call-and-Response Model\n\nJazz phrasing grew from blues tradition: one phrase asks a question (call), the next answers (response).\n\n```\nCall:     (play 2 bars)\nResponse: (play 2 bars)\nSilence:  (rest 2 bars — crucial)\n```\n\n## Phrase Length\n\nMost jazz phrases are 2–4 bars long. Shorter phrases create energy; longer phrases create tension. The key is **variety**:\n\n- 1-bar phrases (punchy, aggressive)\n- 2-bar phrases (balanced, conversational)\n- 4-bar phrases (flowing, sustained)\n- Long breaths (rest 2+ bars — creates anticipation)\n\n## The Silence Rule\n\nMiles Davis: \"Don't play what's there, play what's not there.\"\n\nProfessional soloists **leave more space than beginners expect**. Listen to Miles's \"Kind of Blue\" — the space between phrases is as musical as the phrases themselves.\n\n## Rhythmic Displacement\n\nTake a melodic idea and move it to a different rhythmic position. If a lick starts on beat 1, try it starting on the \"and\" of 2, or beat 3. Same notes, completely different feel.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What did Miles Davis mean by 'play what's not there'?",
+      "choices": [
+        "Play notes not in the scale",
+        "Use silence purposefully — the rests and spaces are as musical as the notes",
+        "Improvise without listening to the changes",
+        "Play in a different key than the band"
+      ],
+      "answer": 1,
+      "explanation": "Miles was emphasizing the musical value of silence. Space between phrases creates anticipation, breathes life into the music, and gives each phrase more impact. Overcrowding a solo with notes destroys its storytelling quality.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Motivic Development Technique\n\nInstead of random notes, build your solo on a **motif** — a short 2-4 note idea that you develop, transform, and return to.\n\n## Wes Montgomery's Approach\n\nWes often started a solo with a simple melodic idea (motif), then:\n1. **Repeated** it (exact repetition)\n2. **Transposed** it (same intervals, different pitch)\n3. **Inverted** it (same intervals, upside down)\n4. **Augmented** it (same notes, doubled in length)\n5. **Fragmented** it (used only part of the motif)\n6. **Developed** it (changed a few notes while keeping the shape)\n\n## Example Motif and Development\n\nMotif: G – A – B – D (descending)\n\n1. Repeat: G – A – B – D (same)\n2. Transpose: C – D – E – G (up a 4th)\n3. Invert: G – F – Eb – C (upside down)\n4. Fragment: G – A – B only (cut last note)\n5. Sequence: G-A-B-D, then E-F#-G-B (move up by step)\n\nThis creates a **coherent solo narrative** — a story with beginning, development, and conclusion.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'motif' in jazz improvisation?",
+      "choices": [
+        "A complete 32-bar solo",
+        "A short 2-4 note melodic idea that can be developed and transformed",
+        "A specific scale pattern",
+        "A chord voicing used repeatedly"
+      ],
+      "answer": 1,
+      "explanation": "A motif is a short melodic idea (typically 2-4 notes) that becomes the 'seed' of an improvised solo. By developing, repeating, transposing, and transforming the motif, the soloist creates a coherent musical narrative rather than random note sequences.",
+      "srs": true
+    }
+  ]
+}

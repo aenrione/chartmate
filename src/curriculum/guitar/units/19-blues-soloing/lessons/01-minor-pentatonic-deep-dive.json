@@ -1,0 +1,38 @@
+{
+  "id": "01-minor-pentatonic-deep-dive",
+  "title": "Minor Pentatonic Deep Dive",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Minor Pentatonic — Five Positions\n\nYou know the minor pentatonic from Unit 5. Now we go deep — five positions across the neck, each with its own character.\n\n## The A Minor Pentatonic Formula\n\nA – C – D – E – G (intervals: b3, 4, 5, b7 from root)\n\n## Position 1 (\"Box 1\" — most common)\n\n```\ne |--5--8--|\nB |--5--8--|\nG |--5--7--|\nD |--5--7--|\nA |--5--7--|\nE |--5--8--|\n   (A at fret 5)\n```\n\n## Position 2\n\n```\ne |--8--10--|\nB |--8--10--|\nG |--7--9---|\nD |--7--10--|\nA |--7--10--|\nE |--8--10--|\n```\n\n## Position 3\n\n```\ne |--10--12--|\nB |--10--13--|\nG |--9--12---|\nD |--10--12--|\nA |--10--12--|\nE |--10--12--|\n```\n\n## Position 4\n\n```\ne |--12--15--|\nB |--13--15--|\nG |--12--14--|\nD |--12--14--|\nA |--12--14--|\nE |--12--15--|\n```\n\n## Position 5 (links back to Position 1 an octave up)\n\n```\ne |--15--17--|\nB |--15--17--|\nG |--14--17--|\nD |--14--17--|\nA |--14--17--|\nE |--15--17--|\n```\n\n**Key insight**: These 5 positions cover the entire neck. Knowing which position you're in — and which position is adjacent — is fretboard mastery.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many positions of the minor pentatonic scale cover the entire guitar neck?",
+      "choices": ["2", "3", "5", "7"],
+      "answer": 2,
+      "explanation": "The minor pentatonic scale has 5 positions (patterns) that tile across the entire guitar neck, repeating in the next octave. Knowing all 5 positions and how they connect gives you complete fretboard coverage.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Connecting Positions — The \"CAGED Connection\"\n\nThe five pentatonic positions correspond to the five CAGED chord shapes. Understanding this connection lets you see chord shapes and scale positions as one integrated system.\n\n## In A Minor:\n\n| Position | Related CAGED Shape |\n|----------|---------------------|\n| Box 1 (fret 5) | Am (open shape) |\n| Box 2 (fret 7-8) | G shape (Gm moved up) |\n| Box 3 (fret 9-10) | F shape (Fm moved up) |\n| Box 4 (fret 12) | E shape (Em moved up) |\n| Box 5 (fret 14-15) | D shape (Dm moved up) |\n\n## Connecting Box 1 to Box 2\n\nThe highest note in Box 1 (fret 8 on string 1) is the same as the lowest notes in Box 2 (fret 8 on string 1). **Boxes share notes at their boundaries** — this is how you shift between them.\n\n## Practice Exercise\n\n1. Play Box 1 ascending and descending (2 minutes)\n2. Play Box 2 ascending and descending (2 minutes)\n3. Play from the bottom of Box 1 all the way to the top of Box 2, connecting them seamlessly\n4. Repeat for all adjacent pair combinations",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How do adjacent pentatonic positions (boxes) connect on the guitar neck?",
+      "choices": [
+        "They don't connect — there are gaps between them",
+        "They share notes at their boundaries, creating overlap points for shifting between positions",
+        "Each position is in a completely different key",
+        "They connect only at the 12th fret"
+      ],
+      "answer": 1,
+      "explanation": "Adjacent pentatonic boxes share notes at their boundaries. For example, the top note of Box 1 in A minor (fret 8 on string 1) is the same as the bottom note of Box 2. These overlap points are where you shift positions seamlessly.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "01-intro-to-tabs",
+  "title": "Intro to Tablature",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# What Is Guitar Tab?\n\nGuitar tablature (tab) is a visual shorthand for guitar music.\n\n**6 lines = 6 strings:**\n```\ne |---|\nB |---|\nG |---|\nD |---|\nA |---|\nE |---|\n```\nTop line = high e (string 1). Bottom line = low E (string 6).\n\n**Numbers = fret to press.** 0 = open string.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Reading Your First Tab\n\nThis is the opening riff of \"Smoke on the Water\" by Deep Purple:\n```\ne |------------------|\nB |------------------|\nG |--0--3--5--0--3---|\nD |------------------|\nA |------------------|\nE |------------------|\n```\nPlay only the G string (3rd from top). Press fret 0 (open), then 3, then 5.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In guitar tab, what does the number 0 represent?",
+      "choices": ["Mute that string", "Don't play that string", "Play that string open", "Press fret 10"],
+      "answer": 2,
+      "explanation": "0 in tab means play the string without pressing any fret — an open string.",
+      "srs": true
+    }
+  ]
+}

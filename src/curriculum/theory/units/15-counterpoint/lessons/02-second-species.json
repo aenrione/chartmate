@@ -1,0 +1,38 @@
+{
+  "id": "02-second-species",
+  "title": "Second Species Counterpoint",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Second Species: Two Against One\n\nIn second species counterpoint, the counterpoint has **two notes against every one note** of the cantus firmus (2:1 ratio). This introduces rhythmic contrast and, crucially, the first appearance of **dissonance** — but only in controlled, passing-note fashion.\n\n### The Downbeat / Upbeat Distinction\n\nWith two half notes against one whole note:\n- **Downbeat (beat 1)**: Must be consonant (same rules as first species)\n- **Upbeat (beat 2)**: May be dissonant — but only as a **passing tone**\n\nA passing tone moves stepwise between two consonances. The dissonance on beat 2 is acceptable because it is both approached and left by step, and occurs on a weak beat.\n\n### Allowed Dissonances in Second Species\n\nOnly **passing tones** — no other dissonances. The passing tone:\n1. Is approached by step from a consonance\n2. Moves by step to a consonance on the next strong beat\n3. Occurs on a weak beat (beat 2)\n\n### Rules Added in Second Species\n\n1. **No parallel fifths or octaves between consecutive downbeats** — the upbeats can mask parallels that occur beat-to-beat but the structural parallels (strong beat to strong beat) matter most\n2. **No parallel fifths or octaves between consecutive upbeats either** — both beat-levels are checked\n3. **No leaping to a dissonance** — if the upbeat is dissonant, it must be approached by step\n4. **Unisons only on downbeats**, not upbeats\n5. **The 'battuta'** (Italian: 'beaten'): avoid a leap into a downbeat that creates a hidden octave — specifically octaves between CF and CP at consecutive downbeats approached by leap in the outer voices\n\n### Compensating for Leaps\n\nWhen the counterpoint leaps (third or larger), it should recover by moving in the opposite direction:\n- Leap up → step down afterward\n- Leap down → step up afterward\n\nA leap of a sixth is the largest commonly used leap; sevenths are generally avoided.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In second species, a note on beat 2 (the upbeat) may be dissonant only if it is what?",
+      "choices": [
+        "A leading tone that resolves up to the tonic",
+        "A passing tone — approached by step from a consonance and moving by step to the next consonance",
+        "A suspension that resolves on the next downbeat",
+        "Any interval that is smaller than a tritone"
+      ],
+      "answer": 1,
+      "explanation": "In second species, the only allowed dissonance is the passing tone, which must be approached by step from a consonance AND move by step to a consonance. The dissonance on the weak beat (beat 2) is tolerable because it is 'passing through' — it has clear direction and resolves immediately. This is the foundation for all later dissonance treatment.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why are parallel fifths checked between consecutive downbeats in second species?",
+      "choices": [
+        "Because the downbeats are the structurally important beats — parallels between them undermine voice independence at the strongest rhythmic positions",
+        "Because upbeats are always consonant and cannot create parallels",
+        "Because the cantus firmus changes only on downbeats",
+        "Because parallel fifths only matter at the first beat of each measure"
+      ],
+      "answer": 0,
+      "explanation": "Downbeats are metrically strong — they carry the structural harmonic weight. Parallel perfect fifths or octaves between consecutive downbeats are the most perceptually damaging kind of parallelism because they occur at the rhythmically emphasized points. Even if the upbeat between them is different, the structural parallel fifths remain audible and problematic.",
+      "srs": true
+    }
+  ]
+}

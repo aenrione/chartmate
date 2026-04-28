@@ -1,0 +1,28 @@
+{
+  "id": "05-the-capo",
+  "title": "The Capo",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# What Is a Capo?\n\nA **capo** is a clamp that presses all strings at a chosen fret, raising the pitch of every string equally.\n\n**Why use it?**\n- Play in a higher key using open chord shapes you already know\n- Match a song's key to your vocal range\n- Get a brighter, chiming tone\n\nCapo on fret 2 + G chord shape = **A major** sound.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "If you place a capo on fret 3 and play a G chord shape, what chord do you hear?",
+      "choices": ["G major", "A# major", "Bb major", "B♭ major"],
+      "answer": 2,
+      "explanation": "G is the root. Move up 3 semitones: G → G# → A → A# (Bb). So capo 3 + G shape = Bb major.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the primary purpose of a capo?",
+      "choices": ["Change the tuning of individual strings", "Transpose to a new key using familiar chord shapes", "Mute specific strings", "Hold a slide in place"],
+      "answer": 1,
+      "explanation": "A capo transposes the whole guitar up in pitch so you can use open chord shapes in different keys.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "id": "05-a-chord",
+  "title": "The A Chord",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The A Major Chord\n\nA major has a bright, punchy sound. It's the gateway to barre chords later on.\n\n**Finger placement:**\n- Index (1): string 4, fret 2\n- Middle (2): string 3, fret 2\n- Ring (3): string 2, fret 2\n\nAll three fingers share the 2nd fret. Strings 1 and 5 are open; mute string 6.",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "A",
+      "frets": [0, 2, 2, 2, 0, -1],
+      "fingers": [0, 3, 2, 1, 0, 0],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "On which fret do all three fingers sit for the A chord?",
+      "choices": ["Fret 1", "Fret 2", "Fret 3", "Fret 4"],
+      "answer": 1,
+      "explanation": "Index, middle, and ring fingers all press the 2nd fret on strings 4, 3, and 2.",
+      "srs": true
+    },
+    {
+      "type": "fretboard-drill",
+      "notes": ["A2", "E3", "A3", "C#4"],
+      "requiredCorrect": 4
+    }
+  ]
+}

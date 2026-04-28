@@ -1,0 +1,43 @@
+{
+  "id": "01-chord-tone-soloing",
+  "title": "Chord-Tone Soloing",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Chord-Tone Soloing — The Foundation of Jazz Melody\n\nChord-tone soloing means building your improvised lines primarily from the **notes of each chord as it passes**. Instead of staying in one key scale, you track the changes.\n\n## Why Chord Tones?\n\nIn bebop (Charlie Parker, Dizzy Gillespie), the melody **targets chord tones** on the strong beats (1 and 3), creating that clear, swinging jazz sound.\n\nIf you solo only from one scale over everything, you'll \"float\" without clearly outlining the harmony — you'll sound like you're not \"hearing the changes.\"\n\n## The Chord Tones of Common Jazz Chords\n\n| Chord | Chord Tones |\n|-------|-------------|\n| Cmaj7 | C, E, G, B |\n| Dm7 | D, F, A, C |\n| G7 | G, B, D, F |\n| Am7 | A, C, E, G |\n| Dm7b5 | D, F, Ab, C |\n\n## The Target Note Concept\n\nOn beat 1 of each chord, land on a **chord tone** — especially the 3rd or 7th. These are called target notes.\n\n**Example over ii-V-I:**\n- Beat 1 of Dm7: land on F (minor 3rd) or C (7th)\n- Beat 1 of G7: land on B (major 3rd) or F (minor 7th)\n- Beat 1 of Cmaj7: land on E (major 3rd) or B (major 7th)\n\nEverything between the targets can be passing tones, chromatic notes, or scales — but the targets lock you into the changes.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In chord-tone soloing, which two notes are considered the most important targets on a dominant 7th chord?",
+      "choices": [
+        "Root and 5th",
+        "3rd and 7th (the guide tones)",
+        "9th and 13th",
+        "Root and 9th"
+      ],
+      "answer": 1,
+      "explanation": "The 3rd and 7th (guide tones) define the chord's quality and create the strongest harmonic statement. Landing on these notes as targets in your solo makes the chord changes audible in your melody.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Chord-Tone Arpeggio Exercise\n\nThe most direct way to practice chord-tone soloing: play arpeggios through the changes.\n\n## ii-V-I Arpeggios in C Major\n\n### Dm7 arpeggio (one position):\n```\ne |------5---------|\nB |----6-----------|\nG |--7-------------|\nD |------5---------|\nA |----5-----------|\nE |--5-------------|\n   D  F  A  C  (then continue up)\n```\n\n### G7 arpeggio:\n```\ne |------8---------|\nB |------8---------|\nG |--7-9-----------|\nD |------7---------|\nA |----7-----------|\nE |--3-------------|\n   G  B  D  F\n```\n\n### Cmaj7 arpeggio:\n```\ne |------8---------|\nB |----8-----------|\nG |--9-------------|\nD |----10----------|\nA |--3-------------|\nE |-x--------------|\n   C  E  G  B\n```\n\n## Connecting Arpeggios\n\nThe skill is smoothly connecting one arpeggio to the next. Use **chromatic passing tones** (half steps) to bridge them.\n\nPractice at 80 BPM until transitions are seamless, then 100, 120, 140...",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the purpose of using chromatic passing tones between chord-tone arpeggios?",
+      "choices": [
+        "To add more notes per beat",
+        "To smooth the connection between arpeggios with half-step movements",
+        "To make the solo more dissonant",
+        "To replace chord tones entirely"
+      ],
+      "answer": 1,
+      "explanation": "Chromatic passing tones (half-step connections) bridge the gap between chord-tone arpeggios, creating smooth melodic lines. They give jazz solos their characteristic flowing quality — the chromatic notes are fleeting connectors, not targets.",
+      "srs": true
+    }
+  ]
+}

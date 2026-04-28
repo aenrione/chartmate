@@ -1,0 +1,38 @@
+{
+  "id": "02-genre-analysis",
+  "title": "Genre Harmonic Analysis",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Genre Harmonic Analysis: Cross-Genre Synthesis\n\nEach musical genre has characteristic harmonic fingerprints — recurring patterns, preferred chord types, and structural habits. Recognizing these patterns across genres develops versatile musicianship.\n\n### Genre Harmonic Fingerprints\n\n**Classical/Common Practice** (1600–1900):\n- Functional harmony: every chord moves with purpose toward tonic\n- Diatonic chords plus secondary dominants\n- Modulation to closely related keys\n- Cadences are structural events\n- Listen to: Beethoven piano sonatas, Mozart symphonies\n\n**Blues** (1890s–present):\n- I7–IV7–V7 with dominant sevenths on all three chords\n- 12-bar form\n- Blue notes (b3, b5, b7)\n- Turnarounds at bar 11-12\n- Listen to: Robert Johnson, B.B. King, Muddy Waters\n\n**Jazz** (1920s–present):\n- ii–V–I as primary unit\n- Extended chords (7ths, 9ths, 11ths, 13ths)\n- Tritone substitutions, reharmonization\n- AABA form or 12-bar blues form\n- Listen to: Miles Davis, Bill Evans, John Coltrane\n\n**Rock/Pop** (1950s–present):\n- I–IV–V as primary palette\n- Borrowed chords (bVII, bVI, iv) for color\n- Verse-chorus form\n- Pentatonic melody\n- Listen to: Beatles, Rolling Stones, contemporary pop\n\n**Modal/Impressionist** (1890s–present):\n- Suspended or static harmony\n- Modes (Dorian, Phrygian, Lydian) as tonal centers\n- Quartal harmony, parallel motion\n- No V→I resolution\n- Listen to: Debussy, Miles Davis 'Kind of Blue,' Bill Evans\n\n**Film/Game Scoring** (1930s–present):\n- All of the above, chosen contextually\n- Leitmotif system\n- Adaptive/functional music\n- Tempo synchronization\n- Listen to: Bernard Herrmann, John Williams, Ennio Morricone\n\n### The Unified Analysis Approach\n\nWhen analyzing any piece:\n1. Identify the genre and its typical harmonic language\n2. Note where the piece follows genre conventions\n3. Note where it diverges — these divergences are the composer's 'voice'\n4. Look for cross-genre influences\n5. Ask: what problem was the composer solving with each choice?",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the primary harmonic unit in jazz that distinguishes it from classical functional harmony?",
+      "choices": [
+        "The I–IV–V progression",
+        "The ii–V–I progression with seventh chords",
+        "The tonic–subdominant–dominant–tonic cycle",
+        "The AABA 32-bar form"
+      ],
+      "answer": 1,
+      "explanation": "While classical harmony uses V→I as its primary harmonic event, jazz uses ii–V–I as its fundamental unit. The ii chord (subdominant preparation) precedes the V7 (dominant), which resolves to I. This three-chord unit appears in virtually every jazz standard repeatedly in multiple keys. The ii chord's subdominant function smoothly prepares the dominant, creating a three-stage tension-release cycle rather than the classical two-stage V→I.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When analyzing any piece, what do 'divergences from genre conventions' reveal?",
+      "choices": [
+        "Errors and mistakes by the composer",
+        "Places where the piece fails to achieve its genre",
+        "The composer's individual voice and artistic choices — moments where personal expression transcends formula",
+        "The influence of music theory teachers on the composer"
+      ],
+      "answer": 2,
+      "explanation": "Genre conventions provide the baseline expectation. When a composer deviates from convention — uses an unexpected chord, a different form, an unusual instrumentation — that deviation reveals individual voice. Bob Dylan in 'folk music' subverted folk song form. Beatles subverted the 12-bar blues. Miles Davis subverted bebop conventions. The divergences are where personality lives. Understanding conventions is prerequisite to recognizing and appreciating deviation.",
+      "srs": true
+    }
+  ]
+}

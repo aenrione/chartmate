@@ -1,0 +1,34 @@
+{
+  "id": "04-drum-tracks",
+  "title": "Creating Drum Tracks",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Building Complete Drum Tracks\n\nA 'drum track' in the production sense is the complete drum arrangement for an entire song — every section written, recorded or programmed, and arranged with intention.\n\n**The drum track workflow:**\n1. **Listen to reference tracks**: Identify the drum aesthetic of the genre and specific artists\n2. **Map the song structure**: Write out every section (intro, verse A, verse B, pre-chorus, chorus 1, etc.)\n3. **Establish the core groove**: The main verse/chorus groove that defines the song's feel\n4. **Differentiate sections**: What changes between verse and chorus? What fills signal the transitions?\n5. **Develop the arc**: Plan where the energy builds, where it drops, and where the climax is\n6. **Record or program**: Execute the plan\n7. **Edit and refine**: Listen critically and remove anything that doesn't serve the song\n\n**Common mistakes in drum track creation:**\n- Using the same pattern throughout (boring, no differentiation)\n- Overcomplicating verses (distracting from the vocal)\n- Under-committing to choruses (the payoff doesn't feel big enough)\n- Fills at wrong times (disrupting rather than enhancing transitions)\n- Tempo inconsistency (if not locked to a click)\n\n**The drum track as blueprint:** A well-constructed drum track can serve as the rhythmic blueprint for the entire production. Other instruments build around the drum arrangement, not the other way around.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Verse Groove Reference",
+      "description": "A restrained, space-giving verse groove. Half-open hi-hat instead of closed adds a little air. Ghost notes on snare add texture without volume. This is the 'less is more' verse approach that lets vocals breathe.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 116,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x-x-x-x-x-x-x-x-"},
+        {"name": "Snare",  "pattern": "o---X-o-o---X-o-"},
+        {"name": "Kick",   "pattern": "x---x-------x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a complete drum track, what is the most important planning step before recording?",
+      "choices": ["Choosing the most complex groove possible", "Mapping the complete song structure and planning how the drum part will differentiate and arc through each section", "Recording the fills first", "Setting the tempo as fast as possible"],
+      "answer": 1,
+      "explanation": "Mapping the song structure before recording allows deliberate planning of how the drum part will serve each section. Without a plan, drummers tend to play the same thing throughout, miss transitions, or make random choices that don't serve the song's arc. Planning creates intentionality.",
+      "srs": true
+    }
+  ]
+}

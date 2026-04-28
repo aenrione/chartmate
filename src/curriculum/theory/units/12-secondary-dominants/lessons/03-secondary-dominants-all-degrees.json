@@ -1,0 +1,59 @@
+{
+  "id": "03-secondary-dominants-all-degrees",
+  "title": "Secondary Dominants of All Degrees",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Secondary Dominants: The Full System\n\nIn a major key, any diatonic chord except the diminished vii° can be preceded by its own secondary dominant. Here is the complete secondary dominant system in C major:\n\n| Target Chord | Secondary Dominant | Notes Added |\n|---|---|---|\n| I (C) | (diatonic V7 = G7) | — |\n| ii (Dm) | **V7/ii = A7** | C# |\n| iii (Em) | **V7/iii = B7** | D# (= Eb) |\n| IV (F) | **V7/IV = C7** | Bb |\n| V (G) | **V7/V = D7** | F# |\n| vi (Am) | **V7/vi = E7** | G# |\n\nThe vii° chord (B diminished in C major) is typically excluded because its resolution would require treating it as a tonic — the diminished chord rarely functions as a stable tonal goal.\n\n### V7/vi: The Most Emotional\n\n**E7 → Am** is one of the most powerful secondary dominant resolutions in music. E7 (E–G#–B–D) resolves to Am, with G# rising to A (chromatic half step) and D falling to C.\n\nExamples:\n- 'If I Fell' (Beatles): E7 → Am in C major\n- 'Can't Help Falling in Love' (Elvis): Uses E7 → Am prominently\n- Bach chorales use E7 repeatedly to approach Am cadences\n\nThe G# → A resolution has a particularly haunting, minor-tinged quality.\n\n### V7/IV: The Bluesy Dominant\n\n**C7 → F** (V7/IV → IV in C major) is characteristic of blues-influenced harmony. In C major, playing C7 (adding Bb) before IV gives a brief blues flavor. This also appears in gospel music and R&B.\n\nInterestingly, many blues songs treat the I chord *itself* as a dominant seventh (C7) even without moving to IV immediately — an influence of the blues scale rather than strict secondary dominant function.\n\n### V7/iii: The Least Common\n\nB7 → Em in C major is relatively rare because iii (Em) is an unstable, 'dark' chord that rarely functions as a resting point. However, it appears in pieces that briefly tonicize the mediant.\n\n### Chromatic Relationships\n\nSecondary dominants all add one chromatic note (a raised 3rd of the secondary dominant chord). These raised notes relate to different keys:\n- F# (D7) → key of G major\n- C# (A7) → key of D minor\n- G# (E7) → key of A minor\n- Bb (C7) → key of F major\n\nEach secondary dominant is borrowed from a temporarily implied key.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is V7/vi in C major, and what chromatic note does it add?",
+      "choices": [
+        "B7 (adds D#)",
+        "A7 (adds C#)",
+        "E7 (adds G#)",
+        "D7 (adds F#)"
+      ],
+      "answer": 2,
+      "explanation": "V7/vi means the dominant seventh of vi. In C major, vi = Am. The dominant of Am is E. So V7/vi = E7 (E–G#–B–D). The G# is the chromatic note (not in C major, which has G natural). E7 resolves to Am with G# rising to A and D falling to C.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is V7/vii° generally not used as a secondary dominant?",
+      "choices": [
+        "Because vii° is too high in the scale",
+        "Because the diminished chord (vii°) rarely functions as a stable tonal goal that can be 'tonicized'",
+        "Because vii° is the same as V7 — they are identical chords",
+        "Because the secondary dominant of vii° would require too many sharps"
+      ],
+      "answer": 1,
+      "explanation": "Secondary dominants work by treating a diatonic chord as a temporary tonic. But vii° (B diminished in C major) is an inherently unstable, dissonant chord — it cannot convincingly function as a tonal center. There is nothing for a secondary dominant to 'point toward' if the target itself is unstable.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the key of Bb major, what chord is V7/ii?",
+      "choices": [
+        "F7",
+        "A7",
+        "G7",
+        "E7"
+      ],
+      "answer": 2,
+      "explanation": "In Bb major, ii = Cm (C minor). The dominant of C minor is G. So V7/ii in Bb major = G7 (G–B–D–F). The B natural in G7 is the chromatic note — Bb major has Bb, not B natural. G7 resolves to Cm.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which secondary dominant is associated with a blues/gospel sound in major keys?",
+      "choices": ["V7/ii", "V7/V", "V7/vi", "V7/IV"],
+      "answer": 3,
+      "explanation": "V7/IV adds a flattened seventh to the tonic chord — e.g., C7 in C major. This dominant seventh on the tonic note is characteristic of blues and gospel harmony, where the I chord itself is frequently played as a dominant seventh. The Bb in C7 gives a distinctively bluesy color before resolving to IV.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "04-loop-pedal-drumming",
+  "title": "Loop Pedal Drumming",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Loop Pedals: Composing in Real Time\n\nA loop pedal (looper) records a section of your playing and repeats it indefinitely. The drummer can then add layers on top, building a complex arrangement in real time.\n\n**Basic looper workflow:**\n1. Start recording (tap footswitch on beat 1)\n2. Play the foundational loop (bass and kick, for example)\n3. Tap footswitch to stop recording and start playback\n4. The loop begins repeating\n5. Press the overdub switch to record a second layer on top\n6. Continue adding layers\n\n**The time accuracy challenge:** The moment you tap the footswitch to end your loop determines the loop length. If you tap slightly early or late, the loop will have a fractional offset that makes every subsequent loop accumulate error. This demands extreme time precision — often more demanding than standard playing.\n\n**Looping setups for drums:**\n- **Boss RC-505**: Multi-track looper, can loop individual drum sounds to separate tracks\n- **Ableton Live**: Computer-based looping with much more flexibility but more setup\n- **TC Electronic Ditto**: Simple single-track looper, good for adding a rhythmic bed during a solo\n\n**Artists who loop:** Snarky Puppy's drummer often uses loops during breaks; Josh Dun (Twenty One Pilots) integrates looping into live performance.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the most critical technical skill when creating drum loops with a loop pedal?",
+      "choices": ["Playing as fast as possible during the loop", "Extreme time accuracy — the footswitch tap to end the loop must be precisely on beat 1 to avoid accumulated drift", "Using as many layers as possible", "Only using electronic sounds for loops"],
+      "answer": 1,
+      "explanation": "The loop endpoint is determined by when you tap the footswitch. Any error in this timing creates a loop that is slightly longer or shorter than one bar. This fractional error accumulates in each repetition and in each new overdubbed layer, eventually destroying the time feel. Precise footswitch timing is the central challenge of live looping.",
+      "srs": true
+    }
+  ]
+}

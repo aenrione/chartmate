@@ -1,0 +1,20 @@
+{
+  "id": "05-brush-fills",
+  "title": "Brush Fills",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Fills with Brushes\n\nFills with brushes are more subtle than stick fills — they're more like 'inflections' or 'gestures' than dramatic statements. In jazz ballad contexts, a fill that draws attention to itself has failed.\n\n**Brush fill techniques:**\n\n1. **Sweep acceleration**: Speeding up the oval sweep motion into a rapid wash — effective as a 'swell' into the next section\n\n2. **Ratchet stroke**: Dragging the brush across the head in a short, rapid stroke — produces a quick 'ssshk' accent sound\n\n3. **Press roll with brushes**: Using both brush tips to create a sustained press roll on the head — a very different sound from a stick press roll, more like a swell of white noise\n\n4. **Cross-pattern sweeps**: Both brushes sweeping in opposite directions simultaneously, intersecting in the center of the head — creates a layered texture\n\n5. **Tap fill across toms**: Using the brush tips like very light sticks to tap across the toms — the quietest possible tom fill, virtually inaudible at distance but felt in close-mic situations\n\n**Context is everything:** In a trio setting supporting a piano player, even a subtle brush fill may be too much. The measure of a brush fill's success is whether the music felt better — not whether anyone noticed the fill.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What distinguishes a successful brush fill in a ballad context from an unsuccessful one?",
+      "choices": ["It should be as technically complex as possible", "It should be loud enough to clearly signal a transition", "It should improve the music's flow without drawing attention to itself", "It should last at least two full bars"],
+      "answer": 2,
+      "explanation": "In ballad playing, a fill that draws attention to itself has overstepped. The best brush fills are subtle enough that the listener feels the transition without consciously noticing the drummer did something. Service to the music is the criterion, not technical display.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "id": "06-e-minor",
+  "title": "E Minor & A Minor",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Minor Chords\n\nMinor chords have a darker, more emotional sound than major chords.\n\n**E minor** — the easiest chord on guitar:\n- Middle (2): string 5, fret 2\n- Ring (3): string 4, fret 2\n- All other strings: open\n\nStrum all 6 strings.",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "Em",
+      "frets": [0, 0, 0, 2, 2, 0],
+      "fingers": [0, 0, 0, 2, 1, 0],
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# A Minor\n\n**A minor** is C major's close relative and shares two notes with it.\n\n**Finger placement:**\n- Index (1): string 2, fret 1\n- Middle (2): string 4, fret 2\n- Ring (3): string 3, fret 2\n\nMute string 6.",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "Am",
+      "frets": [0, 1, 2, 2, 0, -1],
+      "fingers": [0, 1, 2, 3, 0, 0],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which chord uses only 2 fingers and all open strings?",
+      "choices": ["A minor", "D major", "E minor", "C major"],
+      "answer": 2,
+      "explanation": "E minor only needs 2 fingers on strings 4 and 5 — all other strings ring open.",
+      "srs": true
+    }
+  ]
+}

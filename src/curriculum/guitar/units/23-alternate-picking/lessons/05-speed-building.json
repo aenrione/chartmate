@@ -1,0 +1,43 @@
+{
+  "id": "05-speed-building",
+  "title": "Speed Building",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Building Picking Speed — The Science\n\nSpeed development follows a specific physiological process. Understanding it prevents injury and accelerates progress.\n\n## Myelination — The Biological Basis\n\nWhen you practice a movement correctly and repeatedly, your nervous system wraps the neural pathway in **myelin** — an insulating sheath that speeds nerve conduction.\n\nMore myelin = faster, more automatic movement.\n\nKey fact: myelin is laid down during **correct, focused practice** — not during fast, sloppy practice. Playing sloppily at high speed wraps bad motor patterns in myelin.\n\n## The Speed Building Protocol\n\n### Phase 1: Slow and Perfect (weeks 1-2)\n- 60 BPM, full attention, perfect mechanics\n- Goal: zero tension, equal pick strokes, clear notes\n\n### Phase 2: Gradual Increase (weeks 3-4)\n- Increase by 5 BPM when current tempo feels effortless\n- Never increase if notes are unclear or tension is present\n\n### Phase 3: Bursts and Recovery (weeks 5-8)\n- 3-second bursts at 10% above comfortable tempo\n- Immediately drop back to comfortable tempo\n- Bursts \"test\" speed without reinforcing bad patterns\n\n### Phase 4: New Baseline\n- The burst tempo becomes the new practice tempo after several weeks",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is practicing at sloppy high speed counterproductive for developing picking technique?",
+      "choices": [
+        "High speed is too hard on the fingers",
+        "The nervous system myelinates the motor patterns you practice — sloppy fast practice wraps bad mechanics in myelin, making errors more automatic",
+        "Speed can only come from slow practice",
+        "High speed requires different mechanics than regular playing"
+      ],
+      "answer": 1,
+      "explanation": "Myelination reinforces whatever motor pattern you repeat. Sloppy fast practice makes those imprecise movements more automatic and harder to correct. Clean slow practice builds efficient mechanics that naturally accelerate over time.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Metronome Method — Structured Speed Building\n\n## The Shawn Lane Approach\n\n**Shawn Lane** (1963–2003) was one of the fastest and most accurate pickers ever. His method:\n1. Find your current \"comfortable maximum\" (clean at this tempo)\n2. Practice at 80% of that for 30 minutes\n3. Every session, attempt the maximum for 3 notes only — then stop\n4. Over months, the maximum rises naturally\n\n## Troy Grady's Pick Slanting Research\n\nTroy Grady (Cracking the Code) identified that pick angle (slanting) solves string crossing problems:\n\n**Down-slant** (DWPS — Down-Wrist Pick Slant): Pick tilted so the leading edge points toward the floor. Naturally facilitates outside picking — good for patterns ending on downstrokes.\n\n**Up-slant** (UWPS): Pick tilted toward ceiling. Facilitates inside picking patterns ending on upstrokes.\n\n**Most fast pickers** use one slant as default and switch situationally.\n\n## Practical Speed Milestone Chart\n\n| BPM (16ths) | Level |\n|-------------|-------|\n| Up to 100 | Beginner |\n| 100-140 | Intermediate |\n| 140-170 | Advanced |\n| 170-200 | Professional |\n| 200+ | Elite |\n\nMeasure your speed with a metronome at 16th notes (4 notes per beat).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'pick slanting' and why does it matter for string crossing?",
+      "choices": [
+        "The angle of the pick tip relative to the string, which determines whether string crossings favor inside or outside picking motions",
+        "The angle at which the guitar is held",
+        "The direction of the pick stroke",
+        "The width of the pick used"
+      ],
+      "answer": 0,
+      "explanation": "Pick slanting is the angle of the pick face relative to the strings. A down-slant naturally facilitates certain string crossings (outside picking on downstroke-ending patterns), while an up-slant facilitates others. Understanding your natural slant and adjusting it for different lick patterns is key to eliminating picking difficulty.",
+      "srs": true
+    }
+  ]
+}

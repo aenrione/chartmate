@@ -1,0 +1,20 @@
+{
+  "id": "04-scale-positions",
+  "title": "Pentatonic Positions",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# 5 Positions of the Pentatonic\n\nThe minor pentatonic has 5 positions that cover the whole neck. Position 1 (the box) is your foundation.\n\n**Position 2** starts 3 frets up from Position 1:\n```\ne |--8--10--|\nB |--8--10--|\nG |--7--10--|\nD |--7--10--|\nA |--7-10--|\nE |--8--10--|\n```\n\nConnect positions by sliding from one to the next — your solos will start spanning the whole fretboard.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many positions does the minor pentatonic scale have across the fretboard?",
+      "choices": ["1", "3", "5", "7"],
+      "answer": 2,
+      "explanation": "The minor pentatonic has 5 positions that tile across the entire neck. Most players start with Position 1 (the box) and gradually learn the others.",
+      "srs": true
+    }
+  ]
+}

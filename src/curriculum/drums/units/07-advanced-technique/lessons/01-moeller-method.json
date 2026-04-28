@@ -1,0 +1,20 @@
+{
+  "id": "01-moeller-method",
+  "title": "The Moeller Method",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Moeller Method\n\nDeveloped by Sanford Moeller, this technique uses a whipping arm motion to produce multiple strokes with one muscular effort.\n\n**The 3 strokes:**\n1. **Down stroke** — arm comes down, stick stops near drum head\n2. **Tap stroke** — small, controlled strike at low height\n3. **Up stroke** — arm lifts to prepare the next down stroke\n\n**Benefit:** Play faster with less fatigue. The momentum of the arm does the work instead of individual muscle contractions.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the main benefit of the Moeller Method?",
+      "choices": ["Louder volume", "Playing faster and longer with less muscular effort by using arm momentum", "Smaller stick movements", "Only works at slow tempos"],
+      "answer": 1,
+      "explanation": "The Moeller Method harnesses the whipping momentum of the arm to generate multiple strokes efficiently. Drummers can play faster for longer without fatigue or injury.",
+      "srs": true
+    }
+  ]
+}

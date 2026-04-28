@@ -1,0 +1,51 @@
+{
+  "id": "02-alterations",
+  "title": "Alterations: b9, #9, #11, b13",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Altered Chords: Maximum Tension Before Resolution\n\nIn jazz, **altered chords** are dominant seventh chords where the extensions (9th, 11th, 13th) are chromatically modified — raised or lowered by a half step — to maximize tension before resolving to the target chord.\n\nAlterations apply almost exclusively to **dominant seventh chords** (the V7 chord). Why? Because the dominant chord's job is to create tension that resolves. Alterations crank that tension to maximum.\n\n### The Four Main Alterations\n\n**b9 (flat nine)**: The 9th is lowered a half step.\n- G7b9: G–B–D–F–Ab\n- The Ab creates an extremely tense minor 9th against the root G\n- Sound: dark, Spanish, flamenco, jazz ballad\n- Resolution: Ab resolves to A (5th of Cmaj) or Ab → G\n\n**#9 (sharp nine)**: The 9th is raised a half step — same as a minor 3rd from the root.\n- G7#9: G–B–D–F–A# (= Bb enharmonically)\n- The 'Hendrix chord' — E7#9 in 'Purple Haze' is the most famous example\n- Sound: blues, rock, funky — the b9 and the 3rd clash for intense distortion-like tension\n\n**#11 (sharp eleven)**: The 11th is raised a half step.\n- G7#11: G–B–D–F–C#\n- Also called the Lydian dominant scale's characteristic tone\n- Sound: mysterious, ethereal, jazz/film — avoids the natural 11th clash\n\n**b13 (flat thirteen)**: The 13th is lowered a half step.\n- G7b13: G–B–D–F–Eb\n- The Eb can also be spelled as #5 (augmented fifth)\n- Often combined with b9: G7b9b13 = G–B–D–F–Ab–Eb\n\n### The 'Alt' Chord Symbol\n\nG7alt (or G+7, G7#9b13) means: raise/lower everything possible. Specifically, a G7alt uses the **altered scale** (= melodic minor starting a half step above the root): Ab melodic minor starting from G's perspective.\n\nG altered scale: G–Ab–Bb–B–Db–Eb–F\nThis contains: b9 (Ab), #9 (Bb), 3rd (B), #11/#4 (Db), b13 (Eb), minor 7th (F).\n\n### When to Use Altered Chords\n\nAlterations are typically used:\n1. On the V chord before a strong tonic resolution (V7alt → Imaj7)\n2. When the melody note is an altered tone (forcing the underlying chord to accommodate)\n3. For stylistic intensity (bebop, post-bop, jazz ballads)\n\n**Example**: In C major, instead of G7 → Cmaj7, use G7b9#11 → Cmaj7. The added tension makes the resolution feel earned and satisfying.\n\nListen to: Miles Davis 'Kind of Blue' — Bill Evans's piano voicings use alterations extensively. John Coltrane's 'Giant Steps' — virtually every chord is altered.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the '#9' alteration on G7, and what famous song popularized this sound?",
+      "choices": [
+        "G7 with a raised 9th (A#/Bb); popularized by 'Purple Haze' (Jimi Hendrix as E7#9)",
+        "G7 with a raised 5th (D#); popularized by 'So What' (Miles Davis)",
+        "G7 with a flat 9th (Ab); popularized by 'Autumn Leaves'",
+        "G7 with a sharp 11th (C#); popularized by Duke Ellington"
+      ],
+      "answer": 0,
+      "explanation": "G7#9 = G–B–D–F–A# (where A# = Bb enharmonically). The #9 is the same pitch class as a minor third above the root. Jimi Hendrix's 'Purple Haze' uses E7#9 as its signature chord (E–G#–B–D–G), creating the intensely tense, bluesy-rock sound. The coexistence of G# (major 3rd) and G (enharmonic minor 3rd) in one chord creates unique dissonance.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What scale does a G7alt chord imply, and where does that scale come from?",
+      "choices": [
+        "G Mixolydian — the scale built on the 5th degree of C major",
+        "Ab melodic minor — the altered scale is the melodic minor starting a half step above the chord root",
+        "G harmonic minor — from the key of C minor",
+        "G whole tone — because whole tone has all augmented intervals"
+      ],
+      "answer": 1,
+      "explanation": "The altered scale for a dominant chord is the melodic minor scale starting a half step above the chord's root. For G7alt: start Ab melodic minor (Ab–Bb–B–Db–Eb–F–G). From G's perspective, these notes give: b9 (Ab), #9 (Bb), 3 (B), #11 (Db), b13 (Eb), 7 (F). All possible alterations are contained in this one scale.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why are alterations mainly applied to dominant chords rather than major or minor chords?",
+      "choices": [
+        "Because dominant chords have more notes to alter",
+        "Because the dominant chord's function is to create tension; alterations maximize that tension before resolution",
+        "Because major and minor chords cannot have extensions",
+        "Because alterations change the chord quality from dominant to major"
+      ],
+      "answer": 1,
+      "explanation": "Dominant chords exist to create tension that resolves to tonic. Alterations (b9, #9, #11, b13) increase that tension by adding more dissonant intervals. Applying them to tonic (major) or subdominant (minor) chords would destabilize the resolution points — counterproductive. The rule: save alterations for when you want maximum tension before a strong resolution.",
+      "srs": true
+    }
+  ]
+}

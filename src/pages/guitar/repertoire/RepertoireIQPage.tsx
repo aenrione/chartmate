@@ -1,17 +1,19 @@
-import {useState} from 'react';
-import {Link} from 'react-router-dom';
+import {useState, useEffect, useMemo} from 'react';
+import {Link, useSearchParams} from 'react-router-dom';
 import {Flame, BookOpen, CalendarCheck, ListMusic, PlusCircle, Clock} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import {formatInterval} from '@/lib/repertoire/sm2';
 import {useRepertoireStats} from './hooks/useRepertoireStats';
+import {seedTheorySRS} from '@/lib/local-db/theory-srs';
 import AddRepertoireItemDialog from './AddRepertoireItemDialog';
-import type {RepertoireItem, ItemType} from '@/lib/local-db/repertoire';
+import type {RepertoireItem, ItemType, RepertoireFilter} from '@/lib/local-db/repertoire';
 
 const ITEM_TYPE_LABELS: Record<ItemType, string> = {
   song: 'Song',
   song_section: 'Section',
   composition: 'Composition',
   exercise: 'Exercise',
+  theory: 'Theory',
 };
 
 const ITEM_TYPE_COLORS: Record<ItemType, string> = {
@@ -19,6 +21,7 @@ const ITEM_TYPE_COLORS: Record<ItemType, string> = {
   song_section: 'bg-purple-500/20 text-purple-400',
   composition: 'bg-emerald-500/20 text-emerald-400',
   exercise: 'bg-amber-500/20 text-amber-400',
+  theory: 'bg-violet-500/20 text-violet-400',
 };
 
 function ItemCard({item, today}: {item: RepertoireItem; today: string}) {
@@ -26,14 +29,17 @@ function ItemCard({item, today}: {item: RepertoireItem; today: string}) {
   const isDueToday = item.nextReviewDate === today;
 
   return (
-    <div className={cn(
-      'rounded-2xl border p-4 flex flex-col gap-2',
-      isOverdue
-        ? 'border-red-500/30 bg-red-500/5'
-        : isDueToday
-        ? 'border-primary/30 bg-primary/5'
-        : 'border-outline-variant/20 bg-surface-container',
-    )}>
+    <Link
+      to={`/guitar/repertoire/session?item=${item.id}`}
+      className={cn(
+        'rounded-2xl border p-4 flex flex-col gap-2 cursor-pointer transition-colors hover:bg-opacity-80 active:scale-[0.99]',
+        isOverdue
+          ? 'border-red-500/30 bg-red-500/5 hover:bg-red-500/10'
+          : isDueToday
+          ? 'border-primary/30 bg-primary/5 hover:bg-primary/10'
+          : 'border-outline-variant/20 bg-surface-container hover:bg-surface-container-high',
+      )}
+    >
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <p className="font-medium text-sm text-on-surface truncate">{item.title}</p>
@@ -62,27 +68,73 @@ function ItemCard({item, today}: {item: RepertoireItem; today: string}) {
           <span className="ml-auto">Rep {item.repetitions}</span>
         )}
       </div>
-    </div>
+    </Link>
   );
 }
 
+const FILTER_TABS: {label: string; value: RepertoireFilter}[] = [
+  {label: 'All', value: 'all'},
+  {label: 'Guitar', value: 'guitar'},
+  {label: 'Drums', value: 'drums'},
+  {label: 'Theory', value: 'theory'},
+];
+
 export default function RepertoireIQPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeFilter = (searchParams.get('filter') ?? 'all') as RepertoireFilter;
+
   const {stats, dueItems, loading, refresh} = useRepertoireStats();
   const [addOpen, setAddOpen] = useState(false);
   const today = new Date().toISOString().split('T')[0];
 
-  const dueCount = stats?.dueToday ?? 0;
-  const overdueCount = stats?.overdue ?? 0;
+  // Seed theory cards from completed lessons when user views the theory tab
+  useEffect(() => {
+    if (activeFilter === 'theory') {
+      seedTheorySRS().then(refresh).catch(() => {});
+    }
+  }, [activeFilter]);
+
+  const filteredItems = useMemo(() => {
+    if (activeFilter === 'guitar') return dueItems.filter(i => i.compositionId !== null);
+    if (activeFilter === 'drums') return dueItems.filter(i => i.savedChartMd5 !== null);
+    if (activeFilter === 'theory') return dueItems.filter(i => i.itemType === 'theory');
+    return dueItems;
+  }, [dueItems, activeFilter]);
+
+  const dueCount = filteredItems.length;
+  const overdueCount = filteredItems.filter(i => i.nextReviewDate < today).length;
+
+  const sessionHref = activeFilter === 'all'
+    ? '/guitar/repertoire/session'
+    : `/guitar/repertoire/session?filter=${activeFilter}`;
 
   return (
     <div className="flex h-full overflow-hidden">
       {/* Main content */}
       <div className="flex-1 overflow-y-auto p-6">
-        <div className="mb-6">
+        <div className="mb-5">
           <h1 className="text-2xl font-bold text-on-surface">RepertoireIQ</h1>
           <p className="text-sm text-on-surface-variant mt-1">
             Spaced repetition for your guitar repertoire. Never forget a song again.
           </p>
+        </div>
+
+        {/* Filter tabs */}
+        <div className="flex gap-1 p-1 rounded-xl bg-surface-container mb-5 w-fit">
+          {FILTER_TABS.map(({label, value}) => (
+            <button
+              key={value}
+              onClick={() => setSearchParams(value === 'all' ? {} : {filter: value})}
+              className={cn(
+                'px-4 py-1.5 rounded-lg text-sm font-medium transition-all',
+                activeFilter === value
+                  ? 'bg-surface text-on-surface shadow-sm'
+                  : 'text-on-surface-variant hover:text-on-surface',
+              )}
+            >
+              {label}
+            </button>
+          ))}
         </div>
 
         {/* Stats row */}
@@ -113,7 +165,7 @@ export default function RepertoireIQPage() {
         {/* Actions */}
         <div className="flex gap-3 mb-6">
           <Link
-            to="/guitar/repertoire/session"
+            to={sessionHref}
             className={cn(
               'flex-1 py-3 rounded-2xl font-semibold text-sm text-center transition-all',
               dueCount > 0
@@ -137,20 +189,22 @@ export default function RepertoireIQPage() {
         {/* Due items list */}
         {loading ? (
           <div className="text-sm text-on-surface-variant text-center py-12">Loading…</div>
-        ) : dueItems.length === 0 ? (
+        ) : filteredItems.length === 0 ? (
           <div className="text-center py-16">
             <CalendarCheck className="h-12 w-12 text-on-surface-variant/30 mx-auto mb-3" />
             <p className="text-on-surface font-medium">Nothing due today!</p>
             <p className="text-sm text-on-surface-variant mt-1">
               Come back tomorrow, or add more items to your repertoire.
             </p>
-            <button
-              onClick={() => setAddOpen(true)}
-              className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-on-primary text-sm font-semibold"
-            >
-              <PlusCircle className="h-4 w-4" />
-              Add Your First Item
-            </button>
+            {activeFilter === 'all' && (
+              <button
+                onClick={() => setAddOpen(true)}
+                className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-on-primary text-sm font-semibold"
+              >
+                <PlusCircle className="h-4 w-4" />
+                Add Your First Item
+              </button>
+            )}
           </div>
         ) : (
           <div>
@@ -158,7 +212,7 @@ export default function RepertoireIQPage() {
               Due for Review
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {dueItems.map(item => (
+              {filteredItems.map(item => (
                 <ItemCard key={item.id} item={item} today={today} />
               ))}
             </div>

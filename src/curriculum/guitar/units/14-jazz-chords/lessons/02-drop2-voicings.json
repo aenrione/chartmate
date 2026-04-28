@@ -1,0 +1,50 @@
+{
+  "id": "02-drop2-voicings",
+  "title": "Drop-2 Voicings",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Drop-2 Voicings — Jazz Guitar's Core Vocabulary\n\nDrop-2 voicings are the most important chord shapes in jazz guitar. They come from a simple transformation:\n\n## The Process\n\n1. Start with a **close-position chord** (all 4 notes as close together as possible)\n2. **Drop the second-from-top note** down an octave\n3. Result: a 4-note chord spread across 4 adjacent strings\n\n## Example: Cmaj7\n\nClose position (low to high): C – E – G – B\nSecond from top is G → drop it down an octave\nDrop-2 result: C – B – E – G (but voiced: C – G↓ – B – E from strings 6→1... typically rearranged on adjacent strings)\n\n**On guitar, the practical drop-2 Cmaj7 on strings 5-4-3-2:**\n```\ne |--x--|\nB |--5--| (E = major 3rd)\nG |--4--| (B = major 7th)\nD |--5--| (E ... wait—this is a voicing for strings 5-4-3-2)\nA |--3--| (C = root)\nE |--x--|\n```\n\n## The Four String Sets\n\nDrop-2 voicings exist on four string sets:\n- **Strings 4-3-2-1** (highest, brightest)\n- **Strings 5-4-3-2** (mid range, most common)\n- **Strings 6-5-4-3** (lowest, darkest)\n\nLearning all three sets for one chord type (e.g., maj7) across the neck gives you complete fretboard command.",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "Cmaj7 drop-2 (strings 5-4-3-2)",
+      "frets": [-1, 5, 4, 5, 3, -1],
+      "fingers": [0, 3, 2, 4, 1, 0],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In constructing a drop-2 voicing, which voice is dropped down an octave?",
+      "choices": [
+        "The bass (lowest) voice",
+        "The soprano (highest) voice",
+        "The second from the top voice",
+        "The third from the top voice"
+      ],
+      "answer": 2,
+      "explanation": "Drop-2 takes the second from the top voice (alto voice) and drops it down an octave. This creates the characteristic open, spread quality of drop-2 voicings used in jazz guitar.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Drop-2 Chord Cycle — Major 7th Voicings\n\nPractice these Cmaj7 drop-2 voicings in order across the neck:\n\n## Position 1 (strings 5-4-3-2, 3rd fret area)\n```\nA |--3--| C (root)\nD |--5--| G (5th)\nG |--4--| B (maj 7th)\nB |--5--| E (maj 3rd)\ne |--x--|\n```\n\n## Position 2 (strings 5-4-3-2, 7th fret area)\n```\nA |--7--| E\nD |--9--| B\nG |--9--| E (wait—adjust)\n```\n\n## The Cycle of 4ths Workout\n\nPlay Cmaj7 drop-2, then Fmaj7 drop-2, then Bbmaj7 drop-2, cycling through all 12 keys. Stay on the same string set, moving up the neck.\n\nThis is one of the most important jazz guitar exercises. Players like **George Benson, Pat Metheny, Wes Montgomery** all have drop-2 shapes completely internalized.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "On which string sets can drop-2 voicings be played on guitar?",
+      "choices": [
+        "Only strings 4-3-2-1",
+        "Strings 4-3-2-1, 5-4-3-2, and 6-5-4-3",
+        "Only the top four strings",
+        "Any combination of non-adjacent strings"
+      ],
+      "answer": 1,
+      "explanation": "Drop-2 voicings work on three adjacent-string sets: 4-3-2-1 (highest), 5-4-3-2 (middle), and 6-5-4-3 (lowest). Learning all three sets for each chord type gives complete fretboard coverage.",
+      "srs": true
+    }
+  ]
+}

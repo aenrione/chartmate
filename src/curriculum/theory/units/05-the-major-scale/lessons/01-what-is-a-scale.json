@@ -1,0 +1,64 @@
+{
+  "id": "01-what-is-a-scale",
+  "title": "What Is a Scale?",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## What Is a Scale?\n\n### The Ladder of Pitch\n\nThe word **scale** comes from the Latin *scala*, meaning ladder. A scale is an ordered series of pitches that ascends (or descends) step-by-step from a starting note — the **tonic** (or root) — to its octave. Each note in the scale is a rung on the ladder: a fixed step up in pitch.\n\nScales are not random collections of notes. They are carefully chosen sets of pitches that work together to define a specific sound world — the tonal vocabulary of a piece of music.\n\n### The Tonic: Home Base\n\nThe most important note in any scale is the **tonic** — scale degree 1. The tonic is the note of *rest and resolution*. When a melody moves away from the tonic and then returns to it, the listener feels arrival, completion, satisfaction. When a melody stops on any note *other than* the tonic, it feels unresolved — like a sentence without a period.\n\nThis pull toward the tonic is the defining feature of **tonality** — the harmonic system that has governed Western music for roughly 400 years.\n\n### Conjunct and Disjunct Motion\n\nMelodies move in two ways:\n\n- **Conjunct motion**: step-by-step, moving from one scale degree to the adjacent one (e.g., C to D, D to E). This is the most common melodic motion and sounds smooth and connected.\n- **Disjunct motion**: leaps — jumping over one or more scale degrees (e.g., C to E, D to G). Leaps add drama and expressiveness.\n\nMost melodies combine both. A melody that moves only by step feels predictable; a melody that leaps constantly feels jagged. The interplay of steps and leaps is one of the primary tools of melodic craft.\n\n### Scales vs. Keys\n\nA **scale** is the ordered sequence of notes. A **key** is the tonal context — the broader system that declares one note as the tonic and organizes harmony around it. They are related but not identical. You can play the C major scale, but \"being in the key of C\" means that C functions as the tonal center for an entire piece, governing both melody and harmony.\n\n### Why Scales Matter\n\nEvery chord, every melody, every harmonic progression is built from the notes of a scale. Scales are the atoms of tonal music: everything reduces to them. Knowing the major scale is the prerequisite for understanding chords, harmony, modes, and improvisation.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does the word 'scale' derive from, and what does it literally mean?",
+      "choices": [
+        "Greek 'skalos' meaning 'string'",
+        "Latin 'scala' meaning 'ladder'",
+        "Italian 'scalare' meaning 'to climb'",
+        "French 'escale' meaning 'step'"
+      ],
+      "answer": 1,
+      "explanation": "The word 'scale' comes from the Latin 'scala,' meaning 'ladder.' This is apt — a scale ascends step by step like the rungs of a ladder, moving from the tonic to its octave. The image of a ladder is a helpful mental model: each rung is a scale degree, and the rungs are spaced by specific intervals.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the tonic in a scale?",
+      "choices": [
+        "The highest note in the scale",
+        "The note with the most sharps",
+        "Scale degree 1 — the note of rest and resolution that functions as home base",
+        "The note exactly halfway through the scale"
+      ],
+      "answer": 2,
+      "explanation": "The tonic is scale degree 1 — the starting and ending note of the scale. It is the note of rest and resolution: all other scale degrees have varying degrees of tension that pull toward it. When a melody or harmony lands on the tonic, it feels resolved. This is the foundation of tonality.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "A melody moves from C to D to E to F. This is an example of what type of melodic motion?",
+      "choices": [
+        "Disjunct motion — because the notes are moving upward",
+        "Conjunct motion — step-by-step movement through adjacent scale degrees",
+        "Chromatic motion — because accidentals are used",
+        "Retrograde motion — because the melody is ascending"
+      ],
+      "answer": 1,
+      "explanation": "Conjunct motion is step-by-step movement from one scale degree to the immediately adjacent one. C→D→E→F moves through consecutive scale degrees with no leaps. Disjunct motion would involve a skip or leap — jumping over one or more notes (e.g., C to E, skipping D). The distinction between these two types of motion is fundamental to melodic analysis.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the difference between a 'scale' and a 'key'?",
+      "choices": [
+        "They are identical — the terms are interchangeable",
+        "A scale is the ordered sequence of notes; a key is the tonal context that declares one note as tonic for an entire piece",
+        "A key is only for piano; a scale applies to all instruments",
+        "A scale has 8 notes; a key has 7"
+      ],
+      "answer": 1,
+      "explanation": "A scale is the specific ordered set of pitches and their intervallic pattern. A key is a broader tonal context — it declares a tonic, governs the harmony, and organizes an entire piece around one center. You can play a C major scale as a drill, but a piece 'in the key of C major' uses C as the governing center of its entire harmonic language. The scale is the raw material; the key is the tonal system built from it.",
+      "srs": true
+    }
+  ]
+}

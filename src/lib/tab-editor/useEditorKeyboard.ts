@@ -1,7 +1,7 @@
 import {useEffect, useRef, useCallback} from 'react';
 import {model} from '@coderline/alphatab';
 import type {EditorCursor} from './useEditorCursor';
-import {DRUM_SHORTCUTS} from './drumMap';
+import {DRUM_SHORTCUTS, getDrumLane} from './drumMap';
 import {
   setNoteAndAdvance,
   removeNote,
@@ -54,6 +54,10 @@ interface UseEditorKeyboardOptions {
   onRedo?: () => void;
   onScrollUp?: () => void;
   onScrollDown?: () => void;
+  selectedBarRange?: {start: number; end: number} | null;
+  onSelectAllBars?: () => void;
+  onClearSelectedBars?: () => void;
+  onClearBarSelection?: () => void;
 }
 
 const FRET_TIMEOUT = 500; // ms to wait for second digit
@@ -102,15 +106,14 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't capture if user is typing in an input, except Space in number inputs
-      // (space is never valid in a number field, so let it through as play/pause)
+      // Don't capture if user is typing in an input, except Space (play/pause from any input).
       if (
         e.target instanceof HTMLInputElement ||
         e.target instanceof HTMLTextAreaElement ||
         e.target instanceof HTMLSelectElement
       ) {
-        const isNumberInput = e.target instanceof HTMLInputElement && e.target.type === 'number';
-        if (!(isNumberInput && e.key === ' ')) return;
+        if (e.key !== ' ') return;
+        // Space falls through to play/pause — preventDefault stops it typing a space.
       }
 
       const s = optionsRef.current.score;
@@ -127,6 +130,13 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
         return;
       }
 
+      // Select all bars
+      if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
+        e.preventDefault();
+        optionsRef.current.onSelectAllBars?.();
+        return;
+      }
+
       // Helper: snapshot then re-render
       const mutate = () => {
         optionsRef.current.onBeforeMutation?.();
@@ -136,6 +146,7 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
       // Digit keys — fret number entry
       if (/^[0-9]$/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
+        optionsRef.current.onClearBarSelection?.();
         if (fretTimerRef.current) {
           clearTimeout(fretTimerRef.current);
           fretTimerRef.current = null;
@@ -168,15 +179,27 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
         fretBufferRef.current = '';
       }
 
-      // Navigation
+      // Escape — clear bar selection
+      if (e.key === 'Escape') {
+        const barRange = optionsRef.current.selectedBarRange;
+        if (barRange) {
+          e.preventDefault();
+          optionsRef.current.onClearBarSelection?.();
+          return;
+        }
+      }
+
+      // Navigation — clear bar selection on any movement key
       switch (e.key) {
         case 'ArrowLeft':
           e.preventDefault();
+          optionsRef.current.onClearBarSelection?.();
           if (e.ctrlKey || e.metaKey) moveToPrevMeasure();
           else moveLeft();
           return;
         case 'ArrowRight':
           e.preventDefault();
+          optionsRef.current.onClearBarSelection?.();
           if (e.ctrlKey || e.metaKey) {
             moveToNextMeasure();
           } else if (s) {
@@ -231,9 +254,14 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
           return;
       }
 
-      // Delete/Backspace — remove note, or remove empty beat from bar
+      // Delete/Backspace — clear selected bars, or remove note/empty beat
       if (e.key === 'Delete' || e.key === 'Backspace') {
         e.preventDefault();
+        const barRange = optionsRef.current.selectedBarRange;
+        if (barRange) {
+          optionsRef.current.onClearSelectedBars?.();
+          return;
+        }
         if (s) {
           const track = s.tracks[c.trackIndex];
           const staff = track?.staves[0];
@@ -369,6 +397,15 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
 
       // Drum shortcuts — when on a drum track, single keys trigger drum hits
       if (optionsRef.current.isDrumTrack && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        // Enter places/toggles the drum on the current cursor lane (no auto-advance)
+        if (e.key === 'Enter') {
+          const lane = getDrumLane(c.stringNumber);
+          if (lane) {
+            e.preventDefault();
+            optionsRef.current.onDrumHit?.(lane.midiNote);
+            return;
+          }
+        }
         const drumMidi = DRUM_SHORTCUTS[e.key.toLowerCase()];
         if (drumMidi !== undefined) {
           e.preventDefault();

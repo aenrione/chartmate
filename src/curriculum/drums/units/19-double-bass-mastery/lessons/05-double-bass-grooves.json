@@ -1,0 +1,34 @@
+{
+  "id": "05-double-bass-grooves",
+  "title": "Double Bass Grooves",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Making Double Bass Groovy\n\nThe ultimate challenge in double bass drumming: using two feet as melodic, musical instruments rather than a speed demonstration. The world's best double bass players — Vinnie Colaiuta, Dave Weckl, Gavin Harrison — use double bass to create grooves with rhythmic interest, not just speed.\n\n**The groove principle applied to double bass:**\n1. **Syncopation**: Don't just run straight 16ths. Use double bass to land on the 'e' and 'ah' positions in unexpected ways\n2. **Mixed density**: Alternate between single and double bass 16th passages within a groove\n3. **Kick-bass relationship**: Think of the kick as a second bass instrument — let it create call-and-response with the bass guitar\n4. **Silence**: The most powerful double bass moment is often the silence after a run\n\n**Moving away from constant 16ths:**\nConstant double bass 16th notes, while technically impressive, is musically monotonous. The most effective double bass grooves mix: single kicks, double kicks (pairs), and short 4-6 note runs, arranged rhythmically rather than as a constant stream.\n\n**Study:** Vinnie Colaiuta's work with Sting ('The Soul Cages'), Gavin Harrison with Porcupine Tree, Thomas Lang's instructional videos.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Syncopated Double Bass Groove",
+      "description": "Double bass used melodically: alternating single and double kick hits in syncopated positions. This feels like a groove, not a speed exercise. The 'pairs' of kick notes are the double bass; single notes are standard foot technique.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 130,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x-x-x-x-x-x-x-x-"},
+        {"name": "Snare",  "pattern": "----X-------X---"},
+        {"name": "Kick",   "pattern": "x-xx--x-x-xx--x-"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What distinguishes a musical double bass groove from a technical speed demonstration?",
+      "choices": ["Playing faster and louder at all times", "Using syncopation, varied density, and strategic placement of runs rather than constant 16th note streams", "Using only one foot for the main groove", "Avoiding any rests in the kick pattern"],
+      "answer": 1,
+      "explanation": "Musical double bass grooves use syncopation, mixed density (alternating single kicks, double pairs, and short runs), and strategic silence to create rhythmic interest. Constant 16th note streams, while impressive, become monotonous without contrast and variation.",
+      "srs": true
+    }
+  ]
+}

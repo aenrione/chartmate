@@ -1,0 +1,34 @@
+{
+  "id": "04-blast-variations",
+  "title": "Blast Beat Variations",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Advanced Blast Beat Vocabulary\n\nBeyond the traditional blast beat, advanced metal drummers have developed a vocabulary of blast variations that add nuance and controlled power to extreme music.\n\n**The gravity blast:** The snare stick is thrown at the head and the rebound is controlled, rather than actively striking. At high speeds, gravity blasts produce a very even, consistent sound with less arm fatigue. Dave Lombardo uses this technique.\n\n**The machine gun blast:** Groups of 3 notes (right-right-left or left-left-right) on snare against alternating double bass — creates a 3-against-2 feel within the blast context.\n\n**The half-speed blast:** The standard blast beat played with everything halved — snare plays 8th notes instead of 16ths, kick fills in the 16th positions between snare hits. This creates a heavier, more powerful feel at the same BPM.\n\n**Blast transitions:** Moving into and out of blast beats seamlessly within a song requires specific techniques:\n- **Into blast**: The bar before the blast, the kick anticipates by starting the double bass, then snare joins on beat 1\n- **Out of blast**: On the last bar of the blast, the snare drops to the backbeat while the double bass continues for one bar, then both simplify\n\n**Context and taste:** Blast beats are a tool, not a constant state. The most effective metal drummers use blasts strategically — as an intensification device at climactic moments, not as the default setting.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Half-Speed Blast Beat",
+      "description": "Snare plays 8th notes (half the rate of traditional blast), kick fills with 16th notes between snare hits. This creates a heavier, more powerful texture than the traditional blast while requiring less speed. Often more musical than full-rate blasting.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 160,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-x-x-x-x-x-x-x-"},
+        {"name": "Snare",  "pattern": "x---x---x---x---"},
+        {"name": "Kick",   "pattern": "-xxx-xxx-xxx-xxx"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes a half-speed blast beat different from a traditional blast beat?",
+      "choices": ["The tempo is cut in half", "The snare plays 8th notes instead of 16ths, while the kick fills in 16th note positions", "Both snare and kick play slower", "Only the kick plays at reduced speed"],
+      "answer": 1,
+      "explanation": "In a half-speed blast beat, the snare plays 8th notes (half the rate of a standard blast's 16th notes) while the kick fills in the 16th note positions between snare hits. The overall density is similar but the feel is heavier and more powerful.",
+      "srs": true
+    }
+  ]
+}

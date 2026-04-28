@@ -1,0 +1,38 @@
+{
+  "id": "05-modern-harmony",
+  "title": "Modern Harmony: R&B, Hip-Hop, and Beyond",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Modern Harmony in R&B and Hip-Hop\n\nContemporary R&B, neo-soul, and hip-hop production have developed a distinct harmonic language that draws from jazz, gospel, blues, and modal music while creating something genuinely new.\n\n### The Sample-Based Harmony Revolution\n\nHip-hop producers who sampled jazz records in the early 90s inadvertently imported jazz harmonic language into popular music:\n\n- **J Dilla** (Donuts, 2006): Sampled rare soul and jazz records; jazz chord progressions embedded in hip-hop beats\n- **Pete Rock**: Heavy jazz sample use; dominant sevenths, minor 11ths\n- **Madlib**: Extensive use of modal jazz sources\n\nThis created a generation of artists who grew up hearing jazz harmonics in hip-hop context — leading to producers and musicians like Flying Lotus, Thundercat, Kendrick Lamar who synthesize all traditions.\n\n### Kendrick Lamar's Harmonic Approach (*To Pimp a Butterfly*, 2015)\n\nProduced with Flying Lotus, Robert Glasper, and Thundercat:\n- **Jazz-funk fusion harmonic language**: i9sus4, bVI–bVII–i progressions\n- **Modal vamps**: Extended sections over one chord or scale\n- **Bass-led harmony**: Thundercat's complex bass lines define the harmony rather than chords\n- **Free jazz influence**: Dissonant, atonal sections contrasting with rich tonal passages\n\n### The 'Lo-fi' Harmonic Aesthetic\n\nLo-fi hip-hop (2015–present) has a characteristic harmonic palette:\n- **Major 7ths everywhere**: CMaj7, Fmaj7, Amaj7 — gentle, warm, non-aggressive\n- **Slow harmonic rhythm**: Chords change once every 2–4 bars\n- **Minor 6ths and minor 11ths**: Dm6, Am11 — melancholy but not sad\n- **No strong V→I**: Harmonic motion is circular, not directional — matching the 'chilling' aesthetic\n\n### Robert Glasper: Classical Training Meets Modern Production\n\nRobert Glasper's *Black Radio* (2012) is a landmark that directly merges jazz piano vocabulary with hip-hop production:\n- **Quartal voicings** over hip-hop drums\n- **Jazz standards reharmonized** with neo-soul production\n- **Vocal improvisation** over jazz changes\n- **Synthesizes**: Classical piano, jazz harmony, hip-hop groove, R&B melody\n\n### The Future of Harmony\n\nTrends in contemporary harmony:\n1. **Microtonality**: Notes between the piano keys (Arabic maqam, Turkish makam, pitch bend in production)\n2. **Spectral harmony**: Building chords from the overtone series rather than equal temperament\n3. **Algorithmic harmony**: AI and machine learning generating harmonic progressions",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How did hip-hop sampling of jazz records contribute to contemporary harmonic sophistication?",
+      "choices": [
+        "Sampling made jazz chords available to musicians who couldn't read music, but didn't change harmonic thinking",
+        "Sampling embedded jazz harmonic language (dominant sevenths, minor 11ths, modal vamps) into hip-hop production, creating a generation that grew up hearing jazz harmonics in pop context",
+        "Hip-hop sampling only used jazz melodies, not harmony",
+        "Sampling prevented musicians from learning harmony because they could just sample existing chords"
+      ],
+      "answer": 1,
+      "explanation": "When producers like J Dilla, Pete Rock, and Madlib sampled jazz records, they brought jazz harmonic language — dominant sevenths, chord extensions, minor 11ths, modal sections — into hip-hop. Listeners and subsequent musicians grew up with this enriched palette as their baseline. Artists like Thundercat, Flying Lotus, and Kendrick Lamar synthesize jazz harmony with modern production precisely because their formative musical diet included jazz-sampled hip-hop.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a characteristic harmonic feature of 'lo-fi hip-hop' and why does it suit the genre's aesthetic?",
+      "choices": [
+        "Strong V→I cadences and clear key modulations — creates a classical, resolved feeling",
+        "Major 7th and minor 6th chords with slow harmonic rhythm and circular (non-directional) progressions — creates a warm, non-aggressive, contemplative mood",
+        "Heavy use of diminished seventh chords for tension",
+        "Atonal harmony with no discernible key center"
+      ],
+      "answer": 1,
+      "explanation": "Lo-fi hip-hop uses gentle major 7ths, minor 6ths, and minor 11ths with slow harmonic rhythm and circular progressions that avoid strong V→I pulls. This creates a warm, contemplative, non-confrontational sound matching the 'studying/chilling' aesthetic. The absence of harmonic tension (no strong dominants pulling to resolution) makes the music feel safe, ambient, and soothing — ideal background music.",
+      "srs": true
+    }
+  ]
+}

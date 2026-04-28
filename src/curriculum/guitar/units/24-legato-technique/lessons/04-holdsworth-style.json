@@ -1,0 +1,43 @@
+{
+  "id": "04-holdsworth-style",
+  "title": "Holdsworth-Style Legato",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Allan Holdsworth — The Impossible Standard\n\n**Allan Holdsworth** (1946–2017) created the most distinctive and technically demanding legato style in guitar history. His playing was so fluid and harmonically advanced that he was cited by Eddie Van Halen as his favorite guitarist, and by Guthrie Govan as the player who made him question the limits of the instrument.\n\n## What Made Holdsworth Unique\n\n1. **Immense hand stretch**: Holdsworth's left hand could span unusual intervals legato\n2. **No pentatonic thinking**: He thought in chord-scales, not pentatonic patterns\n3. **Consistent tone**: Every note at the same volume — no weak fingers\n4. **Jazz harmony**: His improvisation was harmonically sophisticated (superimposition, outside playing)\n5. **No cowboy licks**: He had zero blues clichés — completely original vocabulary\n\n## The Holdsworth Scale Approach\n\nHoldsworth didn't think in scales — he thought in **chords**. His solos outline chord voicings through his lines:\n\nOver Cmaj7: instead of C major scale, he might use notes from Fmaj7#11 (Lydian) or superimpose Am6 arpeggios.\n\n## Signature Legato Technique\n\nHoldsworth's signature: **large-interval legato leaps** using a mix of hammer-ons and slides:\n\n```\ne |--12-h15-h17-s19--|\n   (hammer a minor 3rd, hammer a M2nd, slide up M2nd)\n```\n\nThe combination of hammer and slide creates seamless interval jumps impossible with alternate picking alone.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What was the central difference between Holdsworth's harmonic approach and most other rock guitarists?",
+      "choices": [
+        "He used only minor keys",
+        "He thought in chord-scale superimposition rather than pentatonic patterns, creating jazz-influenced harmonic complexity",
+        "He played only blues",
+        "He only used chromatic scales"
+      ],
+      "answer": 1,
+      "explanation": "While most rock guitarists use pentatonic scales as their primary vocabulary, Holdsworth thought harmonically — outlining chord voicings through his legato lines, superimposing different chord-scales over the underlying harmony. This jazz-influenced approach gave his solos extraordinary harmonic richness.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Holdsworth 4-Note Group Exercise\n\nHoldsworth built his technique with 4-note groups — four notes per legato burst from one pick attack:\n\n## Exercise: 4-Note Legato Groups, C Lydian Mode\n\nC Lydian: C D E F# G A B\n\nPractice 4-note groups starting on each scale degree:\n```\nGroup 1: C-D-E-F# (pick C, hammer D, E, F#)\nGroup 2: D-E-F#-G (pick D, hammer E, F#, G)\nGroup 3: E-F#-G-A (pick E, hammer F#, G, A)\n...continue through all 7 scale degrees\n```\n\nThese span across two strings (3NPS: first 3 notes on one string, 4th on next).\n\n## The Practice Schedule\n\n1. Learn one 4-note group perfectly (5 minutes)\n2. Learn all 7 groups of one scale (30 minutes)\n3. Cycle through groups sequentially (sequences)\n4. Improvise using only 4-note groups (creative application)\n\n## Tone Ideal\n\nRecord yourself playing Holdsworth-style groups. The goal: listener cannot tell which note was picked and which was hammered. All notes equal. This takes months to achieve.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the test for whether your legato technique has achieved a professional level?",
+      "choices": [
+        "Playing at 300 BPM",
+        "A listener cannot tell which notes were picked and which were hammered — all notes sound equal in volume and tone",
+        "Playing all 12 keys in sequence",
+        "Covering the full range of the guitar in one run"
+      ],
+      "answer": 1,
+      "explanation": "Professional legato means the pick attacks are invisible — a listener hears only smooth, connected notes of equal volume. When picked and unpicked notes sound different, the technique is still developing. This equality requires matching hammer and pull-off strength to the initial pick attack.",
+      "srs": true
+    }
+  ]
+}

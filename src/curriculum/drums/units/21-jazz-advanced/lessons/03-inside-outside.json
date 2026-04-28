@@ -1,0 +1,20 @@
+{
+  "id": "03-inside-outside",
+  "title": "Playing Inside & Outside",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Inside and Outside Playing\n\nIn jazz improvisation, 'inside' playing refers to staying within the harmonic and rhythmic structure of the piece. 'Outside' playing means briefly departing from that structure — playing notes or rhythms that don't belong to the current chord or meter — before resolving back 'inside.'\n\n**Why go outside:**\nThe tension created by 'wrong' notes or 'wrong' rhythms against the established framework creates dramatic interest. The resolution back inside is satisfying precisely because of the tension that preceded it.\n\n**The drummer's version of inside/outside:**\nFor a drummer, playing outside doesn't mean wrong notes (there are no wrong notes in drumming per se). It means:\n- Displacing the time feel (making beat 1 feel like beat 2 or beat 3)\n- Playing in a different meter from the rest of the band temporarily\n- Dropping out of swing feel into straight feel against a swinging band\n- Accenting off-beats so strongly that the listener momentarily reorients the downbeat\n\n**Tony Williams's approach:** Williams with Miles Davis's Second Great Quintet frequently displaced the time feel dramatically — the listener would momentarily feel 'lost' before Williams returned to the established pulse. This created incredible tension and release.\n\n**The resolution imperative:** Outside playing only works if you return inside. Staying outside indefinitely isn't 'outside' anymore — it's just a new 'inside.' The art is in controlling the departure and return.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the essential element that makes 'outside' playing effective in jazz?",
+      "choices": ["Staying outside as long as possible to demonstrate freedom", "Returning inside ('resolving') after the outside departure, creating tension and release", "Playing louder when going outside", "Using only silence as the outside technique"],
+      "answer": 1,
+      "explanation": "Outside playing derives its power from the contrast with inside playing — and from the resolution back inside. Without a clear departure and a clear return, there is no tension and release. Staying outside indefinitely simply establishes a new 'inside' and loses the dramatic effect.",
+      "srs": true
+    }
+  ]
+}

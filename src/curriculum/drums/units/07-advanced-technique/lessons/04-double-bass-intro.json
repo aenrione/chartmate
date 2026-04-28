@@ -1,0 +1,20 @@
+{
+  "id": "04-double-bass-intro",
+  "title": "Double Bass Introduction",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Double Bass Drumming\n\nDouble bass uses either two bass drums or a double pedal on one bass drum.\n\n**Technique options:**\n- **Heel-up:** foot raised, full leg power — good for power\n- **Heel-down:** heel stays on footboard — good for control at medium tempos\n- **Slide technique:** heel slides forward to engage the second beater\n\n**Common pattern:**\n```\nKick: R L R L R L R L  (alternating feet, 16th notes)\n```\n\nStart at 70 BPM with 8th notes. Speed comes from consistency, not force.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does a double bass pedal allow you to do?",
+      "choices": ["Play two snare drums simultaneously", "Use both feet to play rapid kick drum patterns on one bass drum", "Control hi-hat and bass drum with the same foot", "Play faster hi-hat patterns"],
+      "answer": 1,
+      "explanation": "A double bass pedal attaches two beaters to one bass drum, allowing both feet to play the kick drum and enabling fast, alternating bass drum patterns without needing a second drum.",
+      "srs": true
+    }
+  ]
+}

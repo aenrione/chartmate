@@ -1,0 +1,27 @@
+{
+  "id": "03-e-shape-minor",
+  "title": "E-Shape Minor Barre",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# E-Shape Minor Barre\n\nSame barre concept as major, but use the Em shape behind your index finger:\n\n**Fm (E-minor shape at fret 1):**\n- Index: barre fret 1\n- Ring: string 5, fret 3\n- Pinky: string 4, fret 3\n- (middle finger lifts off — one fewer finger than the major shape)\n\n**Move up 5 frets = Bm** — one of the most common barre chords in pop songs.",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "Bm",
+      "frets": [2, 3, 4, 4, 2, 2],
+      "fingers": [1, 2, 4, 3, 1, 1],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "To go from E-shape major to E-shape minor at the same fret, what do you remove?",
+      "choices": ["The ring finger", "The pinky", "The middle finger", "The index barre"],
+      "answer": 2,
+      "explanation": "The E major shape has middle finger on string 3. Remove it and you have E minor. Apply that to a barre chord: same idea.",
+      "srs": true
+    }
+  ]
+}

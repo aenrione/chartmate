@@ -1,0 +1,20 @@
+{
+  "id": "01-practice-routine",
+  "title": "Building a Practice Routine",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The 15-Minute Daily Practice\n\nConsistency beats duration. 15 minutes every day outperforms 2 hours once a week.\n\n**Balanced routine structure:**\n| Time | Focus |\n|------|-------|\n| 3 min | Warm-up (scales, chromatic exercises) |\n| 5 min | Technique (current challenge: barre, bends, etc.) |\n| 4 min | Songs / repertoire |\n| 3 min | Free play / jamming |\n\nAlways end with something that feels **good** — free play keeps you motivated.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is 15 minutes daily better than 2 hours once a week?",
+      "choices": ["It takes less total time", "Motor skills and muscle memory build through frequent repetition, not just volume", "Guitars need to rest between sessions", "It's easier on the fingers"],
+      "answer": 1,
+      "explanation": "Motor skill development (including muscle memory) requires frequent activation. Distributed practice over many days builds neural pathways far more effectively than massed practice in one session.",
+      "srs": true
+    }
+  ]
+}

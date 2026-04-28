@@ -1,0 +1,20 @@
+{
+  "id": "02-six-eight",
+  "title": "6/8 & 12/8",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# 6/8 Time\n\n6/8 has 6 eighth notes per measure, grouped as 2 groups of 3:\n\nCount: **1 2 3 | 4 5 6** (feel it as 2 'big' beats)\n\n```\nHH: x-x-x-x-x-x-  (6 8th notes)\nSn: ------x------   (beat 4)\nKD: x------------   (beat 1)\n```\n\n**6/8 vs 3/4:** Same notes, different feel. 3/4 = three equal beats; 6/8 = two beats each divided into 3.\n\n**12/8** = slow blues feel: 4 big beats, each divided into 3. Think 'slow shuffle'.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In 6/8 time, how are the 6 eighth notes typically grouped?",
+      "choices": ["6 equal beats", "3 groups of 2", "2 groups of 3", "1 group of 6"],
+      "answer": 2,
+      "explanation": "6/8 is felt as 2 big beats, each containing 3 eighth notes (1-2-3 | 4-5-6). This creates a compound duple feel — different from 3/4 which feels like three equal beats.",
+      "srs": true
+    }
+  ]
+}

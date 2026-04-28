@@ -1,0 +1,64 @@
+{
+  "id": "01-what-is-secondary-dominant",
+  "title": "What Is a Secondary Dominant?",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Secondary Dominants: Expanding Harmonic Color\n\nWithin diatonic harmony, the only dominant chord (V) targets the tonic (I). But every chord in a key can temporarily act as a tonic — and the chord that most strongly points to any chord is the dominant seventh chord built a perfect fifth above it.\n\nA **secondary dominant** is a dominant seventh chord that is **not in the key** but resolves to a diatonic chord that acts as a temporary tonic.\n\n### The Core Concept\n\nIn C major, G7 is the diatonic V7. It contains a tritone between B and F, which resolves to C and E when the chord lands on I.\n\nNow suppose we want to approach the ii chord (Dm) with extra strength. What chord is the dominant of D minor? **A7** (A–C#–E–G). A7 is not in C major (it contains C#), but it resolves powerfully to Dm.\n\nA7, used this way, is called **V7/ii** — spoken as 'five-seven of two.'\n\n### The Formula\n\nTo find the secondary dominant of any diatonic chord:\n1. Take the chord you want to approach (the 'target')\n2. Find the note a perfect fifth above the root of that chord\n3. Build a dominant seventh chord (major triad + minor seventh) on that note\n4. That chord is the secondary dominant\n\n**Example**: V7/IV in C major\n- Target: F major (IV)\n- Perfect fifth above F: C\n- Dominant seventh on C: C7 (C–E–G–Bb)\n- C7 → F is V7/IV\n\nNotice: C7 contains Bb, which is not in C major. This chromatic note gives secondary dominants their distinctive color.\n\n### Why They Work\n\nDominant seventh chords are powerful because of the tritone between their third and seventh. The tritone in C7 is between E and Bb. E resolves up to F; Bb resolves down to A — perfectly targeting the F major chord.\n\nThis resolution mechanism is identical to V7→I, just temporarily aimed at a different 'home.'\n\n### The Chromatic Addition\n\nAlmost every secondary dominant adds one chromatic note to the diatonic key. This chromatic inflection gives the harmony color and forward momentum. The secondary dominant 'borrows' for a moment the chromatic resources of a related key before returning to the home key.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a secondary dominant chord?",
+      "choices": [
+        "Any dominant chord that appears in the second half of a song",
+        "A dominant seventh chord built to resolve to a diatonic chord other than I",
+        "The dominant chord of the relative minor",
+        "A chord borrowed from the parallel minor key"
+      ],
+      "answer": 1,
+      "explanation": "A secondary dominant is a dominant seventh chord built to target (resolve to) a diatonic chord other than tonic. For example, in C major, A7 is not diatonic but resolves to Dm (ii), making it the V7/ii (secondary dominant of ii).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "To find V7/V in C major, which steps are correct?",
+      "choices": [
+        "Build a dominant seventh chord a fifth above C (the tonic)",
+        "Build a dominant seventh chord a fifth above G (the dominant), giving D7",
+        "Use the subdominant (F) and add a seventh",
+        "Borrow the V chord from the parallel minor"
+      ],
+      "answer": 1,
+      "explanation": "V7/V means 'the dominant seventh of the dominant.' In C major, the dominant is G. A fifth above G is D. Build a dominant seventh on D: D7 (D–F#–A–C). D7 resolves to G, making it V7/V. The F# in D7 is the chromatic note that points toward G.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What note does C7 (C–E–G–Bb) add that is not in C major, and to which chord does it resolve?",
+      "choices": [
+        "Adds F#; resolves to G major",
+        "Adds Bb; resolves to F major (IV)",
+        "Adds Ab; resolves to Db major",
+        "Adds Eb; resolves to Ab major"
+      ],
+      "answer": 1,
+      "explanation": "C major has no Bb. C7 adds Bb, creating the tritone between E and Bb. This tritone resolves: E up to F and Bb down to A — landing on F major (IV). So C7 is V7/IV in C major. The Bb gives the chord its distinct 'dominant pull' toward F.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why do secondary dominants have a strong pull toward their target chord?",
+      "choices": [
+        "Because they share more common tones with the target",
+        "Because they contain a tritone whose two notes resolve by half step into the target chord",
+        "Because they are always louder than diatonic chords",
+        "Because they are borrowed from the relative major"
+      ],
+      "answer": 1,
+      "explanation": "Every dominant seventh chord contains a tritone (augmented fourth/diminished fifth) between its third and seventh. This tritone resolves inward: the third rises by half step and the seventh falls by half step, landing on the root and third of the target chord. This is the same mechanism as V7→I, applied to any target.",
+      "srs": true
+    }
+  ]
+}

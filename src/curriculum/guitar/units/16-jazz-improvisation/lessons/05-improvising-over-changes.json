@@ -1,0 +1,43 @@
+{
+  "id": "05-improvising-over-changes",
+  "title": "Improvising Over Changes",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Putting It All Together: Playing the Changes\n\n\"Playing the changes\" means your improvised melody clearly outlines each chord as it passes. The listener should be able to hear the harmony in your solo, even without a rhythm section.\n\n## The Three-Level Approach\n\n### Level 1: Chord Tones Only\nFor each chord, play only its chord tones (root, 3rd, 5th, 7th). Dry but accurate.\n\n### Level 2: Bebop Scales\nExpand to the full 8-note bebop scale for each chord. Smoother lines, more movement.\n\n### Level 3: Full Vocabulary\nCombine chord tones, bebop scales, approach notes, chromatic encirclement, and motivic development.\n\n## The \"Bar by Bar\" Practice Method\n\n1. Take any standard (e.g., \"Autumn Leaves\")\n2. **Bar 1**: improvise ONLY over the chord in bar 1, loop it\n3. When comfortable, add **bar 2**\n4. Practice bars 1–2 until seamless, then add bar 3\n5. Continue until the full head\n\nThis is how Charlie Parker and Joe Pass described learning new tunes.\n\n## Rhythm and Feel\n\nEven correct notes sound wrong with poor rhythm. In jazz, notes are valued less than:\n1. **Swing feel** (triplet subdivision)\n2. **Phrase placement** (when you play, not just what you play)\n3. **Emotional content** (does it swing, cry, shout?)\n\nJazz legend Cannonball Adderley: \"Jazz is a feeling.\"",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does it mean to 'play the changes' in jazz improvisation?",
+      "choices": [
+        "Playing very fast scale runs",
+        "Making your improvised melody clearly outline each chord as it changes",
+        "Changing keys mid-solo",
+        "Playing only chord tones throughout the entire song"
+      ],
+      "answer": 1,
+      "explanation": "Playing the changes means your improvised lines clearly reflect the chord progression — a listener should hear the harmony in your solo. This requires knowing chord tones, targeting them on strong beats, and using approach notes to navigate between chords.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Scale-Per-Chord Map for Common Jazz Progressions\n\nFor each chord type, here's the appropriate scale/mode to use:\n\n| Chord Type | Scale | Example |\n|-----------|-------|----------|\n| Cmaj7 | C Ionian (major) or C Lydian (b5/#4) | C D E F# G A B |\n| Dm7 | D Dorian | D E F G A B C |\n| G7 | G Mixolydian or G Altered | G A B C D E F |\n| G7alt | G Altered (melodic minor b7) | G Ab Bb B Db Eb F |\n| Am7b5 | A Locrian or A Locrian #2 | A Bb C D Eb F G |\n| Adim7 | A whole-tone diminished | symmetric scale |\n\n## The Altered Scale\n\nOver any dominant 7th chord, the **altered scale** (7th mode of melodic minor) is the most colorful choice. It contains:\n- b9, #9, #11 (b5), b13 (#5)\n\nAll four tensions of the altered chord in one scale. Trane and Bird used this constantly.\n\n## Practice Assignment\n\nLearn \"Autumn Leaves\" (covered in Unit 17) and practice improvising over it:\n1. Chord tones only\n2. Add approach notes to chord tones\n3. Full bebop lines\n4. Record and compare the three levels",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which scale is most commonly used over a dominant 7th chord with all four possible alterations (b9, #9, b5, b13)?",
+      "choices": [
+        "Mixolydian mode",
+        "Dorian mode",
+        "The Altered scale (7th mode of melodic minor)",
+        "The whole-tone scale"
+      ],
+      "answer": 2,
+      "explanation": "The Altered scale (also called the Super-Locrian, the 7th mode of melodic minor) contains all four altered tensions: b9, #9, #11(b5), and b13(#5). It's the 'maximum tension' scale for dominant chords and creates strong resolution to the tonic.",
+      "srs": true
+    }
+  ]
+}

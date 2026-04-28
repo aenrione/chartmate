@@ -1,0 +1,54 @@
+{
+  "id": "01-what-are-modes",
+  "title": "What Are Modes?",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## What Are Modes?\n\nModes are one of the most misunderstood concepts in music theory — and one of the most useful. Once you truly understand them, you gain access to seven distinct musical colors from a single set of notes.\n\n### The Core Concept\n\nA **mode** is a scale derived from a parent major scale by starting on a different degree. The notes remain the same; the **tonal center** changes. That shift of center creates a completely different intervallic pattern from the new starting point — a new scale with its own unique sound.\n\n**Example:** The C major scale uses the notes C D E F G A B. If you play those same notes but treat **D** as your tonal center (starting and ending on D), you get **D Dorian**. Same notes, different center, entirely different sound.\n\n### The Seven Modes\n\nThere is one mode for each degree of the major scale:\n\n| Mode | Degree | Built on (C major) | Tonal center |\n|------|--------|--------------------|--------------|\n| **Ionian** | 1st | C | C |\n| **Dorian** | 2nd | D | D |\n| **Phrygian** | 3rd | E | E |\n| **Lydian** | 4th | F | F |\n| **Mixolydian** | 5th | G | G |\n| **Aeolian** | 6th | A | A |\n| **Locrian** | 7th | B | B |\n\nAll seven modes use the notes C D E F G A B — but each starts on a different note, creating seven different scales.\n\n### Two You Already Know\n\n- **Ionian** = the major scale. Exactly the same. 'Ionian' is just the modal name for the major scale.\n- **Aeolian** = the natural minor scale. A Aeolian (using C major notes, centered on A) is identical to the A natural minor scale.\n\nSo you already know two of the seven modes. The other five — Dorian, Phrygian, Lydian, Mixolydian, and Locrian — each have a distinctive character created by their unique pattern of intervals.\n\n### Why Modes Matter\n\nModes give composers and improvisers access to a spectrum of tonal color:\n- **Lydian**: dreamy, ethereal, otherworldly\n- **Mixolydian**: earthy, bluesy, rock\n- **Dorian**: jazzy, slightly dark but not melancholic\n- **Phrygian**: exotic, Spanish, dark\n- **Locrian**: dissonant, unstable, maximum tension\n\nModal thinking is essential for jazz improvisation, film scoring, folk music, and progressive rock. It expands your harmonic palette far beyond the two options (major and minor) that most beginners work with.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes a mode different from its parent major scale?",
+      "choices": [
+        "Modes use different notes than the parent scale",
+        "Modes use the same notes but treat a different scale degree as the tonal center",
+        "Modes always have fewer notes than the parent scale",
+        "Modes are only used in jazz music"
+      ],
+      "answer": 1,
+      "explanation": "A mode uses the exact same notes as its parent major scale but starts on a different degree, making that note the tonal center. This shift changes the pattern of intervals from the new root, creating a distinct sound despite identical notes.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which mode is built on the 5th degree of the major scale?",
+      "choices": ["Dorian", "Lydian", "Mixolydian", "Phrygian"],
+      "answer": 2,
+      "explanation": "Mixolydian is the mode built on the 5th scale degree. In C major, G is the 5th degree, so G Mixolydian uses C major notes (C D E F G A B) centered on G. Its signature sound comes from its flat 7th degree.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which two modes are equivalent to scales that most musicians already know?",
+      "choices": [
+        "Dorian and Phrygian",
+        "Lydian and Mixolydian",
+        "Ionian and Aeolian",
+        "Locrian and Dorian"
+      ],
+      "answer": 2,
+      "explanation": "Ionian is another name for the major scale, and Aeolian is another name for the natural minor scale. Recognizing these equivalences is the key entry point into understanding modal theory.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "D Dorian is derived from which parent major scale?",
+      "choices": ["D major", "G major", "C major", "F major"],
+      "answer": 2,
+      "explanation": "D Dorian uses the notes of C major (C D E F G A B) but centered on D. To find a mode's parent scale, go back one step: D is the 2nd degree of C major, so C major is D Dorian's parent. The notes are identical; only the starting point changes.",
+      "srs": true
+    }
+  ]
+}

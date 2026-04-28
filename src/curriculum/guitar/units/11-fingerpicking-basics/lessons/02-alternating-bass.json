@@ -1,0 +1,33 @@
+{
+  "id": "02-alternating-bass",
+  "title": "Alternating Bass",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Alternating Bass — The Heartbeat of Fingerstyle\n\nAlternating bass means the thumb **alternates between two bass strings** on beats 1 and 3 (or on every beat), creating a walking, rhythmic foundation beneath your melody fingers.\n\nThis technique is the core of:\n- Country fingerpicking\n- Folk guitar (Bob Dylan, Paul Simon)\n- Delta blues (Robert Johnson)\n- Travis picking (see Lesson 3)\n\n## G Major Alternating Bass\n\nFor G chord, the thumb alternates between string **6** (low E, the root G) and string **4** (D, the fifth):\n\n```\ne |--3-----------3---|\nB |----0-------0-----|\nG |------0---0-------|\nD |----------0-------|\nA |------------------|\nE |--3---------------|\nBeat: 1   2  3   4\nThumb: 6      4\n```\n\n## Bass Note Assignments Per Chord\n\n| Chord | Beat 1 String | Beat 3 String |\n|-------|--------------|---------------|\n| G     | 6 (G)        | 4 (D) |\n| C     | 5 (C)        | 4 (E) or 3 |\n| D     | 4 (D)        | 3 (A) |\n| Am    | 5 (A)        | 4 (E) |\n| Em    | 6 (E)        | 5 (B) |\n\n## Practice Drill\n\nWith just the thumb, no fingers yet:\n```\n| G . G . | G . G . |  (strings 6–4–6–4)\n| C . C . | C . C . |  (strings 5–4–5–4)\n```\nGet this locked in at 60 BPM before adding melody fingers.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "For a G chord, which two strings does the thumb alternate between in alternating bass style?",
+      "choices": ["Strings 6 and 5", "Strings 6 and 4", "Strings 5 and 3", "Strings 4 and 2"],
+      "answer": 1,
+      "explanation": "For G chord, the thumb alternates between string 6 (low E, the root) and string 4 (D string, the fifth of G), creating a G–D bass movement.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Adding Melody Fingers to the Alternating Bass\n\nOnce the thumb is automatic, add the top three fingers:\n\n```\ne |--3-----3-----3---|\nB |----0-----0-------|\nG |------------------|\nD |--------0---------|\nA |------------------|\nE |--3-----3---------|\n    P  I M  P  M P I\n```\n\n## The Key Insight\n\nThe thumb and fingers operate **independently**. Think of it as:\n- Left hand of a pianist = thumb (bass)\n- Right hand of a pianist = fingers (melody/harmony)\n\nThis **thumb independence** is what makes fingerpicking magical and also what takes the most practice. Most students find their thumb wants to follow their fingers — fight this habit from the start.\n\n## Practice Protocol\n\n1. Tap your foot on beats 1 and 3\n2. Thumb on EVERY tap (alternating 6–4)\n3. Fingers fill in the off-beats\n4. Start at 50 BPM — this should feel boringly slow\n5. Increase by 5 BPM only when it feels effortless",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the main challenge when developing alternating bass fingerpicking?",
+      "choices": ["Getting the chord shapes right", "Making the thumb and fingers operate independently", "Playing loud enough", "Memorizing PIMA notation"],
+      "answer": 1,
+      "explanation": "Thumb independence is the core challenge — the thumb must maintain its own rhythmic groove on the bass strings while the fingers play melody, similar to a pianist's two hands working independently.",
+      "srs": true
+    }
+  ]
+}

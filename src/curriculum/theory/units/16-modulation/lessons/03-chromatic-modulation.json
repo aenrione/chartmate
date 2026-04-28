@@ -1,0 +1,38 @@
+{
+  "id": "03-chromatic-modulation",
+  "title": "Chromatic Modulation",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Chromatic Modulation\n\n**Chromatic modulation** moves between keys using a chromatic pivot — a chord that is altered by a half step to become a chord in the new key. Unlike diatonic pivot chord modulation (where the pivot chord is diatonic to both keys), a chromatic pivot involves a chromatic alteration of one note.\n\n### The Common-Note Chromatic Modulation\n\nThe most direct approach: a chord in the old key shares one or more notes with a chord in the new key, but the chord quality changes:\n\n**Example**: C major → Eb major\n- C major triad: C–E–G\n- C minor triad: C–Eb–G\n- C minor is iv in G minor, but it is also i in C minor, or... more usefully: the C minor chord is the bVI in Eb major (wait: bVI of Eb = Cb major, not C minor).\n- Better: C major → Ab major (bVI of C) → Eb major (I of Eb)\n\n**Better example**: C major → E major (chromatic third relation)\n- C major ends on C major triad\n- E major begins — the common tone is... E appears in both C major (as the third) and E major (as the root)\n- The single common note E acts as a pivot: it was the 3rd of C major and becomes the root of E major\n\nThis **common-tone chromatic modulation** moves from one key to another a major or minor third away, preserving one note as a hinge.\n\n### The Secondary Dominant as Chromatic Bridge\n\nA secondary dominant can serve as a chromatic modulation device:\n\nIn C major: arrive at D7 (V7/V). Instead of resolving to G (staying in C major), continue to G major as the new tonic. This is ambiguous: it could be tonicization (brief visit to G) or modulation (if G is then confirmed by multiple phrases).\n\n### Schubert and Chromatic Third Relations\n\nSchubert was a master of chromatic modulation by third. His *Piano Sonata in C major, D. 840* (the 'Reliquie') moves between C major, E major, and Ab major — three keys a major third apart, forming a 'chromatic third cycle.' These distant modulations create a dreamlike, wandering quality.\n\nKey pairs a major third apart (C→E→Ab→C) form a **chromatic mediant** relationship — one of Schubert's and Beethoven's favorite harmonic effects in their late works.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'chromatic mediant' relationship between two keys?",
+      "choices": [
+        "Two keys a half step apart (e.g., C major and C# major)",
+        "Two keys a major or minor third apart with one common tone and a chromatic alteration (e.g., C major and E major)",
+        "Two keys a tritone apart (e.g., C major and F# major)",
+        "Two keys that share the same dominant (e.g., C major and G major)"
+      ],
+      "answer": 1,
+      "explanation": "A chromatic mediant relationship connects two keys a major or minor third apart. For example, C major and E major: they share the note E (which is the 3rd of C and the root of E). Moving between these keys requires a chromatic alteration (C → C# in E major, for instance). Schubert used chromatic mediant modulations extensively for their romantic, colorful quality.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a common-tone chromatic modulation from C major to A major, which note serves as the common tone, and what function does it have in each key?",
+      "choices": [
+        "C: tonic of C major, minor 3rd of A major",
+        "E: 3rd of C major (C–E–G), 5th of A major (A–C#–E)",
+        "G: 5th of C major, 7th of A major",
+        "A: 6th of C major, root/tonic of A major"
+      ],
+      "answer": 1,
+      "explanation": "E is the common tone: it is the major 3rd of C (C–E–G) and the perfect 5th of A major (A–C#–E). In a chromatic modulation, E is held while the harmony shifts from C major to A major. The C# in A major is the chromatic change. E connects both chords as a pivot note, even though the chord qualities are different.",
+      "srs": true
+    }
+  ]
+}

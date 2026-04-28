@@ -265,6 +265,124 @@ export async function updateSectionStatus(
   }
 }
 
+/**
+ * Aggregate the best-known status for every section of a chart, across every setlist the chart
+ * appears in. Used by the song progress panel and the profile "songs you're learning" widget.
+ *
+ * If a section appears in multiple setlists with different statuses, the best ('nailed_it' >
+ * 'practicing' > 'needs_work' > 'not_started') wins.
+ */
+const STATUS_RANK: Record<ProgressStatus, number> = {
+  not_started: 0,
+  practicing: 1,
+  needs_work: 2,
+  nailed_it: 3,
+};
+
+export interface SongProgressEntry {
+  section: SongSection;
+  status: ProgressStatus;
+  updatedAt: string | null;
+}
+
+export interface SongMasteryView {
+  chartMd5: string;
+  sections: SongProgressEntry[];
+  totalSections: number;
+  nailedSections: number;
+  lastTouchedAt: string | null;
+}
+
+export async function getSongMasteryByMd5(chartMd5: string): Promise<SongMasteryView> {
+  const sections = await getSectionsForChart(chartMd5);
+  if (sections.length === 0) {
+    return {chartMd5, sections: [], totalSections: 0, nailedSections: 0, lastTouchedAt: null};
+  }
+  const db = await getLocalDb();
+  const sectionIds = sections.map(s => s.id);
+  const rows = await db
+    .selectFrom('section_progress')
+    .selectAll()
+    .where('song_section_id', 'in', sectionIds)
+    .execute();
+
+  const bestByCstId = new Map<number, {status: ProgressStatus; updatedAt: string}>();
+  for (const r of rows) {
+    const status = r.status as ProgressStatus;
+    const prior = bestByCstId.get(r.song_section_id);
+    if (!prior || STATUS_RANK[status] > STATUS_RANK[prior.status]) {
+      bestByCstId.set(r.song_section_id, {status, updatedAt: r.updated_at});
+    }
+  }
+
+  const entries: SongProgressEntry[] = sections.map(section => {
+    const best = bestByCstId.get(section.id);
+    return {
+      section,
+      status: best?.status ?? 'not_started',
+      updatedAt: best?.updatedAt ?? null,
+    };
+  });
+
+  const nailed = entries.filter(e => e.status === 'nailed_it').length;
+  const sortedTouches = entries
+    .map(e => e.updatedAt)
+    .filter((x): x is string => !!x)
+    .sort();
+  const lastTouchedAt = sortedTouches.length > 0 ? sortedTouches[sortedTouches.length - 1] : null;
+
+  return {
+    chartMd5,
+    sections: entries,
+    totalSections: entries.length,
+    nailedSections: nailed,
+    lastTouchedAt,
+  };
+}
+
+/**
+ * Recently-practiced charts with at least one section progressing — used by the profile
+ * "Songs you're learning" widget. `limit` defaults to 5.
+ */
+export interface RecentSongView {
+  chartMd5: string;
+  totalSections: number;
+  nailedSections: number;
+  practicingSections: number;
+  lastTouchedAt: string;
+}
+
+export async function getRecentlyPracticedSongs(limit = 5): Promise<RecentSongView[]> {
+  const db = await getLocalDb();
+  // We need to map section_progress rows back to their chart_md5 via song_sections.
+  const rows = await db
+    .selectFrom('section_progress as sp')
+    .innerJoin('song_sections as ss', 'ss.id', 'sp.song_section_id')
+    .select(['ss.chart_md5', 'sp.status', 'sp.updated_at'])
+    .execute();
+
+  type Acc = {chartMd5: string; total: number; nailed: number; practicing: number; lastTouched: string};
+  const byChart = new Map<string, Acc>();
+  for (const r of rows) {
+    const acc = byChart.get(r.chart_md5) ?? {chartMd5: r.chart_md5, total: 0, nailed: 0, practicing: 0, lastTouched: r.updated_at};
+    acc.total += 1;
+    if (r.status === 'nailed_it') acc.nailed += 1;
+    if (r.status === 'practicing') acc.practicing += 1;
+    if (r.updated_at > acc.lastTouched) acc.lastTouched = r.updated_at;
+    byChart.set(r.chart_md5, acc);
+  }
+  return [...byChart.values()]
+    .sort((a, b) => (a.lastTouched < b.lastTouched ? 1 : -1))
+    .slice(0, limit)
+    .map(a => ({
+      chartMd5: a.chartMd5,
+      totalSections: a.total,
+      nailedSections: a.nailed,
+      practicingSections: a.practicing,
+      lastTouchedAt: a.lastTouched,
+    }));
+}
+
 export function deriveSongStatus(
   sectionProgress: SectionProgressRecord[],
 ): ProgressStatus {

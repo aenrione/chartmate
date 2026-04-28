@@ -1,0 +1,43 @@
+{
+  "id": "03-srv-style",
+  "title": "Stevie Ray Vaughan Style",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Stevie Ray Vaughan — Maximum Blues Intensity\n\n**Stevie Ray Vaughan** (1954–1990) created the heaviest, most physically intense blues guitar sound in history. His combination of extreme string gauge, aggressive attack, and complete blues-to-rock vocabulary defined 1980s blues revival.\n\n## SRV's Setup\n\n- **Guitar**: 1963 Fender Stratocaster (\"Number One\") with a custom neck\n- **Strings**: .013-.058 gauge (over twice as heavy as most players)\n- **Tuning**: Eb standard (half step down) — gives .013s a more manageable tension\n- **Picks**: Dunlop heavy or Jim Dunlop .88\n- **Amps**: Dumble, Fender Vibroverb, Marshall — all overdriven simultaneously\n\n## SRV's Influences\n\nSRV synthesized: Jimi Hendrix, Albert King, BB King, Wes Montgomery, Django Reinhardt, and T-Bone Walker into one overwhelming style.\n\n## Key SRV Techniques\n\n1. **Massive bends**: Bending up a full step on .013 strings = massive physical force\n2. **Hendrix chord voicings**: Thumb-wrapped chords (Hendrix style)\n3. **Hybrid picking**: Pick + middle finger for complex patterns\n4. **Albert King minor pentatonic positions**: Especially Albert's \"box\" on strings 1-3 at high frets\n5. **Double stops**: Parallel thirds and sixths from T-Bone Walker\n\n## Essential Recordings\n\n- *Texas Flood* (1983) — debut album\n- \"Pride and Joy\" — Texas shuffle\n- \"Lenny\" — fingerstyle (exceptional sensitivity)\n- \"Riviera Paradise\" — slow ballad blues\n- \"Scuttle Buttin'\" — barnstorming fast blues",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why did SRV tune to Eb standard instead of standard tuning?",
+      "choices": [
+        "To match the key of songs he liked",
+        "Because he couldn't tune his guitar",
+        "To reduce string tension on his heavy .013 gauge strings, making bends more physically manageable",
+        "Eb sounds darker and more bluesy"
+      ],
+      "answer": 2,
+      "explanation": "Tuning a half step down to Eb reduces the string tension on SRV's heavy .013 gauge strings, making wide bends physically possible. Without this detuning, bending strings that heavy a full step would require extraordinary force and cause injury.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# SRV's Albert King Box Influence\n\nAlbert King (who was SRV's primary influence) played in an unusual tuning and banded strings upward. SRV emulated Albert's HIGH register licks — specifically the \"Albert King Box\" on strings 1-3 around frets 15-20.\n\n## The Albert/SRV Box in A Blues (at fret 17-20)\n\n```\ne |--17--20--17b19--17--|\nB |--17--20--17---------|\nG |--17--18b19----------|\n```\n\nKey feature: bending strings 2 and 3 upward (push bends), just like Albert King.\n\n## The SRV Lick Pattern\n\nFrom \"Couldn't Stand the Weather\":\n```\ne |--17b19--17--15--12--|\nB |------------------12-|\n   Albert-style bend   (resolve)\n```\n\n## The Thumb-Wraparound Chord\n\nSRV frequently used Hendrix-style thumb-wrap barre chords, where the left-hand thumb frets the low E string:\n\n```\n[Thumb on E string, fret 1] = F chord\nFrets: 1-1-2-3-3-1 but with thumb handling string 6\n```\n\nThis frees other fingers for extensions and allows chords impossible in standard barre position.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'thumb-wrap' or thumb-over chord in the style of SRV and Hendrix?",
+      "choices": [
+        "The thumb plays all six strings like a flatpick",
+        "The left-hand thumb frets the low E string, freeing other fingers for extensions",
+        "A pick technique using only the thumb",
+        "Wrapping a cloth around the thumb for protection"
+      ],
+      "answer": 1,
+      "explanation": "Thumb-over fretting uses the left-hand thumb to fret (usually mute or play) the low E string while the four fingers handle the other five strings. This allows chord shapes — especially dominant 7th voicings with a low root — that are impossible in standard classical barre technique.",
+      "srs": true
+    }
+  ]
+}

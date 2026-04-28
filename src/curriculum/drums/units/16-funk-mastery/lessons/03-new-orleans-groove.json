@@ -1,0 +1,34 @@
+{
+  "id": "03-new-orleans-groove",
+  "title": "New Orleans Second Line",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# New Orleans: The Cradle of American Rhythm\n\nNew Orleans drumming draws from a unique cultural intersection: West African rhythms (brought by enslaved people), Caribbean influences (especially Haitian), European military drumming, and jazz/blues. The result is one of the most distinctive regional drum sounds in the world.\n\n**The second line:** Refers to the second line of a jazz funeral parade — the mourners and community members who follow the brass band, dancing and celebrating the life of the deceased. The rhythm is syncopated, driving, and deeply felt.\n\n**Second line characteristics:**\n- A swung 16th note feel (the 16ths are triplet-influenced rather than straight)\n- Heavy right-hand ride or hi-hat on the quarter note pulse\n- Snare plays multiple positions including the 'e' and 'ah' subdivisions\n- Bass drum follows the bass line (tuba in street parade context)\n- Rimshot accents that feel 'latched' into the pocket\n\n**Key drummers:** Johnny Vidacovich, Zigaboo Modeliste (The Meters), Joseph 'Ziggy' Modeliste, Stanton Moore.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "New Orleans Second Line Pattern",
+      "description": "Second line groove: strong quarter note hi-hat (or ride) with syncopated snare hits on the 'and' of 2 and beat 4. Kick follows the bass line pattern. This has a heavier, more earthy feel than a standard funk beat.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 104,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x---x---x---x---"},
+        {"name": "Snare",  "pattern": "o-o-o-X-o-o-X-o-"},
+        {"name": "Kick",   "pattern": "x---x-x-----x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What historical context defines the 'second line' in New Orleans drumming?",
+      "choices": ["The second bar of a two-bar phrase", "The community members who follow a jazz funeral brass band, dancing in celebration of the deceased's life", "The second drum in a percussion ensemble", "A specific snare technique used in marching bands"],
+      "answer": 1,
+      "explanation": "The second line refers to the community participants who followed the official brass band at a New Orleans jazz funeral. Their celebratory dancing created the energetic, syncopated rhythmic feel that defines second-line drumming.",
+      "srs": true
+    }
+  ]
+}

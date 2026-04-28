@@ -1,0 +1,35 @@
+{
+  "id": "05-afrocuban-orchestration",
+  "title": "Afro-Cuban Orchestration",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Orchestrating Afro-Cuban Rhythms on the Kit\n\nA Cuban percussion ensemble can have 6-12 players, each with a specific role. The drum kit player must represent this entire section through intelligent orchestration — choosing which elements to play and which to omit.\n\n**Orchestration priorities:**\n1. **Clave relationship is non-negotiable** — everything else can be simplified, but the clave must be felt at all times\n2. **Bell patterns** project above the band — prioritize these when the full band is playing\n3. **Bass voice** (kick/tumba) anchors the harmony — keep this active\n4. **Improvisation** (quinto equivalent) belongs in fills and transitions, not in the main groove\n\n**The instrument-to-kit mapping:**\n- Clave → hi-hat pattern or ride pattern\n- Bell (cencerro/cowbell) → cowbell, ride bell, or accented hi-hat\n- Timbales shot → snare rim shot\n- Conga tumba → kick drum\n- Conga quinto (improvised) → snare fills\n\n**The fundamental lesson:** You cannot play everything. Choose what to represent based on what the musical context requires. In a full salsa band, focus on bell and bass. In a stripped-down trio, you can carry more of the harmonic information.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Full Afro-Cuban Orchestration",
+      "description": "Integrating bell (ride), clave-derived hi-hat, snare timbale shots, and kick tumbao in one pattern. This represents the core of a full Cuban percussion ensemble condensed to one player.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 172,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-xx-x-x-xx-x-x-"},
+        {"name": "Hi-Hat", "pattern": "x---x-x-x---x-x-"},
+        {"name": "Snare",  "pattern": "----X-------X---"},
+        {"name": "Kick",   "pattern": "x-x-----x-x-----"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When a drum kit player adapts Afro-Cuban percussion for a full band context, what should be the highest priority?",
+      "choices": ["Representing every instrument's pattern simultaneously", "Playing as many notes as possible to fill the sonic space", "Maintaining the clave relationship in all choices while keeping bell patterns audible", "Only playing the kick and snare patterns"],
+      "answer": 2,
+      "explanation": "The clave relationship is non-negotiable — it defines the rhythmic identity of the music. Everything else can be simplified. After clave, the bell pattern (which projects above the band) is the next priority. The kit player must choose intelligently what to represent given the band's density.",
+      "srs": true
+    }
+  ]
+}

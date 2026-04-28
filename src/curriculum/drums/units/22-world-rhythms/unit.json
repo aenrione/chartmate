@@ -1,0 +1,8 @@
+{
+  "id": "22-world-rhythms",
+  "title": "World Rhythms",
+  "description": "Indian rhythms (tal), Balkan meter, Middle Eastern grooves, and West African patterns",
+  "icon": "clock",
+  "prerequisites": ["12-latin-percussion", "08-odd-time"],
+  "lessons": ["01-indian-tal", "02-balkan-meter", "03-middle-eastern", "04-west-african", "05-world-fusion"]
+}

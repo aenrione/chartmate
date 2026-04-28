@@ -1,0 +1,38 @@
+{
+  "id": "04-turnarounds",
+  "title": "Turnarounds",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Turnarounds: The Return\n\nA **turnaround** is the closing progression of a blues or jazz chorus that leads harmonically back to the beginning of the form. It is typically the last two bars of a 12-bar blues (bars 11-12) and serves to create momentum for the next chorus.\n\n### Simple Turnarounds in C\n\n**Basic**: I7 → V7 → [back to I7]\n- C7 → G7 → C7 (bar 1)\n\n**Chromatic descent**: I → VI7 → ii7 → V7\n- C → A7 → Dm7 → G7 (descending through the cycle)\n\n**Chromatic bass turnaround**: I – bVII – bVI – V\n- C – Bb – Ab – G7 (each chord's root descends by whole step)\n\n**The blues cliché turnaround** (on guitar, very common):\n- I → I/7 → I/b7 → I/6 → V7\n- C – C/B – C/Bb – C/A – G7\n- Bass descends: C → B → Bb → A → G, while upper voices stay on C and E\n\nThis descending bass with static upper voices is one of the most iconic sounds in blues guitar.\n\n### The Jazz Turnaround: iii–VI–ii–V\n\nThe most common jazz turnaround in a major key:\n\n**iii7 – VI7 – ii7 – V7 – I**\n- Em7 – A7 – Dm7 – G7 → Cmaj7\n- In C major: three of these chords cycle through secondary dominants\n- A7 is V7/ii (secondary dominant of Dm)\n\nThis progression is often called the **'backdoor turnaround'** or just the standard jazz turnaround. It appears in jazz standards as the last two bars before the top of the form.\n\n### Turnaround Substitutions\n\nJazz turnarounds can be embellished with tritone substitutions:\n\n**Standard**: Em7 – A7 – Dm7 – G7\n**With tritone subs**: Em7 – Eb7 – Dm7 – Db7 → C\n\nThe bass line becomes: E → Eb → D → Db → C — a chromatic descent, a signature jazz sound.\n\n### Turnarounds in Gospel\n\nGospel turnarounds often use the circle-of-fifths plus added blue notes:\n\n**Gospel turnaround in G**: G7 – E7 – A7 – D7 → G (back to top)\n\nEach chord has the b7, maintaining the gospel/blues flavor throughout the turnaround. The E7 is a secondary dominant of A, and A7 is the secondary dominant of D7.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the function of a turnaround in a 12-bar blues?",
+      "choices": [
+        "It ends the song permanently — there is no more repetition after it",
+        "It creates harmonic motion in the final two bars that leads back to the tonic at bar 1 of the next chorus",
+        "It introduces a new key for the following chorus",
+        "It is a rest period where the drummer solos"
+      ],
+      "answer": 1,
+      "explanation": "A turnaround creates harmonic motion (usually V7 or a cycle leading to V7) in the final 1-2 bars of the form, generating momentum that leads naturally back to the tonic at bar 1 of the next chorus. Without a turnaround, the last bar (I7) would just sit statically with no forward pull. The turnaround gives the cyclic blues form its energetic, spinning quality.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the 'chromatic bass turnaround' (C – Bb – Ab – G7 in C major), what movement creates the characteristic descending sound?",
+      "choices": [
+        "The melody descends chromatically while the bass stays on C",
+        "The bass (root) descends by whole step: C → Bb → Ab → G, while upper voices may stay stationary",
+        "All voices descend in parallel motion",
+        "The chord quality changes while the root stays the same"
+      ],
+      "answer": 1,
+      "explanation": "In the chromatic bass turnaround, the bass descends by whole step: C → Bb → Ab → G (then G7 resolves to C). This is: I (C) – bVII (Bb) – bVI (Ab) – V7 (G7). The bass line is the moving element; upper voices can sustain chord tones while the bass moves. This creates the characteristic 'cascade' effect of descending bass motion leading to the dominant.",
+      "srs": true
+    }
+  ]
+}

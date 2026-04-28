@@ -1,0 +1,34 @@
+{
+  "id": "04-guaguanco",
+  "title": "Guaguancó",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Guaguancó: Afro-Cuban Rumba's Erotic Dance\n\nGuaguancó is one of the three main styles of Cuban rumba (alongside yambú and columbia). It involves a couple's dance that is both charged and sophisticated — the male dancer attempts to 'vacunao' (touch) the female while she deflects.\n\n**Musical structure:**\n- Uses the **rumba clave** (slightly different from son clave — the third hit of the 3-side is a 16th note later)\n- **Clave** is played on wooden claves by the ensemble leader\n- **Quinto** (highest conga): The lead improvising drum, responds to the dancers\n- **Tres golpes** (middle conga): Plays a specific ostinato pattern\n- **Tumba** (lowest conga): The rhythmic anchor\n\n**The quinto's role:** Unlike the foundational patterns of the other congas, the quinto improvises — calling out the dancers, accentuating their movements, and creating musical dialogue. This is one of the deepest traditions of drum improvisation in Afro-Cuban music.\n\n**Drum kit adaptation:**\nAdapting guaguancó to kit means creating the layered conga texture with available voices — hi-hat or ride for the cascara-like time pattern, snare for the tres golpes hits, kick for the tumba pattern.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Guaguancó Drum Kit Adaptation",
+      "description": "Rumba clave feel: hi-hat plays the time pattern, snare plays the tres golpes hits on beats 2 and 4 with anticipations, kick tracks the tumba pattern. The overall feel should be driving but earthy — not polished.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 144,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x-x-x-x-x-x-x-x-"},
+        {"name": "Snare",  "pattern": "o---X-o-o---X-o-"},
+        {"name": "Kick",   "pattern": "x---x-x-----x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes the rumba clave different from the son clave?",
+      "choices": ["Rumba clave has 2 hits in the first bar", "The third hit of the 3-side is a 16th note later in rumba clave", "Rumba clave is 3 bars long instead of 2", "Rumba clave only has 4 hits total"],
+      "answer": 1,
+      "explanation": "In the rumba clave, the third hit of the 3-side is displaced a 16th note later compared to the son clave. This subtle shift gives rumba its slightly more 'pulled' or dragged quality compared to the more forward-leaning son clave.",
+      "srs": true
+    }
+  ]
+}

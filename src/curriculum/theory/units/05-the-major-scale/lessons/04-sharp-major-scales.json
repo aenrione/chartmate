@@ -1,0 +1,69 @@
+{
+  "id": "04-sharp-major-scales",
+  "title": "Major Scales with Sharps",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Major Scales with Sharps\n\n### Building Sharp Keys from the Formula\n\nEvery sharp major scale is built by applying the W–W–H–W–W–W–H formula to a new starting pitch. Each time the formula demands a whole step but the available note is only a half step away, a sharp is added to raise that note. This is not memorization — it is derivation from first principles.\n\n### The Sharp Major Scales\n\n**G major** (1 sharp: F#)\nG – A – B – C – D – E – **F#** – G\nThe formula from E to F requires a whole step (degree 6→7), but E to F is only a half step. Raise F to F# to create the required whole step.\n\n**D major** (2 sharps: F#, C#)\nD – E – **F#** – G – A – B – **C#** – D\nSame reason: E to F is a half step (fix: F#), and B to C is a half step (fix: C# for the leading tone).\n\n**A major** (3 sharps: F#, C#, G#)\nA – B – **C#** – D – E – **F#** – **G#** – A\n\n**E major** (4 sharps: F#, C#, G#, D#)\nE – **F#** – **G#** – A – B – **C#** – **D#** – E\n\n**B major** (5 sharps: F#, C#, G#, D#, A#)\nB – **C#** – **D#** – E – **F#** – **G#** – **A#** – B\n\n**F# major** (6 sharps: F#, C#, G#, D#, A#, E#)\nF# – **G#** – **A#** – B – **C#** – **D#** – **E#** – F#\n\n**C# major** (7 sharps: all sharps)\nC# – **D#** – **E#** – **F#** – **G#** – **A#** – **B#** – C#\n\n### The Pattern: Each New Sharp Is the Leading Tone\n\nNotice that in each new sharp key, the single new sharp added is the **7th scale degree (the leading tone)** of that key:\n- G major's leading tone is F# — and F# is the one new sharp in G major.\n- D major's new sharp is C# — the leading tone of D major.\n- A major's new sharp is G# — the leading tone of A major.\n\nThis is the structural reason the order of sharps (F# C# G# D# A# E# B#) is not arbitrary — each new sharp is the leading tone of the next key in the cycle.\n\n### Moving by Perfect Fifths\n\nEach successive sharp key starts a **perfect fifth above** the previous one:\nC → G → D → A → E → B → F# → C#\n\nA fifth up from C is G. A fifth up from G is D. A fifth up from D is A. This is the sharp (dominant) side of the circle of fifths. Every time you go up a fifth, you enter a new key and add one new sharp.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Practicing Sharp Scales: Patterns and Memory\n\n### The Cumulative Nature of Sharps\n\nSharp key signatures are cumulative — each new key keeps all the previous sharps and adds one more:\n- G major: F#\n- D major: F#, **C#**\n- A major: F#, C#, **G#**\n- E major: F#, C#, G#, **D#**\n\nThis means that if you know E major, you automatically know A, D, and G major — they are all subsets. The scaffold builds progressively.\n\n### E# and B#: The Unusual Sharps\n\nF# major and C# major contain E# and B# respectively — notes that look strange because E# is enharmonically the same pitch as F, and B# is the same as C. But they are spelled that way to preserve the requirement that every major scale uses **each letter name exactly once**. A major scale must have a note on each line and space of the staff in sequence: you cannot have two F's and no G in a scale.\n\nThis rule — one of each letter name — is why F# major has E# rather than F♮, and C# major has B# rather than C♮.\n\n### Guitar Perspective\n\nFor guitarists: sharp keys are extremely friendly. E major, A major, D major, and G major are the four most common guitar keys because they align with the open strings (E A D G B E). Most rock, country, folk, and pop guitar is written in these keys. Understanding their key signatures deepens your ability to improvise, transpose, and communicate with other musicians.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why does building a major scale on G require an F# instead of F?",
+      "choices": [
+        "Because G major is in the sharp family by arbitrary convention",
+        "Because the W–W–H–W–W–W–H formula requires a whole step between scale degrees 6 and 7 (E to F#), but E to F is only a half step",
+        "Because F is reserved for F major and cannot appear in G major",
+        "Because F# sounds better than F in the context of G"
+      ],
+      "answer": 1,
+      "explanation": "The major scale formula requires a whole step (W) between scale degrees 6 and 7. In G major, degree 6 is E and the natural note above E is F — but E to F is only a half step. To create the required whole step, F must be raised to F#. This is not a convention — it is derived mathematically from the W–W–H–W–W–W–H formula applied to G.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the relationship between successive sharp keys (C, G, D, A, E, B, F#, C#)?",
+      "choices": [
+        "Each key is a major third above the previous",
+        "Each key is a perfect fifth above the previous",
+        "Each key is a whole step above the previous",
+        "Each key is a minor third above the previous"
+      ],
+      "answer": 1,
+      "explanation": "Each successive sharp key is a perfect fifth above the previous one: C→G (fifth up), G→D (fifth up), D→A (fifth up), A→E, E→B, B→F#, F#→C#. This is the dominant (sharp) side of the circle of fifths. Moving up by a perfect fifth always adds one new sharp to the key signature.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "F# major contains the note E#. Why is it spelled E# rather than simply F-natural?",
+      "choices": [
+        "E# and F-natural are different pitches — E# is slightly higher",
+        "Major scales must use each letter name exactly once; since F# is already degree 1, the 7th degree must be spelled as E# to avoid having two F's",
+        "E# is only used in advanced scales; F-natural is too simple for F# major",
+        "It is a historical accident from Baroque notation"
+      ],
+      "answer": 1,
+      "explanation": "A major scale must contain each letter name (A through G) exactly once. F# major starts on F# (degree 1), so F is already 'used up' as the tonic. The 7th scale degree — which sounds the same as F-natural — must be spelled E# to complete the seven-letter sequence without repeating F. This ensures correct staff notation where each degree sits on a distinct line or space.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which sharp keys are most commonly encountered in guitar-based music, and why?",
+      "choices": [
+        "C# and F# major, because they have the most sharps and sound brightest",
+        "B and C# major, because they align with the first two strings of the guitar",
+        "G, D, A, and E major, because they align with the open strings of the guitar (E A D G)",
+        "All sharp keys are equally common in guitar music"
+      ],
+      "answer": 2,
+      "explanation": "G, D, A, and E major are the most common guitar keys because they align with the open strings of a standard-tuned guitar (low to high: E A D G B E). These keys allow guitarists to use open-string voicings (open chords), which are easier to play and have a characteristic resonant sound. This is why the vast majority of rock, folk, country, and pop guitar music is written in these four sharp keys.",
+      "srs": true
+    }
+  ]
+}

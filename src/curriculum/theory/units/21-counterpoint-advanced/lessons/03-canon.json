@@ -1,0 +1,38 @@
+{
+  "id": "03-canon",
+  "title": "Canon",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Canon: Perfect Imitation\n\nA **canon** is a contrapuntal technique where one melodic voice is followed exactly by one or more voices entering at a fixed time interval (the **time distance**) and at a fixed pitch interval (the **pitch distance**). Unlike fugue, which allows free counterpoint between entries, a canon maintains strict imitation throughout.\n\n### Types of Canon\n\n**Canon at the unison**: The second voice enters on the same pitch, at a time delay.\n\n**Canon at the octave**: Second voice is an octave away — this is the most common type.\n\n**Canon at the fifth**: Second voice enters a fifth above or below. Creates modal shifts.\n\n**Cancrizans (Crab canon)**: The second voice plays the original melody **backwards**. Extremely rare, intellectually fascinating. J.S. Bach's 'Musical Offering' contains a famous crab canon.\n\n**Retrograde inversion canon**: The second voice plays the melody both backwards AND upside-down. The rarest form.\n\n**Circular (infinite) canon**: 'Row, row, row your boat' style — the canon cycles back to the beginning endlessly.\n\n### Pachelbel's Canon in D: Anatomy\n\nPachelbel's Canon in D (c. 1680) is the most famous canon in music history. Its structure:\n- **Bass line** (ostinato): D–A–B–F#–G–D–G–A (two-bar pattern, repeated 28 times)\n- **Canon voices**: Three violins in canon at two bars' distance and an octave\n\nThe melody is in strict canon: Violin 1 plays bars 1-2; Violin 2 enters at bar 3 with exactly the same melody; Violin 3 enters at bar 5.\n\nThe genius is that the melodic material is composed so it harmonizes with itself — when Violin 1 is in bar 5 and Violin 2 in bar 3 and Violin 3 in bar 1, all three sound good together over the bass ostinato.\n\n### Writing a Simple Canon\n\nTo write a canon at the unison with one bar delay:\n1. Write bar 1 of the melody\n2. Bar 2 must harmonize with bar 1 (because voice 2 will be playing bar 1 while you're in bar 2)\n3. Bar 3 must harmonize with bar 2 (voice 2 is in bar 2, you're in bar 3)\n4. Continue — each new bar must work against the previous bar\n\nThis is a beautiful puzzle: you are essentially composing a melody that harmonizes with itself when offset by one bar.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'crab canon' (cancrizans)?",
+      "choices": [
+        "A canon that moves in a side-to-side motion rather than up and down",
+        "A canon where the second voice plays the melody backwards (retrograde)",
+        "A canon used exclusively in crab-shell percussion music",
+        "A canon where the bass line is inverted"
+      ],
+      "answer": 1,
+      "explanation": "A crab canon (cancrizans, from Latin for 'walking backward like a crab') has the second voice playing the original melody in retrograde — completely backwards. This is an intellectual tour de force: the melody must work both forwards and backwards simultaneously. Bach's 'Musical Offering' (BWV 1079) contains a famous crab canon for two violins that can be read from either end of the page.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In Pachelbel's Canon in D, what structural feature repeats throughout the entire piece?",
+      "choices": [
+        "The same four-chord harmony in different inversions",
+        "A two-bar bass ostinato (D–A–B–F#–G–D–G–A) that repeats approximately 28 times",
+        "A single melodic motive in inversion",
+        "A series of five-note scales ascending and descending"
+      ],
+      "answer": 1,
+      "explanation": "Pachelbel's Canon is built over a ground bass (basso ostinato) — a two-bar pattern that repeats throughout: D–A–B–F#–G–D–G–A. The three violin canon entries play above this repeated bass line. The harmonic progression implied by the bass line (I–V–vi–iii–IV–I–IV–V) has become so ubiquitous in pop music that it is sometimes called 'the Pachelbel progression.'",
+      "srs": true
+    }
+  ]
+}

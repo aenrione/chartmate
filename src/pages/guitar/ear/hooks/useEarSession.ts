@@ -2,6 +2,7 @@
 import {useTrainingSession} from '@/lib/training/useTrainingSession';
 import {createEarSession, saveEarAttempts} from '@/lib/local-db/ear-training';
 import type {EarExerciseType, EarAttemptStatus} from '@/lib/local-db/ear-training';
+import {recordEventSafely} from '@/lib/progression';
 import type {ExerciseDescriptor, EarConfig, EarQuestion, EarAnswerResult, ItemWeight} from '../exercises/types';
 
 export type {TrainingPhase as EarSessionPhase} from '@/lib/training/useTrainingSession';
@@ -51,6 +52,15 @@ export function useEarSession(
           responseTimeMs: r.responseTimeMs,
         })),
       );
+
+      await recordEventSafely({
+        kind: 'ear_session_finished',
+        exerciseType: descriptor.type,
+        difficulty: (descriptor.difficulty as 'easy' | 'medium' | 'hard') ?? 'medium',
+        correct: correctCount,
+        total: results.length,
+        sessionId,
+      });
 
       return sessionId;
     },

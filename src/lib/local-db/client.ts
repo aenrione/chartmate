@@ -20,9 +20,9 @@ async function initializeDatabase(): Promise<Kysely<DB>> {
       plugins: [new ParseJSONResultsPlugin()],
     });
 
-    // Enable WAL mode for better concurrency (allows reads during writes)
-    await sql`PRAGMA journal_mode=WAL`.execute(db);
-    // Wait up to 5s for locks to clear instead of failing immediately
+    // Wait up to 5s for locks to clear instead of failing immediately.
+    // Note: WAL mode is intentionally not used — it causes SQLITE_BUSY_SNAPSHOT (code 517)
+    // with tauri-plugin-sql's connection pool. busy_timeout does not cover SQLITE_BUSY_SNAPSHOT.
     await sql`PRAGMA busy_timeout=5000`.execute(db);
 
     const migrator = new Migrator({

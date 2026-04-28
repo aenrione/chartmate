@@ -1,0 +1,206 @@
+{
+  "instrument": "theory",
+  "version": "2.0",
+  "units": [
+    {
+      "id": "01-reading-music",
+      "title": "Reading Music",
+      "description": "The staff, clefs, and note names — the alphabet of music",
+      "icon": "book-open",
+      "prerequisites": [],
+      "lessons": ["01-the-staff", "02-treble-clef", "03-bass-clef", "04-note-values", "05-time-signatures"]
+    },
+    {
+      "id": "02-rhythm-and-meter",
+      "title": "Rhythm & Meter",
+      "description": "Note durations, rests, ties, and how meter organizes time",
+      "icon": "timer",
+      "prerequisites": ["01-reading-music"],
+      "lessons": ["01-note-durations", "02-rests", "03-ties-and-dots", "04-compound-meter", "05-syncopation"]
+    },
+    {
+      "id": "03-pitch-and-keyboard",
+      "title": "Pitch & The Keyboard",
+      "description": "The piano keyboard as a map for all of Western pitch",
+      "icon": "piano",
+      "prerequisites": ["01-reading-music"],
+      "lessons": ["01-the-keyboard", "02-sharps-and-flats", "03-enharmonic-notes", "04-half-steps", "05-whole-steps"]
+    },
+    {
+      "id": "04-key-signatures",
+      "title": "Key Signatures",
+      "description": "How sharps and flats are organized into keys",
+      "icon": "key",
+      "prerequisites": ["03-pitch-and-keyboard"],
+      "lessons": ["01-why-key-signatures", "02-sharp-keys", "03-flat-keys", "04-identifying-the-key", "05-relative-keys"]
+    },
+    {
+      "id": "05-the-major-scale",
+      "title": "The Major Scale",
+      "description": "The foundation of Western melody and harmony",
+      "icon": "trending-up",
+      "prerequisites": ["04-key-signatures"],
+      "lessons": ["01-what-is-a-scale", "02-major-scale-formula", "03-c-major", "04-sharp-major-scales", "05-flat-major-scales"]
+    },
+    {
+      "id": "06-intervals",
+      "title": "Intervals",
+      "description": "Measuring distance between pitches — the building blocks of chords and melody",
+      "icon": "ruler",
+      "prerequisites": ["05-the-major-scale"],
+      "lessons": ["01-what-are-intervals", "02-major-and-minor-intervals", "03-perfect-intervals", "04-augmented-and-diminished", "05-interval-quality-summary"]
+    },
+    {
+      "id": "07-triads-and-chords",
+      "title": "Triads & Chords",
+      "description": "Three-note chords: the harmonic core of music",
+      "icon": "layers",
+      "prerequisites": ["06-intervals"],
+      "lessons": ["01-what-is-a-chord", "02-major-triads", "03-minor-triads", "04-augmented-and-diminished-triads", "05-chord-inversions"]
+    },
+    {
+      "id": "08-seventh-chords",
+      "title": "Seventh Chords",
+      "description": "Four-note chords that add color, tension, and jazz sophistication",
+      "icon": "sparkles",
+      "prerequisites": ["07-triads-and-chords"],
+      "lessons": ["01-adding-the-seventh", "02-major-seventh", "03-dominant-seventh", "04-minor-seventh", "05-half-and-full-diminished"]
+    },
+    {
+      "id": "09-diatonic-harmony",
+      "title": "Diatonic Harmony",
+      "description": "The chords built from a key and how they function together",
+      "icon": "network",
+      "prerequisites": ["08-seventh-chords"],
+      "lessons": ["01-harmonizing-the-scale", "02-roman-numerals", "03-harmonic-function", "04-common-progressions", "05-minor-key-harmony"]
+    },
+    {
+      "id": "10-modes",
+      "title": "Modes",
+      "description": "Scales starting on different degrees — the colors beyond major and minor",
+      "icon": "palette",
+      "prerequisites": ["09-diatonic-harmony"],
+      "lessons": ["01-what-are-modes", "02-ionian-and-dorian", "03-phrygian-and-lydian", "04-mixolydian-and-aeolian", "05-locrian-and-modal-harmony"]
+    },
+    {
+      "id": "11-voice-leading",
+      "title": "Voice Leading",
+      "description": "Smooth chord-to-chord motion: the craft behind Bach and beyond",
+      "icon": "git-branch",
+      "prerequisites": ["09-diatonic-harmony"],
+      "lessons": ["01-voice-leading-basics", "02-four-part-harmony", "03-bach-chorales", "04-common-tones", "05-voice-leading-in-practice"]
+    },
+    {
+      "id": "12-secondary-dominants",
+      "title": "Secondary Dominants",
+      "description": "Borrowing the dominant of any key to create drive and chromaticism",
+      "icon": "zap",
+      "prerequisites": ["09-diatonic-harmony"],
+      "lessons": ["01-what-is-secondary-dominant", "02-v-of-v", "03-secondary-dominants-all-degrees", "04-borrowed-chords", "05-tonicization"]
+    },
+    {
+      "id": "13-jazz-harmony-I",
+      "title": "Jazz Harmony I",
+      "description": "Extended chords, alterations, and the jazz chord symbol system",
+      "icon": "music",
+      "prerequisites": ["08-seventh-chords", "10-modes"],
+      "lessons": ["01-extensions", "02-alterations", "03-jazz-chord-symbols", "04-upper-structure-triads", "05-jazz-voicings"]
+    },
+    {
+      "id": "14-modal-interchange",
+      "title": "Modal Interchange",
+      "description": "Borrowing chords from parallel modes for color and surprise",
+      "icon": "shuffle",
+      "prerequisites": ["10-modes", "12-secondary-dominants"],
+      "lessons": ["01-parallel-modes", "02-borrowing-from-minor", "03-borrowed-chords-in-pop", "04-picardy-third", "05-modal-mixture-composition"]
+    },
+    {
+      "id": "15-counterpoint",
+      "title": "Counterpoint",
+      "description": "Species counterpoint from first through fifth species",
+      "icon": "git-merge",
+      "prerequisites": ["11-voice-leading"],
+      "lessons": ["01-first-species", "02-second-species", "03-third-species", "04-fourth-species", "05-free-counterpoint"]
+    },
+    {
+      "id": "16-modulation",
+      "title": "Modulation",
+      "description": "Moving between keys: pivot chords, direct, chromatic, and enharmonic",
+      "icon": "arrow-right-circle",
+      "prerequisites": ["12-secondary-dominants", "14-modal-interchange"],
+      "lessons": ["01-pivot-chord", "02-direct-modulation", "03-chromatic-modulation", "04-enharmonic-modulation", "05-modulation-in-songs"]
+    },
+    {
+      "id": "17-jazz-harmony-II",
+      "title": "Jazz Harmony II",
+      "description": "Tritone substitution, reharmonization, and advanced jazz progressions",
+      "icon": "repeat",
+      "prerequisites": ["13-jazz-harmony-I", "16-modulation"],
+      "lessons": ["01-tritone-substitution", "02-chord-substitution", "03-reharmonization", "04-coltrane-changes", "05-jazz-progressions-analysis"]
+    },
+    {
+      "id": "18-ear-training",
+      "title": "Ear Training",
+      "description": "Interval and chord recognition, melodic dictation, and relative pitch",
+      "icon": "headphones",
+      "prerequisites": ["06-intervals", "08-seventh-chords"],
+      "lessons": ["01-interval-singing", "02-chord-quality-ear", "03-melodic-intervals", "04-harmonic-intervals", "05-advanced-ear-training"]
+    },
+    {
+      "id": "19-form-and-analysis",
+      "title": "Form & Analysis",
+      "description": "Binary, ternary, sonata form, 32-bar AABA, and the 12-bar blues",
+      "icon": "layout",
+      "prerequisites": ["09-diatonic-harmony", "02-rhythm-and-meter"],
+      "lessons": ["01-binary-ternary", "02-32-bar-form", "03-12-bar-blues-form", "04-sonata-form", "05-song-analysis"]
+    },
+    {
+      "id": "20-orchestration-basics",
+      "title": "Orchestration Basics",
+      "description": "Instrument families, ranges, transposing instruments, and small ensemble writing",
+      "icon": "users",
+      "prerequisites": ["11-voice-leading", "19-form-and-analysis"],
+      "lessons": ["01-instrument-families", "02-ranges-and-registers", "03-transposing-instruments", "04-small-ensemble-writing", "05-arranging-basics"]
+    },
+    {
+      "id": "21-counterpoint-advanced",
+      "title": "Advanced Counterpoint",
+      "description": "Three and four-voice counterpoint, double counterpoint, canon, and fugue",
+      "icon": "git-commit",
+      "prerequisites": ["15-counterpoint"],
+      "lessons": ["01-three-voice-counterpoint", "02-double-counterpoint", "03-canon", "04-fugue-subject-answer", "05-fugue-exposition"]
+    },
+    {
+      "id": "22-blues-and-gospel-theory",
+      "title": "Blues & Gospel Theory",
+      "description": "Blue notes, dominant 7ths on I and IV, gospel progressions, and turnarounds",
+      "icon": "heart",
+      "prerequisites": ["14-modal-interchange"],
+      "lessons": ["01-blue-notes", "02-dominant-7-on-I", "03-gospel-IV-chord", "04-turnarounds", "05-blues-gospel-analysis"]
+    },
+    {
+      "id": "23-contemporary-harmony",
+      "title": "Contemporary Harmony",
+      "description": "Quartal harmony, planing, neo-soul voicings, and modern R&B",
+      "icon": "trending-up",
+      "prerequisites": ["17-jazz-harmony-II", "22-blues-and-gospel-theory"],
+      "lessons": ["01-quartal-harmony", "02-planing", "03-neo-soul-voicings", "04-polychords", "05-modern-harmony"]
+    },
+    {
+      "id": "24-film-and-game-scoring",
+      "title": "Film & Game Scoring",
+      "description": "Leitmotifs, underscore, tension techniques, and adaptive music",
+      "icon": "film",
+      "prerequisites": ["20-orchestration-basics", "16-modulation"],
+      "lessons": ["01-leitmotif", "02-underscore", "03-tension-techniques", "04-adaptive-music", "05-score-analysis"]
+    },
+    {
+      "id": "25-comprehensive-analysis",
+      "title": "Comprehensive Analysis",
+      "description": "Full score analysis, genre synthesis, and personal style development",
+      "icon": "award",
+      "prerequisites": ["21-counterpoint-advanced", "23-contemporary-harmony", "24-film-and-game-scoring"],
+      "lessons": ["01-score-reading", "02-genre-analysis", "03-style-synthesis", "04-harmonic-fingerprints", "05-composition-project"]
+    }
+  ]
+}

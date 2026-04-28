@@ -1,0 +1,52 @@
+{
+  "id": "05-jazz-chord-workout",
+  "title": "Jazz Chord Workout",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Jazz Guitarist's Chord Workout\n\nThis lesson consolidates everything in Unit 14 into a systematic practice regimen.\n\n## Daily Chord Workout (20 minutes)\n\n### Segment 1 — Shell Voicings (5 min)\nCycle through ii-V-I in all 12 keys using only shell voicings (3-7 of each chord).\n\nKey sequence: C → F → Bb → Eb → Ab → Db → F# → B → E → A → D → G\n\n### Segment 2 — Drop-2 Voicings (5 min)\nPick one chord quality (e.g., dominant 7). Play it in all 12 keys staying on strings 5-4-3-2. Then move to strings 4-3-2-1.\n\n### Segment 3 — Voice Leading (5 min)\nPick a ii-V-I progression and find the smoothest possible voice leading between the three chords. Try 3 different voicings for each.\n\n### Segment 4 — Free Application (5 min)\nPlay over a jazz backing track using only the chords you've learned today. Don't overthink — trust your ears.\n\n## Target Chord Shapes to Know\n\n| Type | Target Quality |\n|------|----------------|\n| Major | maj7, maj9, maj7#11 |\n| Minor | min7, min9, min11 |\n| Dominant | 7, 9, 13, 7b9, 7#9, 7b13 |\n| Half-dim | m7b5 |\n| Diminished | dim7 |",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "G9 (moveable jazz shape)",
+      "frets": [-1, 3, 2, 3, 1, -1],
+      "fingers": [0, 3, 2, 4, 1, 0],
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "Dm9 (rootless)",
+      "frets": [-1, 5, 5, 5, 5, -1],
+      "fingers": [0, 1, 2, 3, 4, 0],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is it important to practice jazz chord voicings through all 12 keys?",
+      "choices": [
+        "Jazz songs are only written in uncommon keys",
+        "To develop automatic, key-independent muscle memory for any real-world chord change",
+        "Because only 12-key practice counts for theory exams",
+        "To impress other musicians"
+      ],
+      "answer": 1,
+      "explanation": "Jazz tunes appear in all 12 keys (Bb, Eb, and Ab are especially common for horn players). Practicing chord voicings through all keys develops automatic, transposable muscle memory — so you can comp any chord in any key without thinking about fingering.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What are the three most common altered dominant extensions used in jazz chord comping?",
+      "choices": [
+        "9th, 11th, 13th",
+        "b9, #9, and b13 (b9, #9, b5/#11)",
+        "add2, add4, add6",
+        "maj7, 6th, sus2"
+      ],
+      "answer": 1,
+      "explanation": "The most colorful jazz dominant alterations are b9 (one half step above root), #9 (the 'Hendrix chord' augmented 9th), and b13 (lowered 13th, same as #5). These create tension that resolves powerfully to the tonic.",
+      "srs": true
+    }
+  ]
+}

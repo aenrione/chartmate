@@ -1,0 +1,38 @@
+{
+  "id": "02-voice-leading",
+  "title": "Voice Leading",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Voice Leading — Moving Between Chords Smoothly\n\nVoice leading is the art of moving from one chord to the next with **minimal movement in each individual voice** (each note within the chord).\n\n## Why It Matters\n\nPoor voice leading: each chord change jumps to a completely different position on the neck — awkward, unmusical.\n\nGood voice leading: each note moves by a step or stays the same — smooth, connected, piano-like.\n\n## The Four Voice Model\n\nIn classical harmony, chords have four voices:\n- **Soprano** (highest) = your melody\n- **Alto** (second from top) = inner harmony\n- **Tenor** (third from top) = inner harmony  \n- **Bass** (lowest) = root/bass note\n\nOn guitar with 6 strings, you'll work with 3–4 of these simultaneously.\n\n## Common Tones\n\nWhen two adjacent chords share a note, **keep that note in the same string position**. This is called a common tone.\n\n**Example**: C major (x32010) → Am7 (x02010)\n- The G string (fret 0) stays the same in both chords\n- The B string (fret 1) stays the same\n- Only the A string moves (3 → 0)\n\nResult: smooth, connected progression.\n\n## The Rule of Minimum Movement\n\nWhen choosing between two fingerings for the same chord, pick the one where the notes are **closest** to where you just were.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'common tone' in voice leading?",
+      "choices": [
+        "A note played on every beat",
+        "A note that appears in both adjacent chords and is held in the same position",
+        "The root note of each chord",
+        "A note played by the bass only"
+      ],
+      "answer": 1,
+      "explanation": "A common tone is a pitch shared by two consecutive chords. Good voice leading keeps this note held or stationary, creating a smooth connection between the chords — minimizing the sense of 'jump' between harmonies.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Voice Leading in Practice — C to G\n\nHere are two ways to play C → G. Compare the voice movement:\n\n## Option A (Poor Voice Leading)\n```\nC:  x-3-2-0-1-0  →  G:  3-2-0-0-0-3\nMovement: huge jumps across the neck\n```\n\n## Option B (Good Voice Leading)\n```\nC (high position): x-3-2-0-1-0\nG (high position): x-x-0-0-1-3\n```\nHere, the melody note (top voice) moves from E → D → stays near the same area.\n\n## Chord-Melody Voice Leading Exercise\n\nPlay this progression, keeping each voice as smooth as possible:\n\n```\nCmaj7  →  Am7  →  Dm7  →  G7\n(x32000)  (x02010)  (xx0211)  (320001)\n```\n\nNotice:\n- Top melody: E → E → F → F (minimal movement)\n- Inner voices: D → C → D → D (steps)\n- Bass: C → A → D → G (functional bass movement is fine)\n\n**Key insight**: The top melody and inner voices should move smoothly; the bass is allowed to jump because it functions differently.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In voice leading, which voice is allowed to make larger leaps?",
+      "choices": ["The soprano (melody)", "The inner alto/tenor voices", "The bass", "All voices must move by step only"],
+      "answer": 2,
+      "explanation": "The bass voice has a different harmonic function and is allowed to make larger leaps (such as root movement by fourths or fifths). The inner voices and melody should move smoothly by steps or common tones for the best voice leading.",
+      "srs": true
+    }
+  ]
+}

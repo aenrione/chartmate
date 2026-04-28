@@ -1,0 +1,67 @@
+{
+  "id": "05-half-and-full-diminished",
+  "title": "Half & Full Diminished",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Half-Diminished & Full Diminished Seventh Chords\n\nThese two chord types are the most dissonant seventh chords — and the most dramatic. Understanding the difference between them is essential for jazz, classical, and advanced harmony.\n\n### The Half-Diminished Chord (ø7 / m7b5)\n\nThe half-diminished chord = diminished triad + **minor seventh**:\n\n- **Root** to **3rd**: minor third — 3 half steps\n- **3rd** to **5th**: minor third — 3 half steps\n- **5th** to **7th**: major third — 4 half steps\n- **Root** to **7th**: minor seventh — **10 half steps**\n\nBø7 in full: **B–D–F–A**\n\nThe 'half' in half-diminished means: the triad is fully diminished (both thirds are minor), but the seventh is only a **minor seventh** — not diminished. It's 'half' as dissonant as the full diminished seventh.\n\n**Where it occurs:** Naturally on **scale degree vii** of the major scale. Bø7 is built on scale degree 7 of C major. In **minor key harmony**, the half-diminished chord appears as the **ii chord** in minor: iiø7–V7–i.\n\n**Chord symbols:** Bm7b5, Bø7, B half-dim\n\n### The Full Diminished Seventh Chord (°7)\n\nThe full diminished seventh = diminished triad + **diminished seventh**:\n\n- **Root** to **3rd**: minor third — 3 half steps\n- **3rd** to **5th**: minor third — 3 half steps\n- **5th** to **7th**: minor third — 3 half steps\n- **Root** to **7th**: diminished seventh — **9 half steps**\n\nBdim7 in full: **B–D–F–Ab**\n\nThe diminished seventh (Ab) is one half step below the minor seventh (A). This chord is built from **four equal minor thirds** — three minor thirds stacked on top of each other.\n\n**Chord symbols:** Bdim7, B°7\n\n### The Symmetry of dim7\n\nBecause all four intervals are equal minor thirds, the diminished seventh chord divides the octave perfectly into four equal parts. This produces a remarkable property:\n\n**Bdim7 = Ddim7 = Fdim7 = Abdim7** — they all contain the same four notes (B, D, F, Ab), just with different notes treated as the root.\n\nThis means there are only **three distinct diminished seventh chord sonorities** in all of music, each containing four different 'roots.' Composers use this enharmonic flexibility to modulate to distant keys with a single chord.\n\n### Comparison\n\n| Chord | Triad | 7th | Root to 7th | Example |\n|-------|-------|-----|-------------|----------|\n| **Half-dim (ø7)** | Diminished | Minor | 10 half steps | B–D–F–A |\n| **Full dim (°7)** | Diminished | Diminished | 9 half steps | B–D–F–Ab |\n\n### The Sound\n\nThe half-diminished has a brooding, yearning quality — common in jazz and minor key progressions. The full diminished creates maximum tension — it's the 'spooky' chord of horror films, dramatic classical passages, and high-intensity jazz reharmonizations.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What are the notes of Bø7 (B half-diminished)?",
+      "choices": ["B, D, F, Ab", "B, D, F, A", "B, D#, F#, A", "B, Db, F, A"],
+      "answer": 1,
+      "explanation": "Bø7 (B half-diminished) is B–D–F–A. The diminished triad is B–D–F, and the minor seventh above B is A (10 half steps). If the seventh were Ab instead of A, it would be Bdim7 (fully diminished).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the full diminished seventh chord (°7), what interval separates each pair of adjacent notes?",
+      "choices": ["Major second", "Major third", "Minor third", "Perfect fourth"],
+      "answer": 2,
+      "explanation": "A fully diminished seventh chord is built entirely from stacked minor thirds (3 half steps each). B°7 = B–D–F–Ab, with a minor third between each consecutive note. This equal division of the octave gives dim7 chords their symmetry.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why does Bdim7 contain the same notes as Ddim7, Fdim7, and Abdim7?",
+      "choices": [
+        "Because they are all in the key of C major",
+        "Because the diminished seventh chord divides the octave into four equal minor thirds, making it symmetrical",
+        "Because B, D, F, and Ab are all flat notes",
+        "Because diminished chords do not have a defined root"
+      ],
+      "answer": 1,
+      "explanation": "The diminished seventh chord divides the octave into four equal minor thirds (3+3+3+3 = 12 half steps). This symmetry means any of the four notes can function as the root, giving the same set of pitches four different chord names. Only three distinct dim7 sonorities exist in all of music.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In minor key harmony, the half-diminished chord (ø7) typically functions as which chord in the ii-V-i progression?",
+      "choices": [
+        "The V7 chord",
+        "The i chord",
+        "The ii chord (iið7)",
+        "The IV chord"
+      ],
+      "answer": 2,
+      "explanation": "In minor key harmony, the ii chord is a half-diminished seventh. For example, in A minor: Bø7 (ii) → E7 (V7) → Am (i). The half-diminished on scale degree ii is the characteristic starting chord of the minor key ii-V-i progression.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the key difference between a half-diminished (ø7) and a full diminished (°7) chord?",
+      "choices": [
+        "The half-diminished has a major triad; the full diminished has a minor triad",
+        "The half-diminished has a minor seventh; the full diminished has a diminished seventh",
+        "The half-diminished has four notes; the full diminished has three notes",
+        "The half-diminished uses a perfect fifth; the full diminished uses an augmented fifth"
+      ],
+      "answer": 1,
+      "explanation": "Both chords start with a diminished triad (root, minor 3rd, diminished 5th). The difference is the seventh: half-diminished adds a minor seventh (10 half steps), while fully diminished adds a diminished seventh (9 half steps, one half step lower). B–D–F–A vs. B–D–F–Ab.",
+      "srs": true
+    }
+  ]
+}

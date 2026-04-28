@@ -1,0 +1,34 @@
+{
+  "id": "01-funk-beats",
+  "title": "Funk Grooves",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Funk Drumming\n\nFunk is built on **16th notes, ghost notes, and the 'one'**.\n\nThe 'one' (beat 1) is sacred in funk — everything resolves to it. James Brown's famous instruction to his band was always 'hit it on the one.'\n\nGhost notes (very soft snare hits between the main backbeat) create the density and 'pocket' feel. The kick lands in unexpected 16th-note positions rather than just beats 1 and 3.\n\nThe master template: Clyde Stubblefield's work with James Brown established the vocabulary every funk drummer draws from.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Clyde Stubblefield-Style Funk Beat",
+      "description": "16th-note hi-hat with ghost notes on snare (soft 'o' hits) between the main backbeats. Kick on beat 1 and the 'and' of 2 — the hallmark syncopation of funk. The ghosts fill the space and create deep pocket.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 96,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "xxxxxxxxxxxxxxxx"},
+        {"name": "Snare",  "pattern": "o---X-o-o---X-o-"},
+        {"name": "Kick",   "pattern": "x---x-----------"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'the one' in funk music?",
+      "choices": ["The last beat of a phrase", "Beat 1 — the harmonic and rhythmic anchor of funk", "The loudest beat", "The first fill of a song"],
+      "answer": 1,
+      "explanation": "In funk, beat 1 is 'the one' — the downbeat where harmony and rhythm resolve. James Brown's famous instruction to his band was always 'hit it on the one.'",
+      "srs": true
+    }
+  ]
+}

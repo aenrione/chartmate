@@ -1,0 +1,64 @@
+{
+  "id": "05-time-signatures",
+  "title": "Time Signatures",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Time Signatures\n\nAt the beginning of every piece of music, after the clef and key signature, you find the **time signature** — two numbers stacked vertically. Together they define the rhythmic framework of the entire piece.\n\n### What Each Number Means\n\n- **Top number** = how many beats are in each measure\n- **Bottom number** = which note value equals one beat (using a numerical code)\n\n| Bottom number | Note value that gets one beat |\n|---------------|-------------------------------|\n| 1 | Whole note |\n| 2 | Half note |\n| 4 | Quarter note |\n| 8 | Eighth note |\n| 16 | Sixteenth note |\n\nSo **4/4** means: four beats per measure, and the quarter note gets one beat.\n\n### The Most Common Time Signatures\n\n**4/4 — Common Time**  \nFour quarter-note beats per measure. The most prevalent time signature in Western music. Often written as a stylized **C** (for \"common time\"). Used in rock, pop, jazz, classical, hip-hop — virtually everything.\n\n**3/4 — Waltz Time**  \nThree quarter-note beats per measure. The first beat is strongly accented, creating the **ONE-two-three** feel of a waltz. Also used in many folk songs, hymns, and classical minuets.\n\n**2/4 — March Time**  \nTwo quarter-note beats per measure. A crisp, two-pulse feel used in marches, polkas, and some Latin styles.\n\n**2/2 — Cut Time**  \nTwo beats per measure, with the half note getting one beat. Written as a **C with a vertical line** through it. Used for fast duple-feel music — marches at tempo, or to make a fast 4/4 easier to read by halving the note values.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Bar Lines, Measures, and 6/8\n\n### Bar Lines and Measures\n\nThe staff is divided into **measures** (also called bars) by **bar lines** — vertical lines crossing all five staff lines. Every measure must contain exactly the number of beats specified by the time signature. If a measure of 4/4 contains only three beats' worth of notes and rests, something is wrong.\n\nTypes of bar lines:\n- **Single bar line** — marks the end of one measure and the beginning of the next\n- **Double bar line** (two thin lines) — marks the end of a section or a change in key/time signature\n- **Final bar line** (thin line followed by a thick line) — marks the absolute end of the piece\n- **Repeat signs** — bold double bar lines with dots, indicating a section to be repeated\n\n### 6/8 — Compound Duple Meter\n\n6/8 deserves special attention. Technically it has **6 eighth-note beats per measure**, but in practice at any reasonable tempo it is felt as **two groups of three eighth notes** — a lilting, rolling feel quite different from 3/4.\n\nCount 6/8 as: **1 and a — 2 and a** (two dotted-quarter-note beats, each divided into three eighths)\n\nFamiliar examples of 6/8:\n- \"House of the Rising Sun\"\n- \"When the Saints Go Marching In\" (as a gospel march)\n- Most Irish jigs\n- \"Greensleeves\"\n\n### 6/8 vs. 3/4\n\nBoth have six eighth-note beats possible, but the **accent pattern** is different:\n- **3/4**: accent on beat 1 of three quarter-note beats — feels like a waltz\n- **6/8**: accent on beats 1 and 4 of six eighth-note beats — feels like two swinging pulses\n\nThe rhythmic feel is completely different even though the note count can look similar.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a time signature, what does the bottom number represent?",
+      "choices": [
+        "How many measures are in the piece",
+        "The tempo in BPM",
+        "Which note value receives one beat",
+        "The number of beats in each measure"
+      ],
+      "answer": 2,
+      "explanation": "The bottom number of a time signature specifies which note value equals one beat, using a numerical code: 4 = quarter note, 8 = eighth note, 2 = half note, etc.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the feel of 3/4 time commonly associated with?",
+      "choices": ["March", "Waltz", "Funk groove", "Blues shuffle"],
+      "answer": 1,
+      "explanation": "3/4 time has three quarter-note beats per measure with a strong accent on beat 1, creating the ONE-two-three feel classic to waltzes and many folk songs.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In 6/8 time, how is the meter practically felt at a typical tempo?",
+      "choices": [
+        "Six equal eighth-note pulses with no grouping",
+        "Three half-note beats",
+        "Two groups of three eighth notes (two dotted-quarter beats)",
+        "Four quarter-note beats"
+      ],
+      "answer": 2,
+      "explanation": "At any reasonable tempo, 6/8 is felt as two big beats, each subdivided into three eighth notes. This creates the lilting, compound-duple feel heard in Irish jigs and 'House of the Rising Sun.'",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which type of bar line marks the absolute end of a piece?",
+      "choices": [
+        "A single thin bar line",
+        "A double thin bar line",
+        "A thin bar line followed by a thick bar line",
+        "A dotted bar line"
+      ],
+      "answer": 2,
+      "explanation": "The final bar line consists of a thin line followed by a thick line and marks the end of the entire piece. A double bar line (two thin lines) marks section endings or changes in key or time signature.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "id": "04-augmented-and-diminished-triads",
+  "title": "Augmented & Diminished Triads",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Augmented & Diminished Triads\n\nBeyond major and minor, two more triad types complete the set of four: **augmented** and **diminished**. Both are less stable than major and minor triads — they carry tension that demands resolution.\n\n### The Augmented Triad\n\nAn **augmented triad** is built by raising the fifth of a major triad by a half step:\n\n- **Root** to **third**: major third — **4 half steps**\n- **Third** to **fifth**: major third — **4 half steps**\n- **Root** to **fifth**: augmented fifth — **8 half steps** (4 + 4)\n\nTwo equal major thirds stacked on top of each other. C augmented: **C–E–G#**.\n\nThe augmented fifth (G# instead of G) is what gives the chord its tense, unresolved, almost **mysterious** quality. It sounds like it wants to move somewhere — often the fifth resolves up to become the root of the next chord, or the chord shifts by half step.\n\n**Where it appears:** Augmented triads appear as passing chords in chromatic progressions, in Romantic-era classical music, and in jazz. They also occur in the harmonic minor scale on scale degree III.\n\n### The Diminished Triad\n\nA **diminished triad** is built by lowering the fifth of a minor triad by a half step:\n\n- **Root** to **third**: minor third — **3 half steps**\n- **Third** to **fifth**: minor third — **3 half steps**\n- **Root** to **fifth**: diminished fifth — **6 half steps** (3 + 3)\n\nTwo equal minor thirds stacked on top of each other. B diminished: **B–D–F**.\n\nThe diminished fifth (also called a **tritone**) between root and fifth creates intense instability — historically called the *diabolus in musica* (devil in music). The chord strongly wants to resolve.\n\n**Where it appears:** In every major key, the naturally occurring diminished triad is built on **scale degree VII** (the leading tone). In C major, that is B diminished (B–D–F). Diminished triads are common in classical music, jazz, and metal.\n\n### Comparison Chart\n\n| Type | Bottom interval | Top interval | Fifth | Example |\n|------|----------------|--------------|-------|---------|\n| Major | M3 (4) | m3 (3) | Perfect (7) | C–E–G |\n| Minor | m3 (3) | M3 (4) | Perfect (7) | C–Eb–G |\n| Augmented | M3 (4) | M3 (4) | Augmented (8) | C–E–G# |\n| Diminished | m3 (3) | m3 (3) | Diminished (6) | C–Eb–Gb |\n\n### Symmetry\n\nNotice that augmented and diminished triads are each built from **two identical intervals**. This symmetry gives them a floating, ambiguous quality — they don't clearly point to a single tonal center the way major and minor triads do.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How is an augmented triad formed relative to a major triad?",
+      "choices": [
+        "The third is raised by a half step",
+        "The fifth is raised by a half step",
+        "The root is lowered by a half step",
+        "The third is lowered by a half step"
+      ],
+      "answer": 1,
+      "explanation": "An augmented triad is a major triad with the fifth raised one half step. C major (C–E–G) becomes C augmented (C–E–G#). The raised fifth creates an augmented fifth interval (8 half steps) from root to fifth.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What are the notes of a B diminished triad?",
+      "choices": ["B, D#, F#", "B, D, F#", "B, D, F", "B, Db, F"],
+      "answer": 2,
+      "explanation": "B diminished is B–D–F. From B: a minor third (3 half steps) reaches D, and another minor third (3 half steps) from D reaches F. The interval from B to F is a diminished fifth (tritone), 6 half steps.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "On which scale degree of the major scale does the diminished triad naturally occur?",
+      "choices": ["Scale degree I", "Scale degree IV", "Scale degree V", "Scale degree VII"],
+      "answer": 3,
+      "explanation": "The only naturally occurring diminished triad in a major key is built on scale degree VII — the leading tone. In C major, that is B–D–F (B diminished). Its strong tendency to resolve is why the leading tone pulls so powerfully toward the tonic.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What interval between root and fifth do augmented and diminished triads have, respectively?",
+      "choices": [
+        "Augmented: perfect fifth; Diminished: augmented fifth",
+        "Augmented: augmented fifth; Diminished: diminished fifth",
+        "Augmented: diminished fifth; Diminished: augmented fifth",
+        "Both have a perfect fifth"
+      ],
+      "answer": 1,
+      "explanation": "An augmented triad has an augmented fifth (8 half steps) from root to fifth, while a diminished triad has a diminished fifth (6 half steps, also called a tritone) from root to fifth. Neither has the perfect fifth (7 half steps) found in major and minor triads.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What historical nickname was given to the diminished fifth interval due to its dissonance?",
+      "choices": [
+        "Consonantia perfecta",
+        "Diabolus in musica",
+        "Quinta falsa",
+        "Intervallum incertum"
+      ],
+      "answer": 1,
+      "explanation": "The diminished fifth (tritone) was historically called 'diabolus in musica' — the devil in music — because of its extreme dissonance and instability. Medieval theorists considered it so unsettling that they cautioned against its use.",
+      "srs": true
+    }
+  ]
+}

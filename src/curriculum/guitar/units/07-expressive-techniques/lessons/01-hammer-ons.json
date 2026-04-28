@@ -1,0 +1,20 @@
+{
+  "id": "01-hammer-ons",
+  "title": "Hammer-Ons",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Hammer-Ons\n\nA **hammer-on** lets you play two notes with one pick stroke:\n\n1. Pick the first note\n2. **Hammer** a second finger down hard on a higher fret — the string sounds without picking\n\nIn tab: `5h7` (pick fret 5, hammer to fret 7)\n\n**Why it matters:** hammer-ons create a smooth, legato (connected) sound — faster and more fluid than picking every note.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the tab notation '7h9', what does 'h' mean?",
+      "choices": ["Hold that note", "Hammer-on from 7 to 9", "Half-step bend", "High string only"],
+      "answer": 1,
+      "explanation": "'h' means hammer-on. Pick fret 7, then hammer your finger onto fret 9 to sound the second note without re-picking.",
+      "srs": true
+    }
+  ]
+}

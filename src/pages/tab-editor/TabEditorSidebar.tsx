@@ -1,13 +1,24 @@
-import {useState, useEffect} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {cn} from '@/lib/utils';
 import {
   Plus, Trash2, Guitar, Drum, Volume2, VolumeOff,
   RefreshCw, Play, ChevronDown, ChevronRight, X,
-  BookOpen, Layers, Palette,
+  BookOpen, Layers, Palette, Music2, TableProperties,
+  Bookmark, BookMarked,
 } from 'lucide-react';
+import {
+  createItem,
+  deleteItem,
+  findItemByCompositionPattern,
+  findItemByCompositionTabSection,
+  patternNotesFor,
+  tabSectionNotesFor,
+} from '@/lib/local-db/repertoire';
+import {KEYS, DEGREES, getKeyInfo} from '@/lib/tab-editor/keyData';
 import {getTuningsForInstrument, getDefaultTuningPreset, type TuningPreset} from '@/lib/tab-editor/tunings';
 import type {InstrumentType} from '@/lib/tab-editor/newScore';
 import StemMixerPanel, {type StemMixerPanelProps} from '@/components/StemMixerPanel';
+import SongLearningPanel from '@/components/SongLearningPanel';
 import type {DetectedPattern} from '@/lib/tab-editor/patternDetector';
 import type {TabSection} from '@/lib/tab-editor/scoreOperations';
 import {PATTERN_COLORS, MAX_TEMPO_BPM} from './patternColors';
@@ -22,6 +33,8 @@ interface TrackInfo {
 interface TabEditorSidebarProps {
   tracks: TrackInfo[];
   activeTrackIndex: number;
+  /** Composition row id once saved. `null` while the user is still editing a fresh tab. */
+  compositionId: number | null;
   onTrackSelect: (index: number) => void;
   onAddTrack: (instrument: InstrumentType, stringCount: number) => void;
   onRemoveTrack: (index: number) => void;
@@ -47,11 +60,15 @@ interface TabEditorSidebarProps {
   onJumpToBar: (barIndex: number) => void;
   showPatternColors: boolean;
   onTogglePatternColors: () => void;
+  selectedKey: string | null;
+  onKeyChange: (key: string | null) => void;
+  onOpenKeyChart: () => void;
 }
 
 export default function TabEditorSidebar({
   tracks,
   activeTrackIndex,
+  compositionId,
   onTrackSelect,
   onAddTrack,
   onRemoveTrack,
@@ -76,10 +93,99 @@ export default function TabEditorSidebar({
   onJumpToBar,
   showPatternColors,
   onTogglePatternColors,
+  selectedKey,
+  onKeyChange,
+  onOpenKeyChart,
 }: TabEditorSidebarProps) {
   const [showAddTrack, setShowAddTrack] = useState(false);
+  const [keyOpen, setKeyOpen] = useState(true);
   const [sectionsOpen, setSectionsOpen] = useState(true);
   const [tempoInput, setTempoInput] = useState(String(tempo));
+  const [trackedPatterns, setTrackedPatterns] = useState<Set<string>>(new Set());
+  const [trackedTabSections, setTrackedTabSections] = useState<Set<string>>(new Set());
+
+  const refreshTrackedPatterns = useCallback(async () => {
+    if (compositionId == null) {
+      setTrackedPatterns(new Set());
+      return;
+    }
+    const tracked = new Set<string>();
+    await Promise.all(detectedPatterns.map(async p => {
+      const found = await findItemByCompositionPattern(compositionId, p.label);
+      if (found) tracked.add(p.label);
+    }));
+    setTrackedPatterns(tracked);
+  }, [compositionId, detectedPatterns]);
+
+  const refreshTrackedTabSections = useCallback(async () => {
+    if (compositionId == null) {
+      setTrackedTabSections(new Set());
+      return;
+    }
+    const tracked = new Set<string>();
+    await Promise.all(sections.map(async s => {
+      const found = await findItemByCompositionTabSection(compositionId, s.name);
+      if (found) tracked.add(s.name);
+    }));
+    setTrackedTabSections(tracked);
+  }, [compositionId, sections]);
+
+  useEffect(() => {
+    void refreshTrackedPatterns();
+  }, [refreshTrackedPatterns]);
+
+  useEffect(() => {
+    void refreshTrackedTabSections();
+  }, [refreshTrackedTabSections]);
+
+  const togglePatternTracking = useCallback(async (pattern: DetectedPattern) => {
+    if (compositionId == null) return;
+    const existing = await findItemByCompositionPattern(compositionId, pattern.label);
+    if (existing) {
+      await deleteItem(existing.id);
+    } else {
+      const extra = pattern.barLength > 1
+        ? `${pattern.barLength} bars · ${pattern.instances.length} instance${pattern.instances.length === 1 ? '' : 's'}`
+        : `1 bar · ${pattern.instances.length} instance${pattern.instances.length === 1 ? '' : 's'}`;
+      // First instance becomes the "preview range" so RepertoireIQ can render a snippet later.
+      const firstInstance = pattern.instances[0];
+      await createItem({
+        itemType: 'composition',
+        title: `Pattern ${pattern.label}${title ? ` — ${title}` : ''}`,
+        compositionId,
+        notes: patternNotesFor(pattern.label, {
+          extra,
+          // pattern.instances bars are 0-based; AlphaTab's display.startBar is 1-based.
+          startBar: firstInstance + 1,
+          barCount: pattern.barLength,
+        }),
+      });
+    }
+    await refreshTrackedPatterns();
+  }, [compositionId, refreshTrackedPatterns, title]);
+
+  const toggleTabSectionTracking = useCallback(async (sec: TabSection) => {
+    if (compositionId == null) return;
+    const existing = await findItemByCompositionTabSection(compositionId, sec.name);
+    if (existing) {
+      await deleteItem(existing.id);
+    } else {
+      const extra = `bars ${sec.startBar + 1}–${sec.endBar + 1}`;
+      const barCount = Math.max(1, sec.endBar - sec.startBar + 1);
+      await createItem({
+        itemType: 'composition',
+        title: `${sec.name}${title ? ` — ${title}` : ''}`,
+        compositionId,
+        notes: tabSectionNotesFor(sec.name, {
+          extra,
+          // Sidebar `TabSection` bars are 0-based; AlphaTab's display.startBar is 1-based.
+          startBar: sec.startBar + 1,
+          barCount,
+        }),
+      });
+    }
+    await refreshTrackedTabSections();
+  }, [compositionId, refreshTrackedTabSections, title]);
 
   useEffect(() => { setTempoInput(String(tempo)); }, [tempo]);
   const [patternsOpen, setPatternsOpen] = useState(false);
@@ -100,15 +206,22 @@ export default function TabEditorSidebar({
         <input
           value={title}
           onChange={e => onTitleChange(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Escape') e.currentTarget.blur(); }}
           placeholder="Song Title"
           className="w-full bg-transparent text-sm font-bold text-on-surface placeholder:text-on-surface-variant/40 outline-none border-b border-transparent focus:border-primary transition-colors"
         />
         <input
           value={artist}
           onChange={e => onArtistChange(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Escape') e.currentTarget.blur(); }}
           placeholder="Artist"
           className="w-full bg-transparent text-xs text-on-surface-variant placeholder:text-on-surface-variant/40 outline-none border-b border-transparent focus:border-primary transition-colors"
         />
+        {compositionId != null && (
+          <SongLearningPanel
+            target={{kind: 'composition', compositionId, title: title || 'Untitled', artist: artist || undefined}}
+          />
+        )}
         <div className="flex items-center gap-2">
           <label className="text-xs text-on-surface-variant">BPM:</label>
           <input
@@ -126,6 +239,9 @@ export default function TabEditorSidebar({
                 if (v > 0 && v <= MAX_TEMPO_BPM) onTempoChange(v);
                 else setTempoInput(String(tempo));
                 e.currentTarget.blur();
+              } else if (e.key === 'Escape') {
+                setTempoInput(String(tempo));
+                e.currentTarget.blur();
               }
             }}
             min={20}
@@ -142,7 +258,7 @@ export default function TabEditorSidebar({
 
       {/* Tracks */}
       <div className="flex-1 overflow-auto">
-        <div className="px-4 pt-3 pb-1 flex items-center justify-between">
+        <div className="px-4 py-2 flex items-center justify-between">
           <span className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Tracks</span>
           <button
             onClick={() => setShowAddTrack(!showAddTrack)}
@@ -242,16 +358,75 @@ export default function TabEditorSidebar({
           ))}
         </div>
 
+        {/* Key Assistant */}
+        <div className="border-t border-outline-variant/20">
+          <button
+            className="w-full flex items-center gap-2 px-4 py-2 font-bold text-on-surface-variant uppercase tracking-wider hover:bg-surface-container-high transition-colors"
+            onClick={() => setKeyOpen(v => !v)}
+          >
+            <Music2 className="h-3 w-3" />
+            <span className="flex-1 text-left text-xs">Key</span>
+            {selectedKey && (
+              <span className="text-[10px] font-normal text-primary normal-case tracking-normal mr-1">{selectedKey}</span>
+            )}
+            {keyOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+          </button>
+          {keyOpen && (
+            <div className="px-2 pb-2 space-y-2">
+              <div className="flex items-center gap-1">
+                <select
+                  value={selectedKey ?? ''}
+                  onChange={e => onKeyChange(e.target.value || null)}
+                  className="flex-1 bg-surface-container text-xs text-on-surface px-2 py-1 rounded outline-none focus:ring-1 focus:ring-primary"
+                >
+                  <option value="">— No key —</option>
+                  {KEYS.map(k => (
+                    <option key={k.key} value={k.key}>{k.key} major</option>
+                  ))}
+                </select>
+                <button
+                  onClick={onOpenKeyChart}
+                  className="p-1.5 rounded hover:bg-surface-container-high transition-colors text-on-surface-variant"
+                  title="View full key chart"
+                >
+                  <TableProperties className="h-3.5 w-3.5" />
+                </button>
+              </div>
+              {selectedKey && (() => {
+                const info = getKeyInfo(selectedKey);
+                if (!info) return null;
+                return (
+                  <div className="grid grid-cols-7 gap-0.5">
+                    {DEGREES.map((deg, i) => (
+                      <div key={deg} className="flex flex-col items-center gap-0.5">
+                        <span className="text-[8px] text-on-surface-variant/50 uppercase">{deg}</span>
+                        <span className={cn(
+                          'text-[10px] font-medium text-center leading-tight',
+                          info.chords[i].endsWith('°') ? 'text-on-surface-variant/50' :
+                          info.chords[i].endsWith('m') ? 'text-on-surface-variant' :
+                          i === 0 ? 'text-amber-400' : 'text-on-surface',
+                        )}>
+                          {info.chords[i]}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+        </div>
+
         {/* Sections & Patterns */}
         <div className="border-t border-outline-variant/20">
           {/* Sections sub-section */}
           <div>
             <button
-              className="w-full flex items-center gap-2 px-4 py-2 text-xs font-bold text-on-surface-variant uppercase tracking-wider hover:bg-surface-container-high transition-colors"
+              className="w-full flex items-center gap-2 px-4 py-2 font-bold text-on-surface-variant uppercase tracking-wider hover:bg-surface-container-high transition-colors"
               onClick={() => setSectionsOpen(v => !v)}
             >
-              <BookOpen className="h-3.5 w-3.5" />
-              <span className="flex-1 text-left">Sections</span>
+              <BookOpen className="h-3 w-3" />
+              <span className="flex-1 text-left text-xs">Sections</span>
               {sectionsOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
             </button>
             {sectionsOpen && (
@@ -259,12 +434,15 @@ export default function TabEditorSidebar({
                 {sections.length === 0 && !addSectionOpen && (
                   <p className="px-2 text-[10px] text-on-surface-variant/50 italic">No sections yet</p>
                 )}
-                {sections.map(sec => (
+                {sections.map(sec => {
+                  const isSectionTracked = trackedTabSections.has(sec.name);
+                  const canTrackSection = compositionId != null;
+                  return (
                   <div
                     key={sec.startBar}
                     onClick={() => onJumpToBar(sec.startBar)}
                     className={cn(
-                      'flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs cursor-pointer',
+                      'flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs cursor-pointer group',
                       practiceRange?.startBar === sec.startBar
                         ? 'bg-primary/10 text-primary'
                         : 'text-on-surface-variant hover:bg-surface-container-high',
@@ -274,6 +452,21 @@ export default function TabEditorSidebar({
                     <span className="text-[10px] text-on-surface-variant/50 shrink-0">
                       {sec.startBar + 1}–{sec.endBar + 1}
                     </span>
+                    {canTrackSection && (
+                      <button
+                        onClick={e => { e.stopPropagation(); void toggleTabSectionTracking(sec); }}
+                        className={cn(
+                          'p-0.5 rounded transition-colors shrink-0',
+                          isSectionTracked
+                            ? 'text-emerald-500 hover:text-emerald-600'
+                            : 'text-on-surface-variant/40 opacity-0 group-hover:opacity-100 hover:text-on-surface',
+                        )}
+                        title={isSectionTracked ? 'Stop tracking this section' : 'Track this section'}
+                        aria-label={isSectionTracked ? 'Stop tracking section' : 'Track section'}
+                      >
+                        {isSectionTracked ? <BookMarked className="h-3 w-3" /> : <Bookmark className="h-3 w-3" />}
+                      </button>
+                    )}
                     <button
                       onClick={e => { e.stopPropagation(); onPracticeRange(sec.startBar, sec.endBar); }}
                       className="p-0.5 rounded hover:bg-surface-container-highest transition-colors shrink-0"
@@ -289,9 +482,26 @@ export default function TabEditorSidebar({
                       <X className="h-3 w-3" />
                     </button>
                   </div>
-                ))}
+                  );
+                })}
                 {addSectionOpen ? (
                   <div className="px-1 space-y-1">
+                    <div className="flex flex-wrap gap-1 pb-0.5">
+                      {['Intro', 'Verse', 'Pre-Chorus', 'Chorus', 'Bridge', 'Solo', 'Outro'].map(preset => (
+                        <button
+                          key={preset}
+                          onClick={() => setNewSectionName(preset)}
+                          className={cn(
+                            'px-1.5 py-0.5 rounded text-[9px] font-medium border transition-colors',
+                            newSectionName === preset
+                              ? 'border-primary bg-primary/10 text-primary'
+                              : 'border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-high',
+                          )}
+                        >
+                          {preset}
+                        </button>
+                      ))}
+                    </div>
                     <input
                       type="text"
                       value={newSectionName}
@@ -314,6 +524,7 @@ export default function TabEditorSidebar({
                         type="number"
                         value={newSectionBar + 1}
                         onChange={e => setNewSectionBar(Math.max(0, Math.min(totalBars - 1, Number(e.target.value) - 1)))}
+                        onKeyDown={e => { if (e.key === 'Escape') e.currentTarget.blur(); }}
                         min={1}
                         max={totalBars}
                         className="w-16 bg-surface-container text-xs text-on-surface px-2 py-1 rounded outline-none focus:ring-1 focus:ring-primary"
@@ -356,11 +567,11 @@ export default function TabEditorSidebar({
           {/* Detected Patterns sub-section */}
           <div>
             <div
-              className="w-full flex items-center gap-2 px-4 py-2 text-xs font-bold text-on-surface-variant uppercase tracking-wider hover:bg-surface-container-high transition-colors"
+              className="w-full flex items-center gap-2 px-4 py-2 font-bold text-on-surface-variant uppercase tracking-wider hover:bg-surface-container-high transition-colors"
               onClick={() => setPatternsOpen(v => !v)}
             >
-              <Layers className="h-3.5 w-3.5" />
-              <span className="flex-1 text-left">Patterns</span>
+              <Layers className="h-3 w-3" />
+              <span className="flex-1 text-left text-xs">Patterns</span>
               {detectedPatterns.filter(p => !p.unique).length > 0 && (
                 <span className="text-[10px] bg-surface-container-high px-1.5 py-0.5 rounded-full">
                   {detectedPatterns.filter(p => !p.unique).length}
@@ -433,37 +644,61 @@ export default function TabEditorSidebar({
                 )}
                 {detectedPatterns.map((pattern, idx) => {
                   const patternColor = pattern.unique ? '#6b7280' : PATTERN_COLORS[idx % PATTERN_COLORS.length];
+                  const isTracked = trackedPatterns.has(pattern.label);
+                  const canTrack = compositionId != null && !pattern.unique;
                   return (
-                  <div key={pattern.label} className="rounded-lg overflow-hidden">
-                    <button
-                      className="w-full flex items-center gap-2 px-2 py-1.5 text-xs hover:bg-surface-container-high transition-colors"
-                      onClick={() => setExpandedPattern(expandedPattern === pattern.label ? null : pattern.label)}
-                    >
-                      <span
-                        className="w-2 h-2 rounded-full shrink-0"
-                        style={{background: patternColor}}
-                      />
-                      {pattern.unique ? (
-                        <>
-                          <span className="font-medium text-on-surface-variant/70">{pattern.label}</span>
-                          <span className="text-[10px] text-on-surface-variant/40">
-                            {pattern.barLength > 1 ? `${pattern.barLength} bars` : '1 bar'} · unique
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <span className="font-medium">Pattern {pattern.label}</span>
-                          {pattern.barLength > 1 && (
-                            <span className="text-[10px] text-on-surface-variant/40">{pattern.barLength}b</span>
+                  <div key={pattern.label} className="rounded-lg overflow-hidden group">
+                    <div className="w-full flex items-center gap-2 px-2 py-1.5 text-xs hover:bg-surface-container-high transition-colors">
+                      <button
+                        className="flex items-center gap-2 flex-1 min-w-0 text-left"
+                        onClick={() => setExpandedPattern(expandedPattern === pattern.label ? null : pattern.label)}
+                      >
+                        <span
+                          className="w-2 h-2 rounded-full shrink-0"
+                          style={{background: patternColor}}
+                        />
+                        {pattern.unique ? (
+                          <>
+                            <span className="font-medium text-on-surface-variant/70">{pattern.label}</span>
+                            <span className="text-[10px] text-on-surface-variant/40">
+                              {pattern.barLength > 1 ? `${pattern.barLength} bars` : '1 bar'} · unique
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="font-medium">Pattern {pattern.label}</span>
+                            {pattern.barLength > 1 && (
+                              <span className="text-[10px] text-on-surface-variant/40">{pattern.barLength}b</span>
+                            )}
+                            <span className="text-[10px] text-on-surface-variant/60">×{pattern.instances.length}</span>
+                          </>
+                        )}
+                      </button>
+                      {canTrack && (
+                        <button
+                          onClick={e => { e.stopPropagation(); void togglePatternTracking(pattern); }}
+                          className={cn(
+                            'p-0.5 rounded shrink-0 transition-colors',
+                            isTracked
+                              ? 'text-emerald-500 hover:text-emerald-600'
+                              : 'text-on-surface-variant/40 opacity-0 group-hover:opacity-100 hover:text-on-surface',
                           )}
-                          <span className="text-[10px] text-on-surface-variant/60">×{pattern.instances.length}</span>
-                        </>
+                          title={isTracked ? 'Stop tracking this pattern' : 'Track this pattern'}
+                          aria-label={isTracked ? 'Stop tracking pattern' : 'Track pattern'}
+                        >
+                          {isTracked ? <BookMarked className="h-3.5 w-3.5" /> : <Bookmark className="h-3.5 w-3.5" />}
+                        </button>
                       )}
-                      <span className="flex-1" />
-                      {expandedPattern === pattern.label
-                        ? <ChevronDown className="h-3 w-3 text-on-surface-variant/60" />
-                        : <ChevronRight className="h-3 w-3 text-on-surface-variant/60" />}
-                    </button>
+                      <button
+                        className="p-0.5 shrink-0"
+                        onClick={() => setExpandedPattern(expandedPattern === pattern.label ? null : pattern.label)}
+                        aria-label={expandedPattern === pattern.label ? 'Collapse pattern' : 'Expand pattern'}
+                      >
+                        {expandedPattern === pattern.label
+                          ? <ChevronDown className="h-3 w-3 text-on-surface-variant/60" />
+                          : <ChevronRight className="h-3 w-3 text-on-surface-variant/60" />}
+                      </button>
+                    </div>
                     {expandedPattern === pattern.label && (
                       <div className="pl-4 pr-2 pb-1 space-y-0.5">
                         {pattern.instances.map(barIdx => (

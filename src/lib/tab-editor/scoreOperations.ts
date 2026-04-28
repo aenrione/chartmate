@@ -455,6 +455,77 @@ export function duplicateMeasure(score: Score, barIndex: number): void {
   insertMeasureAfter(score, barIndex);
 }
 
+export function clearBar(score: Score, trackIndex: number, voiceIndex: number, barIndex: number): void {
+  const track = score.tracks[trackIndex];
+  if (!track) return;
+  const staff = track.staves[0];
+  if (!staff) return;
+  const bar = staff.bars[barIndex];
+  if (!bar) return;
+  const voice = bar.voices[voiceIndex] ?? bar.voices[0];
+  if (!voice) return;
+
+  // Collect IDs of notes about to be removed.
+  // AlphaTab's finish() looks up slide connections by note ID (_noteIdBag).
+  // If a note in an adjacent bar holds a slideOriginNoteId/slideTargetNoteId
+  // that maps to a removed note, noteIdLookup.get(id) returns undefined and
+  // finish() crashes on `this.slideOrigin.slideTarget = this` (line 6708).
+  const removedIds = new Set<number>();
+  for (const beat of voice.beats) {
+    for (const note of beat.notes) {
+      const id = (note as {id?: number}).id;
+      if (typeof id === 'number' && id >= 0) removedIds.add(id);
+    }
+  }
+
+  if (removedIds.size > 0) {
+    for (const adjIdx of [barIndex - 1, barIndex + 1]) {
+      const adjBar = staff.bars[adjIdx];
+      if (!adjBar) continue;
+      for (const v of adjBar.voices) {
+        for (const beat of v.beats) {
+          for (const note of beat.notes) {
+            // Clear ID-based references that finish() would fail to resolve
+            const bag = (note as unknown as {_noteIdBag?: {slideOriginNoteId: number; slideTargetNoteId: number}})._noteIdBag;
+            if (bag) {
+              if (removedIds.has(bag.slideOriginNoteId)) bag.slideOriginNoteId = -1;
+              if (removedIds.has(bag.slideTargetNoteId)) bag.slideTargetNoteId = -1;
+            }
+            // Clear live references so finish() doesn't re-establish them
+            if (note.slideOrigin && removedIds.has((note.slideOrigin as {id?: number}).id ?? -1)) {
+              note.slideOrigin = null;
+            }
+            if (note.slideTarget && removedIds.has((note.slideTarget as {id?: number}).id ?? -1)) {
+              note.slideTarget = null;
+              note.slideOutType = SlideOutType.None;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Keep the first beat object alive (AlphaTab's internal cursor may hold a
+  // reference to it; dropping it via .length=0 causes _currentBeat.start=null crash).
+  // Instead: clear its notes and reset it, then splice away any extra beats.
+  const firstBeat = voice.beats[0];
+  if (firstBeat) {
+    firstBeat.notes.length = 0;
+    firstBeat.isEmpty = true;
+    firstBeat.duration = Duration.Whole;
+    firstBeat.dots = 0;
+    voice.beats.splice(1);
+  } else {
+    const rest = new Beat();
+    rest.isEmpty = true;
+    rest.duration = Duration.Whole;
+    voice.addBeat(rest);
+  }
+
+  repairBarLinks(staff);
+  finishScore(score);
+}
+
 // --- Beat removal ---
 
 /**

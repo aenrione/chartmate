@@ -1,0 +1,59 @@
+{
+  "id": "01-extensions",
+  "title": "Extensions: 9ths, 11ths, and 13ths",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Extended Chords: Beyond the Seventh\n\nClassical harmony uses chords of three or four notes (triads and seventh chords). Jazz harmony routinely uses five, six, or seven notes — **extended chords** that stack thirds above the seventh.\n\n### The Tertian Stack\n\nAll Western chords are built by stacking thirds. Continuing above the seventh:\n\n- Root → 3rd → 5th → 7th → **9th** → **11th** → **13th**\n\nIn C major: C–E–G–B–D–F–A\n\nThe 9th is D (same as the 2nd, but in a higher octave context). The 11th is F (the 4th in high octave). The 13th is A (the 6th in high octave).\n\n### The 9th: Color Without Clash\n\nThe **major 9th** (D above Cmaj7: Cmaj9 = C–E–G–B–D) adds brightness and lush color without strong dissonance. It is the first, most consonant extension.\n\n- **Cmaj9**: C–E–G–B–D (5 notes)\n- **Dm9**: D–F–A–C–E\n- **G9**: G–B–D–F–A (dominant ninth)\n\nThe dominant ninth (G9 or G7add9) is deeply associated with jazz and R&B. Listen to Herbie Hancock, Oscar Peterson, or Bill Evans for constant 9th usage.\n\n### The 11th: The Problematic Extension\n\nThe natural 11th (F in C major) clashes strongly with the major 3rd (E) — only a minor ninth apart. This dissonance is usually avoided or resolved with a **#11** (raised 11th, Lydian flavor — see 02-alterations).\n\nThe 11th works well on:\n- **Minor chords** (minor 3rd doesn't clash with 11th): Dm11 = D–F–A–C–E–G\n- **Dominant sus chords**: G11 or Gsus7 = G–C–D–F (no 3rd, so no clash)\n\n### The 13th: The Full Stack\n\nThe **13th** (A above G7: G13 = G–B–D–F–A) is the most complex single extension. In practice, not all tones are voiced — G13 is typically played as G–B–F–A or similar (omitting 5th and 11th).\n\nThe 13th on a dominant chord is characteristic of jazz and soul: Cm7→F13→Bbmaj9 is a classic ii–V7(13)–Imaj9 cadence.\n\n### Voicing in Practice\n\nJazz pianists do not play all seven tones. They use **guide tones** (3rd and 7th) plus 1-2 extensions. A practical rule: **omit the 5th** (it adds little color) and **choose extensions that define the specific chord quality**.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What interval is the 9th of a chord equivalent to, heard in the octave above the root?",
+      "choices": ["The 4th", "The 2nd (major second)", "The 6th", "The 7th"],
+      "answer": 1,
+      "explanation": "The 9th is the major second (whole step above the root) placed an octave higher. In C: the 9th is D, which is the same pitch class as the 2nd above C. 'Extension' names (9th, 11th, 13th) indicate the interval from the bass when all chord tones are stacked in thirds above one octave span.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is the natural 11th avoided on major chords in jazz?",
+      "choices": [
+        "It is too far above the root to hear",
+        "It creates a minor ninth clash with the major 3rd (E and F are only a semitone apart)",
+        "It is the same pitch as the 4th, which is forbidden in jazz",
+        "The 11th always creates parallel fifths"
+      ],
+      "answer": 1,
+      "explanation": "In a major chord (e.g., Cmaj7), the major 3rd is E. The natural 11th is F. E and F are only a minor second (semitone) apart — one of the harshest possible dissonances. This clash makes the natural 11th largely unusable on major chords. The solution is to raise the 11th to F# (#11), which clears the E, creating the Lydian-flavored Cmaj7#11.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a jazz context, what does 'Dm11' contain?",
+      "choices": [
+        "D–F#–A–C–E–G (major chord with extensions)",
+        "D–F–A–C–E–G (minor seventh chord with added 9th and 11th)",
+        "D–F–A–Bb–C–G (dominant flavor with extensions)",
+        "D–F–A–C–Eb–G (minor with minor ninth)"
+      ],
+      "answer": 1,
+      "explanation": "Dm11 = D–F–A–C–E–G. Built up: root (D), minor 3rd (F), 5th (A), minor 7th (C), 9th (E), 11th (G). The minor chord's minor 3rd (F) and the 11th (G) are a major 9th apart — no problematic minor 9th clash. This makes 11ths work comfortably on minor chords.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a practical voicing approach for extended chords in jazz piano?",
+      "choices": [
+        "Always play all seven chord tones",
+        "Play the root in both hands for fullness",
+        "Use guide tones (3rd and 7th) plus 1-2 extensions, omitting the 5th",
+        "Avoid extensions entirely; keep voicings to three notes"
+      ],
+      "answer": 2,
+      "explanation": "Jazz pianists typically use guide tones (3rd and 7th — the two notes that most clearly define chord quality) plus one or two choice extensions. The 5th is commonly omitted as it adds little harmonic color. Left hand may have root + 7th; right hand adds 3rd + 9th or 13th. This efficient approach creates rich harmony without muddy clusters.",
+      "srs": true
+    }
+  ]
+}

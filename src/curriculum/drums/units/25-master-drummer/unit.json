@@ -1,0 +1,8 @@
+{
+  "id": "25-master-drummer",
+  "title": "Master Drummer",
+  "description": "Synthesis of all paths — finding your voice, performance preparation, and artistic expression",
+  "icon": "trophy",
+  "prerequisites": ["21-jazz-advanced", "19-double-bass-mastery", "22-world-rhythms", "24-composition-and-arrangement"],
+  "lessons": ["01-finding-your-voice", "02-performance-preparation", "03-artistic-expression", "04-transcription-practice", "05-legacy-drummers"]
+}

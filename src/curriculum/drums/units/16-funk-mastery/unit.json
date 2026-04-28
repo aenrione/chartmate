@@ -1,0 +1,8 @@
+{
+  "id": "16-funk-mastery",
+  "title": "Funk Mastery",
+  "description": "Ghost notes, 16th note funk, New Orleans second line, and syncopated kick patterns",
+  "icon": "activity",
+  "prerequisites": ["06-groove-styles", "14-hand-technique"],
+  "lessons": ["01-ghost-notes", "02-16th-note-funk", "03-new-orleans-groove", "04-syncopated-kick", "05-pocket-playing"]
+}

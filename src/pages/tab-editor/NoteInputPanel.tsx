@@ -18,6 +18,7 @@ interface NoteInputPanelProps {
   onChordNameCommit: (name: string) => void;
   onChordClear: () => void;
   onOpenChordFinder: () => void;
+  isDrumTrack?: boolean;
 }
 
 const DURATIONS = [
@@ -30,7 +31,7 @@ const DURATIONS = [
   {value: Duration.SixtyFourth, label: '64th', subtitle: '64', title: '64th note (Ctrl+7)'},
 ];
 
-const EFFECTS: {key: NoteEffect | 'slide' | 'bend'; label: string; title: string}[] = [
+const GUITAR_EFFECTS: {key: NoteEffect | 'slide' | 'bend'; label: string; title: string}[] = [
   {key: 'hammerOn', label: 'H/P', title: 'Hammer-on / Pull-off (H)'},
   {key: 'slide', label: 'Slide', title: 'Slide (S)'},
   {key: 'bend', label: 'Bend', title: 'Bend (B)'},
@@ -38,6 +39,11 @@ const EFFECTS: {key: NoteEffect | 'slide' | 'bend'; label: string; title: string
   {key: 'vibrato', label: 'Vib', title: 'Vibrato (V)'},
   {key: 'tap', label: 'Tap', title: 'Tap (T)'},
   {key: 'harmonic', label: 'Harm', title: 'Natural Harmonic'},
+  {key: 'ghostNote', label: 'Ghost', title: 'Ghost Note (G)'},
+];
+
+const DRUM_EFFECTS: {key: NoteEffect | 'slide' | 'bend'; label: string; title: string}[] = [
+  {key: 'accent', label: 'Accent', title: 'Accent'},
   {key: 'ghostNote', label: 'Ghost', title: 'Ghost Note (G)'},
 ];
 
@@ -53,6 +59,7 @@ export default function NoteInputPanel({
   onChordNameCommit,
   onChordClear,
   onOpenChordFinder,
+  isDrumTrack = false,
 }: NoteInputPanelProps) {
   const [chordInput, setChordInput] = useState('');
 
@@ -111,7 +118,7 @@ export default function NoteInputPanel({
       {/* Effect buttons */}
       <div className="flex items-center gap-0.5 shrink-0">
         <span className="text-[10px] text-on-surface-variant/60 font-medium mr-1.5 uppercase tracking-wider">FX</span>
-        {EFFECTS.map(eff => (
+        {(isDrumTrack ? DRUM_EFFECTS : GUITAR_EFFECTS).map(eff => (
           <button
             key={eff.key}
             onClick={() => onEffectToggle(eff.key)}
@@ -123,49 +130,52 @@ export default function NoteInputPanel({
         ))}
       </div>
 
-      <div className="w-px h-5 bg-outline-variant/20 shrink-0" />
+      {!isDrumTrack && (
+        <>
+          <div className="w-px h-5 bg-outline-variant/20 shrink-0" />
 
-      {/* Chord annotation */}
-      <div className="flex items-center gap-0.5 shrink-0">
-        <span className="text-[10px] text-on-surface-variant/60 font-medium mr-1.5 uppercase tracking-wider">Chord</span>
-        <div className="relative flex items-center">
-          <input
-            type="text"
-            value={chordInput}
-            onChange={e => setChordInput(e.target.value)}
-            onBlur={commitChord}
-            onKeyDown={e => {
-              if (e.key === 'Enter') { e.preventDefault(); commitChord(); (e.target as HTMLInputElement).blur(); }
-              if (e.key === 'Escape') { setChordInput(currentChordName ?? ''); (e.target as HTMLInputElement).blur(); }
-              // Prevent editor hotkeys from firing while typing
-              e.stopPropagation();
-            }}
-            placeholder="e.g. Bm"
-            className={cn(
-              'h-7 w-20 px-2 pr-5 rounded text-[11px] border transition-colors focus:outline-none focus:ring-1 focus:ring-primary/50',
-              currentChordName
-                ? 'bg-primary/10 border-primary/40 text-primary font-semibold'
-                : 'bg-surface-container-high border-outline-variant/30 text-on-surface-variant',
-            )}
-          />
-          {chordInput && (
+          {/* Chord annotation — guitar/bass only */}
+          <div className="flex items-center gap-0.5 shrink-0">
+            <span className="text-[10px] text-on-surface-variant/60 font-medium mr-1.5 uppercase tracking-wider">Chord</span>
+            <div className="relative flex items-center">
+              <input
+                type="text"
+                value={chordInput}
+                onChange={e => setChordInput(e.target.value)}
+                onBlur={commitChord}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') { e.preventDefault(); commitChord(); (e.target as HTMLInputElement).blur(); }
+                  if (e.key === 'Escape') { setChordInput(currentChordName ?? ''); (e.target as HTMLInputElement).blur(); }
+                  e.stopPropagation();
+                }}
+                placeholder="e.g. Bm"
+                className={cn(
+                  'h-7 w-20 px-2 pr-5 rounded text-[11px] border transition-colors focus:outline-none focus:ring-1 focus:ring-primary/50',
+                  currentChordName
+                    ? 'bg-primary/10 border-primary/40 text-primary font-semibold'
+                    : 'bg-surface-container-high border-outline-variant/30 text-on-surface-variant',
+                )}
+              />
+              {chordInput && (
+                <button
+                  onMouseDown={e => { e.preventDefault(); setChordInput(''); onChordClear(); }}
+                  className="absolute right-1 text-on-surface-variant/50 hover:text-on-surface-variant"
+                  tabIndex={-1}
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              )}
+            </div>
             <button
-              onMouseDown={e => { e.preventDefault(); setChordInput(''); onChordClear(); }}
-              className="absolute right-1 text-on-surface-variant/50 hover:text-on-surface-variant"
-              tabIndex={-1}
+              onClick={onOpenChordFinder}
+              title="Open Chord Finder (Cmd+K)"
+              className="px-1.5 h-7 flex items-center justify-center rounded text-[11px] font-medium text-on-surface-variant hover:bg-surface-container-high active:bg-primary/10 transition-colors"
             >
-              <X className="h-3 w-3" />
+              Find
             </button>
-          )}
-        </div>
-        <button
-          onClick={onOpenChordFinder}
-          title="Open Chord Finder (Cmd+K)"
-          className="px-1.5 h-7 flex items-center justify-center rounded text-[11px] font-medium text-on-surface-variant hover:bg-surface-container-high active:bg-primary/10 transition-colors"
-        >
-          Find
-        </button>
-      </div>
+          </div>
+        </>
+      )}
 
       <div className="w-px h-5 bg-outline-variant/20 shrink-0" />
 

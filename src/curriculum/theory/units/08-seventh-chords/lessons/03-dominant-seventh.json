@@ -1,0 +1,62 @@
+{
+  "id": "03-dominant-seventh",
+  "title": "The Dominant Seventh Chord",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## The Dominant Seventh Chord\n\nIf one chord could be called the engine of Western tonal music, it would be the **dominant seventh**. No other chord creates more harmonic momentum, more urgency to resolve, more forward drive. Understanding it is essential to understanding how tonal harmony works.\n\n### Formula\n\nA dominant seventh chord = major triad + minor seventh:\n\n- **Root** to **3rd**: major third — 4 half steps\n- **3rd** to **5th**: minor third — 3 half steps\n- **5th** to **7th**: minor third — 3 half steps\n- **Root** to **7th**: minor seventh — **10 half steps**\n\nG7 in full: **G–B–D–F**\n\n### Why 'Dominant'?\n\nThe name comes from the chord's position: the dominant seventh chord is built on **scale degree 5** (the dominant) of the major scale. In C major, the dominant is G, so G7 is the dominant seventh chord of C major.\n\n### The Tritone — The Engine of Tension\n\nInside every dominant seventh chord lies a **tritone** — the interval of the diminished fifth — between the third and seventh of the chord. In G7:\n- **B** (the 3rd) and **F** (the 7th) form a tritone (6 half steps, or 3 whole tones)\n\nThis tritone is inherently unstable and creates a powerful pull toward resolution:\n- **B wants to resolve up** by a half step to **C** (the root of C major)\n- **F wants to resolve down** by a half step to **E** (the third of C major)\n\nThe tritone resolves **inward** — both voices move toward each other — producing the most satisfying harmonic motion in tonal music: **V7 → I** (G7 → C major).\n\n### V7 → I: The Authentic Cadence\n\nThis is the most important progression in all of tonal music. In C major:\n- G7 (V7): **G–B–D–F** → C major (I): **C–E–G**\n- B resolves up to C; F resolves down to E\n\nThis motion defines the key center more powerfully than any other harmonic gesture. Bach used it. Mozart used it. Beethoven used it. Every blues musician uses it. It appears in virtually every piece of Western music.\n\n### The Blues Context\n\nIn blues, dominant seventh chords take on a different role — they are used on **every scale degree** (I7, IV7, V7), not just the dominant. This creates a distinctly bluesy color throughout the progression. The tension of the dominant seventh is not always resolved in the classical sense; instead, it becomes the norm, giving blues its gritty, ambiguous quality.\n\n### Chord Symbols\n\nA simple number after the letter always means dominant seventh: **G7**, **C7**, **Bb7**, **F#7**. No 'Maj' prefix — that would be a different chord entirely.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What are the notes of a G7 chord?",
+      "choices": ["G, B, D, F#", "G, B, D, F", "G, Bb, D, F", "G, B, Db, F"],
+      "answer": 1,
+      "explanation": "G7 is G–B–D–F. The dominant seventh chord is a major triad (G–B–D) plus a minor seventh. The minor seventh above G is F (10 half steps). F# would be the major seventh, which would give you GMaj7, not G7.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What interval between the 3rd and 7th of a dominant seventh chord creates the chord's powerful tension?",
+      "choices": ["Perfect fifth", "Major third", "Tritone (diminished fifth)", "Minor second"],
+      "answer": 2,
+      "explanation": "The tritone (diminished fifth, 6 half steps) between the 3rd and 7th of a dominant seventh chord is the source of its tension. In G7, B and F form a tritone. B pulls upward to C while F pulls downward to E — the inward resolution into C major.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The dominant seventh chord in a major key is built on which scale degree?",
+      "choices": ["Scale degree 1 (tonic)", "Scale degree 4 (subdominant)", "Scale degree 5 (dominant)", "Scale degree 7 (leading tone)"],
+      "answer": 2,
+      "explanation": "The dominant seventh chord is built on scale degree 5 — the dominant. In C major, scale degree 5 is G, so G7 is the dominant seventh. The word 'dominant' in the chord name refers to this scale degree position.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When a G7 chord resolves to C major, how does the tritone (B–F) resolve?",
+      "choices": [
+        "B moves down to A; F moves up to G",
+        "B moves up to C; F moves down to E",
+        "Both B and F move up by a half step",
+        "Both B and F move down by a half step"
+      ],
+      "answer": 1,
+      "explanation": "The tritone in G7 resolves inward: B (the major third) rises a half step to C (the root of C major), while F (the minor seventh) falls a half step to E (the major third of C major). This converging motion — both voices moving toward each other — is what makes the V7–I cadence so satisfying.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In blues harmony, dominant seventh chords are used on which scale degrees?",
+      "choices": [
+        "Only scale degree V, as in classical harmony",
+        "Only scale degrees I and V",
+        "Scale degrees I, IV, and V — all three main chords",
+        "Only scale degrees I and IV"
+      ],
+      "answer": 2,
+      "explanation": "Blues uses dominant seventh chords on all three main scale degrees: I7, IV7, and V7. Unlike classical harmony where only the V chord is dominant, blues applies the dominant seventh quality throughout, creating the characteristic blues tonality.",
+      "srs": true
+    }
+  ]
+}

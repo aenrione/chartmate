@@ -1,0 +1,38 @@
+{
+  "id": "02-dominant-7-on-I",
+  "title": "Dominant 7ths on I and IV",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Dominant Sevenths on I, IV, and V: Blues Harmony\n\nIn diatonic major harmony, only one chord is a dominant seventh: V7. In blues, all three primary chords (I, IV, V) are dominant sevenths. This is not an accident — it reflects the blues aesthetic of perpetual, unresolved tension.\n\n### Why All Three Are Dominant Sevenths\n\nThe minor seventh (b7) in a dominant chord creates tension that normally resolves. In blues:\n- **I7** (C7 in C): Has Bb. Never fully resolves — the tonic itself is unstable, suggesting 'I'm home, but I'm still longing.'\n- **IV7** (F7 in C): Has Eb. The IV already has a subdominant pull; adding b7 deepens the bluesy quality.\n- **V7** (G7 in C): Has F. The traditional dominant — now just one of three equally dominant-flavored chords.\n\n### The Endless Cycle\n\nBecause I7 never fully resolves (it is itself a dominant seventh), the blues form creates an endless cycle of departure and incomplete return. The I7 chord at bars 1-4 is already 'yearning' — there is no true resting point. This is the blues emotional reality: there is no full resolution, no perfect happiness.\n\n### Quick Four: The IV7 Approach to I\n\nA characteristic blues variation: moving to IV7 in bar 2 (the 'quick four'):\n\nBar 1: C7 (I7)\nBar 2: F7 (IV7) ← quick four\nBar 3: C7 (return to I7)\n...\n\nThis gives the beginning of the form extra momentum. The F7 arrival in bar 2 'warms up' the form before returning to I7.\n\n### IV to iv: The 'Minor Four' Substitution\n\nA very common blues variation: in bars 5-6 (the IV7 bars), substitute the major IV7 with a minor iv7:\n\nBars 5-6 standard: F7 – F7\nBars 5-6 with minor four: F7 – Fm7 (or just Fm)\n\nThe Fm in bar 6 is borrowed from C Aeolian — the same minor subdominant (iv) borrowed chord we study in modal interchange. In blues, it is a natural, untheorized element of the tradition.\n\nListen to: B.B. King's 'The Thrill is Gone' — famously uses the minor four in a major-key blues. The Fm chord gives the song its particularly melancholy, resigned quality.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the blues, why does the I chord typically function as a dominant seventh (I7) rather than a major seventh (Imaj7)?",
+      "choices": [
+        "Because blues musicians prefer the sound of dominant sevenths on all chords",
+        "Because the I7 chord incorporates the blue note (b7), creating the perpetual unresolved tension that characterizes blues harmony — there is no 'safe home'",
+        "Because Imaj7 is too jazzy and doesn't fit the blues style",
+        "Because the dominant seventh on I comes from the harmonic minor scale"
+      ],
+      "answer": 1,
+      "explanation": "The I7 chord (dominant seventh on the tonic) has a minor seventh (b7), which is one of the three blue notes. Using I7 means the home chord itself is 'unstable' — it contains the blues scale's b7. This creates the blues' defining emotional quality: even at home, there is longing and unresolved tension. The music is always in a state of yearning, which is the blues.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "B.B. King's 'The Thrill is Gone' is in B minor but borrows which chord for its characteristic melancholy sound?",
+      "choices": [
+        "The bVII (A major) borrowed from B Mixolydian",
+        "The minor iv chord (Em) borrowed from B Aeolian — the 'minor four'",
+        "The bII (C major) borrowed from B Phrygian",
+        "The #IV (E# diminished) borrowed from B Lydian"
+      ],
+      "answer": 1,
+      "explanation": "In 'The Thrill is Gone' (key of B minor), the minor iv is Em (E minor). Where a standard blues might have E7 (IV7 in major) or even Em as the diatonic iv in minor, B.B. King uses Em specifically in a way that creates a resigned, melancholy quality. The minor subdominant (iv) deepens the blues emotional weight beyond what a standard major IV7 provides.",
+      "srs": true
+    }
+  ]
+}

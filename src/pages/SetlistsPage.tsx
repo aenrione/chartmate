@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useSearchParams} from 'react-router-dom';
 import {
   FileMusic,
   FileText,
@@ -7,14 +7,10 @@ import {
   ListMusic,
   Music,
   Music2,
-  Pencil,
   Play,
   Plus,
   Search,
-  Disc3,
-  Trash2,
   X,
-  Gamepad2,
   Gauge,
 } from 'lucide-react';
 import {Button} from '@/components/ui/button';
@@ -66,8 +62,6 @@ import {
   type SetlistItem,
   getSetlists,
   createSetlist,
-  updateSetlist,
-  deleteSetlist,
   getSetlistItems,
   addSetlistItem,
   removeSetlistItem,
@@ -81,126 +75,6 @@ import {listCompositions, type TabComposition} from '@/lib/local-db/tab-composit
 import {getAllPdfLibraryEntries, type PdfLibraryEntry} from '@/lib/local-db/pdf-library';
 import {ChartResponseEncore} from '@/lib/chartSelection';
 import {InstrumentImage, RENDERED_INSTRUMENTS, type AllowedInstrument} from '@/components/ChartInstruments';
-import {useSidebar} from '@/contexts/SidebarContext';
-
-// ── Setlist Sidebar ──────────────────────────────────────────────────
-
-function SetlistSidebar({
-  setlists,
-  selectedId,
-  onSelect,
-  onCreate,
-  onDelete,
-  onRename,
-}: {
-  setlists: Setlist[];
-  selectedId: number | null;
-  onSelect: (id: number) => void;
-  onCreate: () => void;
-  onDelete: (id: number) => void;
-  onRename: (id: number, name: string) => void;
-}) {
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [editName, setEditName] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (editingId !== null) inputRef.current?.focus();
-  }, [editingId]);
-
-  const startEditing = (s: Setlist) => {
-    setEditingId(s.id);
-    setEditName(s.name);
-  };
-
-  const commitEdit = () => {
-    if (editingId !== null && editName.trim()) {
-      onRename(editingId, editName.trim());
-    }
-    setEditingId(null);
-  };
-
-  const sourceIcon = (s: Setlist) => {
-    if (s.sourceType === 'spotify') return <Disc3 className="h-3.5 w-3.5 text-green-500 shrink-0" />;
-    if (s.sourceType === 'source_game') return <Gamepad2 className="h-3.5 w-3.5 text-amber-500 shrink-0" />;
-    return <ListMusic className="h-3.5 w-3.5 text-outline shrink-0" />;
-  };
-
-  return (
-    <>
-      <div className="px-3 py-3 border-b border-white/5 flex items-center justify-between">
-        <h2 className="text-sm font-headline font-bold text-on-surface-variant uppercase tracking-widest">Setlists</h2>
-        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onCreate}>
-          <Plus className="h-4 w-4" />
-        </Button>
-      </div>
-      <div className="flex-1 overflow-y-auto">
-        {setlists.length === 0 ? (
-          <div className="px-3 py-8 text-center text-xs text-outline">
-            No setlists yet. Create one to get started.
-          </div>
-        ) : (
-          <div className="py-1">
-            {setlists.map(s => (
-              <div
-                key={s.id}
-                className={cn(
-                  'group flex items-center gap-2 px-3 py-2 cursor-pointer text-sm transition-colors',
-                  selectedId === s.id
-                    ? 'bg-surface-container text-on-surface'
-                    : 'text-on-surface-variant hover:bg-surface-variant/50',
-                )}
-                onClick={() => onSelect(s.id)}
-              >
-                {sourceIcon(s)}
-                {editingId === s.id ? (
-                  <input
-                    ref={inputRef}
-                    className="flex-1 min-w-0 bg-surface-container border border-outline-variant/20 rounded px-1.5 py-0.5 text-sm text-on-surface outline-none focus:ring-1 focus:ring-outline"
-                    value={editName}
-                    onChange={e => setEditName(e.target.value)}
-                    onBlur={commitEdit}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter') commitEdit();
-                      if (e.key === 'Escape') setEditingId(null);
-                    }}
-                    onClick={e => e.stopPropagation()}
-                  />
-                ) : (
-                  <span className="flex-1 min-w-0 truncate">{s.name}</span>
-                )}
-                <span className="text-xs text-outline tabular-nums shrink-0">
-                  {s.itemCount ?? 0}
-                </span>
-                <div className="hidden group-hover:flex items-center gap-0.5 shrink-0">
-                  <button
-                    className="p-0.5 rounded hover:bg-surface-container-high"
-                    onClick={e => {
-                      e.stopPropagation();
-                      startEditing(s);
-                    }}
-                  >
-                    <Pencil className="h-3 w-3 text-on-surface-variant" />
-                  </button>
-                  <button
-                    className="p-0.5 rounded hover:bg-error/10"
-                    onClick={e => {
-                      e.stopPropagation();
-                      onDelete(s.id);
-                    }}
-                  >
-                    <Trash2 className="h-3 w-3 text-error" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </>
-  );
-}
-
 // ── Add Items Dialog (tabbed) ────────────────────────────────────────
 
 type AddTab = 'charts' | 'tabs' | 'pdfs';
@@ -782,12 +656,13 @@ export function SetlistEditor({
 // ── Main Page ────────────────────────────────────────────────────────
 
 export default function SetlistsPage() {
-  const {setSidebarContent} = useSidebar();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [setlists, setSetlists] = useState<Setlist[]>([]);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [items, setItems] = useState<SetlistItem[]>([]);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const selectedId = searchParams.get('id') ? Number(searchParams.get('id')) : null;
 
   const selectedSetlist = useMemo(
     () => setlists.find(s => s.id === selectedId) ?? null,
@@ -807,12 +682,18 @@ export default function SetlistsPage() {
 
   useEffect(() => {
     loadSetlists().then(data => {
-      if (data.length > 0 && selectedId === null) {
-        setSelectedId(data[0].id);
+      if (data.length > 0 && !searchParams.get('id')) {
+        setSearchParams({id: String(data[0].id)}, {replace: true});
       }
       setLoading(false);
     });
   }, [loadSetlists]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const handler = () => loadSetlists();
+    window.addEventListener('setlists-updated', handler);
+    return () => window.removeEventListener('setlists-updated', handler);
+  }, [loadSetlists]);
 
   useEffect(() => {
     if (selectedId !== null) {
@@ -824,24 +705,10 @@ export default function SetlistsPage() {
 
   const handleCreate = useCallback(async () => {
     const id = await createSetlist(`Setlist ${setlists.length + 1}`);
-    await loadSetlists();
-    setSelectedId(id);
+    setSearchParams({id: String(id)});
+    window.dispatchEvent(new CustomEvent('setlists-updated'));
     toast.success('Setlist created');
-  }, [setlists.length, loadSetlists]);
-
-  const handleDelete = useCallback(async (id: number) => {
-    await deleteSetlist(id);
-    const updated = await loadSetlists();
-    if (selectedId === id) {
-      setSelectedId(updated.length > 0 ? updated[0].id : null);
-    }
-    toast.success('Setlist deleted');
-  }, [selectedId, loadSetlists]);
-
-  const handleRename = useCallback(async (id: number, name: string) => {
-    await updateSetlist(id, {name});
-    await loadSetlists();
-  }, [loadSetlists]);
+  }, [setlists.length, setSearchParams]);
 
   const handleAddItems = async (result: AddItemsResult) => {
     if (!selectedId) return;
@@ -866,6 +733,7 @@ export default function SetlistsPage() {
 
     await loadItems(selectedId);
     await loadSetlists();
+    window.dispatchEvent(new CustomEvent('setlists-updated'));
   };
 
   const handleRemoveItem = async (itemId: number) => {
@@ -873,6 +741,7 @@ export default function SetlistsPage() {
     if (selectedId) {
       await loadItems(selectedId);
       await loadSetlists();
+      window.dispatchEvent(new CustomEvent('setlists-updated'));
     }
   };
 
@@ -895,25 +764,6 @@ export default function SetlistsPage() {
     await updateSetlistItemSpeed(itemId, speed);
     if (selectedId) await loadItems(selectedId);
   };
-
-  // Inject setlist navigator into the Layout sidebar
-  useEffect(() => {
-    setSidebarContent(
-      <SetlistSidebar
-        setlists={setlists}
-        selectedId={selectedId}
-        onSelect={setSelectedId}
-        onCreate={handleCreate}
-        onDelete={handleDelete}
-        onRename={handleRename}
-      />
-    );
-  }, [setlists, selectedId, setSidebarContent, handleCreate, handleDelete, handleRename]);
-
-  // Clean up sidebar on unmount
-  useEffect(() => {
-    return () => setSidebarContent(null);
-  }, [setSidebarContent]);
 
   if (loading) {
     return (

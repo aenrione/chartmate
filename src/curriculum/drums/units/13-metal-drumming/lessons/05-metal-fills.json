@@ -1,0 +1,34 @@
+{
+  "id": "05-metal-fills",
+  "title": "Metal Fills",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Metal Fills: Power and Precision\n\nMetal fills must match the intensity of the music — half-hearted fills disappear in the mix. But volume without accuracy is just noise.\n\n**Categories of metal fills:**\n\n1. **Tom roll fills**: Descending or ascending tom hits, often in 16th note or 32nd note groupings. The 'around the kit' fill accelerated to metal tempos.\n\n2. **Paradiddle-based fills**: Rudiments spread across the kit. A RLRR LRLL paradiddle on snare/toms creates naturally accented groupings.\n\n3. **Unison kick/snare fills**: Both hands and both feet hit simultaneously or in tightly spaced groups. Creates maximum impact.\n\n4. **Syncopated fills**: Fills that start on 'e' or 'ah' positions (not beat 1 or 3) — the fill begins in an unexpected place and pulls the listener forward.\n\n**The metal fill trap:** novice players cram too many notes and lose time. Experienced metal drummers know exactly where the next downbeat is during any fill. Practice with a click exclusively.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "16th Note Metal Fill (Full Bar)",
+      "description": "A full bar of 16th note tom fill: starts on hi-hat, moves to toms (approximated here on snare with accents), ends with a crash on beat 1 of the next bar. The kick drives the 'and' of beats 2 and 4 for extra propulsion.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 150,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x-x-x-x---------"},
+        {"name": "Snare",  "pattern": "--------X-X-X-X-"},
+        {"name": "Kick",   "pattern": "----x-------x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the most common mistake novice metal drummers make with fills?",
+      "choices": ["Playing fills too quietly", "Cramming too many notes and losing the time feel", "Using too few toms in the fill", "Playing fills too slowly"],
+      "answer": 1,
+      "explanation": "Novice metal drummers often rush and overplay fills, losing track of the time. The result is landing on beat 1 of the next bar at the wrong moment, disrupting the entire band. Fill precision requires relentless click track practice.",
+      "srs": true
+    }
+  ]
+}

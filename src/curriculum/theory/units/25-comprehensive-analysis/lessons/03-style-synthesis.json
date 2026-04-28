@@ -1,0 +1,38 @@
+{
+  "id": "03-style-synthesis",
+  "title": "Style Synthesis",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Style Synthesis: Where Knowledge Becomes Voice\n\nMusical style synthesis is the process of integrating influences from multiple genres, traditions, and periods into a coherent personal voice. The greatest musicians are not one-genre specialists — they are synthesizers.\n\n### The Great Synthesizers\n\n**Miles Davis**: Started in bebop (Charlie Parker's world), moved to cool jazz (*Birth of the Cool*, 1949), then modal jazz (*Kind of Blue*, 1959), then jazz fusion (*Bitches Brew*, 1970). Each album synthesized his current harmonic interests with whatever contemporary music fascinated him.\n\n**Stevie Wonder**: Gospel + blues + pop + jazz + funk + classical (orchestral arrangements). *Songs in the Key of Life* (1976) achieves complete genre synthesis while remaining unmistakably him.\n\n**Radiohead**: Alternative rock + electronic music + jazz extended harmony + minimalism. *Kid A* (2000) synthesizes Ligeti's atonal string textures, American jazz, and English indie rock into something genre-defying.\n\n**Kendrick Lamar**: West Coast hip-hop + jazz (Coltrane, Monk) + gospel + funk + spoken word. *To Pimp a Butterfly* (2015) is arguably the most ambitious synthesis in 21st-century popular music.\n\n### How Synthesis Happens\n\n1. **Deep study of each tradition**: You cannot synthesize what you don't deeply know\n2. **Unconscious integration**: The influences merge in your subconscious musical thinking without deliberate mixing\n3. **The constraint of a specific problem**: Writing a specific song forces you to reach for whatever tools work, regardless of genre origin\n4. **Time**: Synthesis takes years of listening, playing, and composing\n\n### Your Personal Fingerprint\n\nYour musical fingerprint is the set of habitual choices you make:\n- Which chord voicings do you reach for naturally?\n- Which modes feel 'home' to you?\n- Which rhythmic patterns recur in your writing?\n- Which timbres and textures do you love?\n\nTrack these habits. They are your style. The goal of theory study is not to replace your instincts but to give your instincts more vocabulary — more options — so your fingerprint can be more itself.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What distinguishes 'synthesis' from simply 'mixing' elements of different styles?",
+      "choices": [
+        "Synthesis uses equal amounts of each style; mixing uses unequal amounts",
+        "Synthesis results in something coherent and personal that transcends any individual source influence; mixing is surface-level combination without integration",
+        "Synthesis happens accidentally; mixing is deliberate",
+        "They are identical — synthesis and mixing are synonyms in music"
+      ],
+      "answer": 1,
+      "explanation": "Simple mixing would be playing jazz chords over a blues form — recognizable as two styles combined. Synthesis is when the influences have been so deeply internalized that they emerge as something new and personal — you cannot easily separate the jazz from the blues from the gospel from the classical, because they have become one integrated language. Miles Davis didn't 'mix' bebop with cool jazz; he synthesized a new voice that made both genres evolve.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "According to synthesis principles, what is the role of deep style knowledge in developing personal voice?",
+      "choices": [
+        "Knowledge of multiple styles forces musicians to choose one and specialize",
+        "Deep style knowledge provides the raw vocabulary that synthesis can draw from — you cannot synthesize influences you don't deeply understand",
+        "Knowledge inhibits natural expression by creating too many rules",
+        "Deep knowledge is only useful for academic analysis, not performance or composition"
+      ],
+      "answer": 1,
+      "explanation": "You cannot synthesize what you don't deeply know. Surface familiarity with jazz might lead to using jazz chord symbols without understanding voice leading. Deep knowledge means the language is internalized — you think in it, hear in it, feel in it. Then when you write, the jazz harmony and the gospel melody and the blues rhythm emerge from one unified musical intelligence rather than being consciously 'added' as external elements.",
+      "srs": true
+    }
+  ]
+}

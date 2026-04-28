@@ -1,0 +1,43 @@
+{
+  "id": "02-sor-etude",
+  "title": "Sor Etude",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Fernando Sor — The Beethoven of Guitar\n\n**Fernando Sor** (1778–1839) was the greatest guitar composer of the Romantic era. His 24 etudes (Op. 6, Op. 29, Op. 31, Op. 35, Op. 44, Op. 60) are among the most important works in the guitar repertoire.\n\n## Sor's Musical Context\n\nUnlike Carulli's functional teaching studies, Sor's etudes are **concert works** — intended for public performance. They demand a higher musical and technical standard.\n\n## Op. 9 No. 1 in A Major — Analysis\n\nThis etude features:\n- **Tempo**: Moderato — moderate pace\n- **Right hand**: Alternating P-I-M with occasional full arpeggios\n- **Left hand**: Shifting between first and second position\n- **Musical character**: Elegant, graceful — pure Classical era style\n- **Key challenge**: Smooth position shifts without breaking the melodic line\n\n## The Character of Sor's Writing\n\nSor was influenced by Haydn and Mozart. His guitar music has:\n- **Formal clarity**: Clear phrases, symmetrical structure\n- **Harmonic sophistication**: More elaborate than Carulli\n- **Cantabile melody**: Singing, flowing melodic lines\n- **Counterpoint**: Inner voices sometimes move independently\n\n## Essential Sor Etudes to Learn\n\n1. Op. 6 No. 6 — brilliant, technical\n2. Op. 9 No. 1 — elegant, accessible\n3. Op. 29 No. 23 — the famous \"Etude in B minor\"\n4. Op. 60 No. 9 — gentle, lyrical",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How does Fernando Sor's approach to guitar etudes differ from Carulli's?",
+      "choices": [
+        "Sor's etudes are simpler and shorter",
+        "Sor's etudes are concert works with higher musical and technical demands, reflecting Classical era sophistication",
+        "Carulli's etudes are more musical; Sor's are purely technical",
+        "They are essentially the same in difficulty and intent"
+      ],
+      "answer": 1,
+      "explanation": "Carulli's studies are pedagogically focused and accessible. Sor's etudes are concert pieces — demanding musicianship influenced by Haydn and Mozart, with formal sophistication, cantabile melody, and concert-level technical demands.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Sor Etude in B Minor — The Most Played Guitar Etude\n\nSor's **Etude Op. 29 No. 23 in B Minor** (also known as \"Etude No. 5\" from the Segovia collection) is possibly the most-performed classical guitar piece worldwide.\n\n## Musical Structure\n\n- **Key**: B minor\n- **Form**: Binary (A section, B section, A section repeated)\n- **Right hand**: Constant P-I-M-A arpeggio throughout\n- **Left hand**: Shifting positions, some difficult barré chords\n- **Character**: Melancholic, introspective, deeply singing melody\n\n## The Melody\n\nThe melody appears in the bass (thumb) in the first section — an unusual reversal of the typical melody-in-treble texture. This creates a darker, richer sound.\n\n## The Technical Challenges\n\n1. **Barré at fret 7**: Full barré in the B section requires clean contact across all strings\n2. **Position shifting**: Smooth, inaudible shifts between positions\n3. **Melody in bass**: The thumb must project the bass melody above the inner voices\n\n## Andrés Segovia and This Etude\n\nSegovia included this etude in his famous \"20 Etudes by Fernando Sor\" collection (1945), which standardized the classical guitar repertoire for the 20th century.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is unusual about the melody placement in Sor's Etude Op. 29 No. 23?",
+      "choices": [
+        "The melody is in the inner voices",
+        "The melody appears in the bass (played by the thumb), not the treble",
+        "There is no melody — it's purely harmonic",
+        "The melody alternates between treble and bass each bar"
+      ],
+      "answer": 1,
+      "explanation": "In the first section of this etude, the singing melody is carried in the bass notes (played by the thumb), not in the treble as is typical. This requires the thumb to project above the inner voices — a demanding and unusual musical balance.",
+      "srs": true
+    }
+  ]
+}

@@ -63,3 +63,16 @@ export function getDrumPieceByMidi(midiNote: number): DrumPiece | undefined {
 export function getDrumPiecesByCategory(category: DrumPiece['category']): DrumPiece[] {
   return DRUM_KIT.filter(d => d.category === category);
 }
+
+// Top-to-bottom visual order of the percussion staff (lane 1 = top = Crash, lane N = bottom = Pedal HH).
+// Derived from DRUM_KIT so there's only one place to update piece metadata.
+const DRUM_LANE_MIDI_ORDER = [49, 46, 42, 51, 50, 47, 38, 45, 41, 36, 44] as const;
+export const DRUM_LANES: DrumPiece[] = DRUM_LANE_MIDI_ORDER.map(
+  midi => DRUM_KIT.find(d => d.midiNote === midi)!,
+);
+
+export const DRUM_LANE_COUNT = DRUM_LANES.length;
+
+export function getDrumLane(laneIndex: number): DrumPiece | undefined {
+  return DRUM_LANES[laneIndex - 1];
+}

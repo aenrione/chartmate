@@ -1,0 +1,64 @@
+{
+  "id": "05-voice-leading-in-practice",
+  "title": "Voice Leading in Practice",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Voice Leading Beyond the Chorale: Guitar, Piano, and Jazz\n\nFour-part chorale writing is the training ground, but voice leading principles apply to every instrument and style. The underlying goal is always the same: connect chord tones as smoothly as possible.\n\n### Piano Voicings\n\nOn piano, the left hand typically plays the bass while the right hand plays a 3–4 note chord. Good piano voice leading keeps inner voices stationary or moving by step.\n\n**Classical (Alberti bass)**: C–G–E–G pattern in the left hand under a soprano melody. The Alberti bass arpegiates a chord while the harmonic voice leading is implied.\n\n**Jazz piano**: Pianists often play 'shell voicings' (root and 7th in left hand; 3rd and 7th in right hand) that move with minimal motion:\n- Cmaj7 = E and B in right hand\n- Am7 = E and G in right hand\n- Common tone E stays; B moves to G (down a third)\n\n### Guitar Voicings\n\nGuitar's tuning means voice leading happens implicitly in chord shapes. Compare:\n- C (x32010): notes on strings 5→1 are C–E–G–C–E\n- Am (x02210): notes are A–E–A–C–E\n- Common tone E on string 1 stays; C moves to A; G moves to E\n\nCleverly chosen guitar shapes can create excellent voice leading. The challenge is that the instrument's tuning constrains which voicings are physically possible.\n\n### The 'Drop 2' Voicing System\n\nJazz guitarists and arrangers frequently use 'drop 2' voicings: take a close-position four-voice chord and drop the second-highest voice down an octave.\n\n**Cmaj7 close position**: E–G–B–C (soprano to bass)\n**Drop 2**: Take G (2nd from top), drop it an octave: **G–E–B–C** becomes the bass, giving: E–B–C–G (from top)\n\nDrop 2 voicings spread the chord across a more playable range and create a characteristic jazz sound.\n\n### Voice Leading in Pop Songwriting\n\nSongwriters intuitively use voice leading even without formal training:\n- The bass line is a voice that should move smoothly\n- Inner voices on keyboard/guitar often stay on common tones\n- The melody (top voice) is the soprano — it should have good voice leading as a melodic line\n\n**Example**: I–V–vi–IV in C major with voice-led piano:\n- Right hand keeps E as a common tone through I (C–E–G), V (B–D–G), vi (A–C–E)\n- This inner-voice E→ stays → falls to D (in V) → returns to E (in vi) creates a counter-melody\n\n### Summary: The Five Principles\n\n1. **Move each voice as little as possible**\n2. **Hold common tones in the same voice**\n3. **Prefer stepwise motion over leaps**\n4. **Use contrary motion when parallel motion is unavoidable**\n5. **Resolve tendency tones** (leading tone up; chord seventh down)",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In jazz piano 'shell voicings,' what two notes typically appear in the right hand for a maj7 chord?",
+      "choices": [
+        "Root and fifth",
+        "Third and seventh",
+        "Ninth and thirteenth",
+        "Fifth and ninth"
+      ],
+      "answer": 1,
+      "explanation": "Jazz piano shell voicings use the 3rd and 7th in the right hand (plus root in left hand). These two notes define the chord quality most precisely: the 3rd tells you major/minor, and the 7th tells you major7/dominant7/minor7. The 5th is often omitted as less harmonically essential.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'drop 2' voicing?",
+      "choices": [
+        "A chord where the bass note is dropped down two octaves",
+        "A close-position chord where the second-highest voice is dropped down an octave",
+        "A chord where the second note from the bottom is moved up two steps",
+        "A jazz term for omitting the second (ninth) of a chord"
+      ],
+      "answer": 1,
+      "explanation": "Drop 2 voicing takes a close-position four-note chord and drops the second-highest note down an octave. This spreads the voicing across a more guitaristic or idiomatic range and is a cornerstone of jazz guitar and big band arranging. It transforms a clustered soprano/alto/tenor/bass into a more open texture.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which voice-leading principle says that the leading tone should resolve upward and the chordal seventh should resolve downward?",
+      "choices": [
+        "The principle of minimal distance",
+        "The common-tone rule",
+        "The resolution of tendency tones",
+        "The prohibition on parallel fifths"
+      ],
+      "answer": 2,
+      "explanation": "Tendency tones are notes that have a strong harmonic pull in a particular direction. The leading tone (7th scale degree) has a strong tendency to resolve upward by half step to the tonic. The chordal seventh (e.g., F in G7) has a strong tendency to resolve downward by step. These resolutions are fundamental to tonal harmony.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the I–V–vi–IV progression in C major with voice leading, if the right-hand soprano holds E through I (C) and V (G), what note does E represent in each chord?",
+      "choices": [
+        "Root in I, sixth in V",
+        "Third in I (C–E–G), sixth in V (G–B–D; E is not in V)",
+        "Third of C major (I) and sixth of G major (V) — the note 'E' appears in neither chord as a normal chord tone of V",
+        "Third of I (Cmaj), then becomes a passing tone in V"
+      ],
+      "answer": 2,
+      "explanation": "E is the third of C major (I) but is not in the basic G major triad (G–B–D). However, in G7 (G–B–D–F), E is still not present. If E is held in the right hand over V, it functions as a sustained color tone (a 13th of G) or an inner pedal. This is common in piano writing for a floating, sustained texture.",
+      "srs": true
+    }
+  ]
+}

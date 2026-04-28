@@ -1,0 +1,43 @@
+{
+  "id": "01-freddie-green-style",
+  "title": "Freddie Green Style",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Freddie Green — The Invisible Giant\n\n**Freddie Green** (1911–1987) played rhythm guitar for Count Basie's orchestra for nearly 50 years. He is the greatest rhythm guitarist in jazz history — and paradoxically, one of the least audible.\n\n## The Freddie Green Sound\n\nGreen played **four-to-the-bar** (every beat) with a massive big band orchestra. His guitar was essentially unplugged — he relied entirely on acoustic projection. The result was a **felt-as-much-as-heard** rhythmic pulse.\n\n## Key Techniques\n\n### 1. Three-Note Chord Voicings\nGreen rarely played more than 3 strings. His voicings were bass-light, emphasizing mid-register tones. Typical voicing: strings 4-3-2 or 5-4-3.\n\n### 2. Strumming Direction\nDown strokes only — strict, metronomic. The upstroke is used to dampen, not to play a note.\n\n### 3. Immediate Release\nAfter the downstroke, immediately release left-hand pressure to **mute** the strings. This creates a short, punchy \"chunk\" not a sustained chord.\n\n### 4. On Every Beat\nNo syncopation. Four quarter notes per bar, every bar. The soloist floats over this rock-solid pulse.\n\n## The Sound\n\nThe result is a hollow, woody \"chk\" sound — almost percussive. You hear it clearly in Count Basie recordings: listen to \"One O'Clock Jump\" (1937) or \"April in Paris\" (1955).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the defining rhythmic pattern in Freddie Green style comping?",
+      "choices": [
+        "Syncopated chord stabs on beats 2 and 4",
+        "Four-to-the-bar quarter note downstrokes on every beat",
+        "Alternating arpeggios on every chord",
+        "Off-beat eighth note comping"
+      ],
+      "answer": 1,
+      "explanation": "Freddie Green played four-to-the-bar — a downstroke on every single beat, creating an unwavering rhythmic foundation. This technique, combined with immediately releasing chord pressure to create a short 'chunk' sound, defined big band rhythm guitar.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Freddie Green Chord Voicings\n\nGreen favored small, efficient voicings on the middle strings:\n\n## Typical Green-Style Voicings\n\n### F6 (strings 5-4-3)\n```\nA |--8--|\nD |--7--|\nG |--9--|\n```\n\n### Gm7 (strings 5-4-3)\n```\nA |--10--|\nD |--8---|\nG |--8---|\n```\n\n### C7 (strings 5-4-3)\n```\nA |--3--|\nD |--2--|\nG |--3--|\n```\n\n## The Freddie Green Practice Routine\n\n1. Set a metronome at 120 BPM\n2. Play a simple I-IV-V (F-Bb-C7) in F major\n3. Four downstrokes per chord, release after each\n4. Focus on the \"chunk\" sound — muted, woody, percussive\n5. Gradually increase tempo to 200+ BPM\n\n## Advanced Application\n\nPlay Freddie Green style over a basic 12-bar blues form at 160 BPM. The goal: every beat is rock solid, zero syncopation, totally locked in.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "After a Freddie Green-style chord stroke, what does the left hand do immediately?",
+      "choices": [
+        "Moves to the next chord position",
+        "Releases pressure to mute the strings, creating a short 'chunk' sound",
+        "Bends the strings upward",
+        "Slides to the next voicing"
+      ],
+      "answer": 1,
+      "explanation": "After the downstroke, Green immediately released left-hand pressure, muting the strings. This 'staccato' approach creates the characteristic short, percussive 'chunk' rather than a sustained chord — the foundation of big band rhythm guitar.",
+      "srs": true
+    }
+  ]
+}

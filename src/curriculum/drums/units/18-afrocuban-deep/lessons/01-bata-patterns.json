@@ -1,0 +1,34 @@
+{
+  "id": "01-bata-patterns",
+  "title": "Batá Rhythms",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Batá Drums: Sacred Yoruba Percussion\n\nBatá drums are a family of three double-headed drums used in Lucumí (Santería) ceremonies to communicate with the orishas (Yoruba deities). They represent one of the most sophisticated drum ensemble traditions in the world.\n\n**The three drums:**\n- **Iyá** (mother/largest): The lead drum, improvises and signals changes\n- **Itótele** (middle): Responds to the iyá, the harmonic mediator\n- **Okónkolo** (smallest): Keeps a steady foundational pattern\n\n**Each drum has two heads:**\n- **Enu** (mouth): The larger head — deeper, full tone\n- **Chachá**: The smaller head — higher pitch, sharper tone\n\n**Rhythmic complexity:** Batá patterns are in 12-pulse framework (similar to 6/8) and use interlocking techniques where the three drums fill each other's silences. The patterns are memorized orally through mnemonics; traditional batá drummers learn entirely by ear and oral tradition.\n\n**Sacred vs. profane:** In Santería ceremonies, batá must be played by consecrated drums (iyawó) and trained drummers. The 'aberikula' (unconsecrated) drums are used for practice and performance outside religious context.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Okónkolo (Foundational Batá Pattern)",
+      "description": "The smallest batá drum's steady pattern in a 12-pulse framework. This is the rhythmic anchor of the batá ensemble. The alternating tone-slap pattern creates the characteristic two-pitched texture.",
+      "timeSignature": "6/8",
+      "subdivisions": 12,
+      "bpm": 92,
+      "tracks": [
+        {"name": "Snare",  "pattern": "x-x-x-x-x-x-"},
+        {"name": "Hi-Hat", "pattern": "x---x---x---"},
+        {"name": "Kick",   "pattern": "x-----x-----"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the role of the okónkolo in the batá ensemble?",
+      "choices": ["The lead drum that improvises and signals changes", "The middle drum that mediates between iyá and okónkolo", "The smallest drum that keeps a steady foundational pattern", "The drum that calls the orishas directly"],
+      "answer": 2,
+      "explanation": "The okónkolo is the smallest batá drum and plays the steady foundational pattern that anchors the entire ensemble. The iyá (largest) leads and improvises; the itótele (middle) responds and mediates; the okónkolo holds the rhythmic foundation.",
+      "srs": true
+    }
+  ]
+}

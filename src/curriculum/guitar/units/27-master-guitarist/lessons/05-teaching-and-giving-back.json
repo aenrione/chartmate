@@ -1,0 +1,43 @@
+{
+  "id": "05-teaching-and-giving-back",
+  "title": "Teaching and Giving Back",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Teaching Guitar — The Complete Circle\n\nTeaching is the highest form of musical mastery. Explaining something to another person reveals what you truly understand — and what you only know by rote.\n\n## The Feynman Technique Applied to Guitar\n\nRichard Feynman's learning method:\n1. Take a concept you know\n2. Explain it in simple language to a beginner\n3. Where your explanation fails (you use jargon, you get vague, you can't make it concrete) — that's where your understanding has gaps\n4. Return to the source, fill the gaps\n5. Repeat until you can explain it simply\n\nThis technique reveals shallow knowledge better than any exam.\n\n## What Teaching Does for the Teacher\n\n1. **Crystallizes understanding**: Explaining forces precision\n2. **Reveals gaps**: Students ask questions you never asked yourself\n3. **Creates community**: Your students become your musical community\n4. **Deepens love**: Teaching a piece you love makes you love it more\n5. **Sustains motivation**: A student's progress is its own reward\n\n## The Socratic Teaching Method\n\nInstead of telling students what to do, **ask questions** that lead them to discover the answer:\n\n- Not: \"Move your thumb behind the neck.\"\n- But: \"Does that position feel tense? What happens if you move your thumb?\"\n\nDiscovery sticks longer than instruction.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why does teaching reveal gaps in the teacher's own understanding?",
+      "choices": [
+        "Students are smarter than teachers",
+        "Explaining something in simple language exposes where understanding is superficial — you can't simplify what you don't truly understand",
+        "Teaching takes too much time away from practice",
+        "Students always ask about theory"
+      ],
+      "answer": 1,
+      "explanation": "You can perform a skill automatically without understanding it deeply. Teaching requires converting tacit knowledge into explicit language. When you struggle to explain something simply, it reveals the gap between automatic performance and genuine conceptual understanding.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Lifelong Musician's Manifesto\n\nYou have completed the guitar curriculum. What remains is the rest of your musical life.\n\n## The Principles of Sustained Musical Growth\n\n### 1. Never Stop Being a Student\nEvery master guitarist continues to learn. Pat Metheny is still taking lessons and studying. Chet Atkins practiced every day until his final years.\n\n### 2. Play with People Better Than You\nYou rise to the level of those around you. Seek musicians who challenge and inspire.\n\n### 3. Listen More Than You Play\nThe ratio of listening to playing should be at least 2:1. What you hear becomes what you play.\n\n### 4. Transcribe Something Every Month\nOne transcription per month, even just 4 bars, keeps your ear connected to the music.\n\n### 5. Finish Things\nA completed imperfect song is worth more than an unfinished perfect one.\n\n### 6. Give Back\nTeach. Share. Post. Community multiplies your impact and enriches your practice.\n\n### 7. Play for Joy\nEvery session, play at least 5 minutes with no goal except enjoyment. The joy is why you started — keep it alive.\n\n## The Guitar Is an Infinite Instrument\n\nAfter everything in this curriculum, the guitar still has infinite unexplored territory. Every generation of guitarists discovers something new.\n\nWhat will you add?",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "According to the lifelong musician's principles, what should the ratio of listening to playing be?",
+      "choices": [
+        "1:1 equal balance",
+        "Playing more than listening (3:1)",
+        "At least 2:1 — twice as much listening as playing",
+        "Only practice, no passive listening needed"
+      ],
+      "answer": 2,
+      "explanation": "Musicians who listen extensively absorb musical vocabulary, phrasing, and feeling that transfers directly into their playing. The great improvisers — Miles Davis, Wes Montgomery, BB King — were all voracious listeners. What enters your ears becomes what comes out through your hands.",
+      "srs": true
+    }
+  ]
+}

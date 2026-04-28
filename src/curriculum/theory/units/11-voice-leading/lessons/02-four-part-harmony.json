@@ -1,0 +1,64 @@
+{
+  "id": "02-four-part-harmony",
+  "title": "Four-Part Harmony",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Four-Part Harmony: The SATB Framework\n\nFour-part harmony — Soprano, Alto, Tenor, Bass (SATB) — is the traditional training framework for voice leading. It forces every note of every chord to be assigned to one of four independent melodic lines, each with its own range and character.\n\n### Vocal Ranges\n\n| Voice | Range |\n|-------|-------|\n| Soprano | C4 (Middle C) to G5 |\n| Alto | G3 to D5 |\n| Tenor | C3 to G4 |\n| Bass | E2 to C4 |\n\nIn practice, stay within comfortable singing ranges: avoid the extreme high and low ends unless you have a specific reason.\n\n### Voice Spacing\n\n**Close position**: The upper three voices (SAT) are within an octave of each other.\n**Open position**: The upper three voices span more than an octave.\n\nThe bass can be any distance below the tenor — open spacing between bass and tenor is common and desirable. However, **avoid gaps larger than an octave between adjacent upper voices** (soprano/alto or alto/tenor).\n\n### Voice Crossing\n\n**Voice crossing** — when a lower voice moves above a higher voice — is generally forbidden. Alto should not rise above soprano; tenor should not rise above alto. Crossings destroy the independence of the voices and cause perceptual confusion.\n\n**Voice overlap** is a subtler violation: when a voice moves to a pitch that was previously held by the adjacent voice above it. Example: Alto at E4 moves to G4 while Soprano was just on G4. This 'overlaps' the soprano's range and blurs the texture.\n\n### Doubling Rules\n\nWhen writing a triad in four voices, one pitch must be doubled. Which one?\n\n- **Double the root** — most common and most stable\n- **Double the fifth** — acceptable, especially in open position\n- **Avoid doubling the third** — especially in major chords (the third defines major vs. minor quality; doubling it can sound heavy)\n- **Never double the leading tone** (7th scale degree) — it must resolve up to the tonic, and doubling creates parallel octaves as both copies resolve\n\n### The Dominant Seventh Chord: Special Case\n\nG7 (G–B–D–F) in C major is the chord with the most strict rules:\n- **B (leading tone)** must rise to C\n- **F (chordal seventh)** must fall to E\n- If both of these resolutions occur, the resulting C chord will be missing the fifth (only C and E, doubled)\n- This **incomplete tonic** (5th omitted) is the correct resolution of a dominant seventh in SATB\n\nListen to: J.S. Bach, *Chorale BWV 227 — Jesu, Joy of Man's Desiring*. The chorale texture exemplifies perfect SATB writing with correct doubling and resolution throughout.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In four-part SATB writing, what is 'voice crossing'?",
+      "choices": [
+        "When two voices sing the same pitch at the same time",
+        "When a lower voice moves above a higher voice (e.g., Alto rises above Soprano)",
+        "When two voices move in parallel fifths",
+        "When the bass moves to a pitch outside its normal range"
+      ],
+      "answer": 1,
+      "explanation": "Voice crossing occurs when a lower voice (e.g., Alto) moves to a pitch that is higher than the adjacent upper voice (Soprano). This destroys the independence of the voices and creates perceptual confusion. Alto should always stay below Soprano; Tenor below Alto; Bass below Tenor.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why should the leading tone (7th scale degree) never be doubled in SATB writing?",
+      "choices": [
+        "Because the leading tone is always in the bass",
+        "Because doubling the leading tone creates parallel octaves when both copies resolve upward to the tonic",
+        "Because the leading tone sounds too bright when doubled",
+        "Because doubling the leading tone violates the spacing rules"
+      ],
+      "answer": 1,
+      "explanation": "The leading tone must resolve up to the tonic. If it is doubled in two voices, both copies will resolve upward — creating parallel octaves as they both move from the 7th to the 1st scale degree simultaneously. Parallel octaves destroy voice independence, so doubling the leading tone is forbidden.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What happens to the fifth of the tonic chord when a dominant seventh chord (G7 → C) resolves correctly in SATB?",
+      "choices": [
+        "The fifth is doubled",
+        "The fifth is omitted — the resulting tonic chord has a doubled root",
+        "The fifth moves to the seventh",
+        "The fifth stays in place as a common tone"
+      ],
+      "answer": 1,
+      "explanation": "When G7 resolves to C correctly: B (leading tone) rises to C, and F (the seventh) falls to E. These two necessary resolutions leave only C and E in three of the four voices. To complete the chord, the fourth voice doubles the root (C). The resulting C chord is missing its fifth (G) — this 'incomplete' tonic is normal and correct.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the difference between 'close position' and 'open position' in SATB writing?",
+      "choices": [
+        "Close position uses fewer chords; open position uses more",
+        "Close position has upper three voices within an octave; open position has them spanning more than an octave",
+        "Close position is for strings; open position is for brass",
+        "Close position has all four voices within an octave of each other"
+      ],
+      "answer": 1,
+      "explanation": "Close position means the soprano, alto, and tenor are all within one octave of each other. Open position means the upper three voices span more than an octave. Both are valid; the choice affects the texture and resonance. Bass-to-tenor spacing can be wide in either case.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "05-barre-workout",
+  "title": "Barre Chord Workout",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Building Finger Strength\n\nBarre chords require finger strength that takes time to develop. Here's an efficient daily practice routine:\n\n1. **Barre clamp** — place index finger barre, squeeze firmly for 10 seconds, release. Repeat 5×.\n2. **Full shape** — form F major, strum each string and identify buzzing strings. Adjust pressure.\n3. **The C-F drill** — alternate C → F → C → F. This is the hardest open-to-barre transition.\n4. **Fret 1 is hardest** — if F major is brutal, try the same shape at fret 5 (A major) where the strings are easier to press.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Hand Pain vs. Muscle Fatigue\n\nDistinguish between:\n- **Muscle fatigue** (forearm/hand tiredness) — normal, rest and continue tomorrow\n- **Joint pain** (sharp pain in knuckles/wrist) — stop immediately\n\nBarre chords should fatigue your muscles, not hurt your joints. If you feel joint pain, check your wrist angle — it should be straight, not bent sharply.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is the F major barre at fret 1 harder than the same shape at fret 5?",
+      "choices": ["Fret 1 has more strings", "Strings have higher tension near the nut and are harder to press", "The shape is different at fret 1", "Your hand is in the wrong position at fret 1"],
+      "answer": 1,
+      "explanation": "String tension is highest near the nut (fret 1). As you move up the neck, strings are easier to fret. Practicing the shape at fret 5 first builds strength with less friction.",
+      "srs": true
+    }
+  ]
+}

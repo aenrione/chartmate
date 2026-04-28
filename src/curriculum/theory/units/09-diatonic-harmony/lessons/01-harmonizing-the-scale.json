@@ -1,0 +1,59 @@
+{
+  "id": "01-harmonizing-the-scale",
+  "title": "Harmonizing the Scale",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Harmonizing the Major Scale\n\n**Diatonic chords** are chords built entirely from the notes of a given key — no accidentals, no outside pitches. Harmonizing a scale means building a triad on every scale degree using only the notes that belong to the key.\n\n### Building Diatonic Triads in C Major\n\nTo find the diatonic triads in C major, start on each note and stack two thirds, using only the notes C D E F G A B:\n\n| Degree | Root | Third | Fifth | Quality |\n|--------|------|-------|-------|---------|\n| **I** | C | E | G | Major |\n| **ii** | D | F | A | Minor |\n| **iii** | E | G | B | Minor |\n| **IV** | F | A | C | Major |\n| **V** | G | B | D | Major |\n| **vi** | A | C | E | Minor |\n| **vii°** | B | D | F | Diminished |\n\nEach chord uses only notes from C major — no sharps or flats.\n\n### The Universal Pattern\n\nHere is the crucial insight: **the pattern of chord qualities is identical in every major key**:\n\n> **Major – Minor – Minor – Major – Major – Minor – Diminished**\n\nIn G major, the same pattern applies: Gmaj, Amin, Bmin, Cmaj, Dmaj, Emin, F#dim.\nIn Eb major: Ebmaj, Fmin, Gmin, Abmaj, Bbmaj, Cmin, Ddim.\n\n**Memorize this pattern.** It will allow you to instantly know all seven chords in any key.\n\n### Why These Specific Qualities?\n\nThe qualities arise from the interval structure of the major scale. The major scale has a specific pattern of whole steps and half steps (W-W-H-W-W-W-H). When you stack diatonic thirds on each degree, the resulting intervals vary depending on whether a half step or whole step falls in the gap — producing major, minor, or diminished triads.\n\n### The Three Groups\n\n- **Major chords**: I, IV, V — the backbone of major key harmony\n- **Minor chords**: ii, iii, vi — add color and variety\n- **Diminished chord**: vii° — maximum tension, pulls toward I\n\n### Application\n\nKnowing the diatonic chords in a key means you can immediately understand any chord progression written in that key, transpose it to other keys, and improvise harmonically. This knowledge is the foundation of all chord analysis.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the quality of the chord built on the second degree (ii) of any major scale?",
+      "choices": ["Major", "Minor", "Augmented", "Diminished"],
+      "answer": 1,
+      "explanation": "The ii chord in any major key is always minor. In C major, ii = D minor (D–F–A). The minor third from D to F and the perfect fifth from D to A are both naturally produced by the notes of the C major scale.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In any major key, the diatonic triad qualities in order from I through VII are:",
+      "choices": [
+        "Major, Minor, Minor, Major, Major, Minor, Diminished",
+        "Major, Major, Minor, Major, Minor, Minor, Diminished",
+        "Minor, Major, Major, Minor, Major, Diminished, Minor",
+        "Major, Minor, Diminished, Major, Major, Minor, Minor"
+      ],
+      "answer": 0,
+      "explanation": "The pattern is always: I=Major, ii=Minor, iii=Minor, IV=Major, V=Major, vi=Minor, vii°=Diminished. This pattern is universal — it applies in every major key without exception.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which chord is the only diminished triad in a major key?",
+      "choices": [
+        "The chord built on scale degree II",
+        "The chord built on scale degree V",
+        "The chord built on scale degree VII",
+        "The chord built on scale degree III"
+      ],
+      "answer": 2,
+      "explanation": "The diminished triad occurs naturally only on scale degree VII (the leading tone). In C major, that is B diminished (B–D–F). Its diminished fifth (B to F) creates strong tension that pulls toward the tonic.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What are the three major chords in the key of G major?",
+      "choices": [
+        "G major, A major, D major",
+        "G major, C major, D major",
+        "G major, B major, E major",
+        "G major, C major, E major"
+      ],
+      "answer": 1,
+      "explanation": "In G major, the major chords are on scale degrees I, IV, and V: G major (I), C major (IV), and D major (V). These three chords together contain all seven notes of the G major scale and form the harmonic backbone of the key.",
+      "srs": true
+    }
+  ]
+}

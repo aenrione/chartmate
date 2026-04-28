@@ -17,6 +17,10 @@ export interface PersistedSession {
   resultPairs: {itemId: number; quality: number}[];
   /** ISO timestamp — used for expiry */
   startedAt: string;
+  /** Whether the card was flipped to the back when the user navigated away */
+  showingBack?: boolean;
+  /** Instrument filter active when the session was started */
+  filter?: string;
 }
 
 export function saveSession(session: PersistedSession): void {

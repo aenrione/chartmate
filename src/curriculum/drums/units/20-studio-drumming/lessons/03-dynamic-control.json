@@ -1,0 +1,20 @@
+{
+  "id": "03-dynamic-control",
+  "title": "Dynamic Control",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Dynamics: The Engineer's Perspective\n\nIn a recording context, the mix engineer hears every dynamic nuance — and a drummer who plays everything at the same level makes the engineer's job much harder. Dynamic control is a professional responsibility, not a stylistic nicety.\n\n**The studio dynamic range problem:**\nLive performance can hide dynamic inconsistency through room acoustics and monitor bleed. In the studio, a transient discrepancy of 3 dB is audible and often cannot be corrected in post without audible artifacts.\n\n**Studio dynamic hierarchy:**\n- **Verse**: Typically mp-mf — controlled, supportive\n- **Pre-chorus**: Build, mf-f\n- **Chorus**: f — full commitment, but not at maximum (save maximum for the last chorus)\n- **Bridge**: Varies — can be soft (contrast to chorus) or peak (climax)\n- **Last chorus**: ff — the full dynamic payoff\n\n**Individual drum dynamics:**\n- The kick must be consistent in velocity — compression in the chain can't fix a kick that varies by 10 dB between hits\n- The snare backbeat can have some natural variation, but the loudest hits should be intentional (fills, musical accents)\n- Ghost notes must be truly quiet — at a recording level, a ghost note at 50% of a full hit sounds loud\n\n**The compressor is not a solution:** Many engineers use kick and snare compression aggressively in pop/rock recording. But compression reduces dynamics; it doesn't create them. A drummer who delivers controlled dynamics is always preferred to a drummer who 'relies on compression.'",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why can't mix engineering fully compensate for poor dynamic control during drum recording?",
+      "choices": ["Engineers don't have enough tools", "Compression reduces dynamic variation but doesn't create intentional dynamics; and large transient discrepancies cause audible artifacts when corrected", "Dynamic control is only important in live performance", "Modern DAWs can perfectly replicate any dynamic level"],
+      "answer": 1,
+      "explanation": "Compression can reduce dynamic variation (making everything more consistent) but cannot create intentional musical dynamics where none existed. Large transient discrepancies between drum hits often cause audible pumping or clipping artifacts when corrected aggressively. The engineer needs the drummer to deliver controlled dynamics as source material.",
+      "srs": true
+    }
+  ]
+}

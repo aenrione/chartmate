@@ -1,0 +1,20 @@
+{
+  "id": "05-switching-time-signatures",
+  "title": "Switching Time Signatures",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Fluid Time Signature Changes\n\nModern music often switches time signatures mid-song:\n\n**Common transitions:**\n- Verse in 4/4 → chorus in 3/4\n- Intro in 5/4 → main groove in 4/4\n- Bridge in 7/8 → resolution in 4/4\n\n**The trick:** Keep the pulse (tempo) the same. Only the grouping changes.\n\n**Tool's 'Schism'** famously alternates between 5/8 and 7/8 throughout, keeping the quarter-note pulse constant.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When switching from 4/4 to 3/4, what should remain constant?",
+      "choices": ["The number of beats per measure", "The tempo (pulse speed)", "The backbeat placement", "The hi-hat pattern"],
+      "answer": 1,
+      "explanation": "When changing time signatures, the underlying tempo (how fast the pulse moves) stays the same. Only the grouping of beats per measure changes — otherwise it sounds like a tempo change.",
+      "srs": true
+    }
+  ]
+}

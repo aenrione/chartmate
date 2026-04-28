@@ -1,0 +1,20 @@
+{
+  "id": "01-free-jazz-concepts",
+  "title": "Free Jazz Concepts",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Free Jazz: Liberation and Structure\n\nFree jazz — or 'free improvisation' — deliberately abandons predetermined chord progressions, time signatures, and even steady tempo. It emerged in the late 1950s through the work of Ornette Coleman, Cecil Taylor, and Albert Ayler.\n\n**What 'free' actually means:**\nFree jazz doesn't mean random or formless. The best free jazz has internal logic — it just derives that logic from in-the-moment responses to the music rather than from predetermined structures.\n\nFor the drummer in a free context:\n- Time can expand and contract in response to the music\n- Color and texture become as important as rhythm\n- Listening is amplified — every sound should respond to something\n- Silence is a valid and often powerful choice\n\n**Ed Blackwell and free time:** Ed Blackwell played with Ornette Coleman and demonstrated that free music could still have extraordinary groove — not because of a fixed meter, but because of profound internal pulse sense.\n\n**Milford Graves:** Went further, abandoning the pulse concept entirely to treat percussion as pure sound and sensation, organized by intuition and the interaction of the group.\n\n**The practical challenge:** Free improvisation is not a shortcut to avoid learning technique. The most effective free drummers have mastered all the fundamental techniques and use them as a vocabulary — then choose moment by moment which vocabulary to deploy.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the most important skill for a drummer in free jazz improvisation?",
+      "choices": ["Playing as fast and loud as possible", "Ignoring all other musicians and expressing yourself without constraint", "Listening intensely and responding organically to every sound in the moment", "Playing only quiet textures"],
+      "answer": 2,
+      "explanation": "In free jazz, listening and responding is everything. The music has internal logic derived from moment-to-moment reactions between musicians. Ignoring others and 'expressing yourself' without listening creates noise, not music. The best free jazz players are supremely sensitive listeners.",
+      "srs": true
+    }
+  ]
+}

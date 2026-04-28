@@ -1,0 +1,20 @@
+{
+  "id": "01-single-stroke-roll",
+  "title": "Single Stroke Roll",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Rudiments: The Alphabet of Drumming\n\n**Drum rudiments** are standardized stroke patterns — the building blocks of all drumming.\n\n# Single Stroke Roll\n\nPattern: **R L R L R L R L** (alternating right and left)\n\nThe most fundamental rudiment. Every drumming technique starts here.\n\n**Practice tip:** Start slow (60 BPM, 16th notes). Focus on equal volume and spacing between hands. Speed will come naturally — don't rush it.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the sticking pattern for a single stroke roll?",
+      "choices": ["R R L L R R L L", "R L R L R L R L", "R R R R L L L L", "R L L R L R R L"],
+      "answer": 1,
+      "explanation": "The single stroke roll strictly alternates hands: Right Left Right Left. It's the foundation of drumming speed and control.",
+      "srs": true
+    }
+  ]
+}

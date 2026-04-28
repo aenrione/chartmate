@@ -1,0 +1,20 @@
+{
+  "id": "02-note-values",
+  "title": "Note Values",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Note Values in Drumming\n\nNote values define how long (or how fast) notes are:\n\n| Note | Duration | Count |\n|------|----------|-------|\n| Whole note | 4 beats | 1 — — — |\n| Half note | 2 beats | 1 — |\n| Quarter note | 1 beat | 1, 2, 3, 4 |\n| 8th note | ½ beat | 1+2+3+4+ |\n| 16th note | ¼ beat | 1e+a2e+a |\n\nMost grooves use 8th and 16th notes. Quarter notes appear in slow songs.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many 16th notes fit in one beat?",
+      "choices": ["2", "4", "8", "16"],
+      "answer": 1,
+      "explanation": "One beat = 2 eighth notes = 4 sixteenth notes. 16th notes are counted: 1-e-and-a (four subdivisions per beat).",
+      "srs": true
+    }
+  ]
+}

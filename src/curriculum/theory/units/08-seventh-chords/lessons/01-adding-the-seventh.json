@@ -1,0 +1,49 @@
+{
+  "id": "01-adding-the-seventh",
+  "title": "Adding the Seventh",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Adding the Seventh\n\nA **seventh chord** takes a triad — root, third, fifth — and adds one more note: a **seventh above the root**. That fourth note transforms the chord from a three-note harmony into something richer, more colorful, and more complex.\n\n### From Triad to Seventh Chord\n\nThe logic is an extension of the stacked-thirds principle:\n\n- **Triad**: root → 3rd → 5th (3 notes)\n- **Seventh chord**: root → 3rd → 5th → 7th (4 notes)\n\nEach new note is a third above the previous one. The seventh is literally the seventh note of the scale above the root, which is why we call these 'seventh chords.'\n\n### Why Seventh Chords Matter\n\n**In jazz**, seventh chords are the default unit of harmony. Plain triads are actually uncommon — jazz musicians automatically hear and play seventh chords as the baseline. A chord chart that says 'Cmaj' to a jazz musician implies Cmaj7.\n\n**In pop and R&B**, seventh chords add sophistication and warmth without sounding overly complex. The difference between a plain Am and an Am7 is subtle but immediately noticeable.\n\n**In classical music**, seventh chords — especially the dominant seventh — are the primary engine of harmonic motion and cadences.\n\n### The Five Main Types\n\nFive seventh chord types cover the vast majority of music you will encounter:\n\n| Name | Symbol | Triad Type | 7th Type |\n|------|--------|------------|----------|\n| **Major seventh** | Maj7, Δ | Major | Major 7th |\n| **Dominant seventh** | 7 | Major | Minor 7th |\n| **Minor seventh** | m7, -7 | Minor | Minor 7th |\n| **Half-diminished** | ø7, m7b5 | Diminished | Minor 7th |\n| **Diminished seventh** | dim7, °7 | Diminished | Diminished 7th |\n\n### The Seventh Interval\n\nThere are two common seventh intervals:\n- **Major seventh (M7)**: 11 half steps above the root — just one half step below the octave\n- **Minor seventh (m7)**: 10 half steps above the root — two half steps below the octave\n- **Diminished seventh (d7)**: 9 half steps above the root — three half steps below the octave\n\nThe type of seventh you add, combined with the type of triad beneath it, determines which seventh chord you have.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many notes does a seventh chord contain?",
+      "choices": ["3", "4", "5", "7"],
+      "answer": 1,
+      "explanation": "A seventh chord has 4 notes: the root, third, fifth, and seventh. It is a triad (3 notes) with an additional third stacked on top, creating the seventh above the root.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In jazz harmony, which type of chord is typically used as the basic unit — even when a plain chord name is given?",
+      "choices": ["Triads", "Seventh chords", "Ninth chords", "Dyads"],
+      "answer": 1,
+      "explanation": "In jazz, seventh chords are the default unit of harmony. When a jazz chart shows a simple chord name, musicians automatically assume and play the seventh chord version. Plain triads are actually relatively rare in jazz.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many half steps above the root is the major seventh?",
+      "choices": ["9", "10", "11", "12"],
+      "answer": 2,
+      "explanation": "The major seventh is 11 half steps above the root — just one half step below the octave. This proximity to the octave gives Maj7 chords their characteristic 'almost resolved' feeling.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which combination produces a dominant seventh chord?",
+      "choices": [
+        "Major triad + major seventh",
+        "Minor triad + minor seventh",
+        "Major triad + minor seventh",
+        "Diminished triad + minor seventh"
+      ],
+      "answer": 2,
+      "explanation": "A dominant seventh chord (e.g., G7) is a major triad with a minor seventh added on top. This combination — major triad + minor 7th — is what distinguishes it from the major seventh chord (major triad + major 7th).",
+      "srs": true
+    }
+  ]
+}

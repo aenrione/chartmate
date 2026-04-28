@@ -1,0 +1,33 @@
+{
+  "id": "03-middle-eastern",
+  "title": "Middle Eastern Grooves",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Middle Eastern Rhythmic Traditions\n\nMiddle Eastern music encompasses a vast spectrum of traditions — Arabic maqam music, Turkish makam, Persian dastgah, and countless folk and popular forms. Their rhythmic foundations are ancient and complex.\n\n**The drum sounds:** Traditional Middle Eastern percussion uses the doumbek (darbuka), riq (tambourine-like frame drum), and daf (large frame drum). Each produces distinct tones:\n- **Doum**: Deep bass tone, center of the drum\n- **Tek**: High, crisp tone, edge of the drum\n- **Ka**: Quieter edge tone, opposite hand\n\n**Common Arabic rhythms (iqa'at):**\n- **Masmoudi Kabir (8 beats)**: D.D.T..T. D.T (doum-doum-tek-tek-doum-tek) — the iconic Arabic belly dance rhythm\n- **Wahda (4 beats)**: D...T..T\n- **Maqsum (4 beats)**: D..T.TD.T — the most common modern pop rhythm\n- **Karachi (9 beats)**: Used in Egyptian and Syrian folk music\n\n**Maqam and rhythm:** In Arabic music, the choice of maqam (melodic mode) influences the rhythmic feel. Certain rhythms are traditionally paired with certain maqamat. This holistic relationship between melody and rhythm is unique to the tradition.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Maqsum — Arabic 4/4 Pop Rhythm",
+      "description": "Maqsum is the most common rhythm in modern Arabic pop music. The 'Doum' sound maps to kick, 'Tek' to snare. The pattern has a distinctive displaced feel compared to Western 4/4 with the second kick on beat 2-and.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 104,
+      "tracks": [
+        {"name": "Snare",  "pattern": "--x-x-x-"},
+        {"name": "Kick",   "pattern": "x-x---x-"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What are the three primary tones of the doumbek (darbuka)?",
+      "choices": ["High, medium, low", "Doum (bass center), Tek (crisp edge), Ka (quiet edge)", "Open, muted, rimshot", "Strike, press, slap"],
+      "answer": 1,
+      "explanation": "The doumbek produces three primary sounds: Doum (a deep bass tone from the center of the head), Tek (a high crisp tone from the edge), and Ka (a quieter, rounder edge tone from the other hand). The distinct articulation between these three sounds is what gives doumbek patterns their characteristic Middle Eastern texture.",
+      "srs": true
+    }
+  ]
+}

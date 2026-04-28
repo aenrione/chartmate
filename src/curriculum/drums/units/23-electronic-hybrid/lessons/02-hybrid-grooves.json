@@ -1,0 +1,34 @@
+{
+  "id": "02-hybrid-grooves",
+  "title": "Hybrid Grooves",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Hybrid Drumming: The Best of Both Worlds\n\nHybrid drumming combines acoustic drums (for feel, dynamics, and organic response) with electronic elements (for sounds the acoustic kit can't produce, sample triggering, and integration with production).\n\n**Common hybrid setups:**\n1. **Acoustic kit + one or two electronic pads** for triggered samples: A Roland SPD-SX pad or similar used alongside a standard acoustic kit to access electronic sounds on cue\n2. **Acoustic kit + trigger module on kick/snare**: Acoustic sound plus triggered sample layered together in the PA\n3. **Mixed acoustic/electronic kit**: Some drums acoustic, some fully electronic pads — used when different sounds are needed for different musical contexts\n\n**Musical applications:**\n- Electronic bass drum layered under acoustic kick: adds sub-bass weight to acoustic kick sound in large venues\n- Clap or snare sample triggered with acoustic snare: the stadium pop snare sound\n- Electronic hi-hat replacing or augmenting acoustic hi-hat: for more consistent electronic sounds in mix-sensitive environments\n- Loop triggering: a pad triggers a pre-programmed rhythmic loop to fill behind a drum solo\n\n**Artists using hybrid setups:** Josh Dun (Twenty One Pilots), Questlove (The Roots), Thomas Pridgen, Matt Garstka (Animals As Leaders).",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Hybrid Groove with Electronic Layer",
+      "description": "Standard acoustic groove with an electronic 'clap' layered on the snare beats. Hi-hat plays the standard rock/pop pattern. Kick has a sub-layered sample (represented as a separate kick track). This is the standard pop production hybrid setup.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 120,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x-x-x-x-x-x-x-x-"},
+        {"name": "Snare",  "pattern": "----X-------X---"},
+        {"name": "Kick",   "pattern": "x---x-x-x---x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the primary musical advantage of using a hybrid acoustic/electronic setup?",
+      "choices": ["To replace the acoustic kit entirely", "To access sounds the acoustic kit can't produce while retaining the organic feel and dynamics of acoustic playing", "To eliminate the need for microphones", "To make practice sessions quieter"],
+      "answer": 1,
+      "explanation": "Hybrid setups combine the organic feel, dynamic response, and expressive qualities of acoustic drumming with sounds only available electronically — sub-bass layers, electronic samples, triggered loops. The acoustic playing feel drives the electronic elements rather than replacing the acoustic sounds entirely.",
+      "srs": true
+    }
+  ]
+}

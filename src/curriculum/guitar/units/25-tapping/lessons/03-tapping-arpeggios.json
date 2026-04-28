@@ -1,0 +1,43 @@
+{
+  "id": "03-tapping-arpeggios",
+  "title": "Tapping Arpeggios",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Tapping Arpeggios — The Sweep-Tap Combination\n\nTapping arpeggios combine **sweep picking** (ascending) with **tapping** (for the top note) — creating dramatic, wide-range arpeggio runs across all 6 strings.\n\n## The 6-String Sweep-Tap Arpeggio\n\nFor Am arpeggio (A C E):\n\n### Ascending (sweep up + tap at top)\n```\ne |--T17--16--12--|\nB |---17--16--13--| ↑ sweep\nG |---17--14--12--| ↑\nD |---19--14--12--| ↑\nA |---x-----------|\nE |---5-----------| ↑ start\n   (pick E, sweep upward, tap C at top)\n```\n\n### Descending (pull off tap + sweep down)\n```\nStart with tapped note → pull off → sweep downward across remaining strings\n```\n\n## Why This Works Musically\n\n- The sweep covers the lower 4-5 strings rapidly\n- The tap extends to a note unreachable by sweep alone (typically 1-2 octaves above)\n- The combination covers 3+ octaves in one fluid motion\n\n## Classic Players\n\n**Steve Lynch** (Autograph) and **Randy Rhoads** were early developers. Modern masters:\n- **Tosin Abasi** (Animals as Leaders): 8-string extended tapping arpeggios\n- **Gus G**: Traditional sweep-tap in neo-classical\n- **Marco Sfogli**: Melodic tapping in fusion",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is the sweep-tap arpeggio combination effective for covering a wide range?",
+      "choices": [
+        "Sweeping is faster than picking each note",
+        "The sweep covers multiple lower strings rapidly while the tap extends to a high note normally unreachable from that position, covering 3+ octaves in one motion",
+        "Tapping is louder than sweeping",
+        "It requires less technique than regular arpeggios"
+      ],
+      "answer": 1,
+      "explanation": "Sweep picking covers multiple strings efficiently with one directional motion. The tapped note then extends the range far above the left-hand position, achieving a 3+ octave span in one fluid movement — impossible with picking or legato alone.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Building a Tapping Arpeggio — Step by Step\n\n## Target: Cmaj7 Sweep-Tap Arpeggio\n\nCmaj7 notes: C E G B\n\n### Step 1: Establish the left-hand sweep shape\n```\ne |--x--|\nB |--5--| G\nG |--4--| B\nD |--5--| E\nA |--3--| C (root)\nE |--x--|\n   (5-string sweep shape for Cmaj7)\n```\n\n### Step 2: Add the tap\nWhile the left hand holds this sweep shape, the right hand taps fret 12 on string 1 (high e) — this gives the note C (two octaves above the root).\n\n### Step 3: Full ascending motion\n```\nPick A5 (low C), sweep up to B5, G5, E5, B4 — tap high e at fret 12 (C6)\n```\n\n### Step 4: Full descending motion\n```\nTap C6, pull off to left-hand shape, sweep downward\n```\n\n### Practice Progression\n1. Learn sweep shape with a pick (no tap), ascending and descending\n2. Add tap at the top only\n3. Add tap and pull-off\n4. Full up-and-down sweep-tap at 60 BPM\n5. Increase tempo over weeks",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When learning a sweep-tap arpeggio, what is the recommended first step?",
+      "choices": [
+        "Learn the tap first, then add the sweep",
+        "Practice the full sweep-tap combination immediately at full speed",
+        "Learn the sweep shape with picking alone (no tap) before adding the tapping component",
+        "Learn each string individually and never combine"
+      ],
+      "answer": 2,
+      "explanation": "Establishing the sweep shape first — clean, even, with proper pick direction — gives you a solid foundation before adding the tapping complexity. Adding the tap before the sweep is clean just compounds errors.",
+      "srs": true
+    }
+  ]
+}

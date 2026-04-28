@@ -1,0 +1,38 @@
+{
+  "id": "04-enharmonic-modulation",
+  "title": "Enharmonic Modulation",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Enharmonic Modulation: The Master Trick\n\n**Enharmonic modulation** exploits the fact that in equal temperament, certain notes are identical in pitch but spelled differently. By reinterpreting a note enharmonically (C# = Db, F# = Gb, G# = Ab), a chord from one key can be reinterpreted as a different chord in a distant key.\n\n### The Diminished Seventh Chord: Most Flexible Vehicle\n\nThe fully diminished seventh chord (°7) is perfectly symmetrical — it divides the octave into four equal minor thirds. There are only three distinct diminished seventh chords, but each can be respelled four ways:\n\n**B°7**: B–D–F–Ab\n= B°7 (leading tone of C)\n= D°7 (leading tone of Eb) — respell Ab as G#, D becomes... \n= F°7 (leading tone of Gb) — various respellings\n= G#°7 (Ab°7, leading tone of A)\n\nThis means B°7 can resolve to C, Eb, F#, or A — **four different keys**! By reinterpreting the diminished seventh chord enharmonically, a composer can modulate to any of three distant keys with no preparation.\n\n### The German Augmented Sixth: Another Enharmonic Pivot\n\nThe German augmented sixth chord (Ger+6) is enharmonically equivalent to a dominant seventh chord:\n\n**In C minor**: Ger+6 = Ab–C–Eb–F# (the augmented sixth above Ab to F#)\n**Enharmonic equivalent**: Ab–C–Eb–Gb = Ab7 (dominant seventh chord, root Ab)\n\nSo the Ger+6 in C minor sounds exactly like Ab7 — the V7/Db. By reinterpreting it as Ab7, the music can pivot directly to Db major. This is a **classical enharmonic modulation used by Beethoven and Schubert** to move between keys a tritone apart (a very distant relationship).\n\n### Beethoven's Enharmonic Modulations\n\nBeethoven's *Piano Sonata Op. 57 (Appassionata)* in F minor contains one of the most dramatic enharmonic modulations in the repertoire: the development section uses a diminished seventh chord to pivot unexpectedly to E major (a tritone away from F minor). The reinterpretation of the same chord in a new context is disorienting and dramatic.\n\n### Summary\n\n| Chord Used | Keys Accessible |\n|---|---|\n| Diminished seventh | Four keys (roots a minor 3rd apart) |\n| German augmented sixth | The parallel major/minor AND a key a tritone away |\n| Dominant seventh | Two keys (the normal resolution + the tritone substitution key) |",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why can a diminished seventh chord serve as an enharmonic pivot to four different keys?",
+      "choices": [
+        "Because diminished chords are non-functional and can precede any chord",
+        "Because the diminished seventh chord is symmetrical — it divides the octave into four equal minor thirds, and each note can be reinterpreted as a leading tone to a different key",
+        "Because diminished seventh chords are always in first inversion",
+        "Because the four notes of a diminished seventh chord are all from the same whole-tone scale"
+      ],
+      "answer": 1,
+      "explanation": "The fully diminished seventh chord is made of four stacked minor thirds, dividing the octave into exactly four equal parts. This symmetry means all four notes are equivalent: any one of them can be heard as the leading tone (7th degree) of a major or minor key. B°7 = B–D–F–Ab can resolve to C, Eb, Gb/F#, or A — four keys a minor third apart.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The German augmented sixth chord in C minor (Ab–C–Eb–F#) is enharmonically equivalent to what dominant seventh chord, and to which key does that chord resolve?",
+      "choices": [
+        "E7 → A major",
+        "Ab7 → Db major (the tritone-related key)",
+        "D7 → G major",
+        "F7 → Bb major"
+      ],
+      "answer": 1,
+      "explanation": "The German augmented sixth Ab–C–Eb–F# is enharmonically the same as Ab7 (Ab–C–Eb–Gb, spelling F# as Gb). Ab7 is the dominant seventh of Db major. So the Ger+6 in C minor can pivot — through enharmonic reinterpretation — to Db major (a tritone away from the tonic C). This is a classic Romantic-era distant modulation device.",
+      "srs": true
+    }
+  ]
+}

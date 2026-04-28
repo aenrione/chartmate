@@ -1,0 +1,38 @@
+{
+  "id": "03-travis-picking",
+  "title": "Travis Picking",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Travis Picking — Country Guitar's Signature Style\n\nTravis picking is named after **Merle Travis** (1917–1983), the Kentucky-born country guitarist who perfected this style. It was later popularized by **Chet Atkins**, **Jerry Reed**, and **Paul Simon** (\"The Sound of Silence,\" \"El Condor Pasa\").\n\n## The Pattern\n\nTravis picking combines **alternating bass** with **syncopated melody notes** played on the offbeats:\n\n```\ne |----3-------3-----|\nB |------0-------0---|\nG |--------0---------|\nD |--0-----------0---|\nA |------------------|\nE |--3-------3-------|\nBeat: 1 + 2 + 3 + 4 +\nThumb: P   P   P   P  (alternating 6-4-6-4)\nFingr: . I M . . I M .\n```\n\n## The Core Characteristic\n\nWhat makes Travis picking distinct is that the **treble notes land on the upbeats** (the \"and\" counts), while the **bass notes land on the downbeats**. This syncopation creates a bouncy, self-accompanying feel — one guitar sounds like two.\n\n## Learning Stages\n\n1. **Week 1**: Thumb only, alternating 6–4 at 60 BPM\n2. **Week 2**: Add index on the \"and\" of beat 1 only\n3. **Week 3**: Add middle finger on \"and\" of beat 2\n4. **Week 4**: Full pattern, both fingers filling offbeats\n\n## Classic Travis Picking Songs\n\n- \"Freight Train\" — Elizabeth Cotten (origin of the style)\n- \"Windy and Warm\" — Chet Atkins\n- \"The Sound of Silence\" — Paul Simon\n- \"Dust in the Wind\" — Kansas",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the defining rhythmic characteristic of Travis picking?",
+      "choices": [
+        "Bass notes on downbeats, treble melody notes on upbeats (syncopation)",
+        "All notes played on the downbeats in strict time",
+        "Thumb plays the melody while fingers play bass",
+        "Random arpeggios without a fixed pattern"
+      ],
+      "answer": 0,
+      "explanation": "Travis picking places bass notes on the downbeats and melody/treble notes on the offbeats (upbeats), creating syncopation. This makes one guitar sound like it's playing a bass line AND a melody simultaneously.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Travis Picking in C Major\n\nHere's the full pattern applied to a C chord:\n\n```\nChord: C (x32010)\n\ne |----------0-------|\nB |------1-------1---|\nG |----0-------0-----|\nD |--2-----------2---|\nA |--3-------3-------|\nE |------------------|\n     P  I M  P  I M\n```\n\n## Pinching\n\nA signature Chet Atkins touch: on beat 1, **pinch** the bass note and a treble note simultaneously. This is written as:\n\n```\ne |--0-----------0---|\nD |--2-------2-------|\n(pinch on beat 1)\n```\n\nThe pinch adds a piano-like attack and sets the rhythm in motion.\n\n## Practice Sequence\n\n1. C chord → G chord (4 bars each)\n2. Am → F progression\n3. Full I–V–vi–IV: C–G–Am–F\n\nKeep metronome at 60–70 BPM until pattern is automatic before moving to chord changes.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Who is Travis picking named after?",
+      "choices": ["Travis Barker", "Merle Travis", "Travis Chapman", "John Travis"],
+      "answer": 1,
+      "explanation": "Travis picking is named after Merle Travis (1917–1983), the Kentucky country guitarist who developed this alternating bass + syncopated melody style. Chet Atkins later popularized it widely.",
+      "srs": true
+    }
+  ]
+}

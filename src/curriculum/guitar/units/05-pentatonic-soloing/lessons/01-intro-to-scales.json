@@ -1,0 +1,20 @@
+{
+  "id": "01-intro-to-scales",
+  "title": "What Is a Scale?",
+  "xp": 10,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Scales: The Notes of a Key\n\nA **scale** is a set of notes that sound good together and define a key.\n\n- Chords are built **from** scales\n- Solos are improvised **over** scales\n- Understanding scales = understanding why songs sound the way they do\n\nYou don't need to memorize music theory to use scales. You just need to learn the shapes on the fretboard.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a scale?",
+      "choices": ["A way to measure guitar strings", "A set of notes that define a key and sound good together", "Another word for a chord", "A type of strumming pattern"],
+      "answer": 1,
+      "explanation": "Scales define the 'pool' of notes for a key. Chords are built from those notes, and solos draw from them.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "04-syncopated-kick",
+  "title": "Syncopated Kick Patterns",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Syncopated Kick: Moving Off the Beat\n\nIn standard rock, the kick drum is predictable — beats 1 and 3. In funk, the kick moves into unexpected 16th note positions, creating the characteristic 'push and pull' that makes funk feel so alive.\n\n**The key syncopated kick positions:**\n1. **The 'and' of 2** (position 7): Forward momentum, pushes into beat 3\n2. **The 'ah' of 4** (position 16): Anticipates beat 1, creates a two-beat lag effect\n3. **The 'e' of 3** (position 9): Creates a back-heavy feel in bar 3\n4. **'And' of 3** (position 11): The mid-groove syncopation\n\n**The tuba relationship:** In traditional New Orleans music, the drummer's kick foot mirrors the tuba (or bass) line. Applying this to modern funk: listen to the bass guitarist and let the kick 'lock' with the bass line rather than imposing a predetermined kick pattern.\n\n**Kick independence:** Building syncopated kick patterns requires independence from the hands. The hands continue their patterns uninterrupted while the right foot finds its own rhythmic path. This is the core challenge of advanced funk drumming.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Advanced Syncopated Kick",
+      "description": "The kick targets the 'and' of beat 1, beat 3, and the 'ah' of beat 4 — three non-standard positions. Snare holds the backbeat, hi-hat drives 16th notes. This creates a floating, syncopated bass foundation.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 96,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "xxxxxxxxxxxxxxxx"},
+        {"name": "Snare",  "pattern": "o-o-X-o-o-o-X-o-"},
+        {"name": "Kick",   "pattern": "x-x-------x---x-"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the most musically effective approach to building a syncopated funk kick pattern?",
+      "choices": ["Use a predetermined kick pattern and apply it regardless of the bass line", "Listen to the bass guitarist and lock the kick pattern with the bass line rather than imposing a fixed pattern", "Only play the kick on beats 1 and 3", "Play the kick as fast as possible on all 16th notes"],
+      "answer": 1,
+      "explanation": "The most musical approach to syncopated kick in funk is to listen to the bass guitar and lock the kick drum with the bass line, as the tuba and drum did in traditional New Orleans brass bands. This creates the harmonic-rhythmic unity that defines deep funk pocket.",
+      "srs": true
+    }
+  ]
+}

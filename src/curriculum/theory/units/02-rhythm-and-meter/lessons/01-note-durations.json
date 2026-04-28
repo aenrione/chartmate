@@ -1,0 +1,46 @@
+{
+  "id": "01-note-durations",
+  "title": "Note Durations in Practice",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Note Durations in Practice: Counting Out Loud\n\nUnderstanding note values on paper is one thing. Internalizing them as physical, felt rhythm is another. This lesson is about the **practice of counting** — the bridge between notation and sound.\n\n### The Internal Pulse\n\nEvery piece of music exists against a background of steady, evenly spaced beats called the **pulse** or **tactus**. Even when no instrument is playing a beat, the pulse is still there — implied, felt, maintained by every performer. Learning to **feel** the pulse before playing a note is the most important rhythmic skill you can develop.\n\nA **metronome** is not a crutch — it is a practice tool that reveals whether your internal pulse is truly steady or whether it speeds up and slows down without your awareness.\n\n### Counting in 4/4\n\nIn 4/4, the pulse is the quarter note. Every beat gets a number:\n\n> Count: **1 — 2 — 3 — 4 | 1 — 2 — 3 — 4**\n\n- **Quarter notes**: one note per count — land exactly on each number\n- **Half note**: land on beat 1 (or 3), hold through the next count\n- **Whole note**: land on beat 1, hold through beats 2, 3, and 4\n\n### Counting Eighth Notes\n\nEighth notes subdivide each beat into two equal halves. The syllable **\"and\"** (often written as **+** in rhythmic notation) fills the midpoint between beats:\n\n> Count: **1 and 2 and 3 and 4 and**\n\n- Each number is the downbeat (on the beat)\n- Each \"and\" is the upbeat (halfway between beats)\n- Two eighth notes fill the same time as one quarter note\n\n### Counting Sixteenth Notes\n\nSixteenth notes subdivide each beat into four equal parts, using the syllables **e**, **and**, and **a**:\n\n> Count: **1 e and a — 2 e and a — 3 e and a — 4 e and a**\n\n- The beat numbers and \"and\" syllables remain in their positions\n- The **e** fills the quarter after the beat\n- The **a** fills the three-quarters point between beats\n\nFour sixteenth notes fill the same time as one quarter note.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Tempo, Metronomes, and the Discipline of Counting\n\n### Tempo\n\n**Tempo** is the speed of the pulse, measured in **BPM (beats per minute)**. A metronome set to 60 BPM clicks once per second; 120 BPM clicks twice per second. Common tempo markings in classical music use Italian terms:\n\n| Marking | Approximate BPM | Meaning |\n|---------|----------------|---------|\n| Largo | 40–60 | Very slow |\n| Andante | 70–90 | Walking pace |\n| Moderato | 90–110 | Moderate |\n| Allegro | 120–160 | Fast |\n| Presto | 168–200 | Very fast |\n\n### Why Counting Out Loud Works\n\nWhen you count out loud while playing, you are **forcing your body to maintain two streams simultaneously** — the spoken syllables (which track the beat) and the instrument (which tracks the notes). This dual processing builds the rhythmic independence that all musicians need.\n\nProfessional musicians practice new rhythms by:\n1. Setting the metronome to a slow tempo\n2. Clapping the rhythm while counting out loud\n3. Only picking up the instrument once the rhythm is locked in\n\n### Mixed Rhythms\n\nThe real challenge comes when different note values mix within a measure. For example, in 4/4:\n\n> Quarter — eighth eighth — quarter — half\n\nCounting: **1 — 2 and — 3 — 4 (hold)**\n\nYou must switch your syllable rate smoothly between the different values without disrupting the underlying pulse. This flexibility is the hallmark of strong rhythmic reading.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In 4/4 time, what syllable do you use to count the upbeat (midpoint) between beats?",
+      "choices": ["'e'", "'a'", "'and'", "'ta'"],
+      "answer": 2,
+      "explanation": "The syllable 'and' marks the exact midpoint between beats when counting eighth notes in 4/4. The count becomes '1 and 2 and 3 and 4 and,' with each number on the beat and each 'and' exactly halfway between.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When counting sixteenth notes, what four syllables fill one beat?",
+      "choices": [
+        "1, 2, 3, 4",
+        "ta, te, ti, to",
+        "1, e, and, a",
+        "one, two, and, a"
+      ],
+      "answer": 2,
+      "explanation": "Sixteenth notes use the four syllables '1 e and a' per beat. The number falls on the beat, 'e' on the second sixteenth, 'and' on the third (the eighth-note subdivision), and 'a' on the fourth sixteenth.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "A metronome set to 120 BPM clicks how many times per second?",
+      "choices": ["Once per second", "Twice per second", "Four times per second", "Half a time per second"],
+      "answer": 1,
+      "explanation": "120 BPM means 120 beats per minute, which equals 2 beats per second. At 60 BPM, the click falls once per second — a common reference point.",
+      "srs": true
+    }
+  ]
+}

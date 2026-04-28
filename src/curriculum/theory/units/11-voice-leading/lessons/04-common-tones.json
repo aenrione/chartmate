@@ -1,0 +1,59 @@
+{
+  "id": "04-common-tones",
+  "title": "Common Tones & Smooth Connections",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Common Tones: The Glue of Voice Leading\n\nA **common tone** is a pitch that appears in both the current chord and the next chord. When writing voice leading, common tones are gold: they allow one or more voices to stay on the same note while others move, reducing the total distance traveled.\n\n### Identifying Common Tones\n\nBefore connecting any two chords, identify which pitches they share:\n\n- **I → IV** in C major: C–E–G → F–A–C. Common tone: **C**\n- **I → V** in C major: C–E–G → G–B–D. Common tone: **G**\n- **I → vi** in C major: C–E–G → A–C–E. Common tones: **C and E** (two!)\n- **I → ii** in C major: C–E–G → D–F–A. Common tones: **none**\n- **I → iii** in C major: C–E–G → E–G–B. Common tones: **E and G** (two!)\n\n### The Voice Leading Rule for Common Tones\n\nWhenever two chords share a common tone, **keep that tone in the same voice**. Do not move a voice away from a common tone and then move another voice to that same pitch — that is wasteful motion.\n\n### Chords with Two Common Tones\n\nChords a third apart (I→iii, I→vi, ii→IV, etc.) share two common tones. This makes voice leading extremely smooth — only one or two voices need to move at all. These connections are the foundation of many pop and classical progressions:\n\n- **I → vi**: Keep E in alto, C in soprano (or tenor); bass and one other voice handle the new A\n- **I → iii**: Keep E and G; only C needs to move to the new B\n\n### Chords with No Common Tones\n\nChords a second apart (I→ii, IV→V, etc.) share no common tones. Here, **contrary motion** becomes critical: if no tones are held, at least make the moving voices go in opposite directions.\n\n**I → ii in C major**: C–E–G → D–F–A (no common tones)\n- Soprano might go C→D (up a step)\n- Alto might go E→F (up a step)\n- Tenor might go G→A (up a step)\n- Bass: C→D (up a step)\n\nAll voices moving up in parallel seconds — this is weak, parallel, and risks parallel octaves. Better: bring bass down from C to D an octave lower, or have contrary motion between bass and upper voices.\n\n### The ii → V Connection\n\nIn jazz, **ii–V** is one of the most important connections. Dm7→G7 in C major:\n- Dm7: D–F–A–C\n- G7: G–B–D–F\n- Common tones: **D and F**\n- D can stay in tenor; F stays in alto\n- Soprano moves A→B (up a step); Bass moves D→G (up a fourth)\n\nThis creates the smoothest possible ii–V connection and explains why jazz pianists often keep inner voices stationary on these changes.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many common tones do I and vi share in C major (C–E–G and A–C–E)?",
+      "choices": ["None", "One (C)", "Two (C and E)", "Three (C, E, and A)"],
+      "answer": 2,
+      "explanation": "In C major: I = C–E–G and vi = A–C–E. The pitches C and E appear in both chords — two common tones. This makes the I→vi connection extremely smooth: two voices can hold their pitch while only one or two voices move. This explains why I→vi sounds fluid in pop music.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the general rule for handling common tones in voice leading?",
+      "choices": [
+        "Always move every voice to a different pitch for maximum variety",
+        "Keep the common tone in the same voice — do not reassign it",
+        "Double the common tone in the second chord",
+        "Move the common tone to the bass"
+      ],
+      "answer": 1,
+      "explanation": "When a pitch appears in both the current and next chord, keep it in the same voice. This minimizes motion and creates a smooth connection. Moving a voice away from a common tone and then reassigning another voice to that same pitch creates unnecessary motion that counteracts smooth voice leading.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "I → ii in C major (C–E–G → D–F–A) has how many common tones, and what motion is therefore most important?",
+      "choices": [
+        "Two common tones; keep E and D stationary",
+        "One common tone (E); keep E in place",
+        "No common tones; contrary motion between bass and upper voices is critical",
+        "No common tones; parallel motion is acceptable"
+      ],
+      "answer": 2,
+      "explanation": "C–E–G and D–F–A share no common tones. With no tones to hold, all voices must move. In this situation, contrary motion becomes essential: move the bass in the opposite direction from the upper voices to prevent parallel octaves and create voice independence.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the ii→V connection (Dm7→G7 in C major), which two notes are common tones?",
+      "choices": [
+        "D and A",
+        "F and A",
+        "D and F",
+        "C and G"
+      ],
+      "answer": 2,
+      "explanation": "Dm7 = D–F–A–C. G7 = G–B–D–F. The pitches D and F appear in both chords — these are the common tones. Keeping D and F stationary while moving A to B (soprano up) and C to G (bass leap) creates the smoothest ii→V voice leading.",
+      "srs": true
+    }
+  ]
+}

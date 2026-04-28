@@ -1,0 +1,43 @@
+{
+  "id": "04-call-and-response",
+  "title": "Call and Response",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Call and Response — Blues' Original Language\n\nCall and response is the most fundamental structure in blues music, rooted in African musical tradition and work songs. One musical phrase \"calls\" (asks), the next \"responds\" (answers).\n\n## The Historical Context\n\nBlues evolved from field hollers and work songs where a lead voice would call and other workers (or an echo of the land) would respond. This call-and-response structure underlies:\n- Delta blues (Robert Johnson calling to himself)\n- Classic BB King style (guitar answers vocals)\n- Jimi Hendrix (guitar and voice in conversation)\n- Any blues-based rock improvisation\n\n## Musical Application\n\n**Call**: A rising, questioning phrase (often ends on the 5th or b7)\n**Response**: A descending, answering phrase (often ends on the root or 3rd)\n\n```\nCall:      /---rising--------\\\nResponse:  \\--descending------/\n```\n\n## BB King's Mastery\n\nBB King is the supreme master of call-and-response on guitar. In his solos:\n- He plays a short phrase (2-4 notes) — the call\n- He pauses (1-2 beats of silence) — creating expectation\n- He responds with another short phrase\n- The conversation continues, building in intensity\n\nListen to \"The Thrill Is Gone\" — every phrase is call-and-response.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In blues call-and-response phrasing, what typically characterizes the 'call' phrase?",
+      "choices": [
+        "A descending phrase that ends on the root",
+        "A fast scale run over the entire range of the guitar",
+        "A rising, questioning phrase often ending on the 5th or b7",
+        "A sustained single note held for two bars"
+      ],
+      "answer": 2,
+      "explanation": "The call is the 'question' — it rises and ends on a note that creates expectation (5th, b7, or any unresolved note). The response answers it with a descending, more resolved phrase. This tension-release dynamic is the emotional engine of blues.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Structuring Call-and-Response in a Solo\n\n## The 2+2 Structure\n\nMost blues call-and-response operates on a 2-bar unit:\n```\nBar 1: Call (1.5 bars of notes)\nBar 1-2: Silence (rest, 0.5 to 1 bar)\nBar 2: Response (1.5 bars of notes)\nBar 2: Silence again\n```\n\n## Building an Arc\n\nA well-structured blues solo has an emotional arc:\n1. **Start low**: Short, simple calls in the lower register\n2. **Build**: Phrases get higher in pitch and intensity\n3. **Peak**: High energy, peak register licks\n4. **Resolve**: Descend back to root, simplified phrases\n5. **Silence**: Let the last note ring and decay\n\n## Guitar + Voice Call-and-Response\n\nThe most powerful blues moment: singer sings a line, then guitar \"answers\" what was just sung.\n\nSRV's \"Tin Pan Alley\" — after each vocal phrase, the guitar responds with a bend or a lick that emotionally amplifies what was just sung. This is blues as conversation.\n\n## Exercise\n\n1. Record yourself singing a short blues phrase (even humming)\n2. Play back the recording\n3. When you sing the call, respond on guitar\n4. Alternate between voice call and guitar response for 2 minutes\n\nThis exercise directly wires call-and-response into your playing.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In building a blues solo arc, what happens at the peak of the solo?",
+      "choices": [
+        "The guitarist switches to a different scale",
+        "High energy playing in the upper register, maximum intensity",
+        "The guitarist comps chords only",
+        "The tempo slows down"
+      ],
+      "answer": 1,
+      "explanation": "A well-constructed blues solo builds to a peak — high register notes, bends to extreme pitches, fastest phrases, maximum emotional intensity. After the peak, the solo descends back to resolve on the root, giving the arc a satisfying conclusion.",
+      "srs": true
+    }
+  ]
+}

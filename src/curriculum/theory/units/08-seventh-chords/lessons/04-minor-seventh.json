@@ -1,0 +1,54 @@
+{
+  "id": "04-minor-seventh",
+  "title": "The Minor Seventh Chord",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## The Minor Seventh Chord\n\nThe **minor seventh chord** (m7) is the dark, soulful workhorse of jazz, R&B, funk, and soul. Where the dominant seventh creates urgent tension, the minor seventh creates a smoother, more relaxed tension — a yearning quality rather than an urgent one.\n\n### Formula\n\nA minor seventh chord = minor triad + minor seventh:\n\n- **Root** to **3rd**: minor third — 3 half steps\n- **3rd** to **5th**: major third — 4 half steps\n- **5th** to **7th**: minor third — 3 half steps\n- **Root** to **7th**: minor seventh — **10 half steps**\n\nAm7 in full: **A–C–E–G**\n\nNotice that the seventh is minor (10 half steps) — the same interval type as in the dominant seventh. But the triad underneath is minor (not major), which produces a completely different color.\n\n### Common Minor Seventh Chords\n\n| Chord | Notes |\n|-------|-------|\n| **Am7** | A, C, E, G |\n| **Dm7** | D, F, A, C |\n| **Em7** | E, G, B, D |\n| **Bm7** | B, D, F#, A |\n\n### Where Minor Seventh Chords Occur\n\nIn any major key, minor seventh chords appear naturally on **scale degrees ii, iii, and vi**. In C major:\n- **ii** = Dm7 (D–F–A–C)\n- **iii** = Em7 (E–G–B–D)\n- **vi** = Am7 (A–C–E–G)\n\n### The ii-V-I: The Cornerstone of Jazz\n\nThe most important progression in jazz is the **ii-V-I**, and the ii chord is always a minor seventh:\n\n**Dm7 → G7 → Cmaj7** (in C major)\n\n- Dm7 (ii7): departure, preparation — heading away from home\n- G7 (V7): tension — the tritone demands resolution\n- Cmaj7 (I): arrival, resolution — home\n\nThis three-chord sequence appears in jazz in every key. Virtually every standard has multiple ii-V-I progressions. Mastering this progression is the gateway to jazz harmony.\n\n### Chord Symbols\n\nMinor seventh chords appear with several notations:\n- **Am7** — most common\n- **Amin7** — explicit spelling\n- **A-7** or **A–7** — jazz shorthand (the minus sign means minor)\n\n### The Sound\n\nMinor seventh chords sound darker and jazzier than plain minor triads. The added seventh softens the minor triad's edge while adding warmth. Compare Am (tense, stark) to Am7 (darker but smoother, more nuanced). Soul and R&B use this sound constantly — the Am7 chord is practically a signature of the genre.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What are the notes of an Am7 chord?",
+      "choices": ["A, C, E, G#", "A, C#, E, G", "A, C, E, G", "A, C, Eb, G"],
+      "answer": 2,
+      "explanation": "Am7 is A–C–E–G. Starting with A minor (A–C–E) and adding the minor seventh: G is 10 half steps above A. The minor seventh of A is G natural, not G#. G# would be the major seventh, giving you AMaj7.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "On which scale degrees of the major scale do minor seventh chords occur naturally?",
+      "choices": [
+        "I, IV, and V",
+        "II, III, and VI",
+        "I, III, and V",
+        "II, IV, and VII"
+      ],
+      "answer": 1,
+      "explanation": "In any major key, minor seventh chords occur naturally on scale degrees ii, iii, and vi. In C major: Dm7 (ii), Em7 (iii), and Am7 (vi). These are the minor seventh chords built entirely from the scale's notes.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the ii-V-I progression in C major, which chord is the ii chord?",
+      "choices": ["Cmaj7", "G7", "Dm7", "Fmaj7"],
+      "answer": 2,
+      "explanation": "In C major, the ii chord is Dm7 (D minor seventh). The ii-V-I progression is Dm7–G7–Cmaj7. Dm7 functions as the preparatory chord that leads to the dominant (G7), which then resolves to the tonic (Cmaj7).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the difference between Am and Am7?",
+      "choices": [
+        "Am7 adds a major seventh (G#) to the Am triad",
+        "Am7 adds a minor seventh (G) to the Am triad",
+        "Am7 raises the fifth by a half step",
+        "Am7 has a major third instead of a minor third"
+      ],
+      "answer": 1,
+      "explanation": "Am7 adds a minor seventh (G natural, 10 half steps above A) to the Am triad (A–C–E). The result is A–C–E–G. The minor seventh softens the stark quality of the plain minor triad while adding harmonic richness.",
+      "srs": true
+    }
+  ]
+}

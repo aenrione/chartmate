@@ -1,0 +1,38 @@
+{
+  "id": "02-underscore",
+  "title": "Underscore Techniques",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Underscore: Music Beneath the Action\n\n**Underscore** is the term for background music that plays during scenes — supporting the dialogue, action, and emotion without drawing attention to itself. Unlike a song or concert performance, underscore must be transparent enough not to distract while powerful enough to enhance the scene.\n\n### The Three Modes of Underscore\n\n**Empathetic (synchronized)**: The music matches the scene's emotion and action directly. Action accelerates → music accelerates. Character is sad → music is minor and slow.\n\n**Anempathetic (counterpoint)**: The music contradicts the scene's emotion for ironic or disturbing effect. Violence occurs while cheerful music plays — the contrast creates unease. Kubrick used this throughout *A Clockwork Orange* and *The Shining*.\n\n**Neutral**: The music provides atmosphere without strongly guiding emotional response.\n\n### Mickeymousing\n\n**Mickeymousing** is the technique of synchronizing music to physical action beat-for-beat — every footstep has a musical hit, every visual gag gets a sound effect. Common in cartoons (hence the name), less desirable in sophisticated drama where it feels mechanical.\n\nHoward Shore avoids mickeymousing in *Lord of the Rings* — the music supports the emotional arc, not the physical action, giving the score its epic, timeless quality.\n\n### The Spotted Music: When to Score\n\nA key skill in film scoring is **spotting** — deciding which scenes get music and which don't. Principles:\n\n1. **Don't explain what's already clear**: If the dialogue clearly establishes emotion, adding music that doubles the emotion is redundant ('double explanation')\n2. **Use silence**: Moments without music can be more powerful than scored moments — silence draws attention to dialogue\n3. **Prefer understatement**: Subtle music supporting a big moment is often more effective than bombastic scoring\n\n### The Click Track\n\nFilm composers write to a **click track** — a metronome that synchronizes to the film's frame rate. The composer can calculate exactly which musical beat aligns with which film frame using:\n\nBeats per minute = (60 × frames per second) / frames per beat\n\nFor a hit on frame 120 at 24fps: 120 frames ÷ 24fps = 5 seconds. If the music is at 120 BPM (0.5 sec per beat), the hit is on beat 10. The composer writes beat 10 to align with that visual moment.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'anempathetic' underscore, and how does it differ from empathetic underscore?",
+      "choices": [
+        "Anempathetic means the music has no emotional content whatsoever; empathetic music has strong emotion",
+        "Anempathetic underscore contradicts the scene's emotion (e.g., cheerful music over violence) for ironic effect; empathetic underscore matches and reinforces the scene's emotion",
+        "Anempathetic means the music is played by a live orchestra; empathetic by a synthesizer",
+        "Anempathetic uses dissonant harmony; empathetic uses consonant harmony"
+      ],
+      "answer": 1,
+      "explanation": "Empathetic underscore mirrors the scene's emotion directly — sad scene gets sad music. Anempathetic underscore deliberately contradicts the emotion: a violent or disturbing scene paired with cheerful, innocent music creates a disturbing dissonance between what we see and what we hear. Kubrick's use of 'Singin' in the Rain' during the assault in *A Clockwork Orange* is the most famous example — the contrast is deeply unsettling.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'mickeymousing' in film scoring, and why is it generally avoided in dramatic films?",
+      "choices": [
+        "Using Mickey Mouse character themes in film scores — unprofessional",
+        "Synchronizing every musical beat to a physical action (footstep, gesture) beat-for-beat — feels mechanical in dramatic films where broader emotional arcs are preferable",
+        "Writing music that contradicts the on-screen action",
+        "Scoring only animated films, not live-action"
+      ],
+      "answer": 1,
+      "explanation": "Mickeymousing synchronizes the music to physical action beat-for-beat — like the old Disney cartoons where every footstep, blink, and gesture had its own musical hit. In animation, this is charming and entertaining. In dramatic films, it feels mechanical and condescending — it over-explains the action and removes the sense that the music is responding to deeper emotional truth rather than surface physical movement.",
+      "srs": true
+    }
+  ]
+}

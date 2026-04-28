@@ -1,0 +1,38 @@
+{
+  "id": "02-natural-harmonics",
+  "title": "Natural Harmonics",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Natural Harmonics — The Guitar's Hidden Bells\n\nHarmonics are created by lightly touching (not pressing) a string at certain **nodal points** — mathematical divisions of the string length. This creates a bell-like, ethereal tone.\n\n## The Main Harmonic Positions\n\n| Fret | Division | Harmonic (for low E) | Octave above open |\n|------|----------|---------------------|--------------------|\n| 12   | 1/2      | E (one octave up)   | +1 octave |\n| 7    | 1/3      | B (one octave + fifth) | +1 oct + 5th |\n| 5    | 1/4      | E (two octaves up)  | +2 octaves |\n| 4    | 1/5      | G# (two octaves + maj 3rd) | +2 oct + 3rd |\n| 3.9  | 1/5      | Same as 4th fret approx | varies |\n\n## How to Play Natural Harmonics\n\n1. Rest your left-hand finger **directly over the metal fret wire** (not behind it as usual)\n2. Touch the string lightly — no pressure, just contact\n3. Pick the string, then immediately remove your left finger\n4. Result: clear, bell-like tone\n\n## Musical Uses\n\n- **Intro/outro effects**: harp-like soundscapes\n- **Chord harmonics**: playing full chords in harmonics at fret 12 or 7\n- **Melody**: harmonics can carry short melodic phrases\n- **Classical guitar**: standard technique in pieces by Villa-Lobos, Tarrega",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Where exactly must your left-hand finger be placed to produce a natural harmonic?",
+      "choices": [
+        "Behind the fret as usual, but with less pressure",
+        "Directly over the metal fret wire, touching lightly without pressing down",
+        "On the middle of the fret, pressing all the way down",
+        "Above the sound hole of the guitar"
+      ],
+      "answer": 1,
+      "explanation": "For a natural harmonic, you lightly touch the string directly over the metal fret wire (not behind it as in normal fretting). The light touch creates a node point that produces the harmonic overtone, not the fretted note.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Harmonic Chord at Fret 12\n\nOne of the most beautiful fingerstyle effects: playing a chord **entirely in natural harmonics** at the 12th fret.\n\nAt fret 12, every string produces a harmonic one octave above its open pitch. So:\n- String 6 (E) → harmonic E (one octave up)\n- String 5 (A) → harmonic A\n- String 4 (D) → harmonic D\n- String 3 (G) → harmonic G\n- String 2 (B) → harmonic B\n- String 1 (E) → harmonic E\n\nThe result is a beautiful, shimmering chord in the same pitches as the open strings, but one octave higher.\n\n## Chord Harmonics at Fret 7\n\nAt fret 7, harmonics produce notes one octave plus a fifth above open strings:\n- String 6 → B (5th above E)\n- String 5 → E (5th above A)\n- String 4 → A\n- String 3 → D\n- String 2 → F#\n- String 1 → B\n\nThis gives you a B7sus4 voicing — exotic and beautiful.\n\n## Technique for Full Chord Harmonics\n\nUse a **light barre** with the index finger across all 6 strings at fret 12. Your right-hand fingernails lightly brush upward across the strings — don't press. The result sounds like a music box.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What pitch does the 12th-fret natural harmonic produce on the low E string?",
+      "choices": ["E one octave above open E", "B (a fifth above E)", "The same pitch as open E", "G# (a third above E)"],
+      "answer": 0,
+      "explanation": "The 12th fret is the halfway point of the string, producing a harmonic exactly one octave above the open string pitch. So the low E string's 12th-fret harmonic produces E, one octave higher.",
+      "srs": true
+    }
+  ]
+}

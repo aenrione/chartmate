@@ -1,0 +1,20 @@
+{
+  "id": "04-dynamic-independence",
+  "title": "Dynamic Independence",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Playing Loud and Soft Simultaneously\n\n**Dynamic independence** = controlling volume independently per limb.\n\nExample:\n- Hi-hat: soft (pp)\n- Snare: medium accent\n- Kick: loud accent\n\nThis creates **depth** in your groove — it stops sounding flat and mechanical.\n\n**Ghost notes** are the key: very soft snare hits between the main backbeat hits. Used heavily in funk and R&B.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What are ghost notes on the snare drum?",
+      "choices": ["Notes played with the wrong hand", "Very soft notes played between the main beats", "Notes played on the rim only", "Silent beats in the groove"],
+      "answer": 1,
+      "explanation": "Ghost notes are extremely soft snare hits (barely audible) placed between the main backbeat strokes. They add texture and groove depth without cluttering the beat.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "04-chord-inversions",
+  "title": "Chord Inversions",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Chord Inversions — Every Note Can Be the Bass\n\nAn inversion places a chord note other than the root in the bass.\n\n## Four Positions of a 7th Chord\n\nUsing Cmaj7 (C-E-G-B) as example:\n\n| Position | Bass Note | Symbol |\n|----------|-----------|--------|\n| Root position | C | Cmaj7 |\n| 1st inversion | E | Cmaj7/E |\n| 2nd inversion | G | Cmaj7/G |\n| 3rd inversion | B | Cmaj7/B |\n\n## Why Inversions Matter\n\n1. **Bass line movement**: Using inversions creates chromatic or stepwise bass movement\n2. **Register placement**: Keep the chord in a specific register while moving to a new harmony\n3. **Smoother voice leading**: Inversions reduce the need for big positional jumps\n4. **Harmonic substitution**: Cmaj7/E and Em7 share three notes — they can substitute for each other\n\n## Classic Inversion Usage\n\nThe classic descending bass line:\n```\nC → Cmaj7/B → Am7 → Am7/G → Fmaj7\nC      B         A       G        F\n(each chord root descends by step)\n```\n\nThis cliche appears in hundreds of jazz and pop songs. Listen to the intro of \"Michelle\" (Beatles), \"While My Guitar Gently Weeps\" (Harrison).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a second inversion chord, which note is in the bass?",
+      "choices": ["The root", "The 3rd", "The 5th", "The 7th"],
+      "answer": 2,
+      "explanation": "Second inversion places the 5th in the bass. For Cmaj7: root position = C in bass, 1st inversion = E in bass, 2nd inversion = G (the 5th) in bass, 3rd inversion = B in bass.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Inversions on the Guitar — Practical Shapes\n\n## Cmaj7 Inversion Family (strings 5-4-3-2)\n\n### Root position Cmaj7\n```\nA |--3--| C\nD |--5--| G\nG |--4--| B\nB |--5--| E\n```\n\n### 1st Inversion Cmaj7/E\n```\nA |--7--| E\nD |--9--| B\nG |--9--| E (8va)\nB |--8--| G... (adjust)\n```\n\n### Working Through Inversions — Exercise\n\nFor any chord quality, practice all four inversions ascending the neck:\n1. Root position (lowest available)\n2. 1st inversion (next position up)\n3. 2nd inversion\n4. 3rd inversion\n5. Root position (one octave up)\n\n## The Practical Pay-Off\n\nOnce you can play any inversion of Cmaj7, do the same for Fmaj7, Bbmaj7, Ebmaj7 — cycling through all 12 keys. This is a 6-month practice project that transforms your fretboard knowledge.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The chord symbol 'G7/B' indicates what type of voicing?",
+      "choices": [
+        "G7 with an added B note on top",
+        "G7 in first inversion (B in the bass)",
+        "G7 played in the key of B",
+        "A G minor 7 chord"
+      ],
+      "answer": 1,
+      "explanation": "The slash notation X/Y means 'chord X with Y in the bass.' G7/B means G7 chord in first inversion — the 3rd (B) is the lowest note. B is the major 3rd of G.",
+      "srs": true
+    }
+  ]
+}

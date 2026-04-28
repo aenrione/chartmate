@@ -1,0 +1,43 @@
+{
+  "id": "05-finishing-a-song",
+  "title": "Finishing a Song",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Finishing Songs — The Hardest Skill\n\nStarting songs is easy. Finishing them is one of the hardest skills a musician develops.\n\n## The \"Perfect Killer\" Syndrome\n\nMost musicians have folders full of \"almost finished\" songs. The desire to make every detail perfect before sharing often results in nothing being finished.\n\n**The antidote**: Set a deadline. Version 1.0 is finished when it communicates its idea clearly — not when it's perfect.\n\n## The Finishing Checklist\n\nA song is \"done\" when:\n1. It has a **beginning, middle, and end** — even if short\n2. The **main musical idea** (riff, melody, progression) is clear\n3. Someone else can **follow it** without explanation\n4. It can be **performed** (by you alone, or with others)\n5. It has **a title** — naming a piece forces commitment\n\n## Common Finishing Blocks\n\n### \"I can't find the right ending\"\nEndingsOptions: fade out, stop (cold ending), ritardando (slow down and stop), callback (return to opening idea), unresolved (stop on tension).\n\n### \"The bridge doesn't work\"\nTry cutting the bridge entirely — many great songs have no bridge.\n\n### \"It's too short\"\nShort songs are legitimate. Many great compositions are under 2 minutes.\n\n### \"I need to add more parts\"\nSub more often, add less. Deletion is usually the right move.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the most common reason musicians leave songs unfinished?",
+      "choices": [
+        "Lack of technical skill",
+        "Perfectionism — waiting for the song to be perfect before considering it done",
+        "Not knowing enough chords",
+        "Too many ideas for one song"
+      ],
+      "answer": 1,
+      "explanation": "Perfectionism is the most common composition killer. Musicians revise endlessly, never reaching the elusive 'perfect' state. Setting a deadline and defining 'done' as 'communicating the idea clearly' (not perfectly) is the key to building a body of work.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Songwriter's Workflow\n\n## Week-Long Song Completion Method\n\n**Day 1 — Capture**: Record raw ideas, no editing. Loops, riffs, melodic fragments. Fill 10 minutes of recording.\n\n**Day 2 — Select**: Listen back, identify the strongest 1-2 ideas. The rest is archived, not deleted.\n\n**Day 3 — Structure**: Assign the chosen ideas to song sections. Which is verse? Which is chorus? Is there a bridge?\n\n**Day 4 — First Draft**: Play through the song structure beginning to end. Record it. It will be rough — that's fine.\n\n**Day 5 — Revise**: Identify the two weakest moments. Fix only those.\n\n**Day 6 — Final Draft**: Record a clean version. This is Version 1.0.\n\n**Day 7 — Share**: Play it for someone. The feedback will be more useful than another revision alone.\n\n## The Iterative Portfolio\n\nProfessional songwriters write many songs knowing only some will be outstanding. Aiming for quantity first builds the skill that eventually produces quality.\n\n**Target**: 12 finished songs in 12 months. Even if 10 are mediocre, 2 will be excellent — and you'll have learned from all 12.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is sharing a song with another person (Day 7) important in the composition process?",
+      "choices": [
+        "To get permission to use it",
+        "Another listener's perspective reveals communication gaps — whether the song conveys what you intended — that internal listening cannot",
+        "Social media requires songs to be shared",
+        "It provides copyright protection"
+      ],
+      "answer": 1,
+      "explanation": "The composer is too close to their own work to assess it objectively. Another listener hears only what's actually there — not what you intended to be there. Their feedback quickly reveals whether the song communicates its idea clearly, which is the core test of 'finished.'",
+      "srs": true
+    }
+  ]
+}

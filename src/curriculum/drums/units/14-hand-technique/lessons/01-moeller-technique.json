@@ -1,0 +1,25 @@
+{
+  "id": "01-moeller-technique",
+  "title": "The Moeller Technique",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Moeller Technique: The Whip Stroke\n\nThe Moeller technique, developed by Sanford Moeller and codified by Jim Chapin in 'Advanced Techniques for the Modern Drummer,' is the most efficient system for generating power with minimal effort.\n\n**The core concept:** Instead of playing each stroke with independent effort, the Moeller technique links multiple notes into a single fluid motion using the arm's natural whip-like movement.\n\n**The Moeller stroke sequence:**\n1. **Up stroke** (prep stroke): Bring the stick up high using a large arm motion\n2. **Whip stroke** (primary): Allow the stick to whip down with gravity — this produces the loudest stroke\n3. **Down stroke** (tap stroke): The low follow-through stroke immediately after\n4. **Tap stroke**: Can string multiple tap strokes before the next up stroke\n\n**Why it matters:** A pure wrist-only technique at high speeds leads to tendinitis and limited power. Moeller integrates the forearm, wrist, and fingers into a chain of motion, dramatically reducing fatigue while increasing speed and power.\n\n**Learning pathway:** Start by learning the 'three-stroke Moeller' (up-down-up) at slow tempos on a practice pad before applying it to the kit.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Four Stroke Types\n\nFull stroke vocabulary (applicable to all technique systems):\n\n1. **Full stroke**: Starts and ends high — maximum power, used for accents\n2. **Down stroke**: Starts high, ends low — accent followed by immediate muting/tap position\n3. **Up stroke**: Starts low, ends high — sets up the next power stroke\n4. **Tap stroke**: Starts and ends low — minimal power, used for ghost notes\n\nThe Moeller technique chains these strokes: Full → Down → Tap → Up → Full → Down → Tap → Up...\n\nMastering the four stroke types gives complete dynamic control at any tempo. Accent patterns become infinitely flexible when you can mix stroke types at will.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the primary advantage of the Moeller technique over pure wrist technique?",
+      "choices": ["It only works at very fast tempos", "It integrates forearm, wrist, and fingers to reduce fatigue while increasing power and speed", "It eliminates the need to practice", "It only works on snare drum"],
+      "answer": 1,
+      "explanation": "The Moeller technique uses the arm's natural whip motion to chain multiple strokes together, integrating forearm, wrist, and fingers. This dramatically reduces the effort required per stroke, enabling more power, greater speed, and far less physical fatigue than wrist-only technique.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "02-32-bar-form",
+  "title": "The 32-Bar AABA Form",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## The 32-Bar AABA Form: The Great American Songbook\n\nThe **32-bar AABA form** is the most important song form in jazz and the Great American Songbook (Gershwin, Porter, Berlin, Kern). Understanding it is essential for any jazz musician.\n\n### The Structure\n\nThe form consists of four 8-bar sections:\n\n**A** (8 bars): The main theme, establishing the tonic key\n**A** (8 bars): Same theme repeated, sometimes with slight variation\n**B** (8 bars): The bridge — harmonic and melodic contrast\n**A** (8 bars): Return of the main theme, often with a final cadential extension\n\nTotal: 32 bars = one chorus.\n\nIn jazz performance, the musicians play multiple choruses, cycling through the 32-bar form repeatedly. Soloists improvise over the chord changes for however many choruses they choose.\n\n### The Bridge (B Section)\n\nThe bridge provides contrast through:\n- **Different key** (often moving to the dominant or a related key)\n- **Different harmonic rhythm** (chords may change more or less frequently)\n- **Different melodic character** (often higher register, wider range, or more chromatic)\n- **Secondary dominant chain** (the 'rhythm changes' bridge is a classic example)\n\n### Famous AABA Standards\n\n- **'I Got Rhythm'** (Gershwin, 1930): The archetype. Bridge goes to D major from Bb major via a secondary dominant chain.\n- **'All of Me'** (Simons/Marks, 1931): Simple, clear AABA. A sections in C major; bridge briefly touches E major and A minor.\n- **'Autumn Leaves'** (Kosma/Prévert): AABA but with a 32-bar structure that modulates between G major and G minor.\n- **'The Way You Look Tonight'** (Kern, 1936): AABA with a lush, Romantic bridge.\n- **'Misty'** (Garner, 1954): AABA; the bridge uses secondary dominants for a harmonically complex contrast.\n\n### Performance Practice\n\nIn a jazz performance:\n1. **Head in**: Play the melody once through the form\n2. **Solos**: Each soloist improvises for one or more choruses\n3. **Head out**: Play the melody once more to end\n4. **Tag**: An optional extended ending (last 4 bars of A repeated, cadential extension)\n\nKnowing where you are in the form at all times — 'I'm in the bridge now' or 'we're in bar 5 of the last A' — is fundamental to professional ensemble playing.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a 32-bar AABA song, how many bars is the bridge (B section)?",
+      "choices": ["4 bars", "8 bars", "16 bars", "32 bars"],
+      "answer": 1,
+      "explanation": "In 32-bar AABA form: each A section is 8 bars, and the B section (bridge) is also 8 bars. The total: 8+8+8+8 = 32 bars = one chorus. The bridge's 8 bars provide the harmonic and melodic contrast that makes returning to A at bar 25 feel meaningful and satisfying.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'chorus' in jazz performance context?",
+      "choices": [
+        "The vocal refrain of a jazz vocal number",
+        "One complete pass through the entire song form (e.g., all 32 bars of AABA)",
+        "The first eight bars of any jazz standard",
+        "A collective improvised section where all musicians play simultaneously"
+      ],
+      "answer": 1,
+      "explanation": "In jazz, a 'chorus' refers to one complete pass through the song's form — all 32 bars of AABA, all 12 bars of the blues, etc. Soloists improvise for 'two choruses' or 'four choruses' — meaning they cycle through the form two or four times. This usage of 'chorus' is specific to jazz and is distinct from the common pop usage (the refrain section).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What harmonic feature is common in an AABA bridge to create contrast from the A sections?",
+      "choices": [
+        "The bridge uses the same key as the A sections but different rhythm",
+        "The bridge modulates to a different key or uses a secondary dominant chain to create harmonic contrast",
+        "The bridge uses only tonic chords",
+        "The bridge is always in a minor key regardless of the overall song key"
+      ],
+      "answer": 1,
+      "explanation": "The bridge provides contrast through harmonic movement — often modulating to a related key (dominant, relative major/minor) or using secondary dominant chains. The 'I Got Rhythm' bridge uses a D7→G7→C7→F7 secondary dominant chain (in Bb major context). This harmonic departure makes the return of A in the home key feel fresh and satisfying.",
+      "srs": true
+    }
+  ]
+}

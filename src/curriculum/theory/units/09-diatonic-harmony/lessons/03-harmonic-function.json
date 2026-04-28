@@ -1,0 +1,62 @@
+{
+  "id": "03-harmonic-function",
+  "title": "Harmonic Function",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Harmonic Function\n\nNot all chords in a key behave the same way. Each diatonic chord has a **harmonic function** — a role it plays in the narrative of tension and resolution. There are three functions: **Tonic (T)**, **Subdominant (S)**, and **Dominant (D)**.\n\n### The Three Functions\n\n**Tonic (T) — Home**\nTonic chords create a sense of rest, stability, and arrival. The music 'is home.'\n- Primary: **I** (strongest sense of rest)\n- Secondary: **vi** (relative minor — shares notes with I)\n- Weak tonic: **iii** (shares notes with both I and V)\n\n**Subdominant (S) — Departure**\nSubdominant chords move away from home — they create a sense of departure and preparation. The music 'leaves home.'\n- Primary: **IV**\n- Secondary: **ii** (a darker, more tense preparation than IV)\n\n**Dominant (D) — Tension**\nDominant chords create maximum tension and pull urgently back toward the tonic. The music 'wants to go home.'\n- Primary: **V** (and V7 — the most powerful)\n- Secondary: **vii°** (shares three notes with V7 — nearly as tense)\n\n### The Circle of Tension and Release\n\nThe basic motion of tonal music follows this pattern:\n\n> **T → S → D → T**\n\nOr in Roman numerals: **I → IV → V → I**\n\nThis is the structural engine beneath virtually all Western music. Every Bach chorale, every blues, every pop song operates within this framework of departure and return.\n\n### The Authentic Cadence\n\nA **cadence** is a harmonic phrase ending. The most conclusive cadence — the most powerful sense of musical resolution — is the **authentic cadence**: **V → I** (or V7 → I). This motion, dominant to tonic, is sometimes called 'the perfect cadence' and signals the end of a phrase or section.\n\n### Functional Substitution\n\nBecause vi shares notes with I, it can substitute for I in some contexts — especially when a composer wants a less conclusive landing (a **deceptive cadence**: V → vi instead of V → I). Similarly, ii can substitute for IV because both share subdominant function. These substitutions are the basis of more sophisticated harmonic writing.\n\n### Summary Chart\n\n| Function | Chords | Feeling |\n|----------|--------|---------|\n| Tonic (T) | I, vi (iii) | Rest, home, arrival |\n| Subdominant (S) | IV, ii | Departure, preparation |\n| Dominant (D) | V, vii° | Tension, urgency, pull |\n\nMastering harmonic function means you understand *why* chord progressions work — not just *what* chords are being played. This is the difference between memorizing progressions and truly understanding harmony.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which harmonic function describes the V chord in a major key?",
+      "choices": ["Tonic", "Subdominant", "Dominant", "Mediant"],
+      "answer": 2,
+      "explanation": "The V chord has dominant function — it creates maximum tension and pulls strongly back to the tonic. The dominant seventh chord (V7) is even more powerful because its tritone (between the 3rd and 7th) urgently wants to resolve to I.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'deceptive cadence'?",
+      "choices": [
+        "V resolving to I unexpectedly loudly",
+        "V resolving to vi instead of I",
+        "I moving directly to V without preparation",
+        "IV moving to I without a dominant chord"
+      ],
+      "answer": 1,
+      "explanation": "A deceptive cadence occurs when V resolves to vi instead of the expected I. Because vi shares two notes with I and has tonic function, it provides a sense of (incomplete) resolution — but surprises the ear that expected a full landing on I.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which chord can substitute for the IV chord because they share the same harmonic function?",
+      "choices": ["iii", "V", "ii", "vi"],
+      "answer": 2,
+      "explanation": "The ii chord shares subdominant function with IV. Both prepare the dominant and create a sense of departure from tonic. The ii chord (minor) is slightly more tense and active than IV, making it a common and effective substitution, especially in jazz.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The basic functional progression T → S → D → T corresponds to which Roman numeral progression?",
+      "choices": ["I → ii → vii° → I", "I → IV → V → I", "vi → IV → I → V", "I → iii → vi → IV"],
+      "answer": 1,
+      "explanation": "T → S → D → T maps directly to I → IV → V → I. Tonic (I) departs to subdominant (IV), builds to dominant tension (V), and resolves back to tonic (I). This is the harmonic template for countless progressions in all styles of Western music.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The vii° chord shares dominant function with V. Why?",
+      "choices": [
+        "Because both chords have the same root",
+        "Because vii° contains three of the same notes as V7",
+        "Because both chords are major",
+        "Because vii° and V are both built on odd-numbered scale degrees"
+      ],
+      "answer": 1,
+      "explanation": "The vii° chord (e.g., B–D–F in C major) shares three notes with the V7 chord (G–B–D–F = G7). Both contain the tension-creating tritone (B–F in C major). This is why vii° has dominant function and pulls strongly toward I.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "id": "05-syncopation",
+  "title": "Syncopation",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Syncopation: Rhythm Against the Grain\n\n**Syncopation** is the displacement of rhythmic emphasis from the strong beats (where the listener expects it) to the weak beats or the spaces between beats. The result: tension, forward momentum, and groove.\n\n### Strong and Weak Beats in 4/4\n\nIn 4/4 time, not all beats are equal:\n\n| Beat | Weight |\n|------|--------|\n| 1 | **Strongest** — the \"downbeat\" |\n| 2 | Weak |\n| 3 | Medium strong — secondary accent |\n| 4 | Weak — but has \"leading\" energy toward beat 1 |\n| \"and\" of 1, 2, 3, 4 | **Upbeats** — off-beats |\n\nThe strong beats are 1 and (to a lesser degree) 3. The **backbeat** in rock and pop is beats 2 and 4, where the snare drum typically strikes — these are the weak beats elevated to rhythmic prominence.\n\n### How Syncopation Works\n\nSyncopation occurs when:\n1. A note is **accented on a weak beat** (beats 2 or 4, or an upbeat \"and\")\n2. A **tie carries a note from a weak beat into a strong beat**, suppressing the expected accent on the strong beat\n3. A note lands **between beats** (on the \"and\") and is held through the following beat, anticipating the next measure\n\n### The Tie-Based Anticipation\n\nThe most common form of syncopation in popular music:\n\n> Note on the \"and\" of 4, tied over into beat 1 of the next measure\n\nThis is called an **anticipation** — the note arrives a half-beat early, before the downbeat. The listener's ear expects the downbeat, but the note has already started. This creates the \"leaning forward\" sensation in funk, R&B, and jazz.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Syncopation Across Styles\n\n### Jazz\n\nJazz rhythms are almost entirely built on syncopation. The swing feel itself involves accenting eighth notes on the upbeats. Jazz comping (chordal accompaniment) places chord \"hits\" on weak beats and off-beats deliberately to create rhythmic conversation with the soloist. Bebop melodies often land on the \"and\" of 4 before the bar line — this is called a **pickup into the phrase**.\n\n### Funk\n\nIn funk, syncopation is the defining element. James Brown's bands were masters of placing rhythmic hits precisely on the sixteenth-note level. The groove often places accents on the \"e\" and \"a\" of beats — the inner subdivisions — creating extreme rhythmic density that is simultaneously tight and propulsive.\n\n### Reggae\n\nIn reggae, the rhythm guitar and keyboard play on the **\"and\" of beats 2 and 4** — what reggae musicians call the \"skank.\" The downbeats are left largely empty, creating the distinctive floating, off-beat feel that is the essence of reggae.\n\n### Practicing Syncopation\n\nThe classic Berklee method for internalizing syncopation:\n\n1. **Set your metronome to click on beats 2 and 4** instead of 1 and 3\n2. Feel beats 2 and 4 as the \"strong\" clicks\n3. Play on the beat relative to those clicks\n\nThis trains your ear to hear the pulse on the backbeats — the same way a drummer hears the snare — and makes off-beat accents feel natural rather than awkward.\n\n### Hemiola\n\nA related concept: **hemiola** is the temporary superimposition of a different meter against the existing one. In 3/4, a hemiola groups two measures' worth of beats into three beats of a larger note value, creating the illusion of shifting to 2/4 or cut time. Hemiola is common in Baroque music (Handel, Bach) and in Latin rhythms like the clave.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In 4/4 time, which beats are considered 'strong' beats?",
+      "choices": [
+        "Beats 2 and 4",
+        "Beats 1 and 3",
+        "Only beat 1",
+        "All four beats are equally strong"
+      ],
+      "answer": 1,
+      "explanation": "In 4/4, beats 1 and 3 are the strong beats, with beat 1 (the downbeat) being the strongest. Beats 2 and 4 are the weak beats — though in rock and pop, the snare emphasizes these weak beats as the 'backbeat.'",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is an 'anticipation' in the context of syncopation?",
+      "choices": [
+        "A note that arrives after the expected beat",
+        "A long note held on beat 1",
+        "A note that arrives before the expected beat, tied over to it",
+        "A rest placed on beat 1 to create silence"
+      ],
+      "answer": 2,
+      "explanation": "An anticipation is a syncopated note that sounds slightly before the expected strong beat — typically on the 'and' of beat 4 — and is tied over into beat 1 of the next measure. The strong beat is 'swallowed' by the held note, creating forward momentum.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In reggae music, on which part of the beat does the guitar/keyboard 'skank' typically fall?",
+      "choices": [
+        "Beats 1 and 3 (the downbeats)",
+        "Beat 1 only",
+        "The 'and' (upbeat) of beats 2 and 4",
+        "Beat 4 only"
+      ],
+      "answer": 2,
+      "explanation": "The reggae skank — the rhythmic chop on guitar or keyboard — falls on the 'and' of beats 2 and 4 (the upbeats). The downbeats are largely left empty, giving reggae its characteristic floating, off-beat feel.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The Berklee practice technique for internalizing syncopation involves setting the metronome to click on which beats?",
+      "choices": [
+        "Beats 1 and 2",
+        "Beats 1 and 3",
+        "Beats 2 and 4",
+        "All four beats equally"
+      ],
+      "answer": 2,
+      "explanation": "Setting the metronome on beats 2 and 4 — treating the backbeat as the 'click' — trains you to feel the off-beat pulse naturally. This is how drummers and rhythm section players internalize syncopated grooves.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "05-make-your-own",
+  "title": "Create Your Own Licks",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Building Original Licks\n\nEvery great guitarist has signature licks. Here's how to build yours:\n\n1. **Start small** — pick 3–4 notes from the pentatonic\n2. **Add one technique** — a bend, hammer-on, or slide\n3. **Give it rhythm** — long note, short note, short note, long note\n4. **Repeat and vary** — play it again, slightly different\n5. **Record yourself** — the best accidents become signature licks\n\n**The rule:** A lick you invented always sounds better than one you copied.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Lick Bank\n\nBuild a personal **lick bank** — a collection of phrases you can pull out while improvising.\n\n**Organize by:**\n- Key (A minor, G major, etc.)\n- Mood (bluesy, aggressive, melodic)\n- Technique (bend-heavy, slide-based, legato)\n\nHaving 5–10 memorized licks means you always have something to say when soloing.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'lick bank'?",
+      "choices": ["A financial term for music lessons", "A personal collection of memorized phrases for improvisation", "A type of scale exercise", "A chord substitution technique"],
+      "answer": 1,
+      "explanation": "A lick bank is a personal library of memorized musical phrases you can draw on during improvisation — giving you vocabulary to express yourself in the moment.",
+      "srs": true
+    }
+  ]
+}

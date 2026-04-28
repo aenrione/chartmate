@@ -1,0 +1,25 @@
+{
+  "id": "04-bends",
+  "title": "String Bends",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# String Bending\n\nBending pushes a fretted string sideways, raising its pitch — a core technique in blues and rock soloing.\n\n**Types of bends:**\n- **Half step bend** — raises pitch by 1 semitone (sounds like moving up 1 fret)\n- **Whole step bend** — raises pitch by 2 semitones (sounds like moving up 2 frets)\n- **Pre-bend** — bend first, pick, then release\n\nIn tab: `7b9` — fret 7, bend until it sounds like fret 9.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Bending Technique\n\n**How to bend correctly:**\n1. Use multiple fingers to support the bend (ring + middle pushing together)\n2. Push the string **upward** on strings 1–3, **downward** on strings 4–6\n3. Anchor your thumb over the top of the neck for leverage\n\n**Intonation:** The hardest part of bending is hitting the target pitch. Always verify by playing the target fret first, then matching it with the bend.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "If you bend a note at fret 7 by a whole step, what pitch should it reach?",
+      "choices": ["Same as fret 6", "Same as fret 8", "Same as fret 9", "Same as fret 12"],
+      "answer": 2,
+      "explanation": "A whole-step (full-step) bend raises the pitch by 2 semitones — the equivalent of moving up 2 frets. Fret 7 + 2 = fret 9.",
+      "srs": true
+    }
+  ]
+}

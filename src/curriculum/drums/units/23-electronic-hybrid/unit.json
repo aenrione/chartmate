@@ -1,0 +1,8 @@
+{
+  "id": "23-electronic-hybrid",
+  "title": "Electronic & Hybrid Drumming",
+  "description": "Combining acoustic with electronics, triggering samples, hybrid setups, and looping",
+  "icon": "layers",
+  "prerequisites": ["20-studio-drumming"],
+  "lessons": ["01-trigger-basics", "02-hybrid-grooves", "03-sample-layering", "04-loop-pedal-drumming", "05-electronic-integration"]
+}

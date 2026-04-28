@@ -1,0 +1,41 @@
+{
+  "id": "01-shell-voicings",
+  "title": "Shell Voicings: The 3-7 Core",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Shell Voicings — The Minimum Viable Chord\n\nA shell voicing contains only the **most harmonically essential notes**: the **3rd** and **7th** (plus optionally the root).\n\n## Why 3rd and 7th?\n\n- The **3rd** tells you if the chord is major or minor\n- The **7th** tells you the chord quality (major 7, dominant 7, minor 7, half-diminished)\n- The root is often left to the bass player in a jazz context\n\nTogether, 3rd + 7th = **complete harmonic information** in just two notes. Add the root and you have a 3-note shell.\n\n## The ii-V-I Shell Voicings in C\n\n### Dm7 (ii) — shell on strings 6-4-3\n- String 6: D (root)\n- String 4: A (5th — optional) or leave out\n- String 3: F (minor 3rd)\n- String 2: C (minor 7th)\n\n### G7 (V) — shell on strings 6-4-3\n- String 6: G (root)\n- String 4: B (major 3rd)\n- String 3: F (minor 7th)\n\n### Cmaj7 (I) — shell on strings 5-4-3\n- String 5: C (root)\n- String 4: E (major 3rd)\n- String 3: B (major 7th)\n\n## The Power of Shell Voicings\n\nShells are the foundation of jazz piano comping (Bud Powell, Bill Evans). On guitar, they:\n- Clear space for a soloist\n- Move with minimal finger repositioning\n- Sound uncluttered and professional\n- Work in any key without much thought",
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "Dm7 (shell voicing, strings 6-3-2)",
+      "frets": [-1, 1, 1, 0, -1, -1],
+      "fingers": [0, 1, 2, 0, 0, 0],
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "G7 (shell voicing, strings 6-3)",
+      "frets": [-1, 1, 2, -1, -1, 3],
+      "fingers": [0, 1, 2, 0, 0, 3],
+      "srs": true
+    },
+    {
+      "type": "chord-diagram",
+      "chord": "Cmaj7 (shell voicing)",
+      "frets": [0, 3, 0, 2, 3, -1],
+      "fingers": [0, 3, 0, 1, 2, 0],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a shell voicing, which two notes are considered most harmonically essential?",
+      "choices": ["Root and 5th", "3rd and 7th", "Root and 3rd", "5th and 7th"],
+      "answer": 1,
+      "explanation": "The 3rd and 7th are the harmonic core of any chord: the 3rd defines major/minor quality, and the 7th defines the chord type (maj7, dom7, min7, etc.). These two notes alone communicate complete harmonic information.",
+      "srs": true
+    }
+  ]
+}

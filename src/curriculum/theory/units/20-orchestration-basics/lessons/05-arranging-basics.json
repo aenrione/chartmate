@@ -1,0 +1,38 @@
+{
+  "id": "05-arranging-basics",
+  "title": "Arranging Basics",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Arranging: Adapting Music for New Forces\n\n**Arranging** is the art of adapting an existing piece of music for a different ensemble or medium. It is distinct from composition (creating original music) and orchestration (writing for orchestra from scratch) — arranging starts with existing material and re-clothes it.\n\n### The Arranger's Toolkit\n\n**1. Register placement**: Put melody in the most audible register. Strings in the high register carry melody over a full orchestra; brass in the middle can be covered.\n\n**2. Doubling**: Reinforcing a melody or line by having multiple instruments play the same notes (at the same pitch or at the octave). Doubling increases volume and changes timbre.\n- Same pitch: Oboe + Violin I playing the same melody — oboe adds penetrating quality\n- Octave doubling: Violin I + Cello playing the same line an octave apart — adds richness\n\n**3. Counter-melody**: An independent melodic line that supports but contrasts with the main melody. Often in a different register, slightly slower-moving.\n\n**4. Harmonic filling**: Inner voices that play chord tones — not melody, not bass, but the middle of the harmonic texture.\n\n**5. Textural variation**: Changing the density and character of the arrangement at different points. A climax needs full texture; an intimate moment needs sparse texture.\n\n### The Big Band Tradition\n\nBig band arranging (Duke Ellington, Count Basie, Glenn Miller) developed a sophisticated vocabulary:\n- **Shout chorus**: Full band at maximum intensity — the climactic section\n- **Soli passage**: One section (e.g., saxophones) plays harmonized melody\n- **Brass pyramid**: Brass chords built from bottom up, each instrument entering in turn\n- **Background figures**: One section provides rhythmic/harmonic accompaniment while another solos\n\n### Lead-Sheet to Arrangement Workflow\n\n1. Start with a lead sheet (melody + chord symbols)\n2. Decide on the ensemble (big band? string quartet? jazz combo?)\n3. Establish the key and tempo\n4. Plan the form — intro, how many choruses, outro?\n5. Assign the first chorus melody to a specific instrument\n6. Decide on accompaniment texture for each section\n7. Plan a climax — where does the full ensemble play together?\n8. Write the outro (fade? formal ending? tag?)\n\n### Key Resources\n\n- *The Complete Arranger* by Sammy Nestico (big band focus)\n- *Arranging for the Concert Band* by Frank Erickson\n- *Sounds and Scores* by Henry Mancini (film/pop arranging)\n- Transcriptions of Duke Ellington arrangements — the gold standard",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'octave doubling' and what does it accomplish sonically?",
+      "choices": [
+        "Writing a melody twice — once for each hand of the piano",
+        "Two instruments playing the same melodic line an octave apart — this adds richness, volume, and textural warmth without changing harmony",
+        "Doubling the tempo while keeping the same notes",
+        "Playing every note twice (as a trill)"
+      ],
+      "answer": 1,
+      "explanation": "Octave doubling places the same melodic line in two instruments an octave apart (e.g., Violin I and Cello playing the same line). This adds body and richness to the sound — the octave is the most consonant interval, so the two versions blend seamlessly into one expanded sound. It is one of the most common arranging techniques in orchestral and film music for projecting a melody over full texture.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is a 'shout chorus' in big band arranging?",
+      "choices": [
+        "A chorus where the audience is invited to shout the lyrics",
+        "The climactic full-band passage at maximum intensity — typically near the end of an arrangement",
+        "A section where the vocalists sing without accompaniment",
+        "A fast, unison melody for the trumpet section only"
+      ],
+      "answer": 1,
+      "explanation": "The shout chorus is the climactic moment in a big band arrangement — typically the final or penultimate chorus played by the full ensemble at maximum intensity. It synthesizes all the preceding material into a triumphant, energetic peak. The term comes from the 'shouting' dynamic and character of the full band. Every great big band arrangement builds toward its shout chorus.",
+      "srs": true
+    }
+  ]
+}

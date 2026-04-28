@@ -1,0 +1,20 @@
+{
+  "id": "03-producing-drums",
+  "title": "Producing Drums",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Producing Drums: The Drummer as Producer\n\nModern drummers increasingly participate in the production of their own drum tracks — choosing samples, designing sounds, programming when necessary, and understanding how their acoustic playing translates to the recorded medium.\n\n**Drum production fundamentals:**\n\n**Sample selection:**\nWhen choosing samples (for electronic layering or full electronic production), select based on:\n- Fundamental pitch (kick: 50-80 Hz? 80-120 Hz?)\n- Attack character (click? thud? both?)\n- Sustain and decay length\n- The genre's sonic expectations\n\n**DAW basics for drummers:**\n- Recording acoustic drums: multiple microphones, room sound considerations\n- Sample replacement: replacing or blending acoustic drum hits with samples in post\n- Groove quantization: applying timing corrections that feel natural rather than robotic\n- Humanization: deliberately adding timing and velocity variation to programmed drum patterns\n\n**Programming drum parts:** A drummer who can program realistic, musical drum parts in a DAW is dramatically more valuable in production contexts. Programming requires understanding:\n- Velocity relationships between notes\n- Natural timing imperfections (not everything exactly on the grid)\n- How the groove feels, not just where the notes are\n\n**The loop library:** Maintaining a personal library of drum loops, patterns, and samples — organized by genre, tempo, and feel — is a professional practice tool.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does 'humanization' mean when programming drum parts in a DAW?",
+      "choices": ["Making the drums sound more like human speech", "Deliberately adding subtle timing and velocity variations to programmed patterns so they feel organic rather than machine-perfect", "Replacing electronic sounds with acoustic samples", "Adding reverb to make the room sound larger"],
+      "answer": 1,
+      "explanation": "Humanization adds subtle timing offsets (a few milliseconds early or late) and velocity variations to programmed drum patterns. Perfectly quantized, perfectly even-velocity drum programs sound robotic. Human drummers naturally have these micro-variations, and adding them back to programmed parts makes them feel live.",
+      "srs": true
+    }
+  ]
+}

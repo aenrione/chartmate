@@ -1,0 +1,20 @@
+{
+  "id": "03-time-signatures",
+  "title": "Time Signatures",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# What Is a Time Signature?\n\nA time signature tells you:\n- **Top number** = beats per measure\n- **Bottom number** = what note value gets one beat\n\n**4/4** — 4 beats, quarter note gets the beat (most common)\n**3/4** — 3 beats per measure (waltz feel)\n**6/8** — 6 eighth notes per measure (flowing, compound feel)\n**12/8** — 12 eighth notes = 4 groups of 3 (slow blues, gospel)\n\nThe drummer defines the time signature for the whole band.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In 3/4 time, how many beats are in each measure?",
+      "choices": ["2", "3", "4", "6"],
+      "answer": 1,
+      "explanation": "The top number in a time signature tells you beats per measure. 3/4 = 3 beats per measure — the classic waltz feel.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "01-autumn-leaves",
+  "title": "Autumn Leaves",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Autumn Leaves — The Gateway Jazz Standard\n\n\"Les Feuilles Mortes\" (Autumn Leaves) was written by **Joseph Kosma** (music) and **Jacques Prévert** (lyrics) in 1945. The English version became a jazz standard performed by Miles Davis, Bill Evans, Chet Baker, and virtually every jazz musician.\n\n## Why Learn Autumn Leaves First\n\n1. **Two keys**: It moves through G minor / Bb major — two related keys\n2. **All ii-V-Is**: The entire form is ii-V-I movements in two keys\n3. **Natural voice leading**: The chords fall naturally on the guitar\n4. **Widely used**: Every jam session includes this tune\n\n## The Form: AABA, 32 bars (but actually more like ABBA)\n\n**Full chord progression in G minor:**\n```\nA section:\n| Cm7     | F7      | Bbmaj7  | Ebmaj7  |\n| Am7b5   | D7      | Gm      | Gm      |\n\nB section:\n| Am7b5   | D7      | Gm      | Gm      |\n| Cm7     | F7      | Bbmaj7  | Bbmaj7  |\n```\n\n## Pattern Analysis\n\nLook carefully — it's almost entirely ii-V-I movements:\n- Cm7–F7–Bbmaj7 = ii-V-I in Bb major\n- Am7b5–D7–Gm = ii-V-i in G minor\n\nOnce you see this, the whole song makes sense harmonically.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What harmonic pattern makes up most of the chord progression in 'Autumn Leaves'?",
+      "choices": [
+        "I-IV-V progressions",
+        "Chromatic chord movements",
+        "ii-V-I movements in two related keys (Bb major and G minor)",
+        "Circle of 5ths through all 12 keys"
+      ],
+      "answer": 2,
+      "explanation": "Autumn Leaves is built almost entirely from ii-V-I progressions in two keys: Cm7–F7–Bbmaj7 (ii-V-I in Bb major) and Am7b5–D7–Gm (ii-V-i in G minor). This makes it the perfect tune for practicing ii-V-I vocabulary.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Comping Autumn Leaves\n\n## Shell Voicings Version\n\nUsing shell voicings (3-7 pairs) through the first 8 bars:\n\n```\nCm7:    Eb (b3) + Bb (b7) on strings 3-2, frets 8-6\nF7:     A (3) + Eb (b7) on strings 3-2, frets 7-6  (tritone from Cm7!)\nBbmaj7: D (3) + A (7) on strings 3-2, frets 7-5\nEbmaj7: G (3) + D (7) on strings 3-2, frets 8-7\n```\n\n## Rhythmic Comping\n\nUse the following rhythmic pattern:\n- Bar 1 of each chord: chord stab on beat 2\n- Bar 2: chord stab on \"and\" of 2 and beat 4\n- This is classic jazz 4/4 comping feel\n\n## Miles Davis Version\n\nListen to *Kind of Blue* (1959) — actually use *Milestones* (1958) or the 1958 film soundtrack. Miles's version is in the key of G minor, and Bill Evans's comping is the gold standard of how to play behind a soloist on this tune.\n\nSpecifically: notice how Evans leaves enormous space, often playing just one chord per 2 bars.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In which two related keys does 'Autumn Leaves' primarily move?",
+      "choices": [
+        "C major and A minor",
+        "Bb major and G minor",
+        "F major and D minor",
+        "Eb major and C minor"
+      ],
+      "answer": 1,
+      "explanation": "Autumn Leaves moves between Bb major and G minor — relative keys (they share the same key signature). The ii-V-I in Bb major (Cm7-F7-Bbmaj7) and the ii-V-i in G minor (Am7b5-D7-Gm) form the entire progression.",
+      "srs": true
+    }
+  ]
+}

@@ -5,7 +5,7 @@ import {calculateSM2, todayISO} from '../repertoire/sm2';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
-export type ItemType = 'song' | 'song_section' | 'composition' | 'exercise';
+export type ItemType = 'song' | 'song_section' | 'composition' | 'exercise' | 'theory';
 
 export interface RepertoireCollection {
   id: number;
@@ -30,6 +30,8 @@ export interface RepertoireItem {
   compositionId: number | null;
   /** Typed FK to song_sections.id */
   songSectionId: number | null;
+  /** Dedup key for curriculum-seeded theory cards */
+  theorySource: string | null;
   interval: number;
   easeFactor: number;
   repetitions: number;
@@ -98,6 +100,7 @@ function rowToItem(row: any): RepertoireItem {
     savedChartMd5: row.saved_chart_md5 ?? null,
     compositionId: row.composition_id ?? null,
     songSectionId: row.song_section_id ?? null,
+    theorySource: row.theory_source ?? null,
     interval: row.interval,
     easeFactor: row.ease_factor,
     repetitions: row.repetitions,
@@ -178,6 +181,7 @@ export async function createItem(data: {
   savedChartMd5?: string;
   compositionId?: number;
   songSectionId?: number;
+  theorySource?: string;
 }): Promise<number> {
   const db = await getLocalDb();
   const now = getCurrentTimestamp();
@@ -196,6 +200,7 @@ export async function createItem(data: {
       saved_chart_md5: data.savedChartMd5 ?? null,
       composition_id: data.compositionId ?? null,
       song_section_id: data.songSectionId ?? null,
+      theory_source: data.theorySource ?? null,
       interval: 1,
       ease_factor: 2.5,
       repetitions: 0,
@@ -241,7 +246,9 @@ export async function getItemsByIds(ids: number[]): Promise<RepertoireItem[]> {
   return ids.map(id => byId.get(id)).filter((r): r is NonNullable<typeof r> => !!r).map(rowToItem);
 }
 
-export async function getItemsDueToday(): Promise<RepertoireItem[]> {
+export type RepertoireFilter = 'all' | 'guitar' | 'drums' | 'theory';
+
+export async function getItemsDueToday(filter: RepertoireFilter = 'all'): Promise<RepertoireItem[]> {
   const db = await getLocalDb();
   const today = todayISO();
   const rows = await db
@@ -250,7 +257,11 @@ export async function getItemsDueToday(): Promise<RepertoireItem[]> {
     .where('next_review_date', '<=', today)
     .orderBy('next_review_date', 'asc')
     .execute();
-  return rows.map(rowToItem);
+  const items = rows.map(rowToItem);
+  if (filter === 'guitar') return items.filter(i => i.compositionId !== null);
+  if (filter === 'drums') return items.filter(i => i.savedChartMd5 !== null);
+  if (filter === 'theory') return items.filter(i => i.itemType === 'theory');
+  return items;
 }
 
 export async function getOverdueItems(): Promise<RepertoireItem[]> {
@@ -313,23 +324,167 @@ export async function deleteItem(id: number): Promise<void> {
 }
 
 /** Check if a chart already has a repertoire entry */
+/** Returns the WHOLE-CHART repertoire row (excludes per-section / per-pattern rows). */
 export async function findItemBySavedChart(md5: string): Promise<RepertoireItem | null> {
   const db = await getLocalDb();
   const row = await db
     .selectFrom('repertoire_items')
     .selectAll()
     .where('saved_chart_md5', '=', md5)
+    .where(eb => eb.or([
+      eb('notes', 'is', null),
+      eb.and([
+        eb('notes', 'not like', `${CHART_SECTION_NOTES_PREFIX}%`),
+        eb('notes', 'not like', `${CHART_PATTERN_NOTES_PREFIX}%`),
+      ]),
+    ]))
     .executeTakeFirst();
   return row ? rowToItem(row) : null;
 }
 
-/** Check if a composition already has a repertoire entry */
+/** Per-section row for a sheet-music chart, keyed by saved_chart_md5 + section name. */
+export async function findItemByChartSection(
+  md5: string,
+  sectionName: string,
+): Promise<RepertoireItem | null> {
+  const db = await getLocalDb();
+  const row = await db
+    .selectFrom('repertoire_items')
+    .selectAll()
+    .where('saved_chart_md5', '=', md5)
+    .where('notes', 'like', `${CHART_SECTION_NOTES_PREFIX}${sectionName}%`)
+    .executeTakeFirst();
+  return row ? rowToItem(row) : null;
+}
+
+/** Per-pattern row for a sheet-music chart, keyed by saved_chart_md5 + pattern label. */
+export async function findItemByChartPattern(
+  md5: string,
+  patternLabel: string,
+): Promise<RepertoireItem | null> {
+  const db = await getLocalDb();
+  const row = await db
+    .selectFrom('repertoire_items')
+    .selectAll()
+    .where('saved_chart_md5', '=', md5)
+    .where('notes', 'like', `${CHART_PATTERN_NOTES_PREFIX}${patternLabel}%`)
+    .executeTakeFirst();
+  return row ? rowToItem(row) : null;
+}
+
+/** Check if a composition has a whole-song repertoire entry (excludes pattern/tab-section rows). */
 export async function findItemByComposition(compositionId: number): Promise<RepertoireItem | null> {
   const db = await getLocalDb();
   const row = await db
     .selectFrom('repertoire_items')
     .selectAll()
     .where('composition_id', '=', compositionId)
+    .where(eb => eb.or([
+      eb('notes', 'is', null),
+      eb.and([
+        eb('notes', 'not like', `${PATTERN_NOTES_PREFIX}%`),
+        eb('notes', 'not like', `${TAB_SECTION_NOTES_PREFIX}%`),
+      ]),
+    ]))
+    .executeTakeFirst();
+  return row ? rowToItem(row) : null;
+}
+
+/** Check if a song section already has a repertoire entry */
+export async function findItemBySection(songSectionId: number): Promise<RepertoireItem | null> {
+  const db = await getLocalDb();
+  const row = await db
+    .selectFrom('repertoire_items')
+    .selectAll()
+    .where('song_section_id', '=', songSectionId)
+    .executeTakeFirst();
+  return row ? rowToItem(row) : null;
+}
+
+/**
+ * Patterns aren't first-class DB entities — they're transient outputs of the tab-editor pattern
+ * detector. We track them by saving a repertoire_items row keyed by (composition_id, notes),
+ * where `notes` carries a `pattern:<label>` prefix. This lets the same composition have many
+ * tracked patterns plus an optional whole-composition entry without schema changes.
+ */
+// Notes prefixes — distinguish whole-target rows from sub-target rows that share the same
+// composition_id or saved_chart_md5. The whole-target lookup excludes rows with these prefixes.
+export const PATTERN_NOTES_PREFIX = 'pattern:';                 // tab-editor pattern (composition)
+export const TAB_SECTION_NOTES_PREFIX = 'tabsection:';          // tab-editor section (composition)
+export const CHART_SECTION_NOTES_PREFIX = 'chartsection:';      // sheet-music section (saved chart)
+export const CHART_PATTERN_NOTES_PREFIX = 'chartpattern:';      // sheet-music pattern (saved chart)
+
+export function patternNotesFor(label: string, opts?: {extra?: string; startBar?: number; barCount?: number}): string {
+  const parts = [`${PATTERN_NOTES_PREFIX}${label}`];
+  if (opts?.extra) parts.push(opts.extra);
+  if (opts?.startBar != null && opts.barCount != null) {
+    parts.push(`@b${opts.startBar}+${opts.barCount}`);
+  }
+  return parts.join(' · ');
+}
+
+export function tabSectionNotesFor(name: string, opts?: {extra?: string; startBar?: number; barCount?: number}): string {
+  const parts = [`${TAB_SECTION_NOTES_PREFIX}${name}`];
+  if (opts?.extra) parts.push(opts.extra);
+  if (opts?.startBar != null && opts.barCount != null) {
+    parts.push(`@b${opts.startBar}+${opts.barCount}`);
+  }
+  return parts.join(' · ');
+}
+
+/**
+ * Extract the snippet bar range from a notes string. Returns null if the notes don't carry an
+ * `@bX+N` token. Used by TabSnippet to render only the relevant bars in repertoire reviews.
+ */
+export function parseSnippetRange(notes: string | null): {startBar: number; barCount: number} | null {
+  if (!notes) return null;
+  const m = /@b(\d+)\+(\d+)/.exec(notes);
+  if (!m) return null;
+  return {startBar: Number(m[1]), barCount: Number(m[2])};
+}
+
+export function chartSectionNotesFor(name: string, opts?: {extra?: string; startBar?: number; barCount?: number}): string {
+  const parts = [`${CHART_SECTION_NOTES_PREFIX}${name}`];
+  if (opts?.extra) parts.push(opts.extra);
+  if (opts?.startBar != null && opts.barCount != null) {
+    parts.push(`@b${opts.startBar}+${opts.barCount}`);
+  }
+  return parts.join(' · ');
+}
+
+export function chartPatternNotesFor(label: string, opts?: {extra?: string; startBar?: number; barCount?: number}): string {
+  const parts = [`${CHART_PATTERN_NOTES_PREFIX}${label}`];
+  if (opts?.extra) parts.push(opts.extra);
+  if (opts?.startBar != null && opts.barCount != null) {
+    parts.push(`@b${opts.startBar}+${opts.barCount}`);
+  }
+  return parts.join(' · ');
+}
+
+export async function findItemByCompositionPattern(
+  compositionId: number,
+  patternLabel: string,
+): Promise<RepertoireItem | null> {
+  const db = await getLocalDb();
+  const row = await db
+    .selectFrom('repertoire_items')
+    .selectAll()
+    .where('composition_id', '=', compositionId)
+    .where('notes', 'like', `${PATTERN_NOTES_PREFIX}${patternLabel}%`)
+    .executeTakeFirst();
+  return row ? rowToItem(row) : null;
+}
+
+export async function findItemByCompositionTabSection(
+  compositionId: number,
+  sectionName: string,
+): Promise<RepertoireItem | null> {
+  const db = await getLocalDb();
+  const row = await db
+    .selectFrom('repertoire_items')
+    .selectAll()
+    .where('composition_id', '=', compositionId)
+    .where('notes', 'like', `${TAB_SECTION_NOTES_PREFIX}${sectionName}%`)
     .executeTakeFirst();
   return row ? rowToItem(row) : null;
 }

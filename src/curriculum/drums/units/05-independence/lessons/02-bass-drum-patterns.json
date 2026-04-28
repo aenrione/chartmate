@@ -1,0 +1,20 @@
+{
+  "id": "02-bass-drum-patterns",
+  "title": "Bass Drum Patterns",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Bass Drum Variations\n\nOnce the basic beat (kick on 1 and 3) is solid, add variations:\n\n**Two kicks before beat 3:**\n`Kick: x-x-----x-x-----`\n(1, 2-and, 3, 4-and)\n\n**Syncopated kick (common in funk):**\n`Kick: x---x-x-x---x-x-`\n\n**Practice method:**\n1. Play hi-hat and snare (hands only)\n2. Add kick foot while keeping hands steady\n3. Start with one new kick placement at a time",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the best method to add new bass drum patterns?",
+      "choices": ["Learn the whole pattern at once", "Start with hands only, then add one new kick placement at a time", "Practice the kick alone without hands", "Slow the tempo to 40 BPM always"],
+      "answer": 1,
+      "explanation": "Isolate the hands first (establish that pattern on autopilot), then add the kick foot incrementally. This avoids mental overload and builds independence progressively.",
+      "srs": true
+    }
+  ]
+}

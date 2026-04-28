@@ -1,0 +1,25 @@
+{
+  "id": "04-muting-and-dynamics",
+  "title": "Muting & Dynamics",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Palm Muting\n\nPalm muting is resting the side of your picking hand lightly on the strings near the bridge.\n\nThe result: a thick, chunky, percussive sound — the signature tone of rock rhythm guitar.\n\n**How to do it:**\n1. Rest the palm edge just in front of the bridge saddles\n2. Strum normally\n3. Move the palm slightly forward for more muting, back toward the bridge for less",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Dynamics\n\n**Dynamics** = how loud or soft you play.\n\n- **Forte (loud):** strum harder, angle pick more steeply\n- **Piano (soft):** lighter touch, pick barely grazes strings\n\nSongs have loud and quiet parts for a reason — contrast creates emotion. The verse whispers, the chorus shouts.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Where does your palm rest for palm muting?",
+      "choices": ["On the fretboard near the nut", "Near the bridge, on the strings", "On the body of the guitar", "On the soundhole"],
+      "answer": 1,
+      "explanation": "Palm muting works by lightly resting the picking-hand palm on the strings just forward of the bridge saddles.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "id": "05-combining-beats-fills",
+  "title": "Beats + Fills Together",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The 7+1 Structure\n\nThe classic approach to combining beats and fills:\n\n- Play the groove for **7 beats** (almost 2 measures)\n- **Fill** on beat 8 (the last beat of measure 2)\n- Back to groove\n\nThis creates a natural 2-bar phrase — the most common unit in pop and rock music.\n\n**Count:** 1 2 3 4 | 1 2 3 [FILL] | 1 2 3 4...\n\nThe fill anticipates the return of the groove. A great fill makes the listener want to come back to beat 1.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Groove Bar — The Driving Beat",
+      "description": "The groove bar you repeat for 7 beats before the fill. Solid, consistent, and in the pocket.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 90,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "xxxxxxxx"},
+        {"name": "Snare",  "pattern": "--x---x-"},
+        {"name": "Kick",   "pattern": "x---x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Fill Bar — Beat 4 Snare Burst",
+      "description": "The fill bar: groove through beats 1–3, then four 16th-note snare hits on beat 4 launch you back to the top.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 90,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "x-x-x-x-x-x-x-x-"},
+        {"name": "Snare",  "pattern": "----x-------xxxx"},
+        {"name": "Kick",   "pattern": "x-------x-------"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a 2-bar groove-and-fill pattern, where does the fill typically occur?",
+      "choices": ["The first beat of measure 1", "The last beat of measure 2", "The middle of both measures", "Randomly throughout"],
+      "answer": 1,
+      "explanation": "The standard 7+1 pattern plays the groove for 7 beats (bars 1 + first 3 beats of bar 2), then fills on beat 4 of bar 2 before returning to bar 1.",
+      "srs": true
+    }
+  ]
+}

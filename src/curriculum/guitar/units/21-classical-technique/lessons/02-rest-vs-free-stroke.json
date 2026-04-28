@@ -1,0 +1,43 @@
+{
+  "id": "02-rest-vs-free-stroke",
+  "title": "Rest Stroke vs Free Stroke in Music",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# When to Use Each Stroke\n\nChoosing between rest stroke and free stroke is a musical decision, not a technical preference.\n\n## Rest Stroke: When to Use\n\n- **Solo melody** on the highest sounding note\n- **Scale passages** requiring projection\n- **Forte** passages — maximum volume\n- **Opening theme** — needs to cut through\n\n## Free Stroke: When to Use\n\n- **Arpeggios** — notes must ring together, rest stroke damps the adjacent string\n- **Inner voices** — when melody is on one string and you're playing accompaniment on adjacent strings\n- **Pianissimo** passages — control and lightness\n- **Two voices simultaneously** — both require free stroke to coexist\n\n## The Sor Etude Test\n\nFernando Sor's Op. 60 etudes are written specifically to practice stroke choice:\n- Ascending scale passages: rest stroke\n- Descending arpeggio passages: free stroke\n- The decision-making becomes part of the music\n\n## Julian Bream's Advice\n\nJulian Bream (one of the 20th century's great classical guitarists) emphasized: \"Let the music tell you which stroke to use. If adjacent strings are ringing in the texture, you must use free stroke — rest stroke murders the sustained notes.\"",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why must free stroke be used in arpeggio passages rather than rest stroke?",
+      "choices": [
+        "Free stroke is faster",
+        "Rest stroke would contact and damp the adjacent string, killing notes that should ring and sustain",
+        "Arpeggios are too quiet for rest stroke",
+        "It's simply a stylistic preference"
+      ],
+      "answer": 1,
+      "explanation": "In arpeggios, multiple notes must ring simultaneously. Rest stroke plays through to the adjacent string — if you rest-stroke the first note of an arpeggio, you damp the adjacent string that the next note is on. Free stroke keeps all strings free to vibrate.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Mixed Stroke Practice — Bach Lute Suite BWV 996\n\nBach's Lute Suite No. 1 (BWV 996), originally for lute but universally played on guitar, mixes both strokes throughout.\n\n## The Bourree (most famous movement)\n\n```\ne |--0-------0--2--3--|\nB |----3--1--------3--|\nG |--------2----------|\n   (rest stroke on melody, free stroke on accompaniment)\n```\n\nThe melody notes (often on string 1) use rest stroke for projection.\nThe inner voices (string 2, 3) use free stroke to ring freely.\n\n## Practice Approach for Mixed Texture\n\n1. First pass: identify which notes are melody and which are accompaniment\n2. Mark rest strokes (R) and free strokes (F) in your score\n3. Practice each voice separately with its appropriate stroke\n4. Combine slowly\n\n## The Sound Ideal\n\nIn a well-executed classical piece:\n- Melody (rest stroke): projects above the texture like a singer\n- Bass (thumb, free stroke): warm, round, steady\n- Inner voices (free stroke): transparent, receding behind the melody\n\nThis is the classical piano ideal — singing treble, supportive bass, quiet inner harmony — achieved on guitar.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a Bach or classical piece, how should the listener perceive the balance between melody and inner voices?",
+      "choices": [
+        "All voices at equal volume",
+        "Bass louder than melody",
+        "Melody projects prominently above; inner voices are transparent and recede behind it",
+        "Inner voices louder to reveal the harmony"
+      ],
+      "answer": 2,
+      "explanation": "Classical guitar texture, like classical piano texture, requires the melody to sing above the other voices. Inner voices provide harmony but should be quieter and more transparent. This three-layer balance (melody / inner voices / bass) is the foundation of classical guitar sound.",
+      "srs": true
+    }
+  ]
+}

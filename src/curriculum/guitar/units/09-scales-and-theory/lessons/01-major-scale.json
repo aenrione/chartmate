@@ -1,0 +1,25 @@
+{
+  "id": "01-major-scale",
+  "title": "The Major Scale",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Major Scale\n\nThe major scale is the foundation of Western music. It has 7 notes with a specific interval pattern:\n\n**W W H W W W H** (W = whole step, H = half step)\n\n**C major** (easiest — all white keys):\nC – D – E – F – G – A – B – C\n\n**G major scale, guitar position:**\n```\ne |--2--3--5--|\nB |--2--3--5--|\nG |--2--4--5--|\nD |--2--4--5--|\nA |--2--3--5--|\nE |--2--3--5--|\n```",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the interval pattern for a major scale?",
+      "choices": ["W H W W H W W", "W W H W W W H", "H W W H W W W", "W W W H W W H"],
+      "answer": 1,
+      "explanation": "The major scale pattern is: Whole Whole Half Whole Whole Whole Half — this sequence of whole and half steps creates the characteristic major sound.",
+      "srs": true
+    },
+    {
+      "type": "fretboard-drill",
+      "notes": ["G2", "A2", "B2", "C3", "D3", "E3"],
+      "requiredCorrect": 5
+    }
+  ]
+}

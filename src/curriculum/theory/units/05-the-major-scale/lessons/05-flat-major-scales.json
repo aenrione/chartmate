@@ -1,0 +1,69 @@
+{
+  "id": "05-flat-major-scales",
+  "title": "Major Scales with Flats",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Major Scales with Flats\n\n### Building Flat Keys from the Formula\n\nFlat major scales are built by the same W–W–H–W–W–W–H formula. When the formula requires a whole step but the natural note above is a half step away, we *raise* that note (sharp). But flat key scales arise when the formula requires a half step at the right position, and the only way to place the half steps at degrees 3–4 and 7–8 correctly from the new tonic is to *lower* certain notes (flat). The result: all flat key scales have their sharpened notes replaced by flatted ones.\n\n### The Flat Major Scales\n\n**F major** (1 flat: Bb)\nF – G – A – **Bb** – C – D – E – F\nFrom A to B is a whole step, but the formula needs a half step at degree 3→4 (A to the 4th degree). A to B is a whole step, so B must be lowered to Bb to create the required half step between degrees 3 and 4.\n\n**Bb major** (2 flats: Bb, Eb)\nBb – C – D – **Eb** – F – G – A – Bb\n\n**Eb major** (3 flats: Bb, Eb, Ab)\nEb – F – G – **Ab** – Bb – C – D – Eb\n\n**Ab major** (4 flats: Bb, Eb, Ab, Db)\nAb – Bb – C – **Db** – Eb – F – G – Ab\n\n**Db major** (5 flats: Bb, Eb, Ab, Db, Gb)\nDb – Eb – F – **Gb** – Ab – Bb – C – Db\n\n**Gb major** (6 flats: Bb, Eb, Ab, Db, Gb, Cb)\nGb – Ab – Bb – **Cb** – Db – Eb – F – Gb\n\n**Cb major** (7 flats — all notes flat)\nCb – Db – Eb – **Fb** – Gb – Ab – Bb – Cb\n\n### The Pattern: Each New Flat Is the Subdominant\n\nJust as each new sharp in the sharp keys is the leading tone (degree 7), each new flat added in the flat keys is the **4th scale degree (subdominant)** of the new key:\n- F major's new flat is Bb — Bb is the 4th degree of F major.\n- Bb major's new flat is Eb — Eb is the 4th degree of Bb major.\n- Eb major's new flat is Ab — Ab is the 4th degree of Eb major.\n\nThis is why the second-to-last flat *names the key* — the tonic of each flat key is one flat back from the most recently added 4th-degree flat.\n\n### Moving by Descending Fifths (Ascending Fourths)\n\nEach successive flat key is a **perfect fourth above** (or a perfect fifth below) the previous:\nC → F → Bb → Eb → Ab → Db → Gb → Cb\n\nThis is the subdominant (flat) side of the circle of fifths.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Flat Keys in Musical Context\n\n### Wind, Brass, and Flat Keys\n\nFlat keys dominate orchestral woodwind and brass writing. Clarinets in Bb, alto saxophones in Eb, French horns — these are **transposing instruments** whose natural resonant keys fall in the flat family. A piece written in concert Bb major is easy and natural for a Bb clarinet; the same piece in B major would be awkward. This is why band and orchestra literature features Bb, Eb, Ab, and F major so frequently.\n\nFor jazz musicians: the most common jazz keys are Bb, Eb, F, and Ab — directly reflecting the instrument families that dominate jazz ensembles (brass, saxophones, piano).\n\n### Fb and Cb: Uncommon But Real\n\nGb major contains Cb (= B natural in pitch), and Cb major contains both Cb and Fb (= E natural in pitch). These look alarming on paper but follow the same logic as E# and B# in the sharp keys: each letter name must appear exactly once in a major scale. If the scale starts on Cb, then the 4th degree must be Fb (not E♮) to maintain the seven-distinct-letters rule.\n\n### The Enharmonic Pair: Db Major and C# Major\n\nDb major (5 flats: Bb, Eb, Ab, Db, Gb) and C# major (7 sharps) are **enharmonically equivalent**. Db major is overwhelmingly preferred in written music — five accidentals vs. seven, and none of the unusual E# and B# spellings of C# major. Most classical and jazz piano literature uses Db major. Chopin's famous Db major Nocturne (Op. 27 No. 2) is a celebrated example.\n\n### Connecting Flat and Sharp Keys\n\nTogether, the 7 sharp keys and 7 flat keys (including 3 enharmonic overlaps) give us the **15 major keys** (or 12 distinct pitch collections). The circle of fifths arranges them all in a single visual map: sharp keys clockwise, flat keys counterclockwise, with C major at the top.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why does F major require a Bb rather than a B-natural?",
+      "choices": [
+        "Because F major is in the flat family and all its notes must be flat",
+        "Because the W–W–H–W–W–W–H formula requires a half step between scale degrees 3 and 4 (A to Bb), and A to B-natural is a whole step",
+        "Because B-natural is already used in C major and cannot appear in F major",
+        "Because Bb sounds more consonant than B-natural in the key of F"
+      ],
+      "answer": 1,
+      "explanation": "In F major, the 3rd degree is A and the 4th degree must be a half step above it (the formula requires H between degrees 3–4). A to B-natural is a whole step. To create the required half step, B is lowered to Bb. This is not a convention — it is a direct consequence of applying the W–W–H–W–W–W–H formula starting on F.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the relationship between successive flat keys (C, F, Bb, Eb, Ab, Db, Gb, Cb)?",
+      "choices": [
+        "Each key is a perfect fifth above the previous",
+        "Each key is a whole step below the previous",
+        "Each key is a perfect fourth above (or a perfect fifth below) the previous",
+        "Each key is a minor third below the previous"
+      ],
+      "answer": 2,
+      "explanation": "Each successive flat key is a perfect fourth above the previous (equivalently, a perfect fifth below): C→F (a fourth up), F→Bb (a fourth up), Bb→Eb, Eb→Ab, Ab→Db, Db→Gb, Gb→Cb. This is the subdominant (flat) side of the circle of fifths. The sharp keys move by ascending fifths; the flat keys move by ascending fourths (descending fifths).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the new flat added in Eb major, and what scale degree of Eb major is it?",
+      "choices": [
+        "Db — the 7th degree of Eb major",
+        "Ab — the 4th degree of Eb major",
+        "Bb — the 5th degree of Eb major",
+        "Gb — the 3rd degree of Eb major"
+      ],
+      "answer": 1,
+      "explanation": "Eb major (3 flats: Bb, Eb, Ab) adds Ab as its new flat. In the Eb major scale — Eb F G Ab Bb C D Eb — Ab is the 4th scale degree (the subdominant). This is the pattern for all flat keys: the newly added flat is always the subdominant (4th degree) of the new key. Bb was the 4th of F, Eb was the 4th of Bb, and Ab is the 4th of Eb.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why is Db major preferred over C# major in most written music, even though they contain the same pitches?",
+      "choices": [
+        "Db major is considered more beautiful by composers",
+        "C# major is not a recognized key signature",
+        "Db major has 5 flats while C# major has 7 sharps — fewer accidentals and no unusual spellings (E#, B#) makes Db major significantly easier to read",
+        "Db major is only used for piano while C# major is for strings"
+      ],
+      "answer": 2,
+      "explanation": "Db major (5 flats) and C# major (7 sharps) are enharmonically identical in pitch but differ dramatically in notation complexity. Db major uses five conventional flats; C# major requires seven sharps including the unusual E# and B# (which look like F and C on the page). Fewer accidentals and simpler spelling makes Db major far easier to read and write, which is why it appears in virtually all classical and jazz literature while C# major is rare.",
+      "srs": true
+    }
+  ]
+}

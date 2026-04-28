@@ -1,0 +1,43 @@
+{
+  "id": "05-chet-atkins-style",
+  "title": "Chet Atkins Style",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Chet Atkins — The Country Gentleman\n\n**Chet Atkins** (1924–2001) is the defining figure of fingerstyle guitar. As an artist, producer, and ambassador (\"Mr. Guitar\"), he shaped country music and modern fingerstyle. His style combines:\n\n- **Travis picking** foundation (alternating bass)\n- **Artificial harmonics** (his signature bell-like tones)\n- **Classical fingerstyle technique** (PIMA precision)\n- **Jazz chord-melody** influences\n- **Syncopated, swinging time feel**\n\n## The Chet Sound\n\nChet played with **thumb picks** and **bare fingers** (I, M, A). The thumb pick gave him a stronger bass attack while fingers could vary tone by touching at different angles.\n\n## Essential Chet Techniques\n\n### 1. The Alternating Bass Lock\nThe thumb must be **completely automatic** — locked in like a drummer's kick drum. Practice thumb alone for weeks before adding fingers.\n\n### 2. Syncopated Treble\nMelody notes often land slightly ahead of or behind the beat for swing feel. Listen to how Chet plays \"Windy and Warm\" — the melody notes \"float\" over the locked bass.\n\n### 3. Chord Substitutions\nChet constantly colored chords with 6ths, 7ths, and 9ths instead of plain triads — adding jazz sophistication to country melodies.\n\n## Essential Listening\n- \"Windy and Warm\" (1961)\n- \"Mr. Sandman\" (1954)\n- \"Yankee Doodle Dixie\" (harmonics showcase)\n- *Chester and Lester* with Les Paul (1977)",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What combination of picking implements did Chet Atkins typically use?",
+      "choices": [
+        "Flatpick only",
+        "Bare thumb and all four fingers",
+        "Thumb pick and bare fingers (I, M, A)",
+        "All five fingers with no pick"
+      ],
+      "answer": 2,
+      "explanation": "Chet Atkins used a thumb pick for stronger bass attack combined with bare fingernails on the index, middle, and ring fingers. This hybrid approach gave him both power in the bass and tonal variety in the treble.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Chet Atkins Style Exercise\n\n## \"Windy and Warm\" Style Pattern in G\n\nThis exercise captures the Chet Atkins feel in G major:\n\n```\ne |----3------3------0------0----|\nB |------0------0------1------1--|\nG |--------0------0------0------0|\nD |----------0------0------------|\nA |--------------------3------3--|\nE |--3------3--------------------|\n   P  I  M  A  I  P  I  M  A  I\n```\n\nKey elements:\n1. Bass alternates 6–5 (G root to G5 bass)\n2. Inner voices hold while top melody moves\n3. Thumb and fingers work independently\n\n## Hybrid Picking (Chet's Adaptation)\n\nChet sometimes used a **pick + fingers** approach for certain passages — holding the flatpick between thumb and index, using middle and ring for treble strings. This crossover technique appears in his more pop-oriented recordings.\n\n## Building the Chet Sound\n\n1. **Week 1–2**: Lock in alternating bass at 60 BPM\n2. **Week 3–4**: Add simple I-M treble patterns\n3. **Month 2**: Work on specific Chet arrangements (tabs available in *Chet Atkins in Three Dimensions*)\n4. **Ongoing**: Develop artificial harmonic technique (Unit 13, Lesson 3)",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes the treble melody feel 'float' over the bass in Chet Atkins style?",
+      "choices": [
+        "Playing the melody much louder than the bass",
+        "Syncopating the melody notes slightly ahead of or behind the beat",
+        "Using only open strings for melody",
+        "Playing the melody one octave higher than written"
+      ],
+      "answer": 1,
+      "explanation": "Chet's melody notes are syncopated — they land slightly ahead of or behind the strict beat, creating a swinging, floating quality over the locked alternating bass. This rhythmic independence between bass and melody is the heart of the Chet Atkins sound.",
+      "srs": true
+    }
+  ]
+}

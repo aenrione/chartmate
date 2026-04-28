@@ -1,0 +1,20 @@
+{
+  "id": "01-why-color-chords",
+  "title": "Why Add Color?",
+  "xp": 10,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Beyond Major and Minor\n\nYou know major (bright) and minor (dark). Color chords add **nuance** — tension, longing, warmth, mystery.\n\n**Common color chord types:**\n- **sus2 / sus4** — suspended, unresolved feeling\n- **7th chords** — bluesy, jazzy warmth\n- **add9** — open, airy, modern sound\n- **maj7** — dreamy, bittersweet\n\nOne finger shift from a chord you know = a completely new emotion.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does 'sus' stand for in sus chords?",
+      "choices": ["Sustained", "Suspended", "Subdominant", "Subtle"],
+      "answer": 1,
+      "explanation": "'Sus' is short for 'suspended' — the 3rd of the chord is replaced by a 2nd or 4th, creating unresolved tension.",
+      "srs": true
+    }
+  ]
+}

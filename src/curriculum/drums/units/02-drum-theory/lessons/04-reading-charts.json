@@ -1,0 +1,20 @@
+{
+  "id": "04-reading-charts",
+  "title": "Reading Drum Charts",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Drum Chart Basics\n\nA drum chart tells you the structure of a song so you can play it on the spot.\n\n**Common chart symbols:**\n- **Simile (sim.)** — keep repeating the pattern\n- **N.C.** — no cymbal (play only kicks and snare)\n- **X** over a measure — improvise a fill\n- **D.S. al Coda** — go back to the sign, play to coda\n- **Fine** — end of the song\n\nGig drummers read charts live, often without rehearsal.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does 'simile' (sim.) mean on a drum chart?",
+      "choices": ["Play louder", "Repeat the previous pattern", "Slow down", "Add a fill here"],
+      "answer": 1,
+      "explanation": "'Simile' (sim.) tells the drummer to continue the established pattern — you don't need to write out every measure when the groove stays the same.",
+      "srs": true
+    }
+  ]
+}

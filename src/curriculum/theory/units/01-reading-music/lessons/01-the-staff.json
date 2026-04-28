@@ -1,0 +1,51 @@
+{
+  "id": "01-the-staff",
+  "title": "The Staff",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## The Staff: Foundation of Written Music\n\nEvery piece of written music lives on a **staff** — five horizontal lines stacked evenly on top of each other. These lines aren't decorative; each one, and each space between them, represents a specific **pitch**.\n\n### Lines and Spaces\n\nThe staff has:\n- **5 lines** — numbered 1 (bottom) through 5 (top)\n- **4 spaces** — numbered 1 (between lines 1 and 2) through 4 (between lines 4 and 5)\n\nA note is either sitting **on a line** (the line passes through the middle of the notehead) or **in a space** (the notehead sits between two lines). This distinction is critical for reading pitch accurately.\n\n### The Clef Defines Everything\n\nThe five lines of the staff have no meaning on their own — a **clef sign** placed at the very beginning of the staff assigns specific pitch names to the lines and spaces. Without a clef, you cannot read music. The two most common clefs are:\n- **Treble clef** — used for higher-pitched instruments\n- **Bass clef** — used for lower-pitched instruments\n\n### Ledger Lines\n\nThe five-line staff covers roughly one octave comfortably. When a melody goes **above** or **below** that range, short horizontal lines called **ledger lines** extend the staff temporarily:\n\n- Ledger lines above the staff accommodate higher notes\n- Ledger lines below the staff accommodate lower notes\n- Each ledger line and the space around it works exactly like the main staff\n\nFor example, **middle C (C4)** sits on a ledger line just below the treble clef staff and just above the bass clef staff — which is exactly why it is called \"middle.\"\n\n### Why the Staff Matters\n\nThe staff is the universal language of written music. Whether you are reading a Bach sonata, a jazz lead sheet, or a film score, the same five-line staff carries the information. Learning to see the staff as a **visual map of pitch** — higher on the page means higher in sound — is the single most important reading skill you will develop.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Reading Notes on the Staff\n\n### Notes on Lines vs. in Spaces\n\nWhen you look at a notehead, ask yourself: is the line passing **through** the middle of the oval, or is the oval sitting **between** two lines?\n\n- **On a line**: the line bisects the notehead horizontally\n- **In a space**: the notehead fills the gap between two adjacent lines\n\nThis takes practice, but your eyes will learn to recognize the pattern very quickly with consistent exposure.\n\n### Consecutive Notes Move Stepwise\n\nIn music notation, a **step** (or second) means moving from a line to the adjacent space above or below, or from a space to the adjacent line above or below. Steps are the most common motion in melodies. A **skip** (or third) jumps over one note — from a line to the next line, or from a space to the next space.\n\nRecognizing whether a melody is moving by step or skip at a glance is a core sight-reading skill.\n\n### Staff Orientation\n\nA crucial spatial fact: **higher on the staff = higher in pitch.** This means:\n- A note on line 5 is higher than a note on line 1\n- A note in space 4 is higher than a note in space 1\n- A note on a ledger line above the staff is higher than any note on the staff itself\n\nThe staff is literally a graph — pitch on the vertical axis, time on the horizontal axis.\n\n### Multiple Staves: The Grand Staff\n\nPiano music typically uses **two staves connected by a brace**: a treble clef on top for the right hand and a bass clef on the bottom for the left hand. Together, these form the **grand staff**, which covers the full range of the piano from very low to very high. The middle C ledger line connects the two staves conceptually, sitting between them.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many lines does a standard musical staff have?",
+      "choices": ["4", "5", "6", "7"],
+      "answer": 1,
+      "explanation": "The standard staff has exactly 5 lines, numbered 1 (bottom) to 5 (top), creating 4 spaces between them.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the purpose of ledger lines?",
+      "choices": [
+        "To mark the beginning of a new section",
+        "To extend the staff for notes that go above or below its range",
+        "To indicate the tempo of the piece",
+        "To show where to place a finger on the instrument"
+      ],
+      "answer": 1,
+      "explanation": "Ledger lines are short horizontal lines added above or below the staff to accommodate notes that fall outside the five-line staff's range. Each ledger line works exactly like a regular staff line.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "On a staff, what does a higher position on the page indicate about pitch?",
+      "choices": [
+        "A lower pitch",
+        "A louder dynamic",
+        "A higher pitch",
+        "A longer note duration"
+      ],
+      "answer": 2,
+      "explanation": "The staff is a visual map of pitch: higher on the page means higher in pitch. This is one of the most fundamental conventions in music notation.",
+      "srs": true
+    }
+  ]
+}

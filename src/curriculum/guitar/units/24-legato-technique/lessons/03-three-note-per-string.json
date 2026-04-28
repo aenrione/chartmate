@@ -1,0 +1,38 @@
+{
+  "id": "03-three-note-per-string",
+  "title": "Three-Note-Per-String Legato",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# 3-Note-Per-String Legato — Full Scale Runs\n\n3NPS legato is the most musically versatile legato approach — full scales at fluid speed.\n\n## The Pick Pattern for 3NPS Legato\n\nWith 3 notes per string:\n- **Ascending**: Pick first note, hammer 2nd and 3rd\n- **Descending**: Pick first note, pull 2nd and 3rd\n\nSo out of 18 notes (6 strings × 3), you only pick **6 times** — every note that starts a new string.\n\n## E Natural Minor 3NPS — Complete Ascending Run\n\n```\n   pick     h  h  | pick    h  h  |\nE |--0-h2-h3------ |\nA |--0-h2-h3------- |\nD |--0-h2-h3------- |\nG |--0-h2-h4------- |\nB |--0-h2-h3------- |\ne |--0-h2-h3------- |\n```\n(Starting from open E)\n\nIn a single position (fret 12 area):\n```\nE |--12-h14-h15--|\nA |--12-h14-h15--|\nD |--12-h14-h16--|\nG |--12-h14-h16--|\nB |--12-h13-h15--|\ne |--12-h14-h15--|\n```\n\n## The Sound Target\n\nAll 18 notes should sound equal in volume and duration. Most players have 2-4 weak notes (ring and pinky hammers on certain strings). Identify yours and isolate those specific finger combinations.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a 3-note-per-string legato run covering all 6 strings (18 total notes), how many times does the pick actually strike a string?",
+      "choices": ["18 (every note)", "9 (every other note)", "6 (one per string)", "3 (once per pair of strings)"],
+      "answer": 2,
+      "explanation": "With 3NPS legato, you pick the first note of each string and hammer/pull the other two. 6 strings × 1 pick each = 6 pick strokes for 18 notes. This minimal picking creates the characteristic smooth, connected legato sound.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Legato Workout — Finger Combination Table\n\nDifferent finger pairs have different strength levels. Practice each combination systematically:\n\n## Hammer-On Pairs (on single string, 4th fret area)\n\n| Pair | Notation | Difficulty |\n|------|----------|------------|\n| Index → Middle | 1h2 | Easy |\n| Index → Ring | 1h3 | Medium |\n| Index → Pinky | 1h4 | Medium-Hard |\n| Middle → Ring | 2h3 | Medium |\n| Middle → Pinky | 2h4 | Hard |\n| Ring → Pinky | 3h4 | Very Hard |\n\n## Pull-Off Pairs (reversed order)\n\nAll the above in reverse (4po3, 4po2, 4po1, etc.)\n\n## Weekly Practice Focus\n\n- **Week 1**: All pairs in first position, 60 BPM\n- **Week 2**: All pairs in higher position (fret 12), faster\n- **Week 3**: Connect pairs across strings (2 string slurs)\n- **Week 4**: Full 6-string ascending and descending runs",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which hammer-on finger combination is considered most difficult and why?",
+      "choices": [
+        "Index to middle — furthest apart",
+        "Ring to pinky — the weakest and least independent finger combination",
+        "Middle to ring — they are adjacent",
+        "Index to pinky — the stretch is too large"
+      ],
+      "answer": 1,
+      "explanation": "Ring to pinky (3→4) is the hardest hammer-on because the ring and pinky are the weakest and most inter-dependent fingers. Many players' ring and pinky 'sympathetically' move together. Developing true independence here requires focused, isolated practice.",
+      "srs": true
+    }
+  ]
+}

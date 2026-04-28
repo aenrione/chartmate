@@ -1,0 +1,20 @@
+{
+  "id": "05-style-challenge",
+  "title": "Rock Style Challenge",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Adapting Your Playing to the Genre\n\nSame tempo, three different feels:\n\n**Classic rock (120 BPM):**\n- 8th note hi-hat, backbeat snare, kick on 1 and 3\n\n**Hard rock (120 BPM):**\n- Open hi-hat on beat 4, snare with rimshot, kick variations\n\n**Punk (120 BPM):**\n- 8th note hi-hat, snare every beat, kick on 1\n\nDrummer's job: **serve the song**. The best drummers sound completely different across genres at the same BPM.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does 'serving the song' mean for a drummer?",
+      "choices": ["Playing as many notes as possible", "Adapting feel, dynamics, and patterns to what the song needs", "Always playing at maximum volume", "Using the same beat for every song"],
+      "answer": 1,
+      "explanation": "Serving the song means the drummer's choices (groove, fills, dynamics, feel) enhance the song rather than calling attention to the drumming itself. The song is primary.",
+      "srs": true
+    }
+  ]
+}

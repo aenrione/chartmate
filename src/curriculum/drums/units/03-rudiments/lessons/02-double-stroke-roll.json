@@ -1,0 +1,20 @@
+{
+  "id": "02-double-stroke-roll",
+  "title": "Double Stroke Roll",
+  "xp": 15,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Double Stroke Roll\n\nPattern: **R R L L R R L L**\n\nTwo strokes per hand before switching. Harder than the single stroke — the second stroke must bounce naturally, not be forced.\n\n**The secret:** Let the stick bounce. Don't 'muscle' the second stroke. Apply pressure, let the stick rebound, guide the rebound into the drum.\n\nDoubles are essential for rolls, fills, and developing hand speed.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a double stroke roll, how many consecutive strokes does each hand play?",
+      "choices": ["1", "2", "3", "4"],
+      "answer": 1,
+      "explanation": "RRLL — each hand plays 2 consecutive strokes. The second stroke should be a controlled bounce/rebound, not a separate muscled hit.",
+      "srs": true
+    }
+  ]
+}

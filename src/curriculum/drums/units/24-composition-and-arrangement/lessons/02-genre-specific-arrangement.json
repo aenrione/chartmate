@@ -1,0 +1,20 @@
+{
+  "id": "02-genre-specific-arrangement",
+  "title": "Genre-Specific Arrangement",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Genre Conventions and When to Break Them\n\nEvery genre has arrangement conventions — typical drum textures, fills, and structures that listeners associate with that genre. Understanding these conventions is essential, both for meeting expectations and for knowing when to subvert them.\n\n**Genre conventions for drums:**\n\n**Pop**: Clean, precise, supportive. Hi-hat on 16th notes in chorus. Snare layered with clap sample. Kick on beats 1 and 3 with occasional anticipations. Fills at 4-bar and 8-bar boundaries. **Avoid**: complexity that distracts from the vocal.\n\n**Jazz**: No repeating pattern — constant variation and responsiveness. Ride drives the time; snare and kick comp freely. Dynamic range is wide and constantly changing. **Avoid**: rigid backbeats that turn jazz into pop.\n\n**Metal**: Power and precision. Kick and guitar riff locked. Snare with full authority. **Avoid**: fills that interrupt the riff's momentum without purpose.\n\n**Hip-hop influenced R&B**: Laid-back pocket. Ghost notes. Syncopated kick. Less ride/hi-hat, more open space around the beat. **Avoid**: rushing or overplaying that removes the pocket.\n\n**Reggae**: The one-drop or rockers groove. Restraint. Space. The absence of information is as important as the presence. **Avoid**: filling every beat, which destroys reggae's hypnotic emptiness.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the most important thing to avoid when playing drums in a pop song?",
+      "choices": ["Using a ride cymbal", "Complexity that distracts from the vocal", "Playing fills at section transitions", "Using ghost notes on the snare"],
+      "answer": 1,
+      "explanation": "In pop music, the vocal is the primary focus. Any drum complexity that draws the listener's attention away from the melody or lyric is counterproductive. Pop drumming's highest purpose is to make the song feel good and let the voice shine, not to demonstrate the drummer's ability.",
+      "srs": true
+    }
+  ]
+}

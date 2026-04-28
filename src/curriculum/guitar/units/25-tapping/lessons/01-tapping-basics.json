@@ -1,0 +1,43 @@
+{
+  "id": "01-tapping-basics",
+  "title": "Tapping Basics",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Two-Hand Tapping — An Extra Left Hand\n\nTapping uses the right hand's index or middle finger to **tap (hammer)** notes on the fretboard, effectively giving you an extra hand. The technique was popularized by **Eddie Van Halen** with \"Eruption\" (1978), though Emmett Chapman and others used it earlier.\n\n## The Basic Technique\n\n1. **Right hand**: Index or middle finger taps the string firmly at a target fret\n2. **The tap is a hammer-on**: The impact of the tap sounds the note\n3. **Pull-off from the tap**: After tapping, pull off downward (toward the floor) to sound the next left-hand fretted note\n4. **Left hand completes**: The left hand has notes already fretted below the right-hand tap\n\n## The Basic 3-Note Tapping Pattern\n\nRight Hand taps fret 12, Left Hand has frets 5 and 9 fretted:\n\n```\ne |--T12-po9-po5--T12-po9-po5--|\n   T = right hand tap\n   po = pull off\n   Left hand: ring on 9, index on 5\n```\n\nThis three-note group (T-po-po) repeats continuously.\n\n## Fingering Setup\n\n- Right hand: hold the pick between thumb and index, tap with middle finger (most common)\n- OR tuck the pick, use index to tap\n- Left hand: index on low fret, ring or pinky on higher fret\n- Both hands must be solidly fretted BEFORE tapping",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In basic tapping technique, what happens after the right-hand finger taps the string?",
+      "choices": [
+        "It lifts straight up",
+        "It pulls off downward toward the floor, sounding the next left-hand fretted note",
+        "The left hand picks the string",
+        "The right hand stays pressed down"
+      ],
+      "answer": 1,
+      "explanation": "After tapping, the right-hand finger pulls off (downward, like a pull-off) to sound the next note — usually the highest left-hand fretted note. This pull-off is what drives the legato chain: tap→pull-off→pull-off creates 3 notes from the right hand alone.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Your First Tapping Lick\n\n## The Classic Van Halen-Style Lick (in A minor)\n\n```\ne |--T12-po9-po5--T12-po9-po5--T12-po9-po5--|\n   (right hand on 12, left hand ring on 9, index on 5)\n```\n\nThis is the foundational tapping pattern. Play it slowly:\n1. Right hand taps fret 12 (harmonic: C above the octave A)\n2. Right hand pulls off downward → left ring finger (fret 9 = E)\n3. Left ring pulls off → left index (fret 5 = A)\n4. Repeat\n\n## Sound Check\n\nAll three notes should be equal volume:\n- Tap: clear, not buzzy\n- First pull-off (12→9): equal volume\n- Second pull-off (9→5): equal volume\n\nIf the third note (pull-off to fret 5) is quiet, the left-hand pull-off is too timid.\n\n## Rhythm\n\nAt full speed, this 3-note group is played as **16th-note triplets** (3 notes per beat at 120 BPM = very fast). Start at 40 BPM.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the classic 3-note tapping pattern (T-po-po), which note is typically the weakest and why?",
+      "choices": [
+        "The tapped note — the right hand doesn't have enough force",
+        "The second pull-off (lowest left-hand note) — the left-hand pull-off after the first pull-off tends to be weaker",
+        "The first pull-off — it's the hardest",
+        "All three notes are equal strength naturally"
+      ],
+      "answer": 1,
+      "explanation": "The second pull-off (from the middle left-hand note to the lowest note) tends to be the weakest because: (1) the left-hand finger may not have pulled off with enough lateral force, and (2) string vibration energy decreases through the chain. This note requires specific practice attention.",
+      "srs": true
+    }
+  ]
+}

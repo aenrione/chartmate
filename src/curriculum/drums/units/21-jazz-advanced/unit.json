@@ -1,0 +1,8 @@
+{
+  "id": "21-jazz-advanced",
+  "title": "Advanced Jazz",
+  "description": "Free jazz concepts, odd-time jazz, playing inside/outside, and avant-garde drumming",
+  "icon": "sparkles",
+  "prerequisites": ["15-brushwork", "17-polyrhythms"],
+  "lessons": ["01-free-jazz-concepts", "02-odd-time-jazz", "03-inside-outside", "04-rhythm-conversations", "05-avant-garde-approaches"]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "03-hybrid-picking",
+  "title": "Hybrid Picking",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Hybrid Picking — Pick and Fingers Combined\n\nHybrid picking uses the **flatpick** (held between thumb and index) combined with the **middle and ring fingers** of the right hand. This opens up interval skips and patterns impossible with pick alone or fingers alone.\n\n## Why Hybrid Picking?\n\n- **String skipping**: Jump across non-adjacent strings easily\n- **Chicken pickin'**: Snap the string with middle finger for country twang\n- **Chord and melody simultaneously**: Pick bass note, fingernail treble note\n- **Speed without sacrifice**: Maintain pick attack on bass, fingerstyle control on treble\n\n## The Notation\n\n- **p** = pick (the flatpick)\n- **m** = middle finger\n- **a** = ring finger\n\n## Basic Hybrid Lick in A Blues\n\n```\ne |-----8-8-8---------|\nB |---8-----------8---|\nG |------------------9|\nD |-------------------|\n   p  m  m  m       p\n```\n\nPick plays the D or G string, middle finger snaps the B or high e.\n\n## Country Hybrid Lick (Chicken Pickin')\n\n```\ne |---8b9-8-5--5------|\nB |------------------5|\nG |--------------------|\n   m (snap bend)   m\n```\n\nSnap the middle finger upward and immediately release — creates a sharp, percussive \"cluck\" sound beloved in country and rockabilly.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In hybrid picking notation, what does 'p' indicate?",
+      "choices": ["The pinky finger", "The flatpick", "The palm mute", "Pull-off"],
+      "answer": 1,
+      "explanation": "In hybrid picking, 'p' indicates the flatpick (not the pulgar/thumb as in classical PIMA notation). 'm' and 'a' indicate the middle and ring fingers of the right hand, while the index holds the pick.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Hybrid Picking in Blues Context\n\n## The String-Skip Blues Lick\n\nHybrid picking enables string skips that create wide intervallic jumps — unexpected and exciting in blues solos:\n\n```\ne |--8------8------8--|\nB |------------------|\nG |--7--9--7--9-------|\n   p  m  p  m  p  m\n  (skip strings 1-3)\n```\n\nThe pick hits G string, middle finger hits high e — skipping string 2 entirely. This creates a 10th interval (a wide, open sound).\n\n## Albert King's Approach\n\nAlbert King's unique tuning and string action created natural hybrid opportunities. His bends went up (since he played upside-down), and he often snapped strings for extra attack.\n\n## SRV and Hybrid Picking\n\nSRV used hybrid picking on certain passages of \"Pride and Joy\" and \"Couldn't Stand the Weather\" — particularly for the rolling 6th patterns:\n\n```\ne |--0--5--0--5---------|\nB |------------------3--|\nG |--2--7--2--7-----2---|\n   (6th intervals, pick+middle)\n```\n\n## Practice Protocol\n\n1. Start very slowly — hybrid picking requires independent right-hand control\n2. Practice \"snap\" motion with middle finger alone before combining with pick\n3. 10 minutes/day for 2 weeks = noticeable improvement",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What acoustic effect does 'chicken pickin'' create and how is it achieved?",
+      "choices": [
+        "A sustained note from palm muting",
+        "A sharp, percussive 'cluck' from snapping a string upward with the middle finger and immediately releasing",
+        "A whammy bar dip",
+        "A harmonics effect from lightly touching the string"
+      ],
+      "answer": 1,
+      "explanation": "Chicken pickin' involves snapping a string upward (away from the guitar body) with the middle or ring finger and immediately releasing it. The string snaps back against the fretboard, creating a sharp, staccato 'cluck' — the signature sound of country and rockabilly guitar.",
+      "srs": true
+    }
+  ]
+}

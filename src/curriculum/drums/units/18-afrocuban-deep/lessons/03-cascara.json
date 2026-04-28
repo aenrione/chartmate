@@ -1,0 +1,34 @@
+{
+  "id": "03-cascara",
+  "title": "Cascara",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Cascara: The Shell Pattern\n\nCascara (Spanish for 'shell' or 'husk') is a timbale pattern played on the shell (side) of the timbale drum rather than the head. It produces a high, dry, clicking sound.\n\n**The cascara pattern:**\nCascara is a specific 2-bar 16-pulse pattern derived from the clave. It's the most common time-keeping pattern for timbales in salsa, mambo, and other Cuban popular music.\n\n**Two versions:**\n1. **2-3 clave context cascara**: Slightly different accents depending on whether the clave starts on the 2-side or 3-side\n2. **Ride cymbal adaptation**: Many jazz-Latin drummers play cascara on the ride cymbal, translating the dry shell click to a sustained ring\n\n**Relationship to clave:**\nCascara is designed to coexist with and complement the clave without duplicating it. It fills in the spaces the clave leaves empty and avoids the clave's strong points — creating a complementary rather than parallel pattern.\n\n**Practical use:**\n- During verses and softer sections of salsa arrangements: cascara on the timbale shell (or ride cymbal)\n- During 'coros' (call-and-response choruses) and montuno sections: switch to bell pattern (mambo bell or campana)",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Cascara Pattern (Ride Cymbal)",
+      "description": "The cascara pattern translated to ride cymbal. This 16-pulse pattern fills the spaces between the clave's strong beats. Kick plays quarter notes as the pulse anchor; hi-hat foot on 2 and 4.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 168,
+      "tracks": [
+        {"name": "Ride",   "pattern": "x-xx-x-x-xx-x-x-"},
+        {"name": "Hi-Hat", "pattern": "----x-------x---"},
+        {"name": "Kick",   "pattern": "x---x---x---x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "On what surface is cascara traditionally played?",
+      "choices": ["The head (top) of the timbale drum", "The shell (side) of the timbale drum", "A cowbell attached to the timbale stand", "The ride cymbal exclusively"],
+      "answer": 1,
+      "explanation": "Cascara is traditionally played on the shell (side) of the timbale drum, producing a high, dry, clicking sound quite different from the head's resonant ping. When adapted to drum kit, the ride cymbal is the closest approximation of this texture.",
+      "srs": true
+    }
+  ]
+}

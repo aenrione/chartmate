@@ -1,0 +1,20 @@
+{
+  "id": "01-writing-drum-parts",
+  "title": "Writing Drum Parts",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Writing Drum Parts: Serving the Song\n\nWriting a drum part for a song is different from improvising — it requires thinking ahead, considering every section, and making deliberate choices about how the drums support the song's narrative arc.\n\n**The drum part as narrative tool:**\nA well-written drum part reinforces the song's emotional journey:\n- Verse: restraint and space (the story is being told)\n- Pre-chorus: building intensity (anticipation)\n- Chorus: full commitment (payoff)\n- Bridge: contrast (fresh perspective)\n- Final chorus: maximum commitment (climax)\n\n**Orchestration principles:**\n1. **Section differentiation**: Each section should have a distinct drum texture so the listener's ears understand the song's structure\n2. **Grow with the song**: Generally, the drum part should get denser and more intense as the song progresses toward its climax\n3. **Less is more in verses**: Open space in verses allows the melody and lyrics to breathe\n4. **Fills signal transitions**: Deliberate fills between sections help the listener anticipate changes\n\n**The internal edit:** Every element of a drum part should be there because it serves the song. When something doesn't serve the song — even if it's technically impressive — remove it.\n\n**Documenting the part:** Write it down. A carefully considered drum arrangement doesn't survive reliance on memory across multiple rehearsals.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a well-arranged drum part, what typically differentiates the verse from the chorus?",
+      "choices": ["The verse uses only hi-hat; the chorus uses only ride", "The verse is more restrained with space and the chorus uses full commitment for the payoff", "The verse is played faster than the chorus", "There should be no difference to maintain consistency"],
+      "answer": 1,
+      "explanation": "A well-written drum part uses the verse for restraint — the space allows melody and lyrics to breathe. The chorus brings full commitment for the emotional payoff. This differentiation helps the listener's ears understand the song's structure and makes the chorus feel bigger by contrast.",
+      "srs": true
+    }
+  ]
+}

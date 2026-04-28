@@ -1,0 +1,20 @@
+{
+  "id": "03-paradiddle",
+  "title": "The Paradiddle",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Single Paradiddle\n\nPattern: **R L R R  L R L L**\n\nSingle-single-double, starting on each hand alternately.\n\nSay it aloud as you play: **pa-ra-did-dle pa-ra-did-dle**\n\n**Why it matters:** Paradiddles naturally switch lead hands every 4 strokes, making fills around the kit smooth and logical. They're also the foundation of more complex rudiments.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the sticking pattern for a single paradiddle?",
+      "choices": ["RRLL RRLL", "RLRL RLRL", "RLRR LRLL", "RLLR RLLR"],
+      "answer": 2,
+      "explanation": "The paradiddle is RLRR LRLL — a right-left single followed by a right double, then the mirror. The name comes from saying it aloud: para (RL) diddle (RR).",
+      "srs": true
+    }
+  ]
+}

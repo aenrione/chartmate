@@ -1,0 +1,43 @@
+{
+  "id": "03-texas-shuffle",
+  "title": "Texas Shuffle",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Texas Shuffle — The Slow, Deep Groove\n\nThe Texas shuffle is heavier and more deliberate than the Chicago shuffle. It's the foundation of SRV (Stevie Ray Vaughan), Albert King, Freddie King, and ZZ Top's Billy Gibbons.\n\n## What Distinguishes the Texas Shuffle\n\n1. **Slower tempo** (typically 65–100 BPM vs Chicago's 120–160)\n2. **Heavier string gauge** and harder picking attack\n3. **Full chord stabs** instead of two-string riffs\n4. **More string bends** in the rhythm parts\n5. **Horn-like punctuation** — chord stabs that mimic a brass section\n\n## The Basic Texas Shuffle Pattern\n\nIn E, using full E7 and A7 chord shapes:\n\n```\ne |--0-x-0-x-0-x--3-3--2-2--0-0--|\nB |--0-x-0-x-0-x--3-3--2-2--0-0--|\nG |--1-x-1-x-1-x--1-1--1-1--1-1--|\nD |--2-x-2-x-2-x--0-0--0-0--0-0--|\nA |--2-x-2-x-2-x--------------------------|\nE |--0-x-0-x-0-x--------------------------|\n   E7 (shuffle pattern)    (walk down)\n```\n\n## Stevie Ray Vaughan's Approach\n\nSRV used **extra-heavy strings** (.013 gauge or heavier) and played with incredible physical force. His Texas shuffle had a density and drive that was physically impossible to achieve with light strings.\n\nKey SRV shuffle recordings:\n- \"Pride and Joy\" — The essential Texas shuffle\n- \"Tell Me\" — Slow, grinding Texas feel\n- \"Scuttle Buttin'\" — Fast Texas shuffle",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What distinguishes a Texas shuffle from a Chicago shuffle?",
+      "choices": [
+        "Texas shuffle is always in minor; Chicago is major",
+        "Texas shuffle is typically slower, heavier, uses full chord stabs and more string bends",
+        "Texas shuffle uses only open strings",
+        "Texas shuffle is played with a slide"
+      ],
+      "answer": 1,
+      "explanation": "The Texas shuffle is slower, heavier, and more muscular than the Chicago shuffle. It features full chord stabs (often with horn-like punctuation), heavier string attack, and string bends in the rhythm part. SRV, Albert King, and Freddie King exemplify this style.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Albert King-Style Rhythm\n\n**Albert King** (1923–1992) had one of the most distinctive rhythm feels in blues — he played left-handed on a right-handed guitar strung upside down, creating a unique tension and release in his bends.\n\n## Albert King Rhythm Characteristics\n\n1. **Syncopated chord hits** — not on the beat\n2. **Rests** used as punctuation — silence before the hit\n3. **Slow, grinding feel** — deliberate placement of every note\n4. **Bends in the rhythm** — bent notes used for rhythmic accents\n\n## Practice Exercise — Albert King Feel\n\nIn A blues at 75 BPM:\n```\ne |--5-5--5b6--5--3--|\nB |--5-5--5----5--3--|\nG |--6-6--6----6--4--|\n(pause)    (hit)  (release)\n```\n\nThe pause before the hit is as important as the hit itself. Use it.\n\n## Recommended Listening\n\n- Albert King: \"Born Under a Bad Sign\" (1967) — the album is a masterclass\n- Albert King: \"Oh, Pretty Woman\" — slow blues at its deepest\n- Albert Collins: \"Master Charge\" — related Texas style",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What made Albert King's guitar technique physically unique?",
+      "choices": [
+        "He played with his toes",
+        "He played a left-handed guitar strung upside down (strings reversed from normal left-hand setup)",
+        "He used a special capo on every song",
+        "He tuned his guitar up two whole steps"
+      ],
+      "answer": 1,
+      "explanation": "Albert King played a right-handed Gibson Flying V left-handed — but he didn't re-string it. This meant the bass strings were on the bottom (near the floor) and treble strings on top, opposite of a normal left-handed setup. This created unique string tension and enabled his characteristic bending style.",
+      "srs": true
+    }
+  ]
+}

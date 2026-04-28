@@ -1,0 +1,46 @@
+{
+  "id": "04-picardy-third",
+  "title": "The Picardy Third",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## The Picardy Third: Light at the End\n\nThe **Picardy third** (French: *tierce de Picardie*) is the modal interchange technique of ending a minor-key piece or section with a **major tonic chord** — replacing the expected minor tonic with its parallel major.\n\n### Definition\n\nIn a piece in A minor: the expected final chord is Am (A–C–E). The Picardy third substitutes **A major** (A–C#–E) — 'raising the third' of the tonic chord. The C# (the 'raised third,' or 'Picard third') transforms the ending from dark/minor to bright/major.\n\n### Historical Context\n\nThe Picardy third was nearly universal in Baroque and Renaissance music. Ending a minor piece on a major chord was considered the 'correct' way to achieve finality — a minor tonic was thought to be less stable and less conclusive than a major tonic.\n\nBach uses the Picardy third in virtually all his pieces in minor keys. The final chord of the *Toccata and Fugue in D minor* (BWV 565) is D major, not D minor.\n\n### The Reverse: Major to Minor\n\nThe opposite technique — ending a major piece with a minor chord — is less common but equally striking. This is sometimes called a **reverse Picardy** or **tonic minor substitution**. It creates an unexpected darkness at the moment of resolution.\n\nExamples:\n- Some Romantic-era pieces 'darken' their final chord to suggest unresolved tragedy\n- Jazz and blues frequently treat the final I chord as a minor seventh for a 'bitter' ending\n\n### The Picardy Third in Modern Music\n\n- 'Stairway to Heaven' (Led Zeppelin): The solo section ends with various major-third inflections in an Am context\n- Gospel music frequently uses major tonic chords in minor-key spirituals for emotional uplift\n- Radiohead's 'Exit Music (For a Film)' ends with a raised third for brief brightness\n\n### Voice Leading of the Picardy Third\n\nThe key voice leading: C (minor third of Am) rises by half step to C# (major third of A major). This chromatic half-step ascent — C → C# — creates a sense of resolution, light, and transcendence. After dwelling in the minor world, the half-step lift to C# feels like sunlight entering.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the Picardy third?",
+      "choices": [
+        "A minor chord played at the end of a major piece",
+        "A major tonic chord used to end a minor-key piece, replacing the expected minor tonic",
+        "The third degree of any major scale",
+        "A borrowed chord from the Phrygian mode"
+      ],
+      "answer": 1,
+      "explanation": "The Picardy third is the practice of ending a minor-key piece with a major tonic chord. For example, a piece in D minor ends on D major instead of D minor. The 'third' refers to the raised (major) third of the tonic chord — F# instead of F in D minor. This was standard practice in Baroque music for achieving a bright, conclusive ending.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What voice leading motion characterizes the Picardy third, and what emotional quality does it convey?",
+      "choices": [
+        "The bass leaps down an octave — creating a sense of weight and gravity",
+        "The minor third rises by half step to the major third (e.g., C → C# in A minor → A major) — creating brightness and resolution",
+        "The fifth of the chord falls by a tritone — creating distance from the home key",
+        "All voices move in parallel motion — creating unity"
+      ],
+      "answer": 1,
+      "explanation": "The defining motion of the Picardy third is the chromatic lift of the minor third to the major third — e.g., C rises to C# when A minor becomes A major. This half-step ascent creates a feeling of light, transcendence, and resolution. After dwelling in the darker minor world, the raised third acts as a sunrise moment at the cadence.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "J.S. Bach's Toccata and Fugue in D minor ends on what chord, demonstrating the Picardy third?",
+      "choices": ["D minor (i)", "A major (V)", "D major (I with Picardy third — raised F# instead of F)", "F major (bIII)"],
+      "answer": 2,
+      "explanation": "Bach's Toccata and Fugue in D minor (BWV 565) ends on D major — the Picardy third. The piece is in D minor throughout, with F natural as the minor third. The final chord raises the F to F#, making it D major. This was the baroque convention for conclusive endings, providing maximum stability and brightness at the final cadence.",
+      "srs": true
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "04-adaptive-music",
+  "title": "Adaptive Music in Games",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Adaptive Music: The Unique Challenge of Games\n\nFilm music is written for a fixed duration — the composer knows exactly when each cue starts and ends. **Game music** is different: the player's actions are unpredictable, and the music must respond in real-time without jarring transitions.\n\n### Vertical Remixing\n\n**Vertical remixing** changes the layers of a single musical cue based on game state:\n\n- **Exploration layer**: Solo instrument, quiet, ambient\n- **Combat layer**: Add percussion, brass, accelerate\n- **Alert layer**: Add tension strings, dissonant chord\n- **Safe layer**: Return to ambient exploration\n\nAll layers are written in the same key and tempo. The game engine crossfades between them based on what the player is doing. The music transitions imperceptibly because the harmonic and rhythmic foundation is consistent.\n\n**The Legend of Zelda: Ocarina of Time (1998)**: The dungeon music uses this technique — a base ambient track with additional layers that activate when enemies appear.\n\n### Horizontal Sequencing\n\n**Horizontal sequencing** divides music into segments that play in different orders based on gameplay:\n\n- Segment A: 4 bars (exploration theme)\n- Segment B: 4 bars (tension variant)\n- Segment C: 4 bars (victory fanfare)\n\nTransitions between segments must work in any order. Composers write 'transition bars' (connective tissue) that can follow any segment and lead to any other. This requires writing music in a modular, harmonically flexible way.\n\n**Baldur's Gate series**: Multiple orchestral variations of each theme that sequence based on story context.\n\n### iMUSE System: Star Wars Games (LucasArts, 1991)\n\nLucasArts developed the **iMUSE** (Interactive Music Streaming Engine) system for their Star Wars and adventure games. iMUSE enabled:\n- **Beat-accurate transitions**: Music waits for the next structural downbeat before transitioning — no jarring mid-phrase cuts\n- **Dynamic tempo matching**: The system finds the nearest bar/beat boundary for a natural handoff\n\nThis was revolutionary: before iMUSE, game music transitions were abrupt and jarring.\n\n### Modern Middleware: FMOD and Wwise\n\n**FMOD** and **Wwise** are the industry-standard game audio middleware systems used today:\n- **Wwise**: Used in *The Witcher 3*, *Assassin's Creed*, *Mass Effect*\n- **FMOD**: Used in *Celeste*, *Hollow Knight*, *Firewatch*\n\nBoth allow composers to create parameter-driven music without programming. The 'mood' slider in the game engine crossfades between musical states in real-time.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'vertical remixing' in adaptive game music?",
+      "choices": [
+        "Playing the same music at higher pitch for intense moments",
+        "Layering multiple musical tracks that can be faded in/out based on game state — all in the same key and tempo, so transitions are seamless",
+        "Writing separate complete pieces for each game area",
+        "Reversing the music for flashback sequences"
+      ],
+      "answer": 1,
+      "explanation": "Vertical remixing stacks multiple musical layers (exploration, combat, ambient, etc.) that are all in the same key, tempo, and harmonic framework. The game engine can smoothly crossfade between these layers in real-time based on what the player is doing. Since all layers share the same harmonic/rhythmic foundation, no jarring transition occurs — the music simply gains or loses instruments/density.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why must game music transitions wait for a 'structural boundary' (bar line, phrase end) before switching segments?",
+      "choices": [
+        "Because game engines can only read music in 4-bar chunks",
+        "Because switching mid-phrase creates a jarring, unnatural interruption — waiting for the natural phrase boundary makes the transition feel intentional and musical",
+        "Because the player might hear the beginning of the new segment before they expect it",
+        "Because copyright law requires music to complete every phrase"
+      ],
+      "answer": 1,
+      "explanation": "Music has natural phrase structures — melodies and harmonic progressions flow in units of 2, 4, or 8 bars. Cutting mid-phrase is jarring, like interrupting a sentence mid-word. The iMUSE system (and modern equivalents) detected the nearest upcoming bar line or phrase boundary and waited for it before transitioning. This made the transition feel like an intentional musical choice rather than a technical glitch.",
+      "srs": true
+    }
+  ]
+}

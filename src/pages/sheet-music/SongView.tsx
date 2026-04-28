@@ -47,7 +47,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import useInterval from 'use-interval';
 import {ChartResponseEncore} from '@/lib/chartSelection';
 import YouTubePlayer from '@/components/YouTubePlayer';
@@ -64,6 +64,7 @@ import CloneHeroRenderer from './CloneHeroRenderer';
 import {generateClickTrackFromMeasures} from './generateClickTrack';
 import type {ClickVolumes} from './generateClickTrack';
 import convertToVexFlow from './convertToVexflow';
+import {buildMeasureBoundaries} from './convertToAlphaTabDrums';
 import type {DrumNoteInstrument} from './drumTypes';
 import {generateSyntheticDrumTrack, ALL_DRUM_INSTRUMENTS} from './generateSyntheticDrumTrack';
 import SyntheticDrumControls from './SyntheticDrumControls';
@@ -76,6 +77,20 @@ import {toast} from 'sonner';
 import Tip from '@/components/shared/Tip';
 import TempoControl from '@/components/shared/TempoControl';
 import ZoomControl from '@/components/shared/ZoomControl';
+import SongProgressPanel from '@/components/SongProgressPanel';
+import SongLearningPanel from '@/components/SongLearningPanel';
+import {
+  Bookmark as BookmarkIcon,
+  BookMarked as BookMarkedIcon,
+} from 'lucide-react';
+import {
+  createItem as createRepertoireItem,
+  deleteItem as deleteRepertoireItem,
+  findItemByChartSection,
+  findItemByChartPattern,
+  chartSectionNotesFor,
+  chartPatternNotesFor,
+} from '@/lib/local-db/repertoire';
 
 function getDrumDifficulties(chart: ParsedChart): Difficulty[] {
   return chart.trackData
@@ -171,11 +186,15 @@ export default function Renderer({
   const [volumeControls, setVolumeControls] = useState<VolumeControl[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobileMode, setIsMobileMode] = useState(false);
+  const songViewLocation = useLocation();
+  const songViewNavigate = useNavigate();
   const [cloneHeroFullscreen, setCloneHeroFullscreen] = useState(false);
 
   // Saved chart state
   const [isSaved, setIsSaved] = useState(false);
   const [savingInProgress, setSavingInProgress] = useState(false);
+  const [trackedChartSections, setTrackedChartSections] = useState<Set<string>>(new Set());
+  const [trackedChartPatterns, setTrackedChartPatterns] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     isChartSaved(metadata.md5).then(setIsSaved);
@@ -369,6 +388,47 @@ export default function Renderer({
     });
   }, [chart]);
 
+  // Refresh which chart sections / patterns are currently tracked in repertoire.
+  const refreshTrackedSections = useCallback(async () => {
+    const tracked = new Set<string>();
+    await Promise.all(sections.map(async s => {
+      const found = await findItemByChartSection(metadata.md5, s.name);
+      if (found) tracked.add(s.name);
+    }));
+    setTrackedChartSections(tracked);
+  }, [metadata.md5, sections]);
+
+  useEffect(() => {
+    void refreshTrackedSections();
+  }, [refreshTrackedSections]);
+
+  // Held in a ref because measureBoundaries is computed further down. The callback only fires
+  // on user click, by which point the ref is populated.
+  const barIndexFromMsRef = useRef<(ms: number) => number>(() => 0);
+
+  const toggleChartSectionTracking = useCallback(async (sec: {name: string; startMs: number; endMs: number}) => {
+    const existing = await findItemByChartSection(metadata.md5, sec.name);
+    if (existing) {
+      await deleteRepertoireItem(existing.id);
+    } else {
+      const extra = formatSeconds(sec.startMs / 1000);
+      // Convert ms→bar so the repertoire snippet can render this section directly.
+      const startBar0 = barIndexFromMsRef.current(sec.startMs);
+      const endBar0 = barIndexFromMsRef.current(Math.max(sec.startMs, sec.endMs - 1));
+      const startBar = startBar0 + 1; // AlphaTab is 1-based
+      const barCount = Math.max(1, Math.min(8, endBar0 - startBar0 + 1));
+      await createRepertoireItem({
+        itemType: 'song_section',
+        title: `${sec.name}${metadata.name ? ` — ${metadata.name}` : ''}`,
+        savedChartMd5: metadata.md5,
+        notes: chartSectionNotesFor(sec.name, {extra, startBar, barCount}),
+      });
+    }
+    await refreshTrackedSections();
+  }, [metadata.md5, metadata.name, refreshTrackedSections]);
+
+  // Chart-pattern tracking is wired below — after `vocabulary` is computed.
+
   // Practice mode handlers
   const startPracticeSection = useCallback(
     (startMs: number, endMs: number) => {
@@ -469,6 +529,26 @@ export default function Renderer({
     return convertToVexFlow(chart, track);
   }, [chart, track]);
 
+  // Bar-by-bar timing info — used to translate section/pattern ms→bar when bookmarking so the
+  // RepertoireIQ snippet can render the right range without re-parsing the chart.
+  const measureBoundaries = useMemo(() => {
+    return buildMeasureBoundaries(chart, track);
+  }, [chart, track]);
+
+  function barIndexFromMs(ms: number): number {
+    for (let i = 0; i < measureBoundaries.length; i++) {
+      const b = measureBoundaries[i];
+      if (ms >= b.startMs && ms < b.endMs) return b.barIndex;
+    }
+    return Math.max(0, measureBoundaries.length - 1);
+  }
+
+  // Keep the ref in sync so the section/pattern toggle handlers (defined earlier) can use it.
+  useEffect(() => {
+    barIndexFromMsRef.current = barIndexFromMs;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [measureBoundaries]);
+
   const vocabulary = useMemo(
     () => buildPatternVocabulary(measures),
     [measures],
@@ -484,6 +564,46 @@ export default function Renderer({
     }
     return map;
   }, [vocabulary, showPatterns]);
+
+  // Chart-pattern repertoire tracking — refresh whenever the vocabulary changes.
+  const refreshTrackedPatterns = useCallback(async () => {
+    if (!vocabulary) {
+      setTrackedChartPatterns(new Set());
+      return;
+    }
+    const tracked = new Set<string>();
+    await Promise.all(vocabulary.patterns.filter(p => !p.isRest).map(async p => {
+      const found = await findItemByChartPattern(metadata.md5, p.label);
+      if (found) tracked.add(p.label);
+    }));
+    setTrackedChartPatterns(tracked);
+  }, [metadata.md5, vocabulary]);
+
+  useEffect(() => {
+    void refreshTrackedPatterns();
+  }, [refreshTrackedPatterns]);
+
+  const toggleChartPatternTracking = useCallback(async (patternLabel: string, frequency: number) => {
+    const existing = await findItemByChartPattern(metadata.md5, patternLabel);
+    if (existing) {
+      await deleteRepertoireItem(existing.id);
+    } else {
+      // Find the first measure index the pattern occupies — patterns are single-bar entries.
+      const pattern = vocabulary?.patterns.find(p => p.label === patternLabel);
+      const firstMeasure0 = pattern?.measureIndices[0] ?? null;
+      await createRepertoireItem({
+        itemType: 'song_section',
+        title: `Pattern ${patternLabel}${metadata.name ? ` — ${metadata.name}` : ''}`,
+        savedChartMd5: metadata.md5,
+        notes: chartPatternNotesFor(patternLabel, {
+          extra: `×${frequency}`,
+          startBar: firstMeasure0 != null ? firstMeasure0 + 1 : undefined,
+          barCount: firstMeasure0 != null ? 1 : undefined,
+        }),
+      });
+    }
+    await refreshTrackedPatterns();
+  }, [metadata.md5, metadata.name, refreshTrackedPatterns, vocabulary]);
 
   const lastAudioState = useRef({
     currentTime: 0,
@@ -951,13 +1071,14 @@ export default function Renderer({
   }, [volumeControls]);
 
   // Define reusable control elements
+  const backFrom = (songViewLocation.state as {from?: string} | null)?.from;
   const backButton = (
-    <Tip label="Back to search">
-      <Link to="/sheet-music">
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <ArrowLeft className="h-6 w-6" />
-        </Button>
-      </Link>
+    <Tip label={backFrom ? 'Back' : 'Back to search'}>
+      <Button variant="ghost" size="icon" className="rounded-full"
+        onClick={() => backFrom ? songViewNavigate(backFrom) : songViewNavigate('/sheet-music')}
+      >
+        <ArrowLeft className="h-6 w-6" />
+      </Button>
     </Tip>
   );
 
@@ -1084,6 +1205,17 @@ export default function Renderer({
           </div>
 
           <div className="space-y-4 overflow-y-auto">
+            <SongLearningPanel
+              target={{
+                kind: 'saved_chart',
+                md5: metadata.md5,
+                title: metadata.name,
+                artist: metadata.artist,
+              }}
+            />
+
+            <SongProgressPanel chartMd5={metadata.md5} title="Section mastery" />
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Difficulty</label>
               <Select
@@ -1437,6 +1569,30 @@ export default function Renderer({
                           <span className="text-muted-foreground shrink-0">
                             {formatSeconds(section.startMs / 1000)}
                           </span>
+                          {(() => {
+                            const isTracked = trackedChartSections.has(section.name);
+                            return (
+                              <Tip label={isTracked ? 'Stop tracking section' : 'Track this section'}>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className={cn(
+                                    'h-5 w-5 shrink-0 transition-colors',
+                                    isTracked
+                                      ? 'text-emerald-500 hover:text-emerald-600 opacity-100'
+                                      : 'opacity-0 group-hover:opacity-100',
+                                  )}
+                                  onClick={e => {
+                                    e.stopPropagation();
+                                    void toggleChartSectionTracking(section);
+                                  }}>
+                                  {isTracked
+                                    ? <BookMarkedIcon className="h-3 w-3" />
+                                    : <BookmarkIcon className="h-3 w-3" />}
+                                </Button>
+                              </Tip>
+                            );
+                          })()}
                           <Tip label="Practice on loop (Shift+click for range)">
                             <Button
                               variant="ghost"
@@ -1490,6 +1646,8 @@ export default function Renderer({
                     onHighlightPattern={setHighlightedPatternId}
                     highlightedPatternId={highlightedPatternId}
                     currentPlaybackMs={currentPlayback * 1000}
+                    trackedPatterns={trackedChartPatterns}
+                    onToggleTrackPattern={(label, frequency) => void toggleChartPatternTracking(label, frequency)}
                   />
                 )}
               </div>

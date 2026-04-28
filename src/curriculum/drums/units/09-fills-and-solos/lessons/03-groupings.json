@@ -1,0 +1,20 @@
+{
+  "id": "03-groupings",
+  "title": "Rhythmic Groupings",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Note Groupings\n\nGroupings are repeated patterns of notes that don't divide evenly into 4/4, creating rhythmic interest.\n\n**Common groupings over 4/4:**\n- **3-note groupings** (RLK repeating): creates a 3-against-4 polyrhythm\n- **4-note groupings** (RLRL): aligns with the beat, straightforward\n- **6-note groupings** (RLRLRL): two per beat, creates driving sextuplet feel\n\n**3-note grouping example:**\nRLK RLK RLK RLK | RLK RLK RLK R (then resolve)\n\nThe pattern takes 12 16th notes to complete — exactly 3 beats.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many 16th notes does a 3-note grouping take to come back to the original hand?",
+      "choices": ["3", "6", "9", "12"],
+      "answer": 3,
+      "explanation": "A 3-note grouping (RLK) repeats: at 3, 6, 9, 12 notes — but in 4/4 with 16 sixteenth notes per measure, it takes 12 sixteenths (3 beats) to return to the right hand on the downbeat.",
+      "srs": true
+    }
+  ]
+}

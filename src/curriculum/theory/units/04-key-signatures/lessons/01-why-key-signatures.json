@@ -1,0 +1,69 @@
+{
+  "id": "01-why-key-signatures",
+  "title": "Why Key Signatures?",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Why Key Signatures?\n\nIf you open any piece of sheet music, the very first thing you see after the clef is a cluster of sharps or flats — sometimes none at all. That cluster is the **key signature**, and it does an enormous amount of work before a single note is played.\n\n### The Problem Key Signatures Solve\n\nImagine writing a melody in G major without a key signature. Every F in the piece — in every octave, in every measure — would need its own sharp symbol: F#. In a four-page piece, that might mean writing F# dozens or even hundreds of times. The key signature collapses all of that into a single declaration at the start of the staff: *\"every F in this piece is sharp, everywhere, in every octave, unless otherwise indicated.\"*\n\n### Where Key Signatures Live\n\nThe key signature appears at the **beginning of every staff** in the score, immediately after the clef sign and before the time signature. It is not written just once at the top — it repeats on every staff line so that performers always have it in view. If the key changes mid-piece, a new key signature is written at the point of change, sometimes preceded by a double bar line.\n\n### What Key Signatures Tell You\n\nA key signature communicates two things simultaneously:\n\n1. **Which notes are raised or lowered** — the sharps or flats shown apply to those pitch classes throughout the entire piece, in every octave.\n2. **The tonal center (key) of the music** — the key signature strongly implies the scale, the chords, and the overall harmonic language in use. If a piece has one sharp (F#), it is almost certainly in **G major** or its relative minor, **E minor**.\n\n### The Two Families\n\nEvery major key uses either sharps or flats — never a mix of both. C major is the only major key with no sharps or flats. All other 14 major keys have between 1 and 7 sharps, or 1 and 7 flats. The sharp keys and flat keys form two parallel families, each following a strict order of addition.\n\n### A Shorthand for the Whole Piece\n\nThink of the key signature as a standing instruction that applies from the first note to the last. Any note that falls *outside* the key signature — a chromatic alteration — gets its own accidental written right next to it. That accidental lasts only for the rest of that measure. So the key signature handles the routine; accidentals handle the exceptions.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Reading and Using Key Signatures\n\n### Accidentals vs. Key Signature\n\nIt is important to distinguish between **accidentals** (sharps, flats, naturals written next to individual notes) and **key signature** symbols. An accidental applies only to that specific note and all same-pitch notes in the same measure. A key signature symbol applies to **every note of that pitch class across the entire piece**, regardless of octave.\n\nFor example: in a piece with a key signature of two sharps (F# and C#), every F and every C in the piece is automatically sharp. You do not write the # symbol next to each one. If a specific note needs to be F-natural instead, a natural sign (♮) is placed directly in front of that note.\n\n### The Natural Sign\n\nThe natural sign (♮) temporarily cancels a key signature sharp or flat for one measure. After the barline, the key signature resumes. This is called a **courtesy accidental** when written as a reminder even after the barline has already reset it — a thoughtful notational habit.\n\n### C Major: The Baseline\n\nC major is the reference point — zero sharps, zero flats, all white keys on the piano. When you see a staff with just a clef and nothing else before the time signature, the piece is in C major (or A minor). Every other key signature builds outward from this baseline, adding sharps or flats one at a time in a fixed order.\n\n### Why Learn the Order?\n\nThe sharps and flats in key signatures are always written in the same **fixed positions** on the staff, in the same **fixed order**. Memorizing these positions is not arbitrary — it connects directly to the structure of the scale itself. Each new sharp or flat added is the 7th degree (for sharp keys) or 4th degree (for flat keys) of the new scale, which is why the pattern has such mathematical regularity.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Where does the key signature appear on a staff?",
+      "choices": [
+        "At the end of the last measure",
+        "After the clef and before the time signature, at the start of every staff",
+        "Only at the beginning of the piece, on the first line",
+        "Immediately after the time signature"
+      ],
+      "answer": 1,
+      "explanation": "The key signature is placed after the clef and before the time signature at the start of every staff line. It is repeated on every staff throughout the score so performers always have it visible — not just at the very beginning of the piece.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "A piece is written with two sharps in the key signature: F# and C#. A performer sees a plain 'C' notehead with no accidental. What pitch do they play?",
+      "choices": [
+        "C-natural, because there is no sharp written next to the note",
+        "C#, because the key signature applies to every C in every octave",
+        "Cb, because key signatures can raise or lower notes",
+        "It depends on which octave the C appears in"
+      ],
+      "answer": 1,
+      "explanation": "Key signature sharps apply to every note of that pitch class in every octave throughout the piece. No accidental is needed — the key signature is the standing instruction. The performer reads C and plays C# automatically. Only a natural sign (♮) written next to a specific note would cancel this.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many sharps or flats does the key of C major have?",
+      "choices": [
+        "One sharp",
+        "One flat",
+        "None — zero sharps and zero flats",
+        "Seven flats"
+      ],
+      "answer": 2,
+      "explanation": "C major has no sharps and no flats. It uses only the seven natural notes: C D E F G A B. It is the reference key from which all other key signatures are measured. On the piano, it uses only white keys.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does a natural sign (♮) written next to a note in a sharp key signature do?",
+      "choices": [
+        "It raises the note by one half step",
+        "It lowers the note by two half steps",
+        "It temporarily cancels the key signature for that pitch class for the remainder of that measure",
+        "It makes the note last twice as long"
+      ],
+      "answer": 2,
+      "explanation": "A natural sign cancels a key signature sharp or flat for the specific note it precedes, and the cancellation lasts for the rest of that measure. After the barline, the key signature is back in full effect. This is how composers write notes outside the prevailing key.",
+      "srs": true
+    }
+  ]
+}

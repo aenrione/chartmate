@@ -1,0 +1,64 @@
+{
+  "id": "02-sharps-and-flats",
+  "title": "Sharps & Flats",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Accidentals: Sharps, Flats, and Naturals\n\nThe seven letters of the musical alphabet (A B C D E F G) give us the white keys. The black keys — and chromatic alterations of white keys — require **accidentals**: symbols that modify a note's pitch by a specific interval.\n\n### The Three Main Accidentals\n\n| Symbol | Name | Effect |\n|--------|------|--------|\n| **#** | Sharp | Raises the pitch by **one half step** |\n| **b** | Flat | Lowers the pitch by **one half step** |\n| **♮** | Natural | Cancels any previous sharp or flat, restoring the original pitch |\n\n### Sharps and Flats on the Keyboard\n\nMost black keys have two names:\n- The **sharp** of the white key immediately below it\n- The **flat** of the white key immediately above it\n\n| Sharp name | = | Flat name | Position |\n|------------|---|-----------|----------|\n| C# | = | Db | Black key between C and D |\n| D# | = | Eb | Black key between D and E |\n| F# | = | Gb | Black key between F and G |\n| G# | = | Ab | Black key between G and A |\n| A# | = | Bb | Black key between A and B |\n\nThese are called **enharmonic equivalents** — same key, two names.\n\n### The Exceptions: E/F and B/C\n\nThe two places where adjacent white keys have **no black key between them**:\n- **E and F** — they are a natural half step apart\n- **B and C** — they are a natural half step apart\n\nThis means some unusual enharmonic relationships exist:\n- **E# = F** (E sharp is the same key as F)\n- **Cb = B** (C flat is the same key as B)\n- **B# = C** (B sharp is the same key as C)\n- **Fb = E** (F flat is the same key as E)\n\nThese notes look strange but are theoretically necessary when building scales and chords in certain keys.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## How Accidentals Work in Music Notation\n\n### Accidentals in a Measure\n\nWhen an accidental appears before a note in a measure, it applies to **all subsequent notes of that same pitch within the same measure**, unless canceled by a natural sign. The accidental does not carry over into the next measure.\n\nExample:\n> Measure has C#, then another C (no accidental written)\n> The second C is **still C#** — the accidental persists through the measure\n> A natural sign (♮) before the second C would cancel it back to natural C\n\n### Key Signatures vs. Accidentals\n\n**Key signatures** (the cluster of sharps or flats at the beginning of each staff line) are permanent accidentals for the entire piece — or until the key signature changes. They tell you which notes are systematically altered throughout the music. An accidental that appears **mid-measure** is a **temporary alteration** that only lasts for that measure.\n\n### Courtesy Accidentals\n\nComposers and editors sometimes place a **courtesy accidental** (also called a cautionary accidental) in parentheses — for example, a natural sign after a note that was sharped in the previous measure, even though the bar line already canceled the sharp. This is purely for the reader's convenience and has no effect on the pitch. It says, in effect: \"Just reminding you — this is natural now.\"\n\n### Practical Application for All Instruments\n\nFor guitarists and pianists, accidentals are encountered constantly:\n- **Blues**: the blues scale uses a b3, b5, and b7 — flats are everywhere\n- **Jazz**: the Mixolydian and Dorian modes have flats; Lydian has a sharp\n- **Classical**: accidentals fill chromatic passages and modulations\n\nKnowing immediately where C# or Bb or Eb is on your instrument — without having to think — is the goal.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does a sharp sign (#) do to a note?",
+      "choices": [
+        "Lowers the pitch by one half step",
+        "Raises the pitch by one half step",
+        "Doubles the note's duration",
+        "Cancels a previous flat"
+      ],
+      "answer": 1,
+      "explanation": "A sharp (#) raises the pitch of a note by one half step. On the keyboard, you move to the very next key to the right (regardless of color). On the guitar, you move up one fret.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Which of the following is correct regarding E# and F?",
+      "choices": [
+        "They are a whole step apart",
+        "E# does not exist in music theory",
+        "E# and F are enharmonically equivalent — the same key",
+        "E# is one half step above F"
+      ],
+      "answer": 2,
+      "explanation": "Because there is no black key between E and F, they are already a natural half step apart. E# (E raised by a half step) lands on the same key as F. This is an enharmonic equivalent: same pitch, different name.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In a measure, if a C# appears and then another C follows with no accidental written, what pitch is that second C?",
+      "choices": [
+        "C natural — the accidental only applies to the first note",
+        "C# — the accidental applies to all C's for the rest of the measure",
+        "Cb — the sharp is reversed",
+        "It depends on the clef"
+      ],
+      "answer": 1,
+      "explanation": "An accidental applies to all notes of that same pitch for the rest of the measure, unless canceled by a natural sign. The second C in the measure is still C# unless a ♮ appears before it.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the enharmonic equivalent of Bb (B flat)?",
+      "choices": ["Ab", "Cb", "A#", "C#"],
+      "answer": 2,
+      "explanation": "Bb and A# are enharmonic equivalents — they are the same key on the piano (the black key between A and B), spelled differently. Which name you use depends on the harmonic context and key you are in.",
+      "srs": true
+    }
+  ]
+}

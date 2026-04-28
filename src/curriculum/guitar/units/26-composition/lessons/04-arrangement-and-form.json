@@ -1,0 +1,43 @@
+{
+  "id": "04-arrangement-and-form",
+  "title": "Arrangement and Form",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Song Form — Structure as Emotional Tool\n\nForm is how a song organizes its sections over time. The listener's journey through the form creates emotional shape.\n\n## Common Song Forms\n\n### Verse-Chorus (most common in pop/rock)\n```\nIntro → V → V → C → V → C → Bridge → C → Outro\n```\nVerse tells the story; Chorus provides the emotional peak.\n\n### AAB (12-bar blues)\nSee Units 18-20.\n\n### AABA (jazz standards, 32 bars)\nSee Units 15-17.\n\n### Through-Composed\nNo repeated sections — each part is new. Used in classical music and progressive rock (Pink Floyd, King Crimson, Dream Theater).\n\n### Rondo (A-B-A-C-A)\nThe A theme returns between contrasting sections. Common in classical music.\n\n## Contrast — The Engine of Form\n\nEvery successful form is built on **contrast**:\n- Verse (subdued) → Chorus (explosive)\n- A section (major) → B section (minor)\n- Sparse texture → Full texture\n\nWithout contrast, all sections feel the same, and the song loses shape.\n\n## The Tension-Release Model\n\nForm can be mapped as alternating tension and release:\n- Tension: builds energy, creates expectation\n- Release: satisfies the expectation\n\nA great song cycles through T-R-T-R, with the final release being the most satisfying.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'through-composed' form and which genres use it most often?",
+      "choices": [
+        "A form with 4 identical sections",
+        "A form where each section is new — no repetition — used in classical music and progressive rock",
+        "A form composed entirely by one person",
+        "A standard verse-chorus form"
+      ],
+      "answer": 1,
+      "explanation": "Through-composed pieces have no repeated sections — the music develops continuously without returning to earlier material. This creates a narrative arc but can be harder for listeners to follow. Progressive rock (Yes, Pink Floyd), classical music, and art songs often use this approach.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Guitar Arrangement Techniques\n\nArrangement is how you texture and orchestrate a song for guitar:\n\n## Single-Guitar Arrangement Levels\n\n### Level 1: Rhythm only\nStrum chords, no melody. Full-band context.\n\n### Level 2: Rhythm + Melody (fills)\nStrum chords with brief single-note fills between vocal phrases.\n\n### Level 3: Chord-Melody\nPlay melody and chords simultaneously (see Unit 12).\n\n### Level 4: Full solo arrangement\nBass, melody, and harmony all at once (classical/fingerstyle approach).\n\n## Texture Change as Arrangement Tool\n\nChanging texture between sections creates automatic contrast:\n- Verse: fingerpicked arpeggios (sparse, intimate)\n- Pre-chorus: power chords (building energy)\n- Chorus: full strumming (maximum energy)\n- Bridge: single note melody (contrast from everything)\n\n## The Density Spectrum\n\n```\nLow density ←————————————→ High density\nSingle notes  Arpeggios  Chords  Power chords  Full strumming\n```\n\nMap your song's sections on this spectrum. No two adjacent sections should be at the same density — always change texture with each section.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why should adjacent song sections differ in texture density?",
+      "choices": [
+        "It's a rule in music theory",
+        "Contrasting textures create the sense of movement and arrival — same density throughout makes a song feel static and monotonous",
+        "It prevents string breakage",
+        "Density contrast is only important in classical music"
+      ],
+      "answer": 1,
+      "explanation": "Texture contrast between sections creates the sense that something has changed — verse to chorus, intro to verse, chorus to bridge. When all sections have the same density, the song loses its emotional shape. Texture change is the arrangement equivalent of a chord change.",
+      "srs": true
+    }
+  ]
+}

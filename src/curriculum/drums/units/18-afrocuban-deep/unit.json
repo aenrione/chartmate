@@ -1,0 +1,8 @@
+{
+  "id": "18-afrocuban-deep",
+  "title": "Afro-Cuban Deep Dive",
+  "description": "Batá rhythms, mozambique, cascara, and guaguancó",
+  "icon": "music",
+  "prerequisites": ["12-latin-percussion"],
+  "lessons": ["01-bata-patterns", "02-mozambique", "03-cascara", "04-guaguanco", "05-afrocuban-orchestration"]
+}

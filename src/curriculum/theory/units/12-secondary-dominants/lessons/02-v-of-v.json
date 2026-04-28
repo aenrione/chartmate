@@ -1,0 +1,54 @@
+{
+  "id": "02-v-of-v",
+  "title": "V/V: The Double Dominant",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## V/V — The Most Common Secondary Dominant\n\nThe secondary dominant of the dominant (V/V, or II in the home key) is the most frequently used secondary dominant in all of Western music. It appears in classical music, folk, pop, country, and jazz alike.\n\n### Why V/V Is Special\n\nIn C major: V/V = D7 (or D major triad). D7 resolves to G, which resolves to C. So V/V creates a **double dominant** — an extra layer of dominant push before the tonic:\n\n**D7 → G7 → C**: V/V → V7 → I\n\nThis chain is sometimes called a **secondary dominant chain** — each chord acts as a dominant of the next. The accumulated tension of two consecutive dominant functions creates a powerful, climactic arrival on the tonic.\n\n### V/V in Classical Music\n\nBeethoven's piano sonatas frequently use V/V to energize the approach to important cadences. In the first movement of *Sonata Op. 13 (Pathétique)*, D major/D7 chords appear before major G arrivals.\n\nMozart's *Symphony No. 40 in G minor* uses II7 (A7) → V (D) → i (Gm) — a V/V → V → i progression in minor.\n\n### V/V in Pop and Country\n\nIn country music, the 'truck driver modulation' often starts with V/V: the band plays a whole step higher than expected, but the measure before the key change is the new V/V. Example:\n\nSong in G major: D (V) – A (V/V) – D again – but now we're in A major (key change up a step).\n\nThe A chord serves as V/V in G, then becomes V in A (if you modulate) or just I in A (if you've actually changed key).\n\n### V/V in Jazz: The II7\n\nIn jazz, the II7 chord (the dominant seventh on the second scale degree) is common before V chords:\n- In C major: **D7 → G7 → Cmaj7**\n- D7 can be voiced as D–F#–A–C\n- The F# is the characteristic chromatic note (major third of D)\n\nThis is distinct from Dm7 (the diatonic ii7): D7 has a major third (F#) while Dm7 has a minor third (F natural). The F# gives D7 its dominant color and its pull toward G.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is V/V in the key of G major?",
+      "choices": ["A major (or A7)", "C major (or C7)", "E major (or E7)", "B major (or B7)"],
+      "answer": 0,
+      "explanation": "In G major, V is D. V/V means the dominant of D, which is built a fifth above D: A. So V/V in G major is A major (or A7: A–C#–E–G). A7 resolves to D, which resolves to G, creating the double dominant chain A7→D→G.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the key difference between the diatonic ii chord and the V/V chord (II7) in a major key?",
+      "choices": [
+        "ii is a triad; II7 is a seventh chord — but both have a minor third",
+        "ii has a minor third; II7 (dominant seventh) has a major third — one chromatic note apart",
+        "ii is in root position; II7 is always in first inversion",
+        "There is no difference — they are enharmonically equivalent"
+      ],
+      "answer": 1,
+      "explanation": "In C major: ii = Dm (D–F–A), with a minor third (D to F). II7 = D7 (D–F#–A–C), with a major third (D to F#). The F# is the chromatic change that transforms the chord from subdominant function (ii) to dominant function (V/V). This single half-step difference dramatically changes the chord's harmonic pull.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "The progression D7 → G7 → Cmaj7 in C major is best described as:",
+      "choices": [
+        "iii7 → V7 → Imaj7",
+        "V7/V → V7 → Imaj7 (a secondary dominant chain)",
+        "ii7 → V7 → Imaj7",
+        "IV7 → IV7 → Imaj7"
+      ],
+      "answer": 1,
+      "explanation": "D7 is V7/V (the dominant seventh of the dominant G). G7 is V7 (the dominant of C). Cmaj7 is I. So the progression is a secondary dominant chain: V7/V → V7 → Imaj7. This double dominant creates accumulated harmonic momentum leading to the tonic resolution.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the key of F major, what is V/V?",
+      "choices": ["G7", "C7", "Bb7", "D7"],
+      "answer": 0,
+      "explanation": "In F major, V is C major. V/V means a fifth above C = G. So V/V in F major is G (or G7: G–B–D–F). G7 resolves to C, which resolves to F. The B natural in G7 is the chromatic note — B natural is not in F major (F major has Bb).",
+      "srs": true
+    }
+  ]
+}

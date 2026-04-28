@@ -1,0 +1,34 @@
+{
+  "id": "05-pocket-playing",
+  "title": "Playing in the Pocket",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# The Pocket: Where Great Grooves Live\n\n'Pocket' is the term musicians use to describe that indescribable quality of a groove that feels deeply locked in — not just on the beat, but in the precise rhythmic center of the music.\n\n**What pocket actually is:**\nPocket is about the relationship between your groove and the quarter-note pulse. Notes can be:\n- **On the beat** (directly on the metronome click)\n- **Slightly ahead** (rushing — creates tension, urgency, excitement)\n- **Slightly behind** (dragging — creates weight, heaviness, laid-back feel)\n\nA drummer who plays consistently in one of these positions has their own 'pocket.' The issue is inconsistency — some notes ahead, some behind, some on the click. This creates an unsettled, uncomfortable groove.\n\n**Groove styles and pocket position:**\n- **New Orleans/second line**: typically slightly ahead — urgent, celebratory\n- **Hip-hop inspired R&B**: behind the beat — heavy, inevitable\n- **Dance/pop funk**: on the click or very slightly behind — predictable, comfortable\n\n**Developing pocket:** Record yourself to a click. Listen back critically. Your instinctive relationship to the click is your natural groove tendency. Work to maintain that tendency consistently.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Deep Pocket Funk Beat",
+      "description": "Medium tempo funk with ghost notes and syncopated kick. Play this with a slight laid-back feel — every note settling just slightly after the 16th-note grid position. The pocket comes from consistency of this subtle behind-the-beat placement.",
+      "timeSignature": "4/4",
+      "subdivisions": 16,
+      "bpm": 88,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "xxxxxxxxxxxxxxxx"},
+        {"name": "Snare",  "pattern": "o---X-o-o---X-o-"},
+        {"name": "Kick",   "pattern": "x---x-x-x---x---"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does it mean for a drummer to play 'behind the beat'?",
+      "choices": ["Playing slower than the metronome", "Placing notes slightly after the strict grid position — creating a heavy, laid-back feel", "Only using the back half of the drum kit", "Ignoring the beat entirely"],
+      "answer": 1,
+      "explanation": "Playing 'behind the beat' means placing notes slightly after the strict metronome position — not rushing, not dragging in tempo, but consistently placing the feel just slightly heavy. This creates the laid-back, inevitable quality found in hip-hop-influenced R&B and deep soul music.",
+      "srs": true
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 import {useMemo} from 'react';
-import {Repeat} from 'lucide-react';
+import {Repeat, Bookmark, BookMarked} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {
   Tooltip,
@@ -15,6 +15,10 @@ interface PatternVocabularyPanelProps {
   onHighlightPattern: (patternId: string | null) => void;
   highlightedPatternId: string | null;
   currentPlaybackMs: number;
+  /** Set of pattern labels currently tracked in repertoire. Optional. */
+  trackedPatterns?: Set<string>;
+  /** Toggle tracking for a pattern label + its frequency. Optional. */
+  onToggleTrackPattern?: (patternLabel: string, frequency: number) => void;
 }
 
 export default function PatternVocabularyPanel({
@@ -23,6 +27,8 @@ export default function PatternVocabularyPanel({
   onHighlightPattern,
   highlightedPatternId,
   currentPlaybackMs,
+  trackedPatterns,
+  onToggleTrackPattern,
 }: PatternVocabularyPanelProps) {
   // Find which pattern is currently playing
   const currentPatternId = useMemo(() => {
@@ -115,6 +121,35 @@ export default function PatternVocabularyPanel({
               </Tooltip>
 
               <span className="flex-1" />
+
+              {/* Track-in-repertoire button (if the host wired it up) */}
+              {onToggleTrackPattern && (() => {
+                const isTracked = trackedPatterns?.has(pattern.label) ?? false;
+                return (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className={cn(
+                          'h-5 w-5 shrink-0 transition-colors',
+                          isTracked
+                            ? 'text-emerald-500 hover:text-emerald-600 opacity-100'
+                            : 'opacity-0 group-hover:opacity-100',
+                        )}
+                        onClick={e => {
+                          e.stopPropagation();
+                          onToggleTrackPattern(pattern.label, pattern.frequency);
+                        }}>
+                        {isTracked
+                          ? <BookMarked className="h-3 w-3" />
+                          : <Bookmark className="h-3 w-3" />}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>{isTracked ? 'Stop tracking pattern' : 'Track this pattern'}</TooltipContent>
+                  </Tooltip>
+                );
+              })()}
 
               {/* Loop button */}
               <Tooltip>

@@ -14,33 +14,43 @@ import GoalItem from '@/components/programs/GoalItem';
 import AddGoalForm from '@/components/programs/AddGoalForm';
 import SessionModal from '@/components/programs/SessionModal';
 
+type UnitDetailCache = {program: Program | null; unit: Unit; goals: Goal[]; todaySessions: Session[]};
+const _unitDetailCache = new Map<string, UnitDetailCache>();
+
 export default function UnitDetailPage() {
   const {id, unitId} = useParams<{id: string; unitId: string}>();
   const navigate = useNavigate();
-  const [program, setProgram] = useState<Program | null>(null);
-  const [unit, setUnit] = useState<Unit | null>(null);
-  const [goals, setGoals] = useState<Goal[]>([]);
-  const [todaySessions, setTodaySessions] = useState<Session[]>([]);
+  const cacheKey = id && unitId ? `${id}/${unitId}` : '';
+  const cached = cacheKey ? _unitDetailCache.get(cacheKey) : undefined;
+  const [program, setProgram] = useState<Program | null>(cached?.program ?? null);
+  const [unit, setUnit] = useState<Unit | null>(cached?.unit ?? null);
+  const [goals, setGoals] = useState<Goal[]>(cached?.goals ?? []);
+  const [todaySessions, setTodaySessions] = useState<Session[]>(cached?.todaySessions ?? []);
   const [sessionModalOpen, setSessionModalOpen] = useState(false);
   const [editSession, setEditSession] = useState<Session | undefined>();
 
   const load = useCallback(async () => {
     if (!id || !unitId) return;
-    const [prog, u, g] = await Promise.all([
-      getProgram(Number(id)),
-      getUnit(Number(unitId)),
-      getGoalsForUnit(Number(unitId)),
-    ]);
-    if (!u) {navigate(`/programs/${id}`); return;}
-    const d = new Date();
-    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    const sessions = await getSessionsForDate(today);
-    const unitSessions = sessions.filter(s => s.unitId === Number(unitId));
-    setProgram(prog);
-    setUnit(u);
-    setGoals(g);
-    setTodaySessions(unitSessions);
-  }, [id, unitId, navigate]);
+    try {
+      const [prog, u, g] = await Promise.all([
+        getProgram(Number(id)),
+        getUnit(Number(unitId)),
+        getGoalsForUnit(Number(unitId)),
+      ]);
+      if (!u) {navigate(`/programs/${id}`); return;}
+      const d = new Date();
+      const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      const sessions = await getSessionsForDate(today);
+      const unitSessions = sessions.filter(s => s.unitId === Number(unitId));
+      if (cacheKey) _unitDetailCache.set(cacheKey, {program: prog, unit: u, goals: g, todaySessions: unitSessions});
+      setProgram(prog);
+      setUnit(u);
+      setGoals(g);
+      setTodaySessions(unitSessions);
+    } catch {
+      // Transient DB error on refresh — keep current state, don't navigate away
+    }
+  }, [id, unitId, navigate, cacheKey]);
 
   useEffect(() => {load();}, [load]);
 

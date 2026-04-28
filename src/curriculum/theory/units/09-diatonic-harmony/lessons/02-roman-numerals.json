@@ -1,0 +1,54 @@
+{
+  "id": "02-roman-numerals",
+  "title": "Roman Numeral Analysis",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Roman Numeral Analysis\n\n**Roman numeral analysis** is the standard system for labeling chords in relation to their key. It tells you two things simultaneously: which scale degree the chord is built on, and what quality that chord is.\n\n### The Notation System\n\n- **Uppercase Roman numerals** (I, IV, V) = **major** chords\n- **Lowercase Roman numerals** (ii, iii, vi) = **minor** chords\n- **Lowercase with ° symbol** (vii°) = **diminished** chord\n- **Uppercase with +** (III+, V+) = **augmented** chord\n- **Adding 7** (ii7, V7, IMaj7) = seventh chord extension\n\n### The Seven Diatonic Chords in Roman Numerals\n\nIn **C major**:\n\n| Roman numeral | Chord name | Notes |\n|--------------|------------|-------|\n| I | C major | C–E–G |\n| ii | D minor | D–F–A |\n| iii | E minor | E–G–B |\n| IV | F major | F–A–C |\n| V | G major | G–B–D |\n| vi | A minor | A–C–E |\n| vii° | B diminished | B–D–F |\n\n### The Power of Transposability\n\nThe great strength of Roman numeral notation is that it works **across all keys**. When you say 'I-IV-V,' that progression is immediately understood regardless of key:\n\n- I-IV-V in **C**: C–F–G\n- I-IV-V in **G**: G–C–D\n- I-IV-V in **Bb**: Bb–Eb–F\n\nA musician who says 'it's a I-IV-V in G' communicates everything you need to play the song. This abstraction is why Roman numerals are the universal language of harmony.\n\n### Reading Chord Progressions\n\nCommon progressions written in Roman numerals:\n\n- **I–V–vi–IV**: the most common pop progression\n- **ii–V–I**: the jazz cornerstone\n- **I–IV–V–I**: blues and rock foundation\n- **I–vi–IV–V**: the '50s doo-wop progression\n\n### Roman Numerals with Seventh Chords\n\nSeventh chords add a number after the Roman numeral:\n- **IMaj7** = major seventh chord on scale degree I\n- **V7** = dominant seventh chord on scale degree V\n- **ii7** = minor seventh chord on scale degree II\n- **vii°7** = diminished seventh on scale degree VII\n\n### Why Analysts Use This System\n\nRoman numeral analysis reveals the **underlying harmonic logic** beneath surface-level chord names. A Bach chorale, a Beatles song, and a jazz standard that all use I–vi–IV–V share the same deep structure — even if they're in different keys and styles. Roman numerals let you see that structural identity instantly.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does a lowercase Roman numeral (like 'ii' or 'vi') indicate about a chord?",
+      "choices": [
+        "The chord is played softly (piano)",
+        "The chord is a minor chord",
+        "The chord is played in second inversion",
+        "The chord is a diminished chord"
+      ],
+      "answer": 1,
+      "explanation": "In Roman numeral analysis, lowercase numerals indicate minor chords. Uppercase (I, IV, V) means major; lowercase (ii, iii, vi) means minor; lowercase with ° (vii°) means diminished.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In the key of G major, what chord does the Roman numeral 'IV' represent?",
+      "choices": ["D major", "C major", "F# minor", "E minor"],
+      "answer": 1,
+      "explanation": "In G major, the fourth scale degree is C, so IV = C major. The pattern I–IV–V in G major is G–C–D. Roman numerals allow you to instantly calculate this by finding the fourth note of the G major scale.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the chord symbol for the dominant seventh chord built on scale degree V in any key?",
+      "choices": ["VMaj7", "Vm7", "V7", "Vdim7"],
+      "answer": 2,
+      "explanation": "V7 (uppercase V, with 7) indicates a dominant seventh chord — a major triad plus a minor seventh — built on scale degree 5. In C major, V7 = G7. This is the most important seventh chord in tonal harmony.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "If a musician says 'it's a ii–V–I in Bb,' what are the three chords?",
+      "choices": [
+        "Cm7 – F7 – BbMaj7",
+        "Dm7 – G7 – CMaj7",
+        "Bbm7 – Eb7 – AbMaj7",
+        "Am7 – D7 – GMaj7"
+      ],
+      "answer": 0,
+      "explanation": "In Bb major: ii = C minor (Cm7), V = F dominant (F7), I = Bb major (BbMaj7). The scale degrees are C (2nd), F (5th), and Bb (1st). Roman numerals tell you exactly which chords to play in any key.",
+      "srs": true
+    }
+  ]
+}

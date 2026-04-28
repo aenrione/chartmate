@@ -1,6 +1,8 @@
 import {useState, useEffect, useCallback} from 'react';
-import {useNavigate, Link} from 'react-router-dom';
-import {ArrowLeft, Music, ExternalLink, FileMusic, Bookmark} from 'lucide-react';
+import {useNavigate, useSearchParams, useLocation, Link} from 'react-router-dom';
+import {ArrowLeft, Music, ExternalLink, FileMusic, Bookmark, BookOpen} from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import {cn} from '@/lib/utils';
 import {
   QUALITY_LABELS,
@@ -9,10 +11,13 @@ import {
   previewNextInterval,
   formatInterval,
 } from '@/lib/repertoire/sm2';
-import {getItemsDueToday, getItemsByIds, fetchLinkedResource, LinkedResource} from '@/lib/local-db/repertoire';
+import {getItemsDueToday, getItemsByIds, fetchLinkedResource, LinkedResource, parseSnippetRange, type RepertoireFilter} from '@/lib/local-db/repertoire';
 import {loadSession, saveSession, clearSession} from '@/lib/repertoire/session-persistence';
+import {seedTheorySRS, lessonLinkFromSource} from '@/lib/local-db/theory-srs';
 import {useRepertoireSession} from './hooks/useRepertoireSession';
 import type {RepertoireItem, ItemType} from '@/lib/local-db/repertoire';
+import TabSnippet from '@/components/TabSnippet';
+import ChartSectionSnippet from '@/components/ChartSectionSnippet';
 
 const KEY_TO_QUALITY: Record<string, ReviewQuality> = {'1': 1, '2': 3, '3': 4, '4': 5};
 
@@ -21,6 +26,7 @@ const ITEM_TYPE_LABELS: Record<ItemType, string> = {
   song_section: 'Section',
   composition: 'Composition',
   exercise: 'Exercise',
+  theory: 'Theory',
 };
 
 const QUALITY_COLORS: Record<ReviewQuality, string> = {
@@ -115,6 +121,7 @@ function LinkedResourcePreview({resource}: {resource: LinkedResource}) {
         </div>
         <Link
           to={`/tab-editor/${resource.id}`}
+          state={{from: '/guitar/repertoire/session'}}
           className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary/10 text-secondary text-xs font-semibold hover:bg-secondary/20 transition-colors"
         >
           <ExternalLink className="h-3.5 w-3.5" />
@@ -151,6 +158,7 @@ function LinkedResourcePreview({resource}: {resource: LinkedResource}) {
 }
 
 function CardFront({item, onShowBack}: {item: RepertoireItem; onShowBack: () => void}) {
+  const isTheory = item.itemType === 'theory';
   return (
     <div className="flex flex-col gap-6">
       <div className="rounded-3xl bg-surface-container p-8 text-center flex flex-col gap-4 min-h-[280px] items-center justify-center">
@@ -161,7 +169,7 @@ function CardFront({item, onShowBack}: {item: RepertoireItem; onShowBack: () => 
         {item.artist && (
           <p className="text-on-surface-variant text-lg">{item.artist}</p>
         )}
-        {item.notes && (
+        {!isTheory && item.notes && (
           <p className="text-sm text-on-surface-variant/80 italic max-w-md">
             "{item.notes}"
           </p>
@@ -175,15 +183,34 @@ function CardFront({item, onShowBack}: {item: RepertoireItem; onShowBack: () => 
       </div>
 
       <p className="text-center text-sm text-on-surface-variant">
-        Play through this now, then rate yourself honestly.
+        {isTheory ? 'Recall the answer, then reveal it.' : 'Play through this now, then rate yourself honestly.'}
       </p>
 
       <button
         onClick={onShowBack}
         className="w-full py-4 rounded-2xl bg-primary text-on-primary font-bold text-base hover:bg-primary/90 active:scale-95 transition-all"
       >
-        Show Self-Assessment
+        {isTheory ? 'Reveal Answer' : 'Show Self-Assessment'}
       </button>
+    </div>
+  );
+}
+
+function TheoryAnswer({notes}: {notes: string}) {
+  return (
+    <div className="rounded-3xl bg-surface-container p-6">
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          p: ({children}) => <p className="text-on-surface leading-relaxed mb-2 text-sm">{children}</p>,
+          strong: ({children}) => <strong className="text-on-surface font-semibold">{children}</strong>,
+          ul: ({children}) => <ul className="list-disc pl-5 mb-2 space-y-0.5 text-on-surface-variant text-sm">{children}</ul>,
+          li: ({children}) => <li className="leading-relaxed">{children}</li>,
+          code: ({children}) => <code className="bg-surface-container-high px-1.5 py-0.5 rounded text-xs font-mono text-on-surface">{children}</code>,
+        }}
+      >
+        {notes}
+      </ReactMarkdown>
     </div>
   );
 }
@@ -195,24 +222,91 @@ function CardBack({
   item: RepertoireItem;
   onRate: (quality: ReviewQuality) => void;
 }) {
+  const location = useLocation();
+  const isTheory = item.itemType === 'theory';
   const [resource, setResource] = useState<LinkedResource | null | 'loading'>('loading');
 
   useEffect(() => {
+    if (isTheory) return;
     fetchLinkedResource(item).then(setResource);
-  }, [item.id]);
+  }, [item.id, isTheory]);
+
+  const lessonHref = isTheory && item.theorySource
+    ? lessonLinkFromSource(item.theorySource)
+    : null;
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="rounded-3xl bg-surface-container p-6 text-center">
-        <h2 className="text-2xl font-bold text-on-surface">{item.title}</h2>
-        {item.artist && (
-          <p className="text-on-surface-variant mt-1">{item.artist}</p>
-        )}
-      </div>
+      {isTheory ? (
+        <>
+          {item.notes ? (
+            <TheoryAnswer notes={item.notes} />
+          ) : (
+            <div className="rounded-3xl bg-surface-container p-6 text-center">
+              <h2 className="text-2xl font-bold text-on-surface">{item.title}</h2>
+            </div>
+          )}
+          {lessonHref && (
+            <Link
+              to={lessonHref}
+              state={{from: location.pathname + location.search}}
+              className="self-start flex items-center gap-1.5 text-xs text-on-surface-variant hover:text-on-surface transition-colors border border-outline-variant/30 px-3 py-1.5 rounded-lg hover:bg-surface-container"
+            >
+              <BookOpen className="h-3.5 w-3.5" />
+              Review lesson
+            </Link>
+          )}
+        </>
+      ) : (
+        <div className="rounded-3xl bg-surface-container p-6 text-center">
+          <h2 className="text-2xl font-bold text-on-surface">{item.title}</h2>
+          {item.artist && (
+            <p className="text-on-surface-variant mt-1">{item.artist}</p>
+          )}
+        </div>
+      )}
 
-      {resource !== 'loading' && resource && (
+      {!isTheory && resource !== 'loading' && resource && (
         <LinkedResourcePreview resource={resource} />
       )}
+
+      {/* Inline preview — render the actual bars in-place so the user can see what they're
+          rating without opening the full editor. Tab compositions and drum charts both use the
+          shared `@bX+N` notes token. */}
+      {!isTheory && (() => {
+        const range = parseSnippetRange(item.notes);
+        if (!range) return null;
+        const label = (
+          <p className="text-[10px] uppercase tracking-wider text-on-surface-variant px-1">
+            Preview · bars {range.startBar}–{range.startBar + range.barCount - 1}
+          </p>
+        );
+        if (item.compositionId != null) {
+          return (
+            <div className="flex flex-col gap-1.5">
+              {label}
+              <TabSnippet
+                compositionId={item.compositionId}
+                startBar={range.startBar}
+                barCount={range.barCount}
+              />
+            </div>
+          );
+        }
+        if (item.savedChartMd5) {
+          return (
+            <div className="flex flex-col gap-1.5">
+              {label}
+              <ChartSectionSnippet
+                md5={item.savedChartMd5}
+                startBar={range.startBar}
+                barCount={range.barCount}
+              />
+            </div>
+          );
+        }
+        return null;
+      })()}
 
       <div>
         <p className="text-center text-sm font-semibold text-on-surface-variant mb-4">
@@ -256,20 +350,39 @@ function CardBack({
 
 export default function RepertoireSessionPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const urlFilter = (searchParams.get('filter') ?? 'all') as RepertoireFilter;
+  // `?item=<id>` opens a single-item preview without touching session persistence.
+  const singleItemId = (() => {
+    const raw = searchParams.get('item');
+    const n = raw ? Number(raw) : NaN;
+    return Number.isFinite(n) ? n : null;
+  })();
+
   const [items, setItems] = useState<RepertoireItem[] | null>(null);
   const [initialIndex, setInitialIndex] = useState(0);
   const [initialResults, setInitialResults] = useState<{item: RepertoireItem; quality: ReviewQuality}[]>([]);
   const [startedAt, setStartedAt] = useState<string | undefined>(undefined);
+  const [initialShowingBack, setInitialShowingBack] = useState(false);
 
   useEffect(() => {
     async function init() {
+      // Single-item preview mode: load just that item, skip session persistence entirely so
+      // a regular due-today session resumes correctly afterwards.
+      if (singleItemId != null) {
+        const fetched = await getItemsByIds([singleItemId]);
+        const now = new Date().toISOString();
+        setItems(fetched);
+        setStartedAt(now);
+        return;
+      }
+
       const saved = loadSession();
 
-      if (saved && saved.currentIndex < saved.itemIds.length) {
-        // Restore all items in the saved order
+      // Restore a saved session only if it matches the requested filter
+      if (saved && saved.currentIndex < saved.itemIds.length && (saved.filter ?? 'all') === urlFilter) {
         const allItems = await getItemsByIds(saved.itemIds);
         if (allItems.length > 0) {
-          // Reconstruct already-done results from the saved pairs
           const doneResults = saved.resultPairs
             .map(p => {
               const item = allItems.find(i => i.id === p.itemId);
@@ -282,27 +395,32 @@ export default function RepertoireSessionPage() {
           setInitialIndex(saved.currentIndex);
           setInitialResults(doneResults);
           setStartedAt(saved.startedAt);
+          setInitialShowingBack(saved.showingBack ?? false);
           return;
         }
       }
 
-      // No saved session — start fresh
-      const due = await getItemsDueToday();
+      // Auto-seed theory cards from curriculum on first visit
+      if (urlFilter === 'theory') {
+        await seedTheorySRS();
+      }
+
+      // No matching saved session — start fresh with the requested filter
+      const due = await getItemsDueToday(urlFilter);
       const shuffled = shuffleArray(due);
       const now = new Date().toISOString();
       setItems(shuffled);
       setStartedAt(now);
 
-      // Persist immediately so navigating away before any rating still saves order
       if (shuffled.length > 0) {
-        saveSession({itemIds: shuffled.map(i => i.id), currentIndex: 0, resultPairs: [], startedAt: now});
+        saveSession({itemIds: shuffled.map(i => i.id), currentIndex: 0, resultPairs: [], startedAt: now, filter: urlFilter});
       }
     }
 
     init();
-  }, []);
+  }, [urlFilter, singleItemId]);
 
-  const session = useRepertoireSession(items ?? [], initialIndex, initialResults, startedAt);
+  const session = useRepertoireSession(items ?? [], initialIndex, initialResults, startedAt, initialShowingBack, urlFilter);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -328,10 +446,15 @@ export default function RepertoireSessionPage() {
 
   useEffect(() => {
     if (session.phase === 'completed') {
+      // Single-item preview: don't show the multi-item summary, just go back to the IQ page.
+      if (singleItemId != null) {
+        navigate('/guitar/repertoire');
+        return;
+      }
       clearSession();
       navigate('/guitar/repertoire/summary', {state: {results: session.results}});
     }
-  }, [session.phase, session.results, navigate]);
+  }, [session.phase, session.results, navigate, singleItemId]);
 
   if (items === null) return <LoadingState />;
   if (items.length === 0) return <EmptyState onBack={() => navigate('/guitar/repertoire')} />;

@@ -1,0 +1,25 @@
+{
+  "id": "05-soloing-genres",
+  "title": "Soloing Across Genres",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Same Scale, Different Feels\n\nThe minor pentatonic sounds different depending on how you play it:\n\n**Blues:** Slow bends, lots of vibrato, linger on notes, use the 'blues note' (b5)\n\n**Rock:** Faster runs, palm-muted power, aggressive bends at the top of the box\n\n**Country:** Clean picking, double-stops (two notes at once), chicken-pickin' sound\n\n**The scale is a tool. Your expression is the music.**",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# Adding the Blue Note\n\nThe **blues note** (b5, or #4) is an extra note that adds grit and soul:\n\nFor A minor pentatonic, the blue note is **Eb/D# (fret 6, string 6)**.\n\nInsert it as a passing tone — don't linger on it, but slide through it on the way to the 5th.\n\nThis turns the minor pentatonic into the full **blues scale**.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the 'blue note' in a blues scale?",
+      "choices": ["The major 3rd", "The flat 5th (diminished 5th)", "The major 7th", "The 9th"],
+      "answer": 1,
+      "explanation": "The blues scale adds a flat 5th (b5) to the minor pentatonic. This chromatic note gives the blues its characteristic gritty, tense sound.",
+      "srs": true
+    }
+  ]
+}

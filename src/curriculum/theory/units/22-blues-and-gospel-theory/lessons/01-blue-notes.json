@@ -1,0 +1,38 @@
+{
+  "id": "01-blue-notes",
+  "title": "Blue Notes",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Blue Notes: The Sound of the Blues\n\n**Blue notes** are specific scale degrees that are bent, flattened, or played with a particular expressive quality in blues and related music. They create the characteristic 'blues sound' — a tonal ambiguity between major and minor that is neither fully resolved to either.\n\n### The Three Blue Notes\n\n**b3 (Flat third)**: In C major, Eb. The minor third appears in a major-key context. This note is often bent — guitarists and vocalists slide between E and Eb, creating an expressive smear.\n\n**b5 (Flat fifth / Tritone)**: In C, Gb/F#. Adds the most dissonant blue note — the 'devil's interval' that gives blues its edge. Used especially in chromatic passing motion.\n\n**b7 (Flat seventh)**: In C, Bb. The dominant seventh on any chord — as we've seen, all three primary chords (I, IV, V) in blues use dominant sevenths.\n\n### The Blues Scale\n\nCombining these blue notes with the minor pentatonic scale:\n\n**Blues scale in C**: C – Eb – F – Gb – G – Bb – C\n\n(Minor pentatonic C: C–Eb–F–G–Bb + the b5 Gb)\n\nThis is the scale used by virtually every blues guitarist from Robert Johnson to Jimi Hendrix to Stevie Ray Vaughan. Its six notes contain all three blue notes.\n\n### The Magic of the b3 Against a Major Chord\n\nThe most defining blues moment: playing Eb over a C major or C7 chord. This creates a major/minor clash — the melody has b3 while the harmony has 3. In classical harmony, this dissonance would be an error. In blues, it is the sound.\n\nThis tension is resolved not by moving to the 'correct' note, but by expressive bending — sliding from Eb toward E, or staying on Eb as a deliberate 'blue' color.\n\n### The African Musical Heritage\n\nBlue notes originated in the African-American musical tradition, where the major/minor ambiguity of African pentatonic scales met European diatonic harmony. The 'blue note' bends reflect a musical tradition where pitch was more flexible and expressive than European equal temperament allowed — the microtonal spaces between Eb and E are the essence of the blues.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What are the three blue notes in the key of C, and what scale degrees do they represent?",
+      "choices": [
+        "Db, Ab, and Bb (representing b2, b6, and b7)",
+        "Eb, Gb, and Bb (representing b3, b5, and b7)",
+        "Eb, F, and G (representing b3, 4, and 5)",
+        "Db, F, and Ab (representing b2, 4, and b6)"
+      ],
+      "answer": 1,
+      "explanation": "The three blue notes in C are Eb (b3 — flat third), Gb (b5 — tritone/flat fifth), and Bb (b7 — flat seventh). Together with C–F–G (root, fourth, fifth), these form the blues scale: C–Eb–F–Gb–G–Bb. The tension between these flattened notes and the underlying major or dominant harmony creates the characteristic blues color.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the expressive significance of playing Eb (b3) over a C major chord?",
+      "choices": [
+        "It is an error — b3 against a major chord creates forbidden parallel fifths",
+        "It creates a major/minor clash — the melody uses the minor third while the harmony uses the major third, producing the characteristic 'blue note' tension",
+        "Eb functions as the ninth of a C9 chord, adding extension color",
+        "It implies a key change to Eb major"
+      ],
+      "answer": 1,
+      "explanation": "Playing Eb over C major creates a simultaneous major/minor quality — the major chord has E natural (major 3rd), but the melody has Eb (minor 3rd). This ambiguity between major and minor is the defining expressive quality of blue notes. In classical harmony, this would be a dissonance requiring resolution. In blues, it is the sound — often expressed through bending from Eb toward E.",
+      "srs": true
+    }
+  ]
+}

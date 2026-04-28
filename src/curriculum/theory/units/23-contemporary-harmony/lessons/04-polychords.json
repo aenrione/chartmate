@@ -1,0 +1,38 @@
+{
+  "id": "04-polychords",
+  "title": "Polychords",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Polychords: Two Chords at Once\n\nA **polychord** is the simultaneous sounding of two different chords. The notation shows one chord over another with a horizontal line separating them:\n\nB♭/C = B major triad over C bass note\nD/C = D major triad over C major triad\n\nPolychords create complex, highly dissonant sounds that cannot be easily explained by single-chord theory. They are used in contemporary classical music, jazz, and film scoring.\n\n### Polychords as Upper Structure Triads (Revisited)\n\nWe already encountered polychords implicitly in upper structure triads. A polychord is the formalization:\n\n**D7 with E major triad on top** = E/D7 polychord\n- Bottom: D–F#–A–C (D7)\n- Top: E–G#–B\n- Result: D9#11 chord (9th = E, #11 = G#, 13th = B)\n\n### Stravinsky's Polychords\n\nIgor Stravinsky used polychords extensively in *The Rite of Spring* (1913) for maximum dissonance:\n\n**The famous 'Petroushka chord'**: Combines C major and F# major simultaneously:\n- C major: C–E–G\n- F# major: F#–A#–C#\n\nThese two chords are a tritone apart, sharing no common tones. The result is maximally dissonant — this is the chord Petroushka plays when expressing his anger and frustration. Stravinsky uses the tritone polychord to represent the clash between two incompatible worlds.\n\n### How to Read Polychord Notation\n\nNotation: Upper chord written over a horizontal line, lower chord below:\n```\n  E major\n  ───────  = E/D7 polychord\n  D7\n```\n\nOr written as E/D7 (E over D7).\n\nThe upper chord is heard as a color layer above the harmonic foundation.\n\n### Polychords in Contemporary Composition\n\n**Bernard Herrmann** (Hitchcock's film composer) used polychords for psychological tension in *Psycho* and *Vertigo*.\n\n**Eric Whitacre** (choral composer): His choral works use dense polychords with multiple overlapping seventh and ninth chords to create lush, shimmering 'sound clouds.'\n\n**Björk, *Homogenic* and *Vespertine***: Contemporary pop that uses polychordal orchestral layers.\n\n### Polychords vs. Extended Chords\n\nThe distinction can be blurry:\n- **Extended chord**: One chord with added 9ths/11ths/13ths — all tones relate to one root\n- **Polychord**: Two clearly separate triads (or seventh chords) heard simultaneously — the two components retain their individual identities\n\nIf the upper triad creates strong conflict with the lower root (tritone relationship, many semitones), it is polychordal. If it smoothly extends the lower chord, it is an extension.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What makes the 'Petroushka chord' (C major + F# major) maximally dissonant?",
+      "choices": [
+        "The two triads share all three notes (they are enharmonic equivalents)",
+        "The two triads are a tritone apart and share no common tones — maximally distant in harmonic space",
+        "The chord is too high in register for most instruments",
+        "The Petroushka chord uses diminished intervals throughout"
+      ],
+      "answer": 1,
+      "explanation": "C major (C–E–G) and F# major (F#–A#–C#) are a tritone apart — the most distant harmonic relationship within the octave. They share no common tones; no note from one chord appears in the other. This makes the combination maximally dissonant. Stravinsky used this 'Petroushka chord' to represent the puppet's tortured inner life — two irreconcilable harmonic worlds forced together.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How is a polychord different from an extended chord (like a 13th chord)?",
+      "choices": [
+        "A polychord has two roots; an extended chord has one root with all tones related to it",
+        "An extended chord has more notes than a polychord",
+        "Polychords are only used in classical music; extended chords in jazz",
+        "They are identical — both terms describe chords with more than four notes"
+      ],
+      "answer": 0,
+      "explanation": "An extended chord (9th, 11th, 13th) has one root, and all chord tones relate to that root by tertian stacking. A polychord has two independent root centers — two clearly audible separate triads (or seventh chords) sounding simultaneously. The two components of a polychord retain their individual harmonic identities rather than melting into one chord.",
+      "srs": true
+    }
+  ]
+}

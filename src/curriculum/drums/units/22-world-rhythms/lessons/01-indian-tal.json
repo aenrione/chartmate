@@ -1,0 +1,48 @@
+{
+  "id": "01-indian-tal",
+  "title": "Indian Tal (Tala)",
+  "xp": 35,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Tala: Indian Rhythmic Cycles\n\nIn Indian classical music (both Hindustani in the north and Carnatic in the south), rhythm is organized through **tala** — repeating rhythmic cycles of varying lengths. Unlike Western time signatures, talas can be 6, 7, 8, 10, 12, 14, or 16 beats long.\n\n**Key concepts:**\n\n**Sam**: Beat 1 of the tala — the most important rhythmic event, where all improvisation resolves. Every improvised cadenza (tihais) aims to arrive on sam.\n\n**Vibhag**: The subdivision of the tala into sections. Each vibhag is marked by specific hand gestures (clap, wave, finger counting).\n\n**Theka**: The standard drum phrase for each tala. On the tabla (north Indian), each tala has an established theka that drummers learn as the foundation.\n\n**Important talas:**\n- **Tintal** (16 beats, most common): Divided 4+4+4+4\n- **Ektal** (12 beats): Divided 2+2+2+2+2+2\n- **Jhaptal** (10 beats): Divided 2+3+2+3\n- **Rupak** (7 beats): Divided 3+2+2\n- **Keharwa** (8 beats): Divided 4+4 (closest to Western 4/4)\n\n**For drum kit:** Learning tala opens up a completely different way of organizing time — not as recurring 4/4 bars, but as long cycles with a specific resolution point.",
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Keharwa Tala (8-beat cycle)",
+      "description": "Keharwa is the most common tala for lighter music and is the closest to Western 8/8 or 4/4. The pattern divides into two groups of 4. The sam falls on beat 1. This is the entry point into Indian rhythmic concepts.",
+      "timeSignature": "4/4",
+      "subdivisions": 8,
+      "bpm": 100,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "xxxxxxxx"},
+        {"name": "Snare",  "pattern": "x---x---"},
+        {"name": "Kick",   "pattern": "x-x---x-"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "drum-pattern",
+      "title": "Rupak Tala (7-beat cycle, 3+2+2)",
+      "description": "Rupak tala has 7 beats divided 3+2+2. Unlike most Western odd meters, Rupak starts the first vibhag on a wave (silent beat 1), creating an unusual sense that the 'heavy' downbeat is on beat 4. This anti-intuitive feel is central to Rupak's character.",
+      "timeSignature": "7/8",
+      "subdivisions": 7,
+      "bpm": 80,
+      "tracks": [
+        {"name": "Hi-Hat", "pattern": "xxxxxxx"},
+        {"name": "Snare",  "pattern": "x--x-x-"},
+        {"name": "Kick",   "pattern": "x------"}
+      ],
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is 'sam' in Indian classical music's tala system?",
+      "choices": ["The fastest possible subdivision", "The last beat of the tala", "Beat 1 of the tala — the most important rhythmic event where improvisation resolves", "The silence between phrases"],
+      "answer": 2,
+      "explanation": "Sam is beat 1 of the tala cycle — the rhythmic home base to which all improvisation (including cadenzas called tihais) must resolve. Landing precisely on sam is the most important goal in Indian rhythmic performance; missing sam is considered a serious error.",
+      "srs": true
+    }
+  ]
+}

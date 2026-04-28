@@ -1,0 +1,54 @@
+{
+  "id": "04-note-values",
+  "title": "Note Values",
+  "xp": 20,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Note Values: The Duration System\n\nIn music, **pitch** tells you what to play; **note values** tell you **how long to hold it**. The Western notation system uses a set of note values built on a single principle: **each value is exactly half the duration of the one above it**.\n\n### The Hierarchy\n\n| Note Value | Beats in 4/4 | Symbol Description |\n|------------|-------------|--------------------|\n| **Whole note** | 4 beats | Open oval, no stem |\n| **Half note** | 2 beats | Open oval with a stem |\n| **Quarter note** | 1 beat | Filled oval with a stem |\n| **Eighth note** | 1/2 beat | Filled oval, stem + one flag |\n| **Sixteenth note** | 1/4 beat | Filled oval, stem + two flags |\n| **Thirty-second note** | 1/8 beat | Filled oval, stem + three flags |\n\nThe relationship is always **2:1**: two half notes equal one whole note, two quarter notes equal one half note, and so on.\n\n### How to Count Each Value in 4/4\n\n- **Whole note**: count \"1 — 2 — 3 — 4\" (hold for all four beats)\n- **Half note**: count \"1 — 2\" or \"3 — 4\" (hold for two beats)\n- **Quarter note**: each beat gets its own note — \"1, 2, 3, 4\"\n- **Eighth note**: two per beat — \"1 and, 2 and, 3 and, 4 and\"\n- **Sixteenth note**: four per beat — \"1 e and a, 2 e and a, 3 e and a, 4 e and a\"\n\nLearning to count syllabically — out loud, with a metronome — is the fastest way to internalize these durations.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "## Note Anatomy and Beaming\n\n### Parts of a Note\n\nEvery notated note (except the whole note) has up to three components:\n1. **Notehead** — the oval shape, either open (hollow) or closed (filled)\n2. **Stem** — a vertical line attached to the notehead\n3. **Flag or beam** — attached to the end of the stem for eighth notes and shorter\n\n**Open notehead** = whole note or half note  \n**Filled notehead** = quarter note and all shorter values\n\n### Flags vs. Beams\n\nWhen a single eighth or sixteenth note appears alone, it uses a **flag** curving to the right off the stem. But when two or more eighth or sixteenth notes appear consecutively, their flags are replaced by a **beam** — a thick horizontal bar connecting the stems. Beaming groups notes together visually and makes rhythmic patterns far easier to read.\n\nExample: four sixteenth notes in a row have two beams connecting all four stems, making the group obvious at a glance.\n\n### Stem Direction\n\nStems point **up** when the notehead is on the lower half of the staff (lines 1–2 and spaces 1–2), and **down** when the notehead is on the upper half (lines 4–5 and spaces 3–4). Notes on the middle line (line 3) can go either way. This rule keeps the stems from extending far off the staff and makes the notation easier to read.\n\n### The 2:1 Relationship in Practice\n\nKnowing the 2:1 ratio lets you convert between values mentally:\n- 1 whole note = 2 half notes = 4 quarter notes = 8 eighth notes = 16 sixteenth notes\n- A measure of 4/4 must add up to exactly 4 quarter-note beats\n- If you have a half note and two quarter notes, that's 2 + 1 + 1 = 4 beats — the measure is full",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "In 4/4 time, how many beats does a half note receive?",
+      "choices": ["1 beat", "2 beats", "3 beats", "4 beats"],
+      "answer": 1,
+      "explanation": "A half note lasts 2 beats in 4/4 time. It is half the duration of a whole note (4 beats) and twice the duration of a quarter note (1 beat).",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the visual difference between a half note and a quarter note?",
+      "choices": [
+        "The half note has two stems; the quarter note has one",
+        "The half note has an open (hollow) notehead; the quarter note has a filled notehead",
+        "The half note has a flag; the quarter note does not",
+        "The half note is larger than the quarter note"
+      ],
+      "answer": 1,
+      "explanation": "Both half notes and quarter notes have a single stem, but the half note uses an open (hollow) notehead while the quarter note uses a filled (closed) notehead. The notehead fill is the key visual distinction.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "How many sixteenth notes are equivalent to one quarter note?",
+      "choices": ["2", "4", "8", "16"],
+      "answer": 1,
+      "explanation": "The 2:1 ratio works down the hierarchy: one quarter note = two eighth notes = four sixteenth notes. Each level is half the duration of the level above.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "When multiple eighth notes appear consecutively, their flags are replaced by what?",
+      "choices": ["Additional stems", "A beam", "A slur", "A tie"],
+      "answer": 1,
+      "explanation": "When two or more eighth or sixteenth notes appear in a row, their individual flags are replaced by beams — thick horizontal bars connecting the stems. Beaming makes rhythmic groupings much easier to read at a glance.",
+      "srs": true
+    }
+  ]
+}

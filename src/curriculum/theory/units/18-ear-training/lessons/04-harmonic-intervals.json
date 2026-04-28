@@ -1,0 +1,33 @@
+{
+  "id": "04-harmonic-intervals",
+  "title": "Harmonic Interval Recognition",
+  "xp": 25,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "## Harmonic Intervals: Hearing Vertical Stacks\n\nA **harmonic interval** is two notes played simultaneously. Recognizing harmonic intervals by ear is harder than melodic intervals — you must 'unpack' the simultaneous sound into its component pitches.\n\n### The Consonance-Dissonance Spectrum\n\nIntervals are ranked by consonance (stability) to dissonance (tension):\n\n**Most consonant** → **Most dissonant**:\n1. Unison (P1) and Octave (P8): Perfect consonances — complete stability\n2. Perfect Fifth (P5): Open, stable but slightly hollow\n3. Perfect Fourth (P4): Stable, but contextually dissonant against the bass\n4. Major Third (M3): Warm, bright consonance\n5. Minor Third (m3): Softer consonance, slightly dark\n6. Major Sixth (M6): Warm, open consonance\n7. Minor Sixth (m6): Softer, more complex\n8. Major Second (M2): Mild dissonance — rubbing quality\n9. Minor Seventh (m7): Moderate dissonance — jazz color\n10. Major Seventh (M7): Sharp dissonance — wants resolution\n11. Minor Second (m2): Strong dissonance — scraping quality\n12. Tritone (TT/d5/A4): Maximum dissonance — the 'diabolus in musica'\n\n### Training Strategy for Harmonic Intervals\n\n1. **Sing the lower note** of the interval while hearing the upper note — isolate each component\n2. **Notice the 'beating'** of dissonant intervals — the acoustic beating (rapid oscillation in volume) is stronger for more dissonant intervals\n3. **Associate with color**: major thirds sound golden/warm; minor thirds are silver/cool; tritones are red/harsh\n4. **Play and compare**: On a piano, play intervals side by side — P5 vs. M6, m2 vs. M2 — to internalize the difference\n\n### The Tritone: Special Attention\n\nThe tritone (diminished fifth / augmented fourth, 6 semitones) is unique:\n- It divides the octave exactly in half\n- It is maximally dissonant in classical theory (the 'devil in music')\n- It is the defining interval of dominant seventh chords (between 3rd and 7th)\n- It resolves inward (diminished fifth → major third) or outward (augmented fourth → minor sixth)\n\nBeing able to instantly recognize a tritone is essential: it tells you immediately that there is a dominant chord present wanting to resolve.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "On the consonance-dissonance spectrum, which interval is generally considered the most dissonant within an octave?",
+      "choices": ["The minor second (m2)", "The major seventh (M7)", "The tritone (augmented fourth / diminished fifth)", "The minor ninth (m9)"],
+      "answer": 2,
+      "explanation": "The tritone (6 semitones, exactly half the octave) is considered the most dissonant interval within an octave. Its perfectly symmetrical division of the octave creates maximum instability — neither pitches can assert dominance as the 'tonic,' and the acoustic beating is intense. It was called 'diabolus in musica' (the devil in music) in medieval theory, and it was forbidden in plainchant.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What does 'acoustic beating' indicate when you hear two notes together?",
+      "choices": [
+        "The rhythm of the music has a beat on that note",
+        "The two frequencies are close but not identical, causing rapid fluctuations in amplitude — a sign of dissonance or slight mistuning",
+        "The notes are being played staccato (short)",
+        "The interval is a perfect consonance with no variation"
+      ],
+      "answer": 1,
+      "explanation": "Acoustic beating occurs when two frequencies are close to each other but not exactly the same ratio. The interference between the two sound waves creates rapid volume fluctuations (beating). More dissonant intervals produce more audible beating. A perfect unison or octave has no beating; a minor second has very rapid, harsh beating. Training your ear to hear this beating helps identify dissonant intervals.",
+      "srs": true
+    }
+  ]
+}

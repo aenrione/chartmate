@@ -1,0 +1,43 @@
+{
+  "id": "03-performance-preparation",
+  "title": "Performance Preparation",
+  "xp": 30,
+  "activities": [
+    {
+      "type": "theory-card",
+      "markdown": "# Performance Preparation — Playing Your Best Live\n\nPractice and performance are different skills. You can be a masterful practitioner and freeze under performance conditions. Performance preparation is a separate discipline.\n\n## The Performance Anxiety Spectrum\n\n- **No anxiety**: Rare — some find performance energizing\n- **Mild anxiety**: Adrenaline improves performance — optimal\n- **Moderate anxiety**: Focus narrows, minor memory lapses\n- **Severe anxiety**: Technical failure, mental blanks\n\nMost professional musicians experience mild anxiety — they've learned to use it as fuel.\n\n## The Preparation Stages\n\n### Stage 1: Technical Readiness\nThe piece must be playable under pressure. Rule: if you can play it 10 times perfectly in a quiet room, it's approximately \"performance ready\" — adrenaline will cost you 10-20% of technical reliability.\n\n### Stage 2: Structural Memory\nYou must know the **form** cold — where every section starts, how long it is, where to go after each section. Structural memory is what saves you when adrenaline disrupts sequential memory.\n\n### Stage 3: Performance Practice\nPlay the piece **as if performing** — no stopping, no second chances:\n1. Stand up if you normally stand\n2. Record video\n3. Play for a small audience (even 1 person)\n4. Simulate distractions (noise, conversation)\n\n### Stage 4: Mental Rehearsal\nIn the 24 hours before performance, visualize the entire performance from beginning to end — physically, emotionally, spatially. Sports psychology shows this measurably improves performance.",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "Why does the 'technical readiness' rule require playing perfectly 10 times rather than just once?",
+      "choices": [
+        "Ten is the traditional music rule",
+        "Performance adrenaline reduces technical reliability by 10-20%, so repeated consistency at practice ensures reliability under pressure",
+        "More repetitions improve memory",
+        "One perfect run is actually sufficient for performance"
+      ],
+      "answer": 1,
+      "explanation": "Adrenaline and performance conditions reduce technical reliability. A piece that's 'barely playable' in practice will fail under pressure. Ten consecutive perfect performances demonstrate the technique is automatic enough to survive the performance context.",
+      "srs": true
+    },
+    {
+      "type": "theory-card",
+      "markdown": "# The Day-of-Performance Protocol\n\n## Morning\n- **Warm up, don't wear down**: Light technique work (scales, arpeggios) — NOT full-power practice\n- **Run through the piece** once, slowly, to confirm memory\n- **Don't run it repeatedly** — over-drilling on performance day creates anxiety, not security\n\n## Before the Performance\n- **Arrive early**: Sound check, acoustic check (if applicable), familiarize yourself with the space\n- **Tune carefully**: Temperature changes affect pitch significantly\n- **Physical warm-up**: Stretch hands, arms, shoulders — cold muscles perform poorly\n- **Mental centering**: Find 5 minutes of silence before going on\n\n## On Stage\n- **Breathe before you play**: One complete breath before starting\n- **Play for the audience**: Your job is to communicate, not to execute\n- **When something goes wrong**: Keep going — the audience doesn't know your score\n- **End definitively**: A strong, decisive ending covers many sins\n\n## Post-Performance\n- **Don't immediately critique**: Give yourself 24 hours before evaluating\n- **Note what worked**: Most post-performance analysis focuses on mistakes, ignoring success\n- **Apply one learning**: Choose one thing to improve before the next performance",
+      "srs": true
+    },
+    {
+      "type": "quiz",
+      "question": "What is the most important thing to do at the very moment before starting to play in performance?",
+      "choices": [
+        "Check your tuning one more time",
+        "Think through the entire piece",
+        "Take one complete, conscious breath to settle the body and mind before beginning",
+        "Look at your hands to ensure correct position"
+      ],
+      "answer": 2,
+      "explanation": "A conscious breath before playing activates the parasympathetic nervous system (calming response), settles adrenaline, and creates a moment of deliberate musical intention. It's the transition from preparation mode to performance mode — a ritual used by performers across all disciplines.",
+      "srs": true
+    }
+  ]
+}

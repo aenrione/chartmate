@@ -28,6 +28,7 @@ import {
   getPatternNoteCount,
   type Subdivision,
 } from './generateRudimentChart';
+import {recordEventSafely} from '@/lib/progression';
 
 type ParsedChart = ReturnType<typeof parseChartFile>;
 
@@ -257,20 +258,43 @@ export default function RudimentPracticeView({
     isPlaying ? 100 : null,
   );
 
+  const playStartTimeRef = useRef<number | null>(null);
+  const reportedThisRunRef = useRef(false);
+
   // Play/pause
   const handlePlay = useCallback(() => {
     if (!audioManagerRef.current) return;
     if (isPlaying) {
       audioManagerRef.current.pause();
       setIsPlaying(false);
+      // Fire a `rudiment_practiced` event if the user just sustained playback long enough.
+      // Conservative: 4 bars minimum at the chosen bpm before it counts as practice.
+      if (playStartTimeRef.current != null && !reportedThisRunRef.current) {
+        const elapsedSec = (Date.now() - playStartTimeRef.current) / 1000;
+        const beats = elapsedSec * (bpm / 60);
+        const sustainedBars = Math.floor(beats / 4);
+        if (sustainedBars >= 4) {
+          reportedThisRunRef.current = true;
+          recordEventSafely({
+            kind: 'rudiment_practiced',
+            rudimentId: String(rudiment.id),
+            bpm,
+            sustainedBars,
+          });
+        }
+      }
+      playStartTimeRef.current = null;
     } else if (!audioManagerRef.current.isInitialized) {
       audioManagerRef.current.play({ time: 0 });
       setIsPlaying(true);
+      playStartTimeRef.current = Date.now();
+      reportedThisRunRef.current = false;
     } else {
       audioManagerRef.current.resume();
       setIsPlaying(true);
+      if (playStartTimeRef.current == null) playStartTimeRef.current = Date.now();
     }
-  }, [isPlaying]);
+  }, [isPlaying, bpm, rudiment.id]);
 
   // Keyboard shortcuts
   useEffect(() => {
