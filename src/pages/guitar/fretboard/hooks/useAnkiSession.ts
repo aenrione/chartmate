@@ -5,7 +5,7 @@ import {
   updateAnkiCard,
   type FretboardCard,
 } from '@/lib/local-db/fretboard';
-import {noteAtPosition} from '../lib/musicTheory';
+import {noteAtPosition, areEnharmonic} from '../lib/musicTheory';
 import {previewNextInterval} from '@/lib/repertoire/sm2';
 import type {ReviewQuality} from '@/lib/repertoire/sm2';
 
@@ -60,7 +60,7 @@ export function useAnkiSession() {
     setState(prev => {
       if (!prev.currentCard || prev.phase !== 'showing_front') return prev;
       const correct = noteAtPosition(prev.currentCard.stringIndex, prev.currentCard.fret);
-      const isCorrect = areEnharmonicSimple(note, correct);
+      const isCorrect = areEnharmonic(note, correct);
       return {
         ...prev,
         phase: 'showing_back',
@@ -123,17 +123,4 @@ function shuffle<T>(arr: T[]): T[] {
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
-}
-
-const ENHARMONIC_PAIRS: Record<string, string> = {
-  'C#': 'Db', 'Db': 'C#',
-  'D#': 'Eb', 'Eb': 'D#',
-  'F#': 'Gb', 'Gb': 'F#',
-  'G#': 'Ab', 'Ab': 'G#',
-  'A#': 'Bb', 'Bb': 'A#',
-};
-
-function areEnharmonicSimple(a: string, b: string): boolean {
-  if (a === b) return true;
-  return ENHARMONIC_PAIRS[a] === b || ENHARMONIC_PAIRS[b] === a;
 }
