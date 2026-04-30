@@ -22,7 +22,7 @@
 
 @media (max-width: 1023px) {
   :root {
-    --bottom-nav-safe-height: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+    --bottom-nav-safe-height: calc(3.5rem + var(--sab));
   }
 }
 
