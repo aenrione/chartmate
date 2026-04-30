@@ -87,20 +87,24 @@ export default function Home() {
       {/* Programs card */}
       <Link
         to="/programs"
-        className="group relative flex items-center gap-4 max-w-3xl mt-4 max-lg:landscape:mt-3 px-5 py-4 rounded-2xl bg-surface-container-low overflow-hidden transition-all duration-300 hover:bg-surface-container"
+        className="group relative flex flex-col h-[180px] lg:h-[320px] max-lg:landscape:h-[130px] max-w-3xl mt-4 max-lg:landscape:mt-3 rounded-2xl bg-surface-container-low overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:bg-surface-container"
       >
+        <div className="h-1 w-full bg-primary-container" />
         <Layers
-          className="pointer-events-none absolute -right-4 -bottom-4 h-28 w-28 text-primary opacity-[0.05]"
+          className="pointer-events-none absolute -right-6 -bottom-6 h-52 w-52 max-lg:landscape:h-28 max-lg:landscape:w-28 text-primary opacity-[0.06]"
           strokeWidth={1}
         />
-        <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 shrink-0">
-          <Layers className="h-5 w-5 text-primary" strokeWidth={1.5} />
+        <div className="relative flex flex-1 flex-col justify-between p-6 max-lg:landscape:p-3">
+          <div>
+            <Layers className="h-10 w-10 max-lg:landscape:h-6 max-lg:landscape:w-6 text-primary mb-4 max-lg:landscape:mb-1" strokeWidth={1.5} />
+            <h2 className="font-headline text-2xl max-lg:landscape:text-base font-semibold text-on-surface">Programs</h2>
+            <span className="font-mono text-sm max-lg:landscape:text-xs text-on-surface-variant">Structured practice plans</span>
+          </div>
+          <div className="flex items-center gap-2 text-primary opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 max-lg:landscape:hidden">
+            <span className="font-mono text-sm">Browse programs</span>
+            <ArrowRight className="h-4 w-4" />
+          </div>
         </div>
-        <div className="flex-1 min-w-0">
-          <h2 className="font-headline text-base font-semibold text-on-surface">Programs</h2>
-          <span className="font-mono text-xs text-on-surface-variant">Structured practice plans</span>
-        </div>
-        <ArrowRight className="h-4 w-4 text-on-surface-variant/40 group-hover:text-primary transition-colors shrink-0" />
       </Link>
     </div>
   );
