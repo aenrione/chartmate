@@ -24,41 +24,41 @@ export default function DrillHUD({
   difficulty,
 }: DrillHUDProps) {
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center gap-2 lg:gap-6 min-w-0 overflow-hidden">
       {/* Progress */}
-      <div className="flex items-center gap-2 text-sm text-on-surface-variant font-mono">
+      <div className="flex items-center gap-1 lg:gap-2 text-sm text-on-surface-variant font-mono shrink-0">
         <span className="text-on-surface font-bold">{questionIndex + 1}</span>
         <span>/</span>
         <span>{totalQuestions}</span>
       </div>
 
       {/* Stats cluster */}
-      <div className="flex items-center gap-4 bg-surface-container-low px-4 py-2 rounded-xl shadow-studio-sm">
+      <div className="flex items-center gap-2 lg:gap-4 bg-surface-container-low px-2 lg:px-4 py-1.5 lg:py-2 rounded-xl shadow-studio-sm shrink-0">
         {/* Timer */}
-        <div className="flex items-center gap-2">
-          <Timer className="h-4 w-4 text-primary" />
-          <span className="font-mono text-sm tracking-tight text-on-surface">{formatTime(timer)}</span>
+        <div className="flex items-center gap-1 lg:gap-2">
+          <Timer className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-primary" />
+          <span className="font-mono text-xs lg:text-sm tracking-tight text-on-surface">{formatTime(timer)}</span>
         </div>
 
-        <div className="w-px h-4 bg-outline-variant/20" />
+        <div className="w-px h-3.5 bg-outline-variant/20" />
 
         {/* Streak */}
-        <div className="flex items-center gap-2">
-          <Flame className="h-4 w-4 text-tertiary" />
-          <span className="font-mono text-sm text-on-surface">{streak}</span>
+        <div className="flex items-center gap-1 lg:gap-2">
+          <Flame className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-tertiary" />
+          <span className="font-mono text-xs lg:text-sm text-on-surface">{streak}</span>
         </div>
 
-        <div className="w-px h-4 bg-outline-variant/20" />
+        <div className="w-px h-3.5 bg-outline-variant/20" />
 
         {/* Score */}
-        <div className="flex items-center gap-2">
-          <Trophy className="h-4 w-4 text-secondary" />
-          <span className="font-mono text-sm text-on-surface">{score}</span>
+        <div className="flex items-center gap-1 lg:gap-2">
+          <Trophy className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-secondary" />
+          <span className="font-mono text-xs lg:text-sm text-on-surface">{score}</span>
         </div>
       </div>
 
-      {/* Difficulty badge */}
-      <span className={`px-2 py-0.5 rounded text-[10px] uppercase tracking-widest font-bold bg-surface-container-high ${
+      {/* Difficulty badge — hidden on small mobile to save space */}
+      <span className={`hidden sm:inline px-2 py-0.5 rounded text-[10px] uppercase tracking-widest font-bold bg-surface-container-high shrink-0 ${
         difficulty === 'beginner' ? 'text-primary' :
         difficulty === 'intermediate' ? 'text-tertiary' :
         'text-error'

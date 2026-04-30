@@ -4,6 +4,7 @@ import {ArrowLeft} from 'lucide-react';
 import {getDrill} from './drills/registry';
 import {useDrillSession} from './hooks/useDrillSession';
 import {usePositionStats, computeWeights} from './hooks/useProgress';
+import {useHideHeaderOnMobile} from '@/contexts/LayoutContext';
 import Fretboard from './components/Fretboard';
 import type {HighlightedPosition} from './components/Fretboard';
 import NoteButtons from './components/NoteButtons';
@@ -25,6 +26,7 @@ export default function FretboardDrillPage() {
   const {stats: positionStats} = usePositionStats(drillType as DrillType);
   const {state, selectDrill, startDrill, submitAnswer, skipQuestion, showHint, reset} = useDrillSession();
   const [elapsed, setElapsed] = useState(0);
+  useHideHeaderOnMobile();
 
   // Initialize drill
   useEffect(() => {
@@ -223,15 +225,15 @@ export default function FretboardDrillPage() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Top Bar */}
-      <header className="flex justify-between items-center px-4 py-2 lg:px-6 lg:py-4">
-        <div className="flex items-center gap-4">
+      <header className="flex justify-between items-center gap-2 px-4 py-2 lg:px-6 lg:py-4 min-w-0">
+        <div className="flex items-center gap-2 lg:gap-4 min-w-0 shrink-0">
           <button
             onClick={() => navigate('/guitar/fretboard')}
-            className="p-2 rounded-full hover:bg-surface-container transition-colors"
+            className="p-2 rounded-full hover:bg-surface-container transition-colors shrink-0"
           >
             <ArrowLeft className="h-5 w-5 text-on-surface-variant" />
           </button>
-          <span className="font-headline tracking-tight font-bold text-lg text-on-surface">{drill.name}</span>
+          <span className="font-headline tracking-tight font-bold text-sm lg:text-lg text-on-surface whitespace-nowrap">{drill.name}</span>
         </div>
         <DrillHUD
           timer={elapsed}
