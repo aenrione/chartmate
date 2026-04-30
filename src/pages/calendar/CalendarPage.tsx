@@ -1,4 +1,5 @@
 import {useEffect, useState, useCallback} from 'react';
+import {useMobilePageTitle} from '@/contexts/LayoutContext';
 import {ChevronLeft, ChevronRight, CalendarDays, Clock, X} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {getSessionsForDateRange, getUpcomingSessions} from '@/lib/local-db/programs';
@@ -61,6 +62,7 @@ function fmtDate(dateStr: string): string {
 }
 
 export default function CalendarPage() {
+  useMobilePageTitle('Calendar');
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth());

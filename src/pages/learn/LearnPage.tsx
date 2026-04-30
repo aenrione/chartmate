@@ -1,5 +1,6 @@
 // src/pages/learn/LearnPage.tsx
 import {useState} from 'react';
+import {useMobilePageTitle} from '@/contexts/LayoutContext';
 import {Guitar, Drum, Music, LayoutList, GitBranch, Target, Award, LayoutDashboard, X} from 'lucide-react';
 import {Link} from 'react-router-dom';
 import {cn} from '@/lib/utils';
@@ -17,6 +18,7 @@ const INSTRUMENTS: {label: string; value: Instrument; Icon: React.ElementType}[]
 ];
 
 export default function LearnPage() {
+  useMobilePageTitle('Learn');
   const [instrument, setInstrument] = useState<Instrument>('guitar');
   const [view, setView] = useState<SkillTreeView>('path');
   const [missionBoardOpen, setMissionBoardOpen] = useState(false);
