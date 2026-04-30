@@ -29,6 +29,7 @@ tauri-plugin-deep-link = "2.4.7"
 tauri-plugin-http = "2.5.7"
 tauri-plugin-localhost = "2"
 tauri-plugin-sql = { version = "2.3.2", features = ["sqlite"] }
+tauri-plugin-safe-area-insets = "0.1.0"
 flate2 = "1"
 aes = "0.8"
 ctr = "0.9"

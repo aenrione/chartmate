@@ -3,6 +3,17 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { getCurrent, onOpenUrl } from '@tauri-apps/plugin-deep-link';
+import { getInsets } from 'tauri-plugin-safe-area-insets';
+
+// Inject Android safe area insets as CSS custom properties.
+// env(safe-area-inset-*) returns 0 on Android WebView; the plugin reads real values.
+getInsets().then(({top, right, bottom, left}) => {
+  const el = document.documentElement;
+  el.style.setProperty('--sat', `${top}px`);
+  el.style.setProperty('--sar', `${right}px`);
+  el.style.setProperty('--sab', `${bottom}px`);
+  el.style.setProperty('--sal', `${left}px`);
+}).catch(() => {/* not in Tauri mobile — env() fallbacks remain */});
 
 function dispatchSpotifyCallback(url: string) {
   if (url.startsWith('chartmate://auth/callback')) {
