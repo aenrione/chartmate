@@ -5,18 +5,22 @@ import {getAllDrills} from './drills/registry';
 import DrillCard from './components/DrillCard';
 import FretboardHeatMap from './components/FretboardHeatMap';
 import {useProgress, usePositionStats} from './hooks/useProgress';
-import {getAnkiDueCount} from '@/lib/local-db/fretboard';
+import {getAnkiDueCount, getAnkiTotalCount} from '@/lib/local-db/fretboard';
+import {useMobilePageTitle} from '@/contexts/LayoutContext';
 
 export default function FretboardIQPage() {
   const navigate = useNavigate();
+  useMobilePageTitle('Training Room');
   const drills = getAllDrills();
   const {userStats} = useProgress();
   const {stats: positionStats} = usePositionStats();
   const [bestScores, setBestScores] = useState<Record<string, string>>({});
   const [dueCount, setDueCount] = useState<number | null>(null);
+  const [totalCount, setTotalCount] = useState<number | null>(null);
 
   useEffect(() => {
     getAnkiDueCount().then(setDueCount).catch(() => setDueCount(0));
+    getAnkiTotalCount().then(setTotalCount).catch(() => setTotalCount(0));
   }, []);
 
   // Load best scores for each drill
@@ -37,10 +41,11 @@ export default function FretboardIQPage() {
   }, []);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto">
+    <div className="flex-1 min-h-0 overflow-y-auto px-4 lg:px-6 py-4 lg:py-6">
+    <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 max-w-7xl mx-auto">
       {/* Drills Grid */}
       <div className="flex-1">
-        <header className="mb-4 lg:mb-8">
+        <header className="mb-4 lg:mb-8 hidden lg:block">
           <h2 className="text-xl lg:text-3xl font-black font-headline tracking-tight text-on-surface mb-1 lg:mb-2">
             Training Room
           </h2>
@@ -53,6 +58,7 @@ export default function FretboardIQPage() {
         <div className="mb-4 lg:mb-8">
           <DailyReviewCard
             dueCount={dueCount}
+            totalCount={totalCount}
             onClick={() => navigate('/guitar/fretboard/anki')}
           />
         </div>
@@ -123,6 +129,7 @@ export default function FretboardIQPage() {
         </div>
       </div>
     </div>
+    </div>
   );
 }
 
@@ -154,12 +161,23 @@ function StatItem({
 
 function DailyReviewCard({
   dueCount,
+  totalCount,
   onClick,
 }: {
   dueCount: number | null;
+  totalCount: number | null;
   onClick: () => void;
 }) {
-  const isEmpty = dueCount === 0;
+  const hasDue = dueCount !== null && dueCount > 0;
+  const available = totalCount ?? 0;
+
+  function subtitle() {
+    if (dueCount === null) return 'Loading…';
+    if (hasDue) return `${dueCount} card${dueCount === 1 ? '' : 's'} due`;
+    if (available > 0) return `${available} card${available === 1 ? '' : 's'} available`;
+    return 'All caught up — check back tomorrow';
+  }
+
   return (
     <button
       onClick={onClick}
@@ -170,15 +188,9 @@ function DailyReviewCard({
       </div>
       <div className="flex-1 min-w-0">
         <p className="font-bold text-on-surface text-sm lg:text-base">Daily Review</p>
-        <p className="text-xs lg:text-sm text-on-surface-variant mt-0.5">
-          {dueCount === null
-            ? 'Loading…'
-            : isEmpty
-            ? 'All caught up — check back tomorrow'
-            : `${dueCount} card${dueCount === 1 ? '' : 's'} due`}
-        </p>
+        <p className="text-xs lg:text-sm text-on-surface-variant mt-0.5">{subtitle()}</p>
       </div>
-      {dueCount !== null && !isEmpty && (
+      {hasDue && (
         <span className="shrink-0 px-3 py-1 rounded-full bg-primary text-on-primary text-sm font-bold">
           {dueCount}
         </span>
