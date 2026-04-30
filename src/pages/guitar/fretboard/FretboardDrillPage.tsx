@@ -223,7 +223,7 @@ export default function FretboardDrillPage() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Top Bar */}
-      <header className="flex justify-between items-center px-6 py-4">
+      <header className="flex justify-between items-center px-4 py-2 lg:px-6 lg:py-4">
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate('/guitar/fretboard')}
@@ -244,9 +244,9 @@ export default function FretboardDrillPage() {
       </header>
 
       {/* Main Drill Area */}
-      <main className="flex-1 flex flex-col items-center justify-center px-4 pb-12">
+      <main className="flex-1 flex flex-col items-center justify-start lg:justify-center px-4 pb-4 lg:pb-12 overflow-y-auto">
         {/* Fretboard */}
-        <section className="w-full max-w-[95vw] mb-12 relative">
+        <section className="w-full max-w-[95vw] mb-4 lg:mb-12 relative">
           <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-outline-variant/10 text-[80px] font-black select-none pointer-events-none uppercase tracking-tighter">
             Fretboard
           </div>
@@ -261,7 +261,7 @@ export default function FretboardDrillPage() {
         </section>
 
         {/* Prompt */}
-        <h2 className="text-sm font-label uppercase tracking-[0.2em] text-outline mb-8">
+        <h2 className="text-sm font-label uppercase tracking-[0.2em] text-outline mb-3 lg:mb-8">
           {prompt}
         </h2>
 
@@ -273,7 +273,7 @@ export default function FretboardDrillPage() {
         )}
 
         {/* Answer Buttons */}
-        <section className="w-full max-w-4xl px-6">
+        <section className="w-full max-w-4xl px-2 lg:px-6">
           <NoteButtons
             options={answerOptions}
             onSelect={submitAnswer}
@@ -291,7 +291,7 @@ export default function FretboardDrillPage() {
       </aside>
 
       {/* Keyboard Hints */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-6">
+      <div className="hidden lg:flex fixed bottom-6 left-1/2 -translate-x-1/2 items-center gap-6">
         <div className="flex items-center gap-2 text-xs text-outline/60 font-mono">
           <span className="px-2 py-1 bg-surface-container rounded-md border border-outline-variant/10">1-0 - =</span>
           <span>Select Note</span>

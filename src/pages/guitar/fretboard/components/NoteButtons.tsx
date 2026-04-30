@@ -34,17 +34,17 @@ export default function NoteButtons({
   }
 
   return (
-    <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-3 w-full">
+    <div className="grid grid-cols-6 lg:grid-cols-12 gap-1.5 lg:gap-3 w-full">
       {options.map((note, idx) => (
         <button
           key={note}
           onClick={() => !disabled && onSelect(note)}
           disabled={disabled}
-          className={`group flex flex-col items-center justify-center py-4 px-3 rounded-xl border transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${getButtonStyle(note)}`}
+          className={`group flex flex-col items-center justify-center py-2 lg:py-4 px-1 lg:px-3 rounded-xl border transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${getButtonStyle(note)}`}
         >
-          <span className="text-lg font-headline font-extrabold">{note}</span>
+          <span className="text-sm lg:text-lg font-headline font-extrabold">{note}</span>
           {idx < KEY_LABELS.length && (
-            <span className="text-[9px] font-mono text-on-surface-variant/40 mt-1">
+            <span className="text-[8px] font-mono text-on-surface-variant/40 mt-0.5 hidden lg:block">
               {KEY_LABELS[idx]}
             </span>
           )}
