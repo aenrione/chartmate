@@ -40,24 +40,24 @@ export default function FretboardIQPage() {
     <div className="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto">
       {/* Drills Grid */}
       <div className="flex-1">
-        <header className="mb-8">
-          <h2 className="text-3xl font-black font-headline tracking-tight text-on-surface mb-2">
+        <header className="mb-4 lg:mb-8">
+          <h2 className="text-xl lg:text-3xl font-black font-headline tracking-tight text-on-surface mb-1 lg:mb-2">
             Training Room
           </h2>
-          <p className="text-on-surface-variant max-w-md">
+          <p className="text-sm lg:text-base text-on-surface-variant max-w-md hidden sm:block">
             Precision focus exercises designed to build instant fretboard recognition and muscular memory.
           </p>
         </header>
 
         {/* Daily Review */}
-        <div className="mb-8">
+        <div className="mb-4 lg:mb-8">
           <DailyReviewCard
             dueCount={dueCount}
             onClick={() => navigate('/guitar/fretboard/anki')}
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-3 lg:gap-6">
           {drills.map(drill => (
             <DrillCard
               key={drill.type}
@@ -163,14 +163,14 @@ function DailyReviewCard({
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-5 p-5 rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/10 to-secondary/5 hover:from-primary/20 hover:to-secondary/10 transition-all active:scale-[0.99] text-left"
+      className="w-full flex items-center gap-3 lg:gap-5 p-3 lg:p-5 rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/10 to-secondary/5 hover:from-primary/20 hover:to-secondary/10 transition-all active:scale-[0.99] text-left"
     >
-      <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
-        <BookOpen className="h-6 w-6 text-primary" />
+      <div className="w-9 h-9 lg:w-12 lg:h-12 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
+        <BookOpen className="h-4 w-4 lg:h-6 lg:w-6 text-primary" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="font-bold text-on-surface text-base">Daily Review</p>
-        <p className="text-sm text-on-surface-variant mt-0.5">
+        <p className="font-bold text-on-surface text-sm lg:text-base">Daily Review</p>
+        <p className="text-xs lg:text-sm text-on-surface-variant mt-0.5">
           {dueCount === null
             ? 'Loading…'
             : isEmpty
