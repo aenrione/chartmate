@@ -6,7 +6,7 @@ import {
   type FretboardCard,
 } from '@/lib/local-db/fretboard';
 import {noteAtPosition, areEnharmonic} from '../lib/musicTheory';
-import type {ReviewQuality} from '@/lib/repertoire/sm2';
+import {isLearningCard, type ReviewQuality} from '@/lib/repertoire/sm2';
 
 export type AnkiPhase = 'loading' | 'showing_front' | 'showing_back' | 'completed';
 
@@ -19,6 +19,8 @@ export interface AnkiSessionState {
   selectedAnswer: string | null;
   reviewedCount: number;
   correctCount: number;
+  /** Original queue length — used for progress bar (cards.length grows when requeuing). */
+  totalUniqueCards: number;
 }
 
 export function useAnkiSession() {
@@ -32,6 +34,7 @@ export function useAnkiSession() {
     selectedAnswer: null,
     reviewedCount: 0,
     correctCount: 0,
+    totalUniqueCards: 0,
   });
 
   useEffect(() => {
@@ -49,6 +52,7 @@ export function useAnkiSession() {
         phase: queue.length === 0 ? 'completed' : 'showing_front',
         cards: queue,
         currentCard: queue[0] ?? null,
+        totalUniqueCards: queue.length,
       }));
     }
     init();
@@ -88,23 +92,39 @@ export function useAnkiSession() {
     if (ratingInFlightRef.current === card.id) return;
     ratingInFlightRef.current = card.id;
 
+    const requeue = isLearningCard(card.repetitions) && quality < 4;
+
     setState(prev => {
       const nextIndex = prev.currentIndex + 1;
       const isCorrect = quality >= 3;
-      const nextCard = prev.cards[nextIndex] ?? null;
+
+      let newCards = prev.cards;
+      if (requeue) {
+        const insertAt = Math.min(nextIndex + 4, prev.cards.length);
+        newCards = [
+          ...prev.cards.slice(0, insertAt),
+          card,
+          ...prev.cards.slice(insertAt),
+        ];
+      }
+
+      const nextCard = newCards[nextIndex] ?? null;
       return {
         ...prev,
+        cards: newCards,
         phase: nextCard ? 'showing_front' : 'completed',
         currentIndex: nextIndex,
         currentCard: nextCard,
         lastWasCorrect: null,
         selectedAnswer: null,
-        reviewedCount: prev.reviewedCount + 1,
-        correctCount: prev.correctCount + (isCorrect ? 1 : 0),
+        reviewedCount: requeue ? prev.reviewedCount : prev.reviewedCount + 1,
+        correctCount: requeue ? prev.correctCount : prev.correctCount + (isCorrect ? 1 : 0),
       };
     });
 
-    await updateAnkiCard(card.id, quality);
+    if (!requeue) {
+      await updateAnkiCard(card.id, quality);
+    }
     ratingInFlightRef.current = null;
   }, [state.cards, state.currentIndex]);
 
