@@ -244,44 +244,47 @@ export default function FretboardDrillPage() {
       </header>
 
       {/* Main Drill Area */}
-      <main className="flex-1 flex flex-col items-center justify-start lg:justify-center px-4 pb-4 lg:pb-12 overflow-y-auto">
-        {/* Fretboard */}
-        <section className="w-full max-w-[95vw] mb-4 lg:mb-12 relative">
-          <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-outline-variant/10 text-[80px] font-black select-none pointer-events-none uppercase tracking-tighter">
-            Fretboard
+      <main className="flex-1 flex flex-col max-lg:landscape:flex-row overflow-hidden">
+
+        {/* Fretboard — full width in portrait, left panel in landscape */}
+        <section className="flex items-center justify-center px-4 py-2 lg:py-8 max-lg:landscape:w-3/5 max-lg:landscape:border-r max-lg:landscape:border-outline-variant/10">
+          <div className="w-full max-w-[95vw] max-lg:landscape:max-w-none relative">
+            <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-outline-variant/10 text-[80px] font-black select-none pointer-events-none uppercase tracking-tighter hidden lg:block">
+              Fretboard
+            </div>
+            <Fretboard
+              highlightedPositions={highlighted}
+              interactive={state.currentQuestion?.type === 'scale-navigator' ||
+                           state.currentQuestion?.type === 'chord-tone-finder' ||
+                           state.currentQuestion?.type === 'octave-mapper'}
+              onPositionClick={(pos) => submitAnswer(JSON.stringify(pos))}
+              className="shadow-[0_0_20px_rgba(198,191,255,0.1)]"
+            />
           </div>
-          <Fretboard
-            highlightedPositions={highlighted}
-            interactive={state.currentQuestion?.type === 'scale-navigator' ||
-                         state.currentQuestion?.type === 'chord-tone-finder' ||
-                         state.currentQuestion?.type === 'octave-mapper'}
-            onPositionClick={(pos) => submitAnswer(JSON.stringify(pos))}
-            className="shadow-[0_0_20px_rgba(198,191,255,0.1)]"
-          />
         </section>
 
-        {/* Prompt */}
-        <h2 className="text-sm font-label uppercase tracking-[0.2em] text-outline mb-3 lg:mb-8">
-          {prompt}
-        </h2>
+        {/* Prompt + Buttons — below fretboard in portrait, right panel in landscape */}
+        <section className="flex flex-col items-center justify-center px-4 pb-4 lg:pb-12 max-lg:landscape:flex-1 max-lg:landscape:overflow-y-auto max-lg:landscape:py-3 max-lg:landscape:px-4 gap-3 lg:gap-6">
+          <h2 className="text-sm font-label uppercase tracking-[0.2em] text-outline">
+            {prompt}
+          </h2>
 
-        {/* Hint */}
-        {state.hint && (
-          <div className="mb-6 px-4 py-2 bg-surface-container rounded-lg text-sm text-on-surface-variant">
-            {state.hint}
+          {state.hint && (
+            <div className="px-4 py-2 bg-surface-container rounded-lg text-sm text-on-surface-variant">
+              {state.hint}
+            </div>
+          )}
+
+          <div className="w-full max-w-4xl">
+            <NoteButtons
+              options={answerOptions}
+              onSelect={submitAnswer}
+              disabled={state.phase !== 'awaiting_answer'}
+              showResult={state.phase === 'showing_feedback'}
+              selectedNote={state.results[state.results.length - 1]?.givenAnswer ?? undefined}
+              correctNote={state.currentQuestion?.correctAnswer ?? undefined}
+            />
           </div>
-        )}
-
-        {/* Answer Buttons */}
-        <section className="w-full max-w-4xl px-2 lg:px-6">
-          <NoteButtons
-            options={answerOptions}
-            onSelect={submitAnswer}
-            disabled={state.phase !== 'awaiting_answer'}
-            showResult={state.phase === 'showing_feedback'}
-            selectedNote={state.results[state.results.length - 1]?.givenAnswer ?? undefined}
-            correctNote={state.currentQuestion?.correctAnswer ?? undefined}
-          />
         </section>
       </main>
 
