@@ -523,8 +523,8 @@ function UnitPreviewSheet({
       <div
         className="fixed bottom-0 z-50 bg-surface rounded-t-2xl border-t border-outline-variant/20 max-h-[80vh] flex flex-col animate-in slide-in-from-bottom duration-300"
         style={{
-          left: 'env(safe-area-inset-left, 0px)',
-          right: 'env(safe-area-inset-right, 0px)',
+          left: 'var(--sal)',
+          right: 'var(--sar)',
         }}
       >
         {/* Handle */}
@@ -618,7 +618,7 @@ function UnitPreviewSheet({
 
         {/* CTA */}
         {status !== 'locked' && startLesson && (
-          <div className="shrink-0 px-5 py-4 border-t border-outline-variant/20" style={{paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 0px))'}}>
+          <div className="shrink-0 px-5 py-4 border-t border-outline-variant/20" style={{paddingBottom: 'max(1rem, var(--sab))'}}>
             <button
               onClick={() => onStart(startLesson.id)}
               className="w-full py-3 rounded-xl bg-primary text-on-primary font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all"

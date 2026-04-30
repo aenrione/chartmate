@@ -1192,8 +1192,8 @@ export default function Renderer({
             isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
           )}
           style={{
-            paddingTop: 'max(env(safe-area-inset-top, 0px), 1rem)',
-            paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 1rem)',
+            paddingTop: 'max(var(--sat), 1rem)',
+            paddingBottom: 'max(var(--sab), 1rem)',
             paddingLeft: '1rem',
             paddingRight: '1rem',
           }}>
@@ -1673,7 +1673,7 @@ export default function Renderer({
               'lg:hidden',
               isMobileMode && 'lg:flex',
             )}
-            style={{paddingTop: 'max(env(safe-area-inset-top, 0px), 0.75rem)', paddingBottom: '0.75rem'}}>
+            style={{paddingTop: 'max(var(--sat), 0.75rem)', paddingBottom: '0.75rem'}}>
             {backButton}
             {playPauseButton}
             {saveButton}
@@ -1780,10 +1780,10 @@ export default function Renderer({
                     cloneHeroFullscreen && 'fixed inset-0 z-[200] flex flex-col',
                   )}
                   style={cloneHeroFullscreen ? {
-                    paddingTop: 'env(safe-area-inset-top, 0px)',
-                    paddingBottom: 'env(safe-area-inset-bottom, 0px)',
-                    paddingLeft: 'env(safe-area-inset-left, 0px)',
-                    paddingRight: 'env(safe-area-inset-right, 0px)',
+                    paddingTop: 'var(--sat)',
+                    paddingBottom: 'var(--sab)',
+                    paddingLeft: 'var(--sal)',
+                    paddingRight: 'var(--sar)',
                   } : undefined}
                 >
                   <CloneHeroRenderer
@@ -1796,8 +1796,8 @@ export default function Renderer({
                   <button
                     className="absolute bg-black/50 hover:bg-black/70 text-white rounded-full p-1.5 z-10"
                     style={{
-                      top: cloneHeroFullscreen ? 'max(env(safe-area-inset-top, 0px), 0.5rem)' : '0.5rem',
-                      right: cloneHeroFullscreen ? 'max(env(safe-area-inset-right, 0px), 0.5rem)' : '0.5rem',
+                      top: cloneHeroFullscreen ? 'max(var(--sat), 0.5rem)' : '0.5rem',
+                      right: cloneHeroFullscreen ? 'max(var(--sar), 0.5rem)' : '0.5rem',
                     }}
                     onClick={() => setCloneHeroFullscreen(f => !f)}
                     aria-label={cloneHeroFullscreen ? 'Exit fullscreen' : 'Fullscreen'}

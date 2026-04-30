@@ -1269,7 +1269,7 @@ export default function TabEditorPage() {
     <div className="flex flex-col h-full">
       {/* Toolbar */}
       <div className="flex items-center gap-3 px-4 py-2 bg-surface-container border-b border-outline-variant/20"
-        style={{paddingTop: 'max(env(safe-area-inset-top, 0px), 0.5rem)'}}
+        style={{paddingTop: 'max(var(--sat), 0.5rem)'}}
       >
         <button
           onClick={() => navigate((location.state as LocationState | null)?.from ?? '/guitar', {state: {activeTab: (location.state as LocationState | null)?.activeTab}})}
@@ -1608,8 +1608,8 @@ export default function TabEditorPage() {
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
         )}
           style={{
-            paddingTop: 'max(env(safe-area-inset-top, 0px), 0px)',
-            paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 0px)',
+            paddingTop: 'max(var(--sat), 0px)',
+            paddingBottom: 'max(var(--sab), 0px)',
           }}
         >
           <TabEditorSidebar

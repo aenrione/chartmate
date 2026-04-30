@@ -425,6 +425,15 @@ export async function updateAnkiCard(id: number, quality: ReviewQuality): Promis
     .execute();
 }
 
+export async function getAnkiTotalCount(): Promise<number> {
+  const db = await getLocalDb();
+  const result = await db
+    .selectFrom('fretboard_cards')
+    .select(db.fn.count<number>('id').as('count'))
+    .executeTakeFirst();
+  return Number(result?.count ?? 0);
+}
+
 export async function getAnkiDueCount(): Promise<number> {
   const db = await getLocalDb();
   const today = todayISO();

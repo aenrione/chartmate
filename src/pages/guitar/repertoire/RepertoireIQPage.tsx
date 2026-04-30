@@ -248,9 +248,9 @@ export default function RepertoireIQPage() {
             : 'hidden',
         )}
         style={sidebarOpen ? {
-          paddingTop: 'max(1.25rem, env(safe-area-inset-top, 0px))',
-          paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom, 0px))',
-          right: 'env(safe-area-inset-right, 0px)',
+          paddingTop: 'max(1.25rem, var(--sat))',
+          paddingBottom: 'max(1.25rem, var(--sab))',
+          right: 'var(--sar)',
         } : undefined}
       >
         {/* Mobile close button */}

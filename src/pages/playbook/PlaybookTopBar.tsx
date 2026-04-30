@@ -10,7 +10,7 @@ export default function PlaybookTopBar() {
   return (
     <header
       className="min-h-12 bg-surface flex items-center gap-2 px-3 lg:px-4 border-b border-white/5 shrink-0"
-      style={{paddingTop: 'max(env(safe-area-inset-top, 0px), 0.5rem)', paddingBottom: '0.5rem'}}
+      style={{paddingTop: 'max(var(--sat), 0.5rem)', paddingBottom: '0.5rem'}}
     >
       <Button
         variant="ghost"

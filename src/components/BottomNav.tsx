@@ -9,9 +9,9 @@ export default function BottomNav() {
     <nav
       className="lg:hidden fixed bottom-0 inset-x-0 bg-surface-container border-t border-outline-variant/20 z-50"
       style={{
-        paddingBottom: 'env(safe-area-inset-bottom, 0px)',
-        paddingLeft: 'env(safe-area-inset-left, 0px)',
-        paddingRight: 'env(safe-area-inset-right, 0px)',
+        paddingBottom: 'var(--sab)',
+        paddingLeft: 'var(--sal)',
+        paddingRight: 'var(--sar)',
       }}
     >
       <div className="flex h-14">

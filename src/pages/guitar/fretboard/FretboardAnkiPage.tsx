@@ -112,7 +112,7 @@ export default function FretboardAnkiPage() {
     : undefined;
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex-1 overflow-y-auto flex flex-col">
       <header className="flex items-center justify-between px-6 py-4">
         <button
           onClick={() => navigate('/guitar/fretboard')}

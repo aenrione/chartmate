@@ -95,9 +95,9 @@ function TopNav({pathname}: {pathname: string}) {
     <header
       className={cn('bg-surface shrink-0 z-40', hideHeaderOnMobile && 'lg:block hidden')}
       style={{
-        paddingTop: 'env(safe-area-inset-top, 0px)',
-        paddingLeft: 'env(safe-area-inset-left, 0px)',
-        paddingRight: 'env(safe-area-inset-right, 0px)',
+        paddingTop: 'var(--sat)',
+        paddingLeft: 'var(--sal)',
+        paddingRight: 'var(--sar)',
       }}
     >
     <div className="flex justify-between items-center w-full px-6 h-16">
@@ -475,7 +475,7 @@ function LandscapeRail({pathname}: {pathname: string}) {
   return (
     <nav
       className="hidden max-lg:landscape:flex flex-col items-center gap-1 pt-2 pb-2 w-14 shrink-0 bg-surface-container-low border-r border-outline-variant/20 overflow-y-auto"
-      style={{paddingTop: 'max(0.5rem, env(safe-area-inset-top, 0px))', paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom, 0px))'}}
+      style={{paddingTop: 'max(0.5rem, var(--sat))', paddingBottom: 'max(0.5rem, var(--sab))'}}
     >
       {NAV_TABS.map(({label, icon: Icon, href, prefixes}) => {
         const active = isNavTabActive(pathname, prefixes);
@@ -521,8 +521,8 @@ export default function Layout({children}: {children: ReactNode}) {
   const showBottomNav = !hideBottomNavOnMobile;
   // Bottom padding accounts for nav height (hidden in landscape, so use safe area only there)
   const contentPaddingClass = showBottomNav
-    ? 'pb-[var(--bottom-nav-safe-height)] max-lg:landscape:pb-[env(safe-area-inset-bottom,0px)]'
-    : 'pb-[env(safe-area-inset-bottom,0px)]';
+    ? 'pb-[var(--bottom-nav-safe-height)] max-lg:landscape:pb-[var(--sab)]'
+    : 'pb-[var(--sab)]';
 
   if (isPlaybook) {
     return (
@@ -531,8 +531,8 @@ export default function Layout({children}: {children: ReactNode}) {
         <div
           className={cn('flex flex-1 min-h-0 overflow-hidden', contentPaddingClass)}
           style={{
-            paddingLeft: 'env(safe-area-inset-left, 0px)',
-            paddingRight: 'env(safe-area-inset-right, 0px)',
+            paddingLeft: 'var(--sal)',
+            paddingRight: 'var(--sar)',
           }}
         >
           <LandscapeRail pathname={pathname} />
@@ -551,8 +551,8 @@ export default function Layout({children}: {children: ReactNode}) {
       <div
         className={cn('flex flex-1 min-h-0 overflow-hidden', contentPaddingClass)}
         style={{
-          paddingLeft: 'env(safe-area-inset-left, 0px)',
-          paddingRight: 'env(safe-area-inset-right, 0px)',
+          paddingLeft: 'var(--sal)',
+          paddingRight: 'var(--sar)',
         }}
       >
         <Sidebar pathname={pathname} locationState={location.state} locationSearch={location.search} />

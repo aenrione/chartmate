@@ -346,7 +346,7 @@ export default function TabsBrowseTab() {
       <div className="fixed inset-0 bg-black/50 z-30 lg:hidden" onClick={() => setFilterOpen(false)} />
     )}
     <div className={`fixed inset-y-0 left-0 z-40 w-72 bg-surface-container flex flex-col lg:hidden transition-transform duration-200 ${filterOpen ? 'translate-x-0' : '-translate-x-full'}`}
-      style={{paddingTop: 'env(safe-area-inset-top, 0px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)'}}>
+      style={{paddingTop: 'var(--sat)', paddingBottom: 'var(--sab)'}}>
       <div className="flex items-center justify-between px-4 py-3 border-b border-outline-variant/20">
         <span className="font-headline font-semibold text-sm">Filters</span>
         <button onClick={() => setFilterOpen(false)} className="p-1 text-on-surface-variant hover:text-on-surface">

@@ -21,8 +21,6 @@ export interface AnkiSessionState {
   correctCount: number;
 }
 
-const NEW_CARD_LIMIT = 10;
-
 export function useAnkiSession() {
   const ratingInFlightRef = useRef<number | null>(null);
   const [state, setState] = useState<AnkiSessionState>({
@@ -41,7 +39,7 @@ export function useAnkiSession() {
       await seedAnkiCards();
       const allDue = await getAnkiDueCards();
 
-      const newCards = allDue.filter(c => c.repetitions === 0).slice(0, NEW_CARD_LIMIT);
+      const newCards = allDue.filter(c => c.repetitions === 0);
       const reviewCards = allDue.filter(c => c.repetitions > 0);
 
       const queue = [...shuffle(newCards), ...shuffle(reviewCards)];

@@ -255,8 +255,8 @@ export default function FillPracticeView({
             isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
           )}
           style={{
-            paddingTop: 'max(env(safe-area-inset-top, 0px), 1rem)',
-            paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 1rem)',
+            paddingTop: 'max(var(--sat), 1rem)',
+            paddingBottom: 'max(var(--sab), 1rem)',
           }}
         >
           {/* BPM */}

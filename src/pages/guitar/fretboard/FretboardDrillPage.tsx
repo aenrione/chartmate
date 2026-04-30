@@ -227,7 +227,7 @@ export default function FretboardDrillPage() {
       {/* Top Bar */}
       <header
         className="flex justify-between items-center gap-2 px-4 py-2 lg:px-6 lg:py-4 min-w-0"
-        style={{paddingTop: 'max(0.5rem, env(safe-area-inset-top, 0px))', paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))', paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))'}}>
+        style={{paddingTop: 'max(0.5rem, var(--sat))', paddingLeft: 'max(1rem, var(--sal))', paddingRight: 'max(1rem, var(--sar))'}}>
 
         <div className="flex items-center gap-2 lg:gap-4 min-w-0 shrink-0">
           <button
@@ -254,7 +254,7 @@ export default function FretboardDrillPage() {
         {/* Fretboard — full width in portrait, left panel in landscape */}
         <section
           className="flex items-center justify-center px-4 py-2 lg:py-8 max-lg:landscape:w-3/5 max-lg:landscape:border-r max-lg:landscape:border-outline-variant/10"
-          style={{paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))'}}
+          style={{paddingLeft: 'max(1rem, var(--sal))'}}
         >
           <div className="w-full max-w-[95vw] max-lg:landscape:max-w-none relative">
             <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-outline-variant/10 text-[80px] font-black select-none pointer-events-none uppercase tracking-tighter hidden lg:block">
@@ -274,7 +274,7 @@ export default function FretboardDrillPage() {
         {/* Prompt + Buttons — below fretboard in portrait, right panel in landscape */}
         <section
           className="flex flex-col items-center justify-center px-4 pb-4 lg:pb-12 max-lg:landscape:flex-1 max-lg:landscape:overflow-y-auto max-lg:landscape:py-3 max-lg:landscape:px-4 gap-3 lg:gap-6"
-          style={{paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 0px))', paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))'}}>
+          style={{paddingBottom: 'max(1rem, var(--sab))', paddingRight: 'max(1rem, var(--sar))'}}>
 
           <h2 className="text-sm font-label uppercase tracking-[0.2em] text-outline">
             {prompt}

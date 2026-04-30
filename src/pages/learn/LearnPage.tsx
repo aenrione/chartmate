@@ -133,9 +133,9 @@ export default function LearnPage() {
           <div
             className="lg:hidden fixed bottom-0 z-50 bg-surface rounded-t-2xl border-t border-outline-variant/20 max-h-[80vh] overflow-y-auto"
             style={{
-              left: 'env(safe-area-inset-left, 0px)',
-              right: 'env(safe-area-inset-right, 0px)',
-              paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+              left: 'var(--sal)',
+              right: 'var(--sar)',
+              paddingBottom: 'var(--sab)',
             }}
           >
             <div className="flex justify-center pt-3 pb-1 shrink-0">

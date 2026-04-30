@@ -857,9 +857,9 @@ export default function SetlistsPage() {
           mobileSidebarOpen ? 'flex' : 'hidden',
         )}
         style={{
-          paddingTop: 'max(1rem, env(safe-area-inset-top, 0px))',
+          paddingTop: 'max(1rem, var(--sat))',
           paddingBottom: 'var(--bottom-nav-safe-height, 1rem)',
-          paddingLeft: 'env(safe-area-inset-left, 0px)',
+          paddingLeft: 'var(--sal)',
         }}
       >
         {/* Sidebar header */}
