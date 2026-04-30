@@ -459,15 +459,15 @@ export default function BrowseCharts() {
           {!hasSearched && (
             <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
               <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mb-4 opacity-40"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-              <p className="text-lg font-headline font-medium">Explore the Encore catalog</p>
-              <p className="text-sm mt-1">Search for songs, artists, or charters to browse and download charts.</p>
+              <p className="text-lg font-headline font-medium text-center">Explore the Encore catalog</p>
+              <p className="text-sm mt-1 text-center">Search for songs, artists, or charters to browse and download charts.</p>
             </div>
           )}
 
           {hasSearched && results.length === 0 && !loading && (
             <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
-              <p className="text-lg font-headline font-medium">No results found</p>
-              <p className="text-sm mt-1">Try a different search term or adjust your filters.</p>
+              <p className="text-lg font-headline font-medium text-center">No results found</p>
+              <p className="text-sm mt-1 text-center">Try a different search term or adjust your filters.</p>
             </div>
           )}
 
