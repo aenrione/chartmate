@@ -29,7 +29,7 @@ export default function LearnPage() {
       {/* Header: instrument switcher + view toggle */}
       <div className="shrink-0 px-4 pt-5 pb-3 border-b border-outline-variant/20">
         <div className="flex items-center justify-between mb-3">
-          <h1 className="text-xl font-bold font-headline">Learn</h1>
+          <h1 className="text-xl font-bold font-headline hidden lg:block">Learn</h1>
 
           <div className="flex items-center gap-2">
             <button
