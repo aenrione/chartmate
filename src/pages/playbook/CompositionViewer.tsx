@@ -300,8 +300,8 @@ export default function CompositionViewer({scoreData}: {scoreData: ArrayBuffer})
       <div
         className={`fixed inset-y-0 right-0 z-[200] w-64 flex flex-col bg-surface-container-low border-l border-white/5 transition-transform duration-300 ease-in-out lg:hidden ${mobilePanelOpen ? 'translate-x-0' : 'translate-x-full'}`}
         style={{
-          paddingTop: 'max(var(--sat), 0px)',
-          paddingBottom: 'max(var(--sab), 0px)',
+          paddingTop: 'var(--sat)',
+          paddingBottom: 'var(--sab)',
         }}
         data-print-hide
       >

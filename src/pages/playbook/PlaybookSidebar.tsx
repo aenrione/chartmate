@@ -489,8 +489,8 @@ export default function PlaybookSidebar() {
           mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full',
         )}
         style={{
-          paddingTop: 'max(var(--sat), 0px)',
-          paddingBottom: 'max(var(--sab), 0px)',
+          paddingTop: 'var(--sat)',
+          paddingBottom: 'var(--sab)',
         }}
       >
         <div className="flex items-center justify-between px-3 py-2 border-b border-white/5 shrink-0">

@@ -1608,8 +1608,8 @@ export default function TabEditorPage() {
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
         )}
           style={{
-            paddingTop: 'max(var(--sat), 0px)',
-            paddingBottom: 'max(var(--sab), 0px)',
+            paddingTop: 'var(--sat)',
+            paddingBottom: 'var(--sab)',
           }}
         >
           <TabEditorSidebar
