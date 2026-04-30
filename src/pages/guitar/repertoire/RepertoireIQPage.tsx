@@ -1,6 +1,6 @@
 import {useState, useEffect, useMemo} from 'react';
 import {Link, useSearchParams} from 'react-router-dom';
-import {Flame, BookOpen, CalendarCheck, ListMusic, PlusCircle, Clock} from 'lucide-react';
+import {Flame, BookOpen, CalendarCheck, ListMusic, PlusCircle, Clock, PanelRight, X} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import {formatInterval} from '@/lib/repertoire/sm2';
 import {useRepertoireStats} from './hooks/useRepertoireStats';
@@ -85,6 +85,7 @@ export default function RepertoireIQPage() {
 
   const {stats, dueItems, loading, refresh} = useRepertoireStats();
   const [addOpen, setAddOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const today = new Date().toISOString().split('T')[0];
 
   // Seed theory cards from completed lessons when user views the theory tab
@@ -112,11 +113,20 @@ export default function RepertoireIQPage() {
     <div className="flex h-full overflow-hidden">
       {/* Main content */}
       <div className="flex-1 overflow-y-auto p-6">
-        <div className="mb-5">
-          <h1 className="text-2xl font-bold text-on-surface">RepertoireIQ</h1>
-          <p className="text-sm text-on-surface-variant mt-1">
-            Spaced repetition for your guitar repertoire. Never forget a song again.
-          </p>
+        <div className="mb-5 flex items-start justify-between gap-2">
+          <div>
+            <h1 className="text-2xl font-bold text-on-surface">RepertoireIQ</h1>
+            <p className="text-sm text-on-surface-variant mt-1">
+              Spaced repetition for your guitar repertoire. Never forget a song again.
+            </p>
+          </div>
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="lg:hidden shrink-0 mt-1 p-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"
+            aria-label="Open sidebar"
+          >
+            <PanelRight className="h-5 w-5" />
+          </button>
         </div>
 
         {/* Filter tabs */}
@@ -220,8 +230,40 @@ export default function RepertoireIQPage() {
         )}
       </div>
 
+      {/* Mobile sidebar backdrop */}
+      {sidebarOpen && (
+        <div
+          className="lg:hidden fixed inset-0 z-40 bg-black/50"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 shrink-0 border-l border-surface-container-high overflow-y-auto p-5 flex flex-col gap-4">
+      <aside
+        className={cn(
+          'w-64 shrink-0 border-l border-surface-container-high overflow-y-auto p-5 flex flex-col gap-4',
+          'lg:relative lg:flex lg:translate-x-0',
+          sidebarOpen
+            ? 'fixed inset-y-0 right-0 z-50 bg-surface flex'
+            : 'hidden',
+        )}
+        style={sidebarOpen ? {
+          paddingTop: 'max(1.25rem, env(safe-area-inset-top, 0px))',
+          paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom, 0px))',
+          right: 'env(safe-area-inset-right, 0px)',
+        } : undefined}
+      >
+        {/* Mobile close button */}
+        <div className="lg:hidden flex justify-end -mb-2">
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors"
+            aria-label="Close sidebar"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
         {/* Progress breakdown */}
         <div className="rounded-2xl bg-surface-container p-4">
           <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-3">

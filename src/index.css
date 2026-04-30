@@ -10,9 +10,13 @@
   }
 }
 
-/* ── Safe area / bottom nav height ─────────────────────────────────── */
+/* ── Safe area custom properties ────────────────────────────────────── */
 
 :root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
   --bottom-nav-safe-height: 0px;
 }
 

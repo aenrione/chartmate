@@ -157,6 +157,7 @@ export default function TabEditorPage() {
   const ytSyncSuppressRef = useRef(false);
   const [resetKey, setResetKey] = useState(0);
   const [showNewTabConfirm, setShowNewTabConfirm] = useState(false);
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const {isDirty, markDirty, markClean, blocker} = useUnsavedChanges();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedBarRange, setSelectedBarRange] = useState<{start: number; end: number} | null>(null);
@@ -563,6 +564,15 @@ export default function TabEditorPage() {
     handleSaveComposition: _handleSaveComposition,
     resetToNew,
   } = scoreIO;
+
+  const closeAsciiImport = useCallback(() => {
+    setShowAsciiImport(false);
+    setAsciiImportText('');
+    setAsciiImportTitle('');
+    setAsciiImportArtist('');
+    asciiTitleManual.current = false;
+    asciiArtistManual.current = false;
+  }, [setShowAsciiImport, setAsciiImportText, setAsciiImportTitle, setAsciiImportArtist, asciiTitleManual, asciiArtistManual]);
 
   // ── Track management ──────────────────────────────────────────────────────
   const [trackVersion, setTrackVersion] = useState(0);
@@ -1411,7 +1421,7 @@ export default function TabEditorPage() {
         <div className="lg:hidden flex items-center gap-1">
           <input ref={fileInputRef} type="file" accept=".gp,.gp3,.gp4,.gp5,.gpx,.gp7,.alphatex,.tex" className="hidden" onChange={handleImportFile} />
           <input ref={psarcFileInputRef} type="file" accept=".psarc" className="hidden" onChange={handleImportPsarc} />
-          <DropdownMenu>
+          <DropdownMenu open={moreMenuOpen} onOpenChange={setMoreMenuOpen}>
             <DropdownMenuTrigger asChild>
               <button className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant">
                 <MoreVertical className="h-4 w-4" />
@@ -1439,7 +1449,7 @@ export default function TabEditorPage() {
                 </>
               )}
               <DropdownMenuItem onClick={() => fileInputRef.current?.click()}><Upload className="h-4 w-4 mr-2" />Import GP/AlphaTex...</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setShowAsciiImport(true)}><Upload className="h-4 w-4 mr-2" />Import ASCII Tab...</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => { setMoreMenuOpen(false); setShowAsciiImport(true); }}><Upload className="h-4 w-4 mr-2" />Import ASCII Tab...</DropdownMenuItem>
               <DropdownMenuItem onClick={() => psarcFileInputRef.current?.click()}><Upload className="h-4 w-4 mr-2" />Import PSARC...</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => void handleExport('gp7')}><Download className="h-4 w-4 mr-2" />Export Guitar Pro</DropdownMenuItem>
@@ -1756,10 +1766,17 @@ export default function TabEditorPage() {
 
       {/* ASCII Import Dialog */}
       {showAsciiImport && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-surface-container-high rounded-xl shadow-xl p-6 w-[600px] max-w-[90vw] flex flex-col gap-4">
+        <div
+          className="fixed inset-0 z-50 overflow-y-auto bg-black/50 cursor-pointer"
+          onPointerDown={e => { if (e.target === e.currentTarget) closeAsciiImport(); }}
+        >
+          <div className="min-h-full flex items-center justify-center p-4">
+            <div
+              className="bg-surface-container-high rounded-xl shadow-xl p-4 sm:p-6 w-full max-w-[600px] flex flex-col gap-4 cursor-default"
+              onPointerDown={e => e.stopPropagation()}
+            >
             <h2 className="text-sm font-semibold text-on-surface">Import ASCII Tab</h2>
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-3">
               <div className="flex-1 flex flex-col gap-1">
                 <label className="text-xs text-on-surface-variant">Title</label>
                 <input
@@ -1793,13 +1810,13 @@ export default function TabEditorPage() {
                   if (meta.artist && !asciiArtistManual.current) setAsciiImportArtist(meta.artist);
                 }}
                 placeholder={"Title: Song Name\nArtist: Artist Name\nTempo: 120\nYouTube: https://youtu.be/...\nThumbnail: https://...\n\ne|---0---2---3---|\nB|---1---3---3---|\nG|---0---2---0---|\nD|---2---0---0---|\nA|---3-------2---|\nE|-----------3---|"}
-                rows={12}
+                rows={8}
                 className="bg-surface-container border border-outline-variant/40 rounded-lg px-3 py-2 text-xs text-on-surface font-mono outline-none focus:border-primary resize-none"
               />
             </div>
             <div className="flex justify-end gap-2">
               <button
-                onClick={() => { setShowAsciiImport(false); setAsciiImportText(''); setAsciiImportTitle(''); setAsciiImportArtist(''); asciiTitleManual.current = false; asciiArtistManual.current = false; }}
+                onClick={closeAsciiImport}
                 className="px-4 py-1.5 text-xs rounded-lg bg-surface-container hover:bg-surface-container-highest transition-colors text-on-surface"
               >
                 Cancel
@@ -1811,6 +1828,7 @@ export default function TabEditorPage() {
               >
                 Import
               </button>
+            </div>
             </div>
           </div>
         </div>

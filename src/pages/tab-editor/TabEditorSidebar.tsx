@@ -309,7 +309,7 @@ export default function TabEditorSidebar({
             <div
               key={i}
               className={cn(
-                'group flex items-center gap-2 px-2 py-2 rounded-lg cursor-pointer transition-colors',
+                'flex items-center gap-2 px-2 py-2 rounded-lg cursor-pointer transition-colors',
                 i === activeTrackIndex
                   ? 'bg-primary/10 text-on-surface'
                   : 'text-on-surface-variant hover:bg-surface-container-high',
@@ -327,7 +327,7 @@ export default function TabEditorSidebar({
                   {track.instrument === 'drums' ? 'Percussion' : track.tuningName}
                 </div>
               </div>
-              <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
+              <div className="flex items-center gap-0.5">
                 <button
                   onClick={e => {
                     e.stopPropagation();
@@ -442,7 +442,7 @@ export default function TabEditorSidebar({
                     key={sec.startBar}
                     onClick={() => onJumpToBar(sec.startBar)}
                     className={cn(
-                      'flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs cursor-pointer group',
+                      'flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs cursor-pointer',
                       practiceRange?.startBar === sec.startBar
                         ? 'bg-primary/10 text-primary'
                         : 'text-on-surface-variant hover:bg-surface-container-high',
@@ -452,21 +452,22 @@ export default function TabEditorSidebar({
                     <span className="text-[10px] text-on-surface-variant/50 shrink-0">
                       {sec.startBar + 1}–{sec.endBar + 1}
                     </span>
-                    {canTrackSection && (
-                      <button
-                        onClick={e => { e.stopPropagation(); void toggleTabSectionTracking(sec); }}
-                        className={cn(
-                          'p-0.5 rounded transition-colors shrink-0',
-                          isSectionTracked
+                    <button
+                      onClick={e => { e.stopPropagation(); if (canTrackSection) void toggleTabSectionTracking(sec); }}
+                      disabled={!canTrackSection}
+                      className={cn(
+                        'p-0.5 rounded transition-colors shrink-0',
+                        !canTrackSection
+                          ? 'text-on-surface-variant/20 cursor-not-allowed'
+                          : isSectionTracked
                             ? 'text-emerald-500 hover:text-emerald-600'
-                            : 'text-on-surface-variant/40 opacity-0 group-hover:opacity-100 hover:text-on-surface',
-                        )}
-                        title={isSectionTracked ? 'Stop tracking this section' : 'Track this section'}
-                        aria-label={isSectionTracked ? 'Stop tracking section' : 'Track section'}
-                      >
-                        {isSectionTracked ? <BookMarked className="h-3 w-3" /> : <Bookmark className="h-3 w-3" />}
-                      </button>
-                    )}
+                            : 'text-on-surface-variant/40 hover:text-on-surface',
+                      )}
+                      title={!canTrackSection ? 'Save tab to track' : isSectionTracked ? 'Stop tracking this section' : 'Track this section'}
+                      aria-label={!canTrackSection ? 'Save tab to track' : isSectionTracked ? 'Stop tracking section' : 'Track section'}
+                    >
+                      {isSectionTracked ? <BookMarked className="h-3 w-3" /> : <Bookmark className="h-3 w-3" />}
+                    </button>
                     <button
                       onClick={e => { e.stopPropagation(); onPracticeRange(sec.startBar, sec.endBar); }}
                       className="p-0.5 rounded hover:bg-surface-container-highest transition-colors shrink-0"
@@ -647,7 +648,7 @@ export default function TabEditorSidebar({
                   const isTracked = trackedPatterns.has(pattern.label);
                   const canTrack = compositionId != null && !pattern.unique;
                   return (
-                  <div key={pattern.label} className="rounded-lg overflow-hidden group">
+                  <div key={pattern.label} className="rounded-lg overflow-hidden">
                     <div className="w-full flex items-center gap-2 px-2 py-1.5 text-xs hover:bg-surface-container-high transition-colors">
                       <button
                         className="flex items-center gap-2 flex-1 min-w-0 text-left"
@@ -674,17 +675,20 @@ export default function TabEditorSidebar({
                           </>
                         )}
                       </button>
-                      {canTrack && (
+                      {!pattern.unique && (
                         <button
-                          onClick={e => { e.stopPropagation(); void togglePatternTracking(pattern); }}
+                          onClick={e => { e.stopPropagation(); if (canTrack) void togglePatternTracking(pattern); }}
+                          disabled={!canTrack}
                           className={cn(
                             'p-0.5 rounded shrink-0 transition-colors',
-                            isTracked
-                              ? 'text-emerald-500 hover:text-emerald-600'
-                              : 'text-on-surface-variant/40 opacity-0 group-hover:opacity-100 hover:text-on-surface',
+                            !canTrack
+                              ? 'text-on-surface-variant/20 cursor-not-allowed'
+                              : isTracked
+                                ? 'text-emerald-500 hover:text-emerald-600'
+                                : 'text-on-surface-variant/40 hover:text-on-surface',
                           )}
-                          title={isTracked ? 'Stop tracking this pattern' : 'Track this pattern'}
-                          aria-label={isTracked ? 'Stop tracking pattern' : 'Track pattern'}
+                          title={!canTrack ? 'Save tab to track' : isTracked ? 'Stop tracking this pattern' : 'Track this pattern'}
+                          aria-label={!canTrack ? 'Save tab to track' : isTracked ? 'Stop tracking pattern' : 'Track pattern'}
                         >
                           {isTracked ? <BookMarked className="h-3.5 w-3.5" /> : <Bookmark className="h-3.5 w-3.5" />}
                         </button>

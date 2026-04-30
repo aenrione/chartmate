@@ -1,6 +1,6 @@
 // src/pages/learn/LearnPage.tsx
 import {useState} from 'react';
-import {Guitar, Drum, Music, LayoutList, GitBranch, Target, Award} from 'lucide-react';
+import {Guitar, Drum, Music, LayoutList, GitBranch, Target, Award, LayoutDashboard, X} from 'lucide-react';
 import {Link} from 'react-router-dom';
 import {cn} from '@/lib/utils';
 import type {Instrument} from '@/lib/curriculum/types';
@@ -20,6 +20,7 @@ export default function LearnPage() {
   const [instrument, setInstrument] = useState<Instrument>('guitar');
   const [view, setView] = useState<SkillTreeView>('path');
   const [missionBoardOpen, setMissionBoardOpen] = useState(false);
+  const [statsPanelOpen, setStatsPanelOpen] = useState(false);
 
   return (
     <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
@@ -76,6 +77,15 @@ export default function LearnPage() {
                 <LayoutList className="h-4 w-4" />
               </button>
             </div>
+
+            {/* Mobile stats toggle */}
+            <button
+              onClick={() => setStatsPanelOpen(true)}
+              className="lg:hidden p-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors"
+              title="Today's stats"
+            >
+              <LayoutDashboard className="h-4 w-4" />
+            </button>
           </div>
         </div>
 
@@ -99,17 +109,52 @@ export default function LearnPage() {
         </div>
       </div>
 
-      {/* Today card */}
-      <TodayCard
-        instrument={instrument}
-        onOpenMissionBoard={() => setMissionBoardOpen(true)}
-      />
+      {/* Today card + stats — always visible on desktop, hidden on mobile */}
+      <div className="hidden lg:contents">
+        <TodayCard
+          instrument={instrument}
+          onOpenMissionBoard={() => setMissionBoardOpen(true)}
+        />
+        <LearnStats />
+      </div>
 
-      {/* Stats bar */}
-      <LearnStats />
-
-      {/* Skill tree */}
+      {/* Skill tree — gets full height on mobile */}
       <SkillTree instrument={instrument} view={view} />
+
+      {/* Mobile stats bottom sheet */}
+      {statsPanelOpen && (
+        <>
+          <div
+            className="lg:hidden fixed inset-0 z-40 bg-black/50"
+            onClick={() => setStatsPanelOpen(false)}
+          />
+          <div
+            className="lg:hidden fixed bottom-0 z-50 bg-surface rounded-t-2xl border-t border-outline-variant/20 max-h-[80vh] overflow-y-auto"
+            style={{
+              left: 'env(safe-area-inset-left, 0px)',
+              right: 'env(safe-area-inset-right, 0px)',
+              paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+            }}
+          >
+            <div className="flex justify-center pt-3 pb-1 shrink-0">
+              <div className="h-1 w-10 rounded-full bg-outline-variant/40" />
+            </div>
+            <div className="flex justify-end px-4 pb-1">
+              <button
+                onClick={() => setStatsPanelOpen(false)}
+                className="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <TodayCard
+              instrument={instrument}
+              onOpenMissionBoard={() => { setStatsPanelOpen(false); setMissionBoardOpen(true); }}
+            />
+            <LearnStats />
+          </div>
+        </>
+      )}
 
       <MissionBoard open={missionBoardOpen} onClose={() => setMissionBoardOpen(false)} />
     </div>

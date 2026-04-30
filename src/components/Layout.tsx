@@ -19,6 +19,7 @@ import {
   BookMarked,
   Repeat2,
 } from 'lucide-react';
+import {NAV_TABS, isNavTabActive} from '@/lib/nav-tabs';
 import {
   getSetlists,
   createSetlist,
@@ -470,6 +471,34 @@ function DefaultSidebarContent({pathname, locationState, locationSearch}: {pathn
   );
 }
 
+function LandscapeRail({pathname}: {pathname: string}) {
+  return (
+    <nav
+      className="hidden max-lg:landscape:flex flex-col items-center gap-1 pt-2 pb-2 w-14 shrink-0 bg-surface-container-low border-r border-outline-variant/20 overflow-y-auto"
+      style={{paddingTop: 'max(0.5rem, env(safe-area-inset-top, 0px))', paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom, 0px))'}}
+    >
+      {NAV_TABS.map(({label, icon: Icon, href, prefixes}) => {
+        const active = isNavTabActive(pathname, prefixes);
+        return (
+          <Link
+            key={label}
+            to={href}
+            title={label}
+            className={cn(
+              'flex items-center justify-center w-10 h-10 rounded-xl transition-colors',
+              active
+                ? 'bg-primary/15 text-primary'
+                : 'text-on-surface-variant/50 hover:text-on-surface hover:bg-surface-container',
+            )}
+          >
+            <Icon className="h-5 w-5" />
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+
 function Sidebar({pathname, locationState, locationSearch}: {pathname: string; locationState: unknown; locationSearch: string}) {
   const {sidebarContent} = useSidebar();
 
@@ -499,15 +528,18 @@ export default function Layout({children}: {children: ReactNode}) {
     return (
       <div className="h-screen flex flex-col overflow-hidden bg-surface">
         <TopNav pathname={pathname} />
-        <main
-          className={cn('flex-1 min-h-0 flex flex-col overflow-hidden', contentPaddingClass)}
+        <div
+          className={cn('flex flex-1 min-h-0 overflow-hidden', contentPaddingClass)}
           style={{
             paddingLeft: 'env(safe-area-inset-left, 0px)',
             paddingRight: 'env(safe-area-inset-right, 0px)',
           }}
         >
-          {children}
-        </main>
+          <LandscapeRail pathname={pathname} />
+          <main className="flex-1 min-h-0 flex flex-col overflow-hidden">
+            {children}
+          </main>
+        </div>
         {showBottomNav && <div className="max-lg:landscape:hidden"><BottomNav /></div>}
       </div>
     );
@@ -524,6 +556,7 @@ export default function Layout({children}: {children: ReactNode}) {
         }}
       >
         <Sidebar pathname={pathname} locationState={location.state} locationSearch={location.search} />
+        <LandscapeRail pathname={pathname} />
         <main className="flex-1 min-h-0 flex flex-col overflow-hidden">
           {children}
         </main>

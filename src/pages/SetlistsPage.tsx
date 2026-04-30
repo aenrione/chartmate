@@ -12,6 +12,9 @@ import {
   Search,
   X,
   Gauge,
+  PanelLeft,
+  Pencil,
+  Trash2,
 } from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
@@ -62,6 +65,8 @@ import {
   type SetlistItem,
   getSetlists,
   createSetlist,
+  deleteSetlist,
+  updateSetlist,
   getSetlistItems,
   addSetlistItem,
   removeSetlistItem,
@@ -529,6 +534,7 @@ export function SetlistEditor({
   onRemoveItem,
   onReorder,
   onChangeSpeed,
+  onOpenSidebar,
 }: {
   setlist: Setlist;
   items: SetlistItem[];
@@ -536,6 +542,7 @@ export function SetlistEditor({
   onRemoveItem: (itemId: number) => void;
   onReorder: (itemId: number, newPosition: number) => void;
   onChangeSpeed: (itemId: number, speed: number) => void;
+  onOpenSidebar?: () => void;
 }) {
   const navigate = useNavigate();
   const [activeId, setActiveId] = useState<number | null>(null);
@@ -570,8 +577,17 @@ export function SetlistEditor({
   return (
     <div className="flex-1 min-w-0 flex flex-col">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
-        <div className="min-w-0">
+      <div className="px-4 py-4 border-b border-white/5 flex items-center gap-2">
+        {onOpenSidebar && (
+          <button
+            onClick={onOpenSidebar}
+            className="lg:hidden shrink-0 p-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors"
+            aria-label="Switch setlist"
+          >
+            <PanelLeft className="h-5 w-5" />
+          </button>
+        )}
+        <div className="flex-1 min-w-0">
           <h1 className="text-lg font-semibold text-on-surface truncate">{setlist.name}</h1>
           <div className="flex items-center gap-3 mt-0.5 text-xs text-on-surface-variant">
             <span>{items.length} {items.length === 1 ? 'item' : 'items'}</span>
@@ -583,7 +599,7 @@ export function SetlistEditor({
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {items.length > 0 && (
             <Button size="sm" variant="outline" onClick={() => navigate(`/playbook/${setlist.id}`)}>
               <Play className="h-4 w-4 mr-1.5" />
@@ -661,6 +677,9 @@ export default function SetlistsPage() {
   const [items, setItems] = useState<SetlistItem[]>([]);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editName, setEditName] = useState('');
 
   const selectedId = searchParams.get('id') ? Number(searchParams.get('id')) : null;
 
@@ -707,8 +726,26 @@ export default function SetlistsPage() {
     const id = await createSetlist(`Setlist ${setlists.length + 1}`);
     setSearchParams({id: String(id)});
     window.dispatchEvent(new CustomEvent('setlists-updated'));
+    setMobileSidebarOpen(false);
     toast.success('Setlist created');
   }, [setlists.length, setSearchParams]);
+
+  const deleteSetlistFn = useCallback(async (id: number) => {
+    await deleteSetlist(id);
+    const updated = await loadSetlists();
+    if (selectedId === id) {
+      const next = updated.find(s => s.id !== id);
+      setSearchParams(next ? {id: String(next.id)} : {});
+    }
+    window.dispatchEvent(new CustomEvent('setlists-updated'));
+  }, [selectedId, loadSetlists, setSearchParams]);
+
+  const updateSetlistFn = useCallback(async (id: number, name: string) => {
+    await updateSetlist(id, {name});
+    await loadSetlists();
+    window.dispatchEvent(new CustomEvent('setlists-updated'));
+    setEditingId(null);
+  }, [loadSetlists]);
 
   const handleAddItems = async (result: AddItemsResult) => {
     if (!selectedId) return;
@@ -774,7 +811,7 @@ export default function SetlistsPage() {
   }
 
   return (
-    <div className="flex-1 flex min-h-0">
+    <div className="flex-1 flex min-h-0 relative">
       {selectedSetlist ? (
         <SetlistEditor
           setlist={selectedSetlist}
@@ -783,6 +820,7 @@ export default function SetlistsPage() {
           onRemoveItem={handleRemoveItem}
           onReorder={handleReorder}
           onChangeSpeed={handleChangeSpeed}
+          onOpenSidebar={() => setMobileSidebarOpen(true)}
         />
       ) : (
         <div className="flex-1 flex items-center justify-center">
@@ -805,6 +843,109 @@ export default function SetlistsPage() {
           </Empty>
         </div>
       )}
+
+      {/* Mobile setlist sidebar */}
+      {mobileSidebarOpen && (
+        <div
+          className="lg:hidden fixed inset-0 z-40 bg-black/50"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
+      <aside
+        className={cn(
+          'lg:hidden fixed inset-y-0 left-0 z-50 w-72 bg-surface border-r border-outline-variant/20 flex flex-col',
+          mobileSidebarOpen ? 'flex' : 'hidden',
+        )}
+        style={{
+          paddingTop: 'max(1rem, env(safe-area-inset-top, 0px))',
+          paddingBottom: 'var(--bottom-nav-safe-height, 1rem)',
+          paddingLeft: 'env(safe-area-inset-left, 0px)',
+        }}
+      >
+        {/* Sidebar header */}
+        <div className="flex items-center justify-between px-4 pb-3 border-b border-outline-variant/20">
+          <span className="text-sm font-semibold text-on-surface-variant uppercase tracking-wider">
+            Setlists
+          </span>
+          <button
+            onClick={() => setMobileSidebarOpen(false)}
+            className="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Setlist list */}
+        <div className="flex-1 overflow-y-auto py-2 space-y-0.5 px-2">
+          {setlists.map(s => (
+            <div
+              key={s.id}
+              className={cn(
+                'flex items-center gap-2 px-3 py-2.5 rounded-xl cursor-pointer transition-colors',
+                selectedId === s.id
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface',
+              )}
+              onClick={() => {
+                setSearchParams({id: String(s.id)});
+                setMobileSidebarOpen(false);
+              }}
+            >
+              {editingId === s.id ? (
+                <input
+                  autoFocus
+                  className="flex-1 min-w-0 bg-surface-container border border-outline-variant/20 rounded px-2 py-0.5 text-sm text-on-surface outline-none focus:ring-1 focus:ring-primary"
+                  value={editName}
+                  onChange={e => setEditName(e.target.value)}
+                  onBlur={() => updateSetlistFn(s.id, editName.trim() || s.name)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') updateSetlistFn(s.id, editName.trim() || s.name);
+                    if (e.key === 'Escape') setEditingId(null);
+                  }}
+                  onClick={e => e.stopPropagation()}
+                />
+              ) : (
+                <span className="flex-1 min-w-0 truncate text-sm font-medium">{s.name}</span>
+              )}
+              <div className="flex items-center gap-0.5 shrink-0">
+                <span className="text-xs opacity-40 tabular-nums mr-1">{s.itemCount ?? 0}</span>
+                <button
+                  className="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high active:bg-surface-container-high transition-colors"
+                  onClick={e => {
+                    e.stopPropagation();
+                    setEditingId(s.id);
+                    setEditName(s.name);
+                  }}
+                  aria-label="Rename"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  className="p-1.5 rounded-lg text-error/60 hover:bg-error/10 active:bg-error/10 transition-colors"
+                  onClick={e => {
+                    e.stopPropagation();
+                    deleteSetlistFn(s.id);
+                  }}
+                  aria-label="Delete"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* New setlist button */}
+        <div className="px-3 py-3 border-t border-outline-variant/20">
+          <button
+            onClick={handleCreate}
+            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-semibold bg-primary text-on-primary active:opacity-80 transition-opacity"
+          >
+            <Plus className="h-4 w-4" />
+            New Setlist
+          </button>
+        </div>
+      </aside>
 
       <AddItemsDialog
         open={addDialogOpen}
