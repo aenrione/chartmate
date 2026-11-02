@@ -1,4 +1,5 @@
 import {model} from '@coderline/alphatab';
+import {GM_TO_PIECE, PIECE_TO_ROLE, type DrumRole} from '@/lib/drums/pieces';
 
 const {InstrumentArticulation, MusicFontSymbol, TechniqueSymbolPlacement, Clef} = model;
 
@@ -34,7 +35,6 @@ type MFS = InstanceType<typeof InstrumentArticulation>['noteHeadDefault'];
 
 interface DrumDef {
   id: number;
-  type: string;
   staffLine: number;
   midi: number;
   head: [MFS, MFS, MFS]; // [default, half, whole]
@@ -42,37 +42,56 @@ interface DrumDef {
   techPlace?: typeof ABOVE;
 }
 
+/**
+ * The articulation name AlphaTab and Guitar Pro use for each role. The roles
+ * themselves come from the shared vocabulary in src/lib/drums/pieces.ts, so
+ * there is one table deciding what a MIDI note is, not three.
+ */
+const ARTICULATION_TYPE: Record<DrumRole, string> = {
+  kick: 'kick',
+  snare: 'snare',
+  tom: 'tom',
+  hat: 'hihat',
+  cymbal: 'cymbal',
+};
+
+function articulationType(midi: number): string {
+  const piece = GM_TO_PIECE[midi];
+  if (!piece) throw new Error(`No drum piece for MIDI ${midi}`);
+  return ARTICULATION_TYPE[PIECE_TO_ROLE[piece]];
+}
+
 const DRUM_DEFS: DrumDef[] = [
   // Kicks
-  {id: 35, type: 'kick',   staffLine: 8, midi: 35, head: [N, NH, NW]},
-  {id: 36, type: 'kick',   staffLine: 8, midi: 36, head: [N, NH, NW]},
+  {id: 35, staffLine: 8, midi: 35, head: [N, NH, NW]},
+  {id: 36, staffLine: 8, midi: 36, head: [N, NH, NW]},
 
   // Snare
-  {id: 37, type: 'snare',  staffLine: 5, midi: 37, head: [X, XH, XW]},  // side stick
-  {id: 38, type: 'snare',  staffLine: 5, midi: 38, head: [N, NH, NW]},
-  {id: 39, type: 'snare',  staffLine: 5, midi: 39, head: [X, XH, XW]},  // hand clap
-  {id: 40, type: 'snare',  staffLine: 5, midi: 40, head: [N, NH, NW]},   // electric snare
+  {id: 37, staffLine: 5, midi: 37, head: [X, XH, XW]},  // side stick
+  {id: 38, staffLine: 5, midi: 38, head: [N, NH, NW]},
+  {id: 39, staffLine: 5, midi: 39, head: [X, XH, XW]},  // hand clap
+  {id: 40, staffLine: 5, midi: 40, head: [N, NH, NW]},   // electric snare
 
   // Toms
-  {id: 41, type: 'tom',    staffLine: 7, midi: 41, head: [N, NH, NW]},   // floor tom
-  {id: 43, type: 'tom',    staffLine: 7, midi: 43, head: [N, NH, NW]},   // floor tom 2
-  {id: 45, type: 'tom',    staffLine: 6, midi: 45, head: [N, NH, NW]},   // low tom
-  {id: 47, type: 'tom',    staffLine: 4, midi: 47, head: [N, NH, NW]},   // mid tom
-  {id: 48, type: 'tom',    staffLine: 3, midi: 48, head: [N, NH, NW]},   // hi-mid tom
-  {id: 50, type: 'tom',    staffLine: 3, midi: 50, head: [N, NH, NW]},   // high tom
+  {id: 41, staffLine: 7, midi: 41, head: [N, NH, NW]},   // floor tom
+  {id: 43, staffLine: 7, midi: 43, head: [N, NH, NW]},   // floor tom 2
+  {id: 45, staffLine: 6, midi: 45, head: [N, NH, NW]},   // low tom
+  {id: 47, staffLine: 4, midi: 47, head: [N, NH, NW]},   // mid tom
+  {id: 48, staffLine: 3, midi: 48, head: [N, NH, NW]},   // hi-mid tom
+  {id: 50, staffLine: 3, midi: 50, head: [N, NH, NW]},   // high tom
 
   // Hi-Hat
-  {id: 42, type: 'hihat',  staffLine: 1, midi: 42, head: [X, XH, XW]},   // closed
-  {id: 44, type: 'hihat',  staffLine: 9, midi: 44, head: [X, XH, XW]},   // pedal
-  {id: 46, type: 'hihat',  staffLine: 1, midi: 46, head: [X, XH, XW], tech: CIRCLE, techPlace: ABOVE}, // open
+  {id: 42, staffLine: 1, midi: 42, head: [X, XH, XW]},   // closed
+  {id: 44, staffLine: 9, midi: 44, head: [X, XH, XW]},   // pedal
+  {id: 46, staffLine: 1, midi: 46, head: [X, XH, XW], tech: CIRCLE, techPlace: ABOVE}, // open
 
   // Cymbals
-  {id: 49, type: 'cymbal', staffLine: 1, midi: 49, head: [X, XH, XW]},   // crash 1
-  {id: 51, type: 'cymbal', staffLine: 1, midi: 51, head: [X, XH, XW]},   // ride
-  {id: 52, type: 'cymbal', staffLine: 1, midi: 52, head: [X, XH, XW]},   // china
-  {id: 53, type: 'cymbal', staffLine: 1, midi: 53, head: [X, XH, XW]},   // ride bell
-  {id: 55, type: 'cymbal', staffLine: 1, midi: 55, head: [X, XH, XW]},   // splash
-  {id: 57, type: 'cymbal', staffLine: 1, midi: 57, head: [X, XH, XW]},   // crash 2
+  {id: 49, staffLine: 1, midi: 49, head: [X, XH, XW]},   // crash 1
+  {id: 51, staffLine: 1, midi: 51, head: [X, XH, XW]},   // ride
+  {id: 52, staffLine: 1, midi: 52, head: [X, XH, XW]},   // china
+  {id: 53, staffLine: 1, midi: 53, head: [X, XH, XW]},   // ride bell
+  {id: 55, staffLine: 1, midi: 55, head: [X, XH, XW]},   // splash
+  {id: 57, staffLine: 1, midi: 57, head: [X, XH, XW]},   // crash 2
 ];
 
 /**
@@ -94,7 +113,7 @@ export function buildPercussionArticulationsArray(): Art[] {
   // Overwrite with actual drum definitions
   for (const def of DRUM_DEFS) {
     arr[def.id] = new InstrumentArticulation(
-      def.type,
+      articulationType(def.id),
       def.staffLine,
       def.midi,
       def.head[0],

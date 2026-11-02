@@ -1,17 +1,11 @@
-import {parseChartFile, noteTypes, noteFlags, NoteEvent} from '@eliwhite/scan-chart';
+import {parseChartFile, NoteEvent} from '@eliwhite/scan-chart';
+import {pieceFromChartNote, type DrumPiece} from '@/lib/drums/pieces';
 
 type ParsedChart = ReturnType<typeof parseChartFile>;
 type TimeSignature = ParsedChart['timeSignatures'][0];
 
-export type DrumNoteInstrument =
-  | 'kick'
-  | 'snare'
-  | 'high-tom'
-  | 'mid-tom'
-  | 'floor-tom'
-  | 'hihat'
-  | 'crash'
-  | 'ride';
+/** The canonical drum vocabulary now lives in src/lib/drums/pieces.ts. */
+export type DrumNoteInstrument = DrumPiece;
 
 type InstrumentMapping = {
   [key in DrumNoteInstrument]: string;
@@ -66,36 +60,11 @@ export interface Duration {
 
 /**
  * Map a NoteEvent from scan-chart to a DrumNoteInstrument.
- * Uses fallback defaults for ambiguous flag combinations rather than throwing.
+ *
+ * Delegates to the shared vocabulary in src/lib/drums/pieces.ts. The fallback
+ * to 'snare' only fires for a note type that is not a drum at all; scan-chart
+ * always resolves lanes 2-4 to exactly one of tom/cymbal for a pro chart.
  */
 export function convertNoteToDrumInstrument(note: NoteEvent): DrumNoteInstrument {
-  switch (note.type) {
-    case noteTypes.kick:
-      return 'kick';
-    case noteTypes.redDrum:
-      return 'snare';
-    case noteTypes.yellowDrum:
-      if (note.flags & noteFlags.cymbal) {
-        return 'hihat';
-      } else if (note.flags & noteFlags.tom) {
-        return 'high-tom';
-      }
-      return 'hihat';
-    case noteTypes.blueDrum:
-      if (note.flags & noteFlags.cymbal) {
-        return 'ride';
-      } else if (note.flags & noteFlags.tom) {
-        return 'mid-tom';
-      }
-      return 'ride';
-    case noteTypes.greenDrum:
-      if (note.flags & noteFlags.cymbal) {
-        return 'crash';
-      } else if (note.flags & noteFlags.tom) {
-        return 'floor-tom';
-      }
-      return 'crash';
-    default:
-      return 'snare';
-  }
+  return pieceFromChartNote(note) ?? 'snare';
 }

@@ -3,14 +3,20 @@
  */
 
 import {DrumVoice} from './types';
-import {NoteType, noteFlags, noteTypes} from '@eliwhite/scan-chart';
+import {NoteType} from '@eliwhite/scan-chart';
+import {PIECE_TO_ROLE, pieceFromChartNote, type DrumRole} from '@/lib/drums/pieces';
 
 // Re-export DrumVoice for use in other modules
 export {DrumVoice};
 
 /**
- * Clone Hero standard drum lane mapping
- * Based on typical 5-lane CH drum charts
+ * Clone Hero standard drum lane mapping, by bare lane index with no regard to
+ * the cymbal flag.
+ *
+ * @deprecated This is a different, lossier question than the one
+ * src/lib/drums/pieces.ts answers — it cannot tell a yellow tom from a hi-hat
+ * because it never sees the flag. Kept because the fill detector's
+ * flagless helpers below still call it. Prefer mapScanChartNoteToVoice.
  */
 export const CLONE_HERO_DRUM_MAP: Record<number, DrumVoice> = {
   0: DrumVoice.KICK, // Kick drum
@@ -39,33 +45,28 @@ export const ROCK_BAND_4_DRUM_MAP: Record<number, DrumVoice> = {
  */
 const DEFAULT_DRUM_MAP = CLONE_HERO_DRUM_MAP;
 
+const ROLE_TO_VOICE: Record<DrumRole, DrumVoice> = {
+  kick: DrumVoice.KICK,
+  snare: DrumVoice.SNARE,
+  tom: DrumVoice.TOM,
+  hat: DrumVoice.HAT,
+  cymbal: DrumVoice.CYMBAL,
+};
+
 /**
- * Maps scan-chart NoteType enum values to DrumVoice, handling both 4-lane (RB), 4-lane pro, and 5-lane.
+ * Maps a scan-chart note to its voice through the shared drum vocabulary in
+ * src/lib/drums/pieces.ts, which already resolves the tom/cymbal flag for
+ * both the .chart and .mid polarities.
  */
 export function mapScanChartNoteToVoice(
   noteType: NoteType,
-  drumType: 0 | 1 | 2 | null = null,
+  _drumType: 0 | 1 | 2 | null = null,
   flags: number = 0,
 ): DrumVoice {
-  // Prefer explicit mapping of drum-specific note types that scan-chart emits
-  const {kick, redDrum, yellowDrum, blueDrum, greenDrum} = noteTypes;
+  const piece = pieceFromChartNote({type: noteType, flags} as never);
+  if (piece) return ROLE_TO_VOICE[PIECE_TO_ROLE[piece]];
 
-  if (noteType === kick) return DrumVoice.KICK;
-  if (noteType === redDrum) return DrumVoice.SNARE;
-
-  // drumType: 0=fourLane, 1=fourLanePro, 2=fiveLane
-  if (noteType === yellowDrum) {
-    // Yellow: hi-hat/ride if cymbal flag, otherwise tom
-    return flags & noteFlags.cymbal ? DrumVoice.HAT : DrumVoice.TOM;
-  }
-  if (noteType === blueDrum) {
-    return flags & noteFlags.cymbal ? DrumVoice.CYMBAL : DrumVoice.TOM;
-  }
-  if (noteType === greenDrum) {
-    return flags & noteFlags.cymbal ? DrumVoice.CYMBAL : DrumVoice.TOM;
-  }
-
-  // Fallback to legacy mapping if type matches 0..5
+  // Legacy charts whose note types land in the flat 0..5 lane range.
   if (noteType in CLONE_HERO_DRUM_MAP) {
     return CLONE_HERO_DRUM_MAP[noteType as unknown as number];
   }

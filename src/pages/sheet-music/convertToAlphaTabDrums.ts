@@ -4,7 +4,8 @@ import {
   parseChartFile,
 } from '@eliwhite/scan-chart';
 import {tickToMs} from './chartUtils';
-import {type DrumNoteInstrument, convertNoteToDrumInstrument} from './drumTypes';
+import {convertNoteToDrumInstrument} from './drumTypes';
+import {PIECE_TO_GM} from '@/lib/drums/pieces';
 
 type ParsedChart = ReturnType<typeof parseChartFile>;
 
@@ -25,17 +26,8 @@ const {
   Clef,
 } = model;
 
-// Map drum instruments to General MIDI percussion note numbers
-const DRUM_MIDI_MAP: Record<DrumNoteInstrument, number> = {
-  kick: 36,       // Bass Drum 1
-  snare: 38,      // Acoustic Snare
-  hihat: 42,      // Closed Hi-Hat
-  ride: 51,       // Ride Cymbal 1
-  crash: 49,      // Crash Cymbal 1
-  'high-tom': 48, // Hi-Mid Tom
-  'mid-tom': 45,  // Low Tom
-  'floor-tom': 41, // Low Floor Tom
-};
+// General MIDI note per piece — shared with the chart exporter.
+const DRUM_MIDI_MAP = PIECE_TO_GM;
 
 // Map tick duration ratios to AlphaTab Duration enum values
 function ticksToDuration(durationTicks: number, ppq: number): {duration: number; dots: number; isTuplet: boolean} {
