@@ -1,5 +1,7 @@
 #[cfg(desktop)]
 mod ignition;
+#[cfg(desktop)]
+mod mcp;
 mod psarc;
 mod webdav;
 
@@ -15,9 +17,13 @@ pub fn run() {
     #[cfg(desktop)]
     let builder = builder
         .manage(ignition::IgnitionState::default())
+        .manage(mcp::McpState::default())
         .invoke_handler(tauri::generate_handler![
             psarc::parse_psarc,
             psarc::extract_psarc_audio,
+            mcp::mcp_set_tools,
+            mcp::mcp_respond,
+            mcp::mcp_port,
             ignition::ignition_open_auth,
             ignition::ignition_auth_ready,
             ignition::ignition_callback,
@@ -55,6 +61,9 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_localhost::Builder::new(LOCALHOST_PORT).build())
         .setup(|_app| {
+            #[cfg(desktop)]
+            mcp::start(_app.handle().clone());
+
             #[cfg(not(debug_assertions))]
             {
                 use tauri::Manager;

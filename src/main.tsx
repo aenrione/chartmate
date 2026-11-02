@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import { getCurrent, onOpenUrl } from '@tauri-apps/plugin-deep-link';
 import { getInsets } from 'tauri-plugin-safe-area-insets';
+import { startMcpBridge } from '@/lib/mcp';
 
 // env(safe-area-inset-*) returns 0 on Android WebView; inject real values via plugin.
 function applyInsets() {
@@ -45,6 +46,10 @@ onOpenUrl((urls) => {
   }
 }).catch((err) => {
   console.error('[deep-link] onOpenUrl registration failed:', err);
+});
+
+startMcpBridge().catch((err) => {
+  console.error('[mcp] bridge failed to start:', err);
 });
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
