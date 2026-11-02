@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react';
-import {ChevronLeft, ChevronRight, Loader2, Printer} from 'lucide-react';
-import {useWindowPrint} from '@/hooks/usePrint';
+import {ChevronLeft, ChevronRight, Loader2} from 'lucide-react';
 import {usePlaybook} from './PlaybookProvider';
 import {useChartLoader} from '@/lib/useChartLoader';
 import SongView from '@/pages/sheet-music/SongView';
@@ -27,8 +26,6 @@ export default function ChartViewer() {
     addAnnotation,
     removeAnnotation,
   } = usePlaybook();
-
-  const handlePrint = useWindowPrint();
 
   const itemType = activeItem?.itemType ?? 'chart';
   const md5 = itemType === 'chart' ? (activeItem?.chartMd5 ?? null) : null;
@@ -150,15 +147,6 @@ export default function ChartViewer() {
           )}
           {data && !loading && !error && (
             <div className="flex-1 flex flex-col min-h-0 relative">
-              <div className="absolute top-2 right-2 z-20" data-print-hide>
-                <button
-                  onClick={handlePrint}
-                  className="p-1.5 rounded-lg bg-surface-container-high/80 hover:bg-surface-container-high transition-colors text-on-surface-variant"
-                  title="Print / Save as PDF"
-                >
-                  <Printer className="h-4 w-4" />
-                </button>
-              </div>
               <SongView
                 metadata={data.metadata}
                 chart={data.chart}

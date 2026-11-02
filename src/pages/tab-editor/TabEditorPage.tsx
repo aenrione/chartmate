@@ -126,7 +126,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {useHideHeaderOnMobile, useHideBottomNavOnMobile} from '@/contexts/LayoutContext';
-import {useAlphaTabPrint} from '@/hooks/usePrint';
+import {saveScorePdfToLibrary} from '@/lib/pdf/save-score-pdf';
 import {useYoutubeSync} from '@/hooks/useYoutubeSync';
 import type {PlaybackClock} from '@/lib/youtube-sync';
 import YouTubePlayer from '@/components/YouTubePlayer';
@@ -1691,7 +1691,20 @@ export default function TabEditorPage() {
     doNewTab();
   }, [id, isDirty, navigate, doNewTab]);
 
-  const handlePrint = useAlphaTabPrint(getApi);
+  const [exportingPdf, setExportingPdf] = useState(false);
+  const handleExportPdf = useCallback(async () => {
+    const score = scoreRef.current;
+    if (!score || exportingPdf) return;
+    setExportingPdf(true);
+    try {
+      const saved = await saveScorePdfToLibrary(score);
+      toast.success(`${saved.filename} — ${saved.pageCount} page${saved.pageCount === 1 ? '' : 's'}`);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'PDF export failed');
+    } finally {
+      setExportingPdf(false);
+    }
+  }, [exportingPdf]);
 
   // ── Derived values ────────────────────────────────────────────────────────
   const currentFingering = useMemo(
@@ -2038,7 +2051,7 @@ export default function TabEditorPage() {
               <DropdownMenuItem onClick={() => void handleExport('gp7')}><Download className="h-4 w-4 mr-2" />Export Guitar Pro</DropdownMenuItem>
               <DropdownMenuItem onClick={() => void handleExport('alphatex')}><Download className="h-4 w-4 mr-2" />Export AlphaTex</DropdownMenuItem>
               <DropdownMenuItem onClick={() => void handleExport('ascii')}><Download className="h-4 w-4 mr-2" />Export ASCII Tab</DropdownMenuItem>
-              <DropdownMenuItem onClick={handlePrint} disabled={!isReady}><Printer className="h-4 w-4 mr-2" />Print / Save as PDF</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => void handleExportPdf()} disabled={!isReady || exportingPdf}><Printer className="h-4 w-4 mr-2" />Export PDF</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setShowYoutubePanel(v => !v)}>
                 <Youtube className="h-4 w-4 mr-2" />YouTube sync

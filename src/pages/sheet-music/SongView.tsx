@@ -39,6 +39,7 @@ import {
   Loader2,
   Youtube,
   Unlink,
+  Printer,
 } from 'lucide-react';
 import {
   useCallback,
@@ -58,6 +59,9 @@ import {getBasename} from '@/lib/src-shared/utils';
 import {cn} from '@/lib/utils';
 import {useHideHeaderOnMobile, useHideBottomNavOnMobile} from '@/contexts/LayoutContext';
 import AlphaTabSheetMusic from './AlphaTabSheetMusic';
+import {buildChartScore} from './buildChartScore';
+import {StaveProfile} from '@coderline/alphatab';
+import {saveScorePdfToLibrary} from '@/lib/pdf/save-score-pdf';
 import {Files, ParsedChart} from '@/lib/preview/chorus-chart-processing';
 import {AudioManager, PracticeModeConfig} from '@/lib/preview/audioManager';
 import CloneHeroRenderer from './CloneHeroRenderer';
@@ -1105,6 +1109,41 @@ export default function Renderer({
     </Tip>
   );
 
+  const [exportingPdf, setExportingPdf] = useState(false);
+  const handleExportPdf = useCallback(async () => {
+    if (exportingPdf) return;
+    setExportingPdf(true);
+    try {
+      const score = buildChartScore(chart, track, {
+        showLyrics,
+        title: metadata.name,
+        artist: metadata.artist,
+      });
+      const saved = await saveScorePdfToLibrary(score, {staveProfile: StaveProfile.Score});
+      toast.success(`${saved.filename} — ${saved.pageCount} page${saved.pageCount === 1 ? '' : 's'}`);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'PDF export failed');
+    } finally {
+      setExportingPdf(false);
+    }
+  }, [chart, track, showLyrics, metadata.name, metadata.artist, exportingPdf]);
+
+  const exportPdfButton = (
+    <Tip label="Export PDF">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="rounded-full"
+        onClick={() => void handleExportPdf()}
+        disabled={exportingPdf}
+      >
+        {exportingPdf
+          ? <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          : <Printer className="h-6 w-6" />}
+      </Button>
+    </Tip>
+  );
+
   const playPauseButton = (
     <Tip label={isPlaying ? 'Pause' : 'Play'}>
       <Button
@@ -1202,6 +1241,7 @@ export default function Renderer({
             {playPauseButton}
             {maximizeButton}
             {saveButton}
+            {exportPdfButton}
           </div>
 
           <div className="space-y-4 overflow-y-auto">
@@ -1677,6 +1717,7 @@ export default function Renderer({
             {backButton}
             {playPauseButton}
             {saveButton}
+            {exportPdfButton}
             <div className="flex-1 min-w-0 px-1">
               <div className="text-sm font-semibold truncate leading-tight">
                 {metadata.name} <span className="text-muted-foreground font-normal">by</span> {metadata.artist}

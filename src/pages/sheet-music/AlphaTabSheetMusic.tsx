@@ -6,7 +6,7 @@ import convertToAlphaTabDrums, {buildMeasureBoundaries, type DrumMeasureInfo} fr
 import {AlphaTabPlayhead, buildTimePositionMap, type TimePositionPoint} from '@/components/AlphaTabPlayhead';
 import {PracticeModeConfig} from '@/lib/preview/audioManager';
 import {cn} from '@/lib/utils';
-import cleanLyrics from './cleanLyrics';
+import {buildChartScore} from './buildChartScore';
 
 type ParsedChart = ReturnType<typeof parseChartFile>;
 type Beat = InstanceType<typeof model.Beat>;
@@ -102,19 +102,10 @@ export default function AlphaTabSheetMusic({
   measureInfosRef.current = measureInfos;
 
   // Build the AlphaTab Score from ParsedChart
-  const score = useMemo(() => {
-    const lyrics = showLyrics
-      ? (chart as any).lyrics
-          ?.filter((lyric: any) => !lyric.text.includes('['))
-          .map((lyric: any) => ({...lyric, text: cleanLyrics(lyric.text)})) || []
-      : [];
-
-    return convertToAlphaTabDrums(chart, track, {
-      noteAnnotations,
-      lyrics,
-      sections: chart.sections,
-    });
-  }, [chart, track, noteAnnotations, showLyrics]);
+  const score = useMemo(
+    () => buildChartScore(chart, track, {showLyrics, noteAnnotations}),
+    [chart, track, noteAnnotations, showLyrics],
+  );
 
   // Render score into AlphaTab when it changes
   useEffect(() => {

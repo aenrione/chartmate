@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {Play, Pause, Square, Minus, Plus, Repeat, Printer, SlidersHorizontal, X} from 'lucide-react';
-import {useAlphaTabPrint} from '@/hooks/usePrint';
+import {Play, Pause, Square, Minus, Plus, Repeat, Printer, Loader2, SlidersHorizontal, X} from 'lucide-react';
+import {saveScorePdfToLibrary} from '@/lib/pdf/save-score-pdf';
+import {toast} from 'sonner';
 import {LayoutMode, StaveProfile, model} from '@coderline/alphatab';
 import {Button} from '@/components/ui/button';
 import {Slider} from '@/components/ui/slider';
@@ -108,8 +109,19 @@ export default function CompositionViewer({scoreData}: {scoreData: ArrayBuffer})
     });
   }, [setSettings]);
 
-  const getApiForPrint = useCallback(() => alphaTabRef.current?.getApi() ?? null, []);
-  const handlePrint = useAlphaTabPrint(getApiForPrint);
+  const [exportingPdf, setExportingPdf] = useState(false);
+  const handleExportPdf = useCallback(async () => {
+    if (!score || exportingPdf) return;
+    setExportingPdf(true);
+    try {
+      const saved = await saveScorePdfToLibrary(score, {trackIndexes: [selectedTrackIndex]});
+      toast.success(`${saved.filename} — ${saved.pageCount} page${saved.pageCount === 1 ? '' : 's'}`);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'PDF export failed');
+    } finally {
+      setExportingPdf(false);
+    }
+  }, [score, selectedTrackIndex, exportingPdf]);
 
   // Mutate AlphaTab's display settings in place, then re-apply and re-render.
   const applyDisplaySetting = useCallback((apply: (display: DisplaySettings) => void) => {
@@ -419,10 +431,11 @@ export default function CompositionViewer({scoreData}: {scoreData: ArrayBuffer})
             variant="ghost"
             size="icon"
             className="h-7 w-7 hidden lg:flex"
-            onClick={handlePrint}
-            title="Print / Save as PDF"
+            onClick={handleExportPdf}
+            disabled={!score || exportingPdf}
+            title="Export PDF"
           >
-            <Printer className="h-3.5 w-3.5" />
+            {exportingPdf ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Printer className="h-3.5 w-3.5" />}
           </Button>
         </div>
 
