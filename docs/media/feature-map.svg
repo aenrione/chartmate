@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" width="960" height="640" role="img" aria-label="Chartmate feature map: play and practice, write tabs, train, find music, learn, and an MCP agent surface">
+  <defs>
+    <style>
+      .t  { font-family: ui-sans-serif, -apple-system, "Segoe UI", Inter, Roboto, sans-serif; }
+      .h  { font-size: 15px; font-weight: 700; letter-spacing: .02em; }
+      .ct { font-size: 14px; font-weight: 700; }
+      .s  { font-size: 11.5px; }
+      .m  { font-size: 10.5px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .lbl{ font-size: 9.5px; font-weight: 700; letter-spacing: .14em; }
+    </style>
+  </defs>
+
+  <rect width="960" height="640" rx="16" fill="#16151c"/>
+  <text class="t h" x="36" y="44" fill="#e8e6ef">What's inside</text>
+  <text class="t s" x="36" y="64" fill="#9c98ab">Six surfaces, one SQLite file, zero accounts.</text>
+
+  <!-- row 1 -->
+  <g>
+    <rect x="36" y="86" width="286" height="246" rx="12" fill="#1f1d27" stroke="#453b78"/>
+    <rect x="36" y="86" width="286" height="3" rx="2" fill="#8f7fff"/>
+    <text class="t lbl" x="56" y="114" fill="#8f7fff">01</text>
+    <text class="t ct" x="56" y="138" fill="#e8e6ef">Play &amp; practice</text>
+    <text class="t s" x="56" y="166" fill="#b9b5c6">Score + tab view with a synced cursor</text>
+    <text class="t s" x="56" y="186" fill="#b9b5c6">Clone Hero note-highway preview</text>
+    <text class="t s" x="56" y="206" fill="#b9b5c6">Speed 25–200%, section looping</text>
+    <text class="t s" x="56" y="226" fill="#b9b5c6">Per-track stems, click track, lyrics</text>
+    <text class="t s" x="56" y="246" fill="#b9b5c6">YouTube synced to the bar you're on</text>
+    <text class="t s" x="56" y="266" fill="#b9b5c6">Setlists → Playbook practice mode</text>
+    <text class="t s" x="56" y="286" fill="#b9b5c6">Per-section progress tracking</text>
+    <text class="t m" x="56" y="314" fill="#6f6b7d">/playbook · /guitar/song · /sheet-music</text>
+
+    <rect x="337" y="86" width="286" height="246" rx="12" fill="#1f1d27" stroke="#1f5f5c"/>
+    <rect x="337" y="86" width="286" height="3" rx="2" fill="#2edcd7"/>
+    <text class="t lbl" x="357" y="114" fill="#2edcd7">02</text>
+    <text class="t ct" x="357" y="138" fill="#e8e6ef">Write &amp; edit tabs</text>
+    <text class="t s" x="357" y="166" fill="#b9b5c6">Keyboard-driven Guitar Pro editor</text>
+    <text class="t s" x="357" y="186" fill="#b9b5c6">ASCII tab → GP7 import</text>
+    <text class="t s" x="357" y="206" fill="#b9b5c6">Strumming patterns &amp; fingering hints</text>
+    <text class="t s" x="357" y="226" fill="#b9b5c6">Sections, repeats, tuning, capo, BPM</text>
+    <text class="t s" x="357" y="246" fill="#b9b5c6">Undo/redo, view vs. edit mode</text>
+    <text class="t s" x="357" y="266" fill="#b9b5c6">Export to PDF / print sheets</text>
+    <text class="t s" x="357" y="286" fill="#b9b5c6">Tagging, archiving, local library</text>
+    <text class="t m" x="357" y="314" fill="#6f6b7d">/tab-editor · /library</text>
+
+    <rect x="638" y="86" width="286" height="246" rx="12" fill="#1f1d27" stroke="#6d4a22"/>
+    <rect x="638" y="86" width="286" height="3" rx="2" fill="#ffb77a"/>
+    <text class="t lbl" x="658" y="114" fill="#ffb77a">03</text>
+    <text class="t ct" x="658" y="138" fill="#e8e6ef">Train</text>
+    <text class="t s" x="658" y="166" fill="#b9b5c6">Fretboard IQ — note drills with</text>
+    <text class="t s" x="658" y="183" fill="#b9b5c6">SM-2 spaced repetition</text>
+    <text class="t s" x="658" y="206" fill="#b9b5c6">EarIQ — interval &amp; chord ear training</text>
+    <text class="t s" x="658" y="226" fill="#b9b5c6">RepertoireIQ — what to replay, when</text>
+    <text class="t s" x="658" y="246" fill="#b9b5c6">Chord finder</text>
+    <text class="t s" x="658" y="266" fill="#b9b5c6">Drum rudiments &amp; fills with a metronome</text>
+    <text class="t s" x="658" y="286" fill="#b9b5c6">Progress graphs per drill</text>
+    <text class="t m" x="658" y="314" fill="#6f6b7d">/guitar/fretboard · /guitar/ear · /rudiments</text>
+  </g>
+
+  <!-- row 2 -->
+  <g>
+    <rect x="36" y="348" width="286" height="246" rx="12" fill="#1f1d27" stroke="#453b78"/>
+    <rect x="36" y="348" width="286" height="3" rx="2" fill="#8f7fff"/>
+    <text class="t lbl" x="56" y="376" fill="#8f7fff">04</text>
+    <text class="t ct" x="56" y="400" fill="#e8e6ef">Find music</text>
+    <text class="t s" x="56" y="428" fill="#b9b5c6">Encore catalog — Clone Hero / YARG</text>
+    <text class="t s" x="56" y="448" fill="#b9b5c6">charts, filtered and downloadable</text>
+    <text class="t s" x="56" y="471" fill="#b9b5c6">8 tab sources searched at once:</text>
+    <text class="t s" x="56" y="488" fill="#b9b5c6">Ultimate Guitar, Songsterr, GProTab,</text>
+    <text class="t s" x="56" y="505" fill="#b9b5c6">Classtab, IMSLP, ClassClef + 2</text>
+    <text class="t s" x="56" y="528" fill="#b9b5c6">Spotify library → charts you can play</text>
+    <text class="t s" x="56" y="548" fill="#b9b5c6">Rocksmith .psarc · CustomsForge CDLC</text>
+    <text class="t m" x="56" y="576" fill="#6f6b7d">/browse · /spotify · /updates</text>
+
+    <rect x="337" y="348" width="286" height="246" rx="12" fill="#1f1d27" stroke="#1f5f5c"/>
+    <rect x="337" y="348" width="286" height="3" rx="2" fill="#2edcd7"/>
+    <text class="t lbl" x="357" y="376" fill="#2edcd7">05</text>
+    <text class="t ct" x="357" y="400" fill="#e8e6ef">Learn</text>
+    <text class="t s" x="357" y="428" fill="#b9b5c6">Built-in curriculum: guitar, drums,</text>
+    <text class="t s" x="357" y="445" fill="#b9b5c6">theory — units, lessons, activities</text>
+    <text class="t s" x="357" y="468" fill="#b9b5c6">Skill tree with unlock gating</text>
+    <text class="t s" x="357" y="488" fill="#b9b5c6">XP, levels, daily missions, achievements</text>
+    <text class="t s" x="357" y="508" fill="#b9b5c6">Programs — your own multi-week plans</text>
+    <text class="t s" x="357" y="528" fill="#b9b5c6">Calendar &amp; practice-session history</text>
+    <text class="t s" x="357" y="548" fill="#b9b5c6">User layer overrides bundled lessons</text>
+    <text class="t m" x="357" y="576" fill="#6f6b7d">/learn · /programs · /calendar</text>
+
+    <rect x="638" y="348" width="286" height="246" rx="12" fill="#1a2423" stroke="#2edcd7"/>
+    <rect x="638" y="348" width="286" height="3" rx="2" fill="#2edcd7"/>
+    <text class="t lbl" x="658" y="376" fill="#2edcd7">06</text>
+    <text class="t ct" x="658" y="400" fill="#e8e6ef">Agent surface (MCP)</text>
+    <text class="t s" x="658" y="428" fill="#b9b5c6">The app is also an MCP server, so an</text>
+    <text class="t s" x="658" y="445" fill="#b9b5c6">assistant can work on your library:</text>
+    <text class="t m" x="658" y="470" fill="#2edcd7">search_tabs · save_tab_to_library</text>
+    <text class="t m" x="658" y="488" fill="#2edcd7">create/update_composition</text>
+    <text class="t m" x="658" y="506" fill="#2edcd7">upsert_lesson · upsert_unit</text>
+    <text class="t s" x="658" y="530" fill="#b9b5c6">"Find this song, fix its rhythm from</text>
+    <text class="t s" x="658" y="547" fill="#b9b5c6">the recording, build me a lesson."</text>
+    <text class="t m" x="658" y="576" fill="#6f6b7d">loopback :4871 · src/lib/mcp/</text>
+  </g>
+
+  <text class="t s" x="36" y="622" fill="#6f6b7d">Desktop is the target — macOS, Windows, Linux. Android and iOS builds exist and work, with a mobile layout.</text>
+</svg>

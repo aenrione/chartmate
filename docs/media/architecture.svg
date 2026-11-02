@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" width="960" height="560" role="img" aria-label="Chartmate architecture: React frontend in a WebView, Tauri IPC layer, Rust backend, SQLite, and a loopback MCP server for AI agents">
+  <defs>
+    <style>
+      .t  { font-family: ui-sans-serif, -apple-system, "Segoe UI", Inter, Roboto, sans-serif; }
+      .h  { font-size: 15px; font-weight: 700; letter-spacing: .02em; }
+      .b  { font-size: 13px; font-weight: 600; }
+      .s  { font-size: 11.5px; }
+      .m  { font-size: 10.5px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .lbl{ font-size: 10px; font-weight: 700; letter-spacing: .14em; }
+    </style>
+  </defs>
+
+  <rect width="960" height="560" rx="16" fill="#16151c"/>
+
+  <text class="t h" x="36" y="44" fill="#e8e6ef">Chartmate — architecture</text>
+  <text class="t s" x="36" y="64" fill="#9c98ab">One desktop process. The WebView owns the data; Rust owns the OS.</text>
+
+  <!-- Frontend -->
+  <rect x="36" y="90" width="700" height="146" rx="12" fill="#1f1d27" stroke="#453b78"/>
+  <text class="t lbl" x="56" y="116" fill="#8f7fff">REACT 19 FRONTEND · WEBVIEW</text>
+  <g>
+    <rect x="56" y="130" width="152" height="86" rx="9" fill="#262235" stroke="#332f40"/>
+    <text class="t b" x="72" y="153" fill="#e8e6ef">Pages &amp; Router</text>
+    <text class="t s" x="72" y="173" fill="#9c98ab">50+ routes</text>
+    <text class="t s" x="72" y="190" fill="#9c98ab">Practice · Library</text>
+    <text class="t s" x="72" y="206" fill="#9c98ab">Browse · Learn</text>
+
+    <rect x="220" y="130" width="152" height="86" rx="9" fill="#262235" stroke="#332f40"/>
+    <text class="t b" x="236" y="153" fill="#e8e6ef">AlphaTab</text>
+    <text class="t s" x="236" y="173" fill="#9c98ab">score render +</text>
+    <text class="t s" x="236" y="190" fill="#9c98ab">SoundFont player</text>
+    <text class="t s" x="236" y="206" fill="#9c98ab">as the clock</text>
+
+    <rect x="384" y="130" width="152" height="86" rx="9" fill="#262235" stroke="#332f40"/>
+    <text class="t b" x="400" y="153" fill="#e8e6ef">Kysely</text>
+    <text class="t s" x="400" y="173" fill="#9c98ab">typed queries</text>
+    <text class="t s" x="400" y="190" fill="#9c98ab">47 migrations</text>
+    <text class="t s" x="400" y="206" fill="#9c98ab">~30 tables</text>
+
+    <rect x="548" y="130" width="170" height="86" rx="9" fill="#262235" stroke="#332f40"/>
+    <text class="t b" x="564" y="153" fill="#e8e6ef">MCP tool registry</text>
+    <text class="t s" x="564" y="173" fill="#9c98ab">tab search, library,</text>
+    <text class="t s" x="564" y="190" fill="#9c98ab">curriculum authoring</text>
+    <text class="t m" x="564" y="208" fill="#2edcd7">src/lib/mcp/</text>
+  </g>
+
+  <!-- MCP agent lane -->
+  <rect x="760" y="90" width="164" height="146" rx="12" fill="#1a2423" stroke="#1f5f5c"/>
+  <text class="t lbl" x="778" y="116" fill="#2edcd7">AI AGENTS</text>
+  <text class="t s" x="778" y="140" fill="#cfe9e7">Claude Code, or any</text>
+  <text class="t s" x="778" y="157" fill="#cfe9e7">MCP client</text>
+  <text class="t m" x="778" y="182" fill="#2edcd7">127.0.0.1:4871</text>
+  <text class="t s" x="778" y="203" fill="#9c98ab">JSON-RPC over HTTP,</text>
+  <text class="t s" x="778" y="219" fill="#9c98ab">loopback only</text>
+  <path d="M736 163 H760" stroke="#2edcd7" stroke-width="1.5"/>
+  <path d="M760 163 l-8 -4 v8 z" fill="#2edcd7"/>
+  <path d="M760 150 H736" stroke="#2edcd7" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <path d="M736 150 l8 -4 v8 z" fill="#2edcd7"/>
+
+  <!-- IPC -->
+  <rect x="36" y="256" width="888" height="58" rx="10" fill="#201d2b" stroke="#332f40"/>
+  <text class="t lbl" x="56" y="280" fill="#9c98ab">TAURI v2 IPC</text>
+  <text class="t m" x="56" y="300" fill="#c6bfff">invoke()</text>
+  <text class="t m" x="140" y="300" fill="#c6bfff">emit() / listen()</text>
+  <text class="t m" x="290" y="300" fill="#c6bfff">chartmate:// deep link</text>
+  <text class="t m" x="470" y="300" fill="#c6bfff">mcp_call / mcp_respond</text>
+  <text class="t s" x="690" y="300" fill="#9c98ab">one bridge, no HTTP server in between</text>
+
+  <!-- Rust -->
+  <rect x="36" y="334" width="580" height="142" rx="12" fill="#231d1a" stroke="#6d4a22"/>
+  <text class="t lbl" x="56" y="360" fill="#ffb77a">RUST BACKEND</text>
+  <rect x="56" y="374" width="262" height="86" rx="9" fill="#2b2420" stroke="#3d342c"/>
+  <text class="t b" x="72" y="397" fill="#e8e6ef">Tauri plugins</text>
+  <text class="t m" x="72" y="417" fill="#ffb77a">sql · fs · http · store</text>
+  <text class="t m" x="72" y="434" fill="#ffb77a">deep-link · dialog · opener</text>
+  <text class="t m" x="72" y="451" fill="#ffb77a">localhost · single-instance</text>
+  <rect x="330" y="374" width="270" height="86" rx="9" fill="#2b2420" stroke="#3d342c"/>
+  <text class="t b" x="346" y="397" fill="#e8e6ef">Native commands</text>
+  <text class="t m" x="346" y="417" fill="#ffb77a">psarc.rs</text>
+  <text class="t s" x="420" y="417" fill="#9c98ab">Rocksmith parsing</text>
+  <text class="t m" x="346" y="434" fill="#ffb77a">ignition.rs</text>
+  <text class="t s" x="430" y="434" fill="#9c98ab">hidden auth WebView</text>
+  <text class="t m" x="346" y="451" fill="#ffb77a">mcp.rs</text>
+  <text class="t s" x="408" y="451" fill="#9c98ab">MCP transport only</text>
+
+  <!-- Storage -->
+  <rect x="640" y="334" width="284" height="142" rx="12" fill="#1f1d27" stroke="#332f40"/>
+  <text class="t lbl" x="660" y="360" fill="#9c98ab">ON DISK · ALL LOCAL</text>
+  <rect x="660" y="374" width="244" height="40" rx="8" fill="#262235" stroke="#332f40"/>
+  <text class="t b" x="676" y="399" fill="#e8e6ef">SQLite</text>
+  <text class="t s" x="736" y="399" fill="#9c98ab">library, progress, charts</text>
+  <rect x="660" y="420" width="244" height="40" rx="8" fill="#262235" stroke="#332f40"/>
+  <text class="t m" x="676" y="445" fill="#c6bfff">prefs.json</text>
+  <text class="t s" x="752" y="445" fill="#9c98ab">paths, OAuth tokens</text>
+
+  <!-- External -->
+  <text class="t lbl" x="36" y="508" fill="#9c98ab">OUTBOUND, ON DEMAND</text>
+  <text class="t s" x="36" y="530" fill="#9c98ab">Encore (enchor.us) · Spotify Web API · Ultimate Guitar, Songsterr, IMSLP + 5 more tab sources · CustomsForge Ignition4 · YouTube</text>
+  <text class="t s" x="36" y="547" fill="#6f6b7d">No Chartmate backend. No account. Nothing leaves the machine unless you ask for it.</text>
+</svg>
