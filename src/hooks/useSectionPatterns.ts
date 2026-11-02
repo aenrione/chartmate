@@ -18,7 +18,12 @@ export interface UseSectionPatternsParams {
   apiRef: React.RefObject<AlphaTabApi | null>;
   canvasScrollRef: React.RefObject<HTMLDivElement | null>;
   totalBars: number;
-  onStartPlaybackAtBar: (startBar: number) => void;
+  /**
+   * Start practising a bar range. Both ends are passed explicitly: the caller
+   * cannot read `practiceRange` back yet (React has not re-rendered), and
+   * looping to a stale end bar is exactly the bug that caused.
+   */
+  onStartPlaybackAtBar: (startBar: number, endBar: number) => void;
   onJumpToBar: (barIndex: number) => void;
   // Mutation primitives needed by add/remove section
   handleBeforeMutation: () => void;
@@ -129,7 +134,7 @@ export function useSectionPatterns(params: UseSectionPatternsParams) {
 
   const handlePracticeRange = useCallback((startBar: number, endBar: number) => {
     setPracticeRange({startBar, endBar});
-    params.onStartPlaybackAtBar(startBar);
+    params.onStartPlaybackAtBar(startBar, endBar);
   }, [params.onStartPlaybackAtBar]);
 
   const handleJumpToBar = useCallback((barIndex: number) => {

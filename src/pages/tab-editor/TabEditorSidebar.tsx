@@ -1,11 +1,19 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {cn} from '@/lib/utils';
 import {
   Plus, Trash2, Guitar, Drum, Volume2, VolumeOff,
   RefreshCw, Play, ChevronDown, ChevronRight, X,
   BookOpen, Layers, Palette, Music2, TableProperties,
-  Bookmark, BookMarked,
+  Bookmark, BookMarked, Hand, Wand2, AudioLines, ListMusic, Settings2,
 } from 'lucide-react';
+import {useLocalStorage} from '@/lib/useLocalStorage';
+import {
+  DEFAULT_SIDEBAR_SECTIONS,
+  SIDEBAR_SECTIONS_KEY,
+  parseSidebarSections,
+  type SidebarSectionId,
+  type SidebarSectionState,
+} from '@/lib/tab-editor/practiceSettings';
 import {
   createItem,
   deleteItem,
@@ -63,6 +71,64 @@ interface TabEditorSidebarProps {
   selectedKey: string | null;
   onKeyChange: (key: string | null) => void;
   onOpenKeyChart: () => void;
+  /** Fingering display toggle — p i m a / 1-4 drawn on the score. */
+  showFingering: boolean;
+  onToggleFingering: () => void;
+  onAutoRightHandFingering: (scope: 'selection' | 'track') => void;
+  onClearTrackFingering: () => void;
+  hasBarSelection: boolean;
+  /** Strumming pattern strip toggle — shown above the canvas. */
+  showStrumming: boolean;
+  onToggleStrumming: () => void;
+  /**
+   * View mode. Every control that writes to the score is hidden or disabled;
+   * playback, navigation, practice tracking and the display toggles stay.
+   */
+  readOnly?: boolean;
+}
+
+/**
+ * One collapsible sidebar section. The sidebar is a single scroll area, so a
+ * closed section costs one header row — that is the vertical space being
+ * reclaimed. `headerExtra` sits outside the toggle button because nesting a
+ * button inside a button is invalid HTML.
+ */
+function SidebarSection({
+  icon: Icon,
+  title,
+  open,
+  onToggle,
+  badge,
+  headerExtra,
+  children,
+}: {
+  icon: typeof Guitar;
+  title: string;
+  open: boolean;
+  onToggle: () => void;
+  badge?: React.ReactNode;
+  headerExtra?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="border-b border-outline-variant/20">
+      <div className="flex items-center">
+        <button
+          type="button"
+          aria-expanded={open}
+          className="flex-1 min-w-0 flex items-center gap-2 px-4 py-2 font-bold text-on-surface-variant uppercase tracking-wider hover:bg-surface-container-high transition-colors"
+          onClick={onToggle}
+        >
+          <Icon className="h-3 w-3 shrink-0" />
+          <span className="flex-1 text-left text-xs truncate">{title}</span>
+          {badge}
+          {open ? <ChevronDown className="h-3 w-3 shrink-0" /> : <ChevronRight className="h-3 w-3 shrink-0" />}
+        </button>
+        {headerExtra && <div className="pr-2 shrink-0">{headerExtra}</div>}
+      </div>
+      {open && children}
+    </div>
+  );
 }
 
 export default function TabEditorSidebar({
@@ -96,10 +162,29 @@ export default function TabEditorSidebar({
   selectedKey,
   onKeyChange,
   onOpenKeyChart,
+  showFingering,
+  onToggleFingering,
+  onAutoRightHandFingering,
+  onClearTrackFingering,
+  hasBarSelection,
+  showStrumming,
+  onToggleStrumming,
+  readOnly = false,
 }: TabEditorSidebarProps) {
   const [showAddTrack, setShowAddTrack] = useState(false);
-  const [keyOpen, setKeyOpen] = useState(true);
-  const [sectionsOpen, setSectionsOpen] = useState(true);
+  // Which sections are open survives reloads — the sidebar is a practice
+  // surface and re-opening the same three panels every session is friction.
+  const [storedSections, setStoredSections] = useLocalStorage<SidebarSectionState>(
+    SIDEBAR_SECTIONS_KEY,
+    DEFAULT_SIDEBAR_SECTIONS,
+  );
+  const openSections = useMemo(() => parseSidebarSections(storedSections), [storedSections]);
+  const toggleSection = useCallback((id: SidebarSectionId) => {
+    setStoredSections(prev => {
+      const current = parseSidebarSections(prev);
+      return {...current, [id]: !current[id]};
+    });
+  }, [setStoredSections]);
   const [tempoInput, setTempoInput] = useState(String(tempo));
   const [trackedPatterns, setTrackedPatterns] = useState<Set<string>>(new Set());
   const [trackedTabSections, setTrackedTabSections] = useState<Set<string>>(new Set());
@@ -188,7 +273,6 @@ export default function TabEditorSidebar({
   }, [compositionId, refreshTrackedTabSections, title]);
 
   useEffect(() => { setTempoInput(String(tempo)); }, [tempo]);
-  const [patternsOpen, setPatternsOpen] = useState(false);
   const [expandedPattern, setExpandedPattern] = useState<string | null>(null);
   const [addSectionOpen, setAddSectionOpen] = useState(false);
   const [newSectionName, setNewSectionName] = useState('');
@@ -201,33 +285,47 @@ export default function TabEditorSidebar({
 
   return (
     <div className="w-64 border-r border-outline-variant/20 bg-surface-container-low flex flex-col h-full overflow-hidden">
-      {/* Song metadata */}
+      {/* One scroll area for the whole sidebar, so nothing can ever be taller
+          than its container with no way to reach it. */}
+      <div className="flex-1 min-h-0 overflow-y-auto">
+      {/* Song metadata — always visible, it is the identity of the tab. */}
       <div className="p-4 border-b border-outline-variant/20 space-y-2">
         <input
           value={title}
           onChange={e => onTitleChange(e.target.value)}
           onKeyDown={e => { if (e.key === 'Escape') e.currentTarget.blur(); }}
           placeholder="Song Title"
-          className="w-full bg-transparent text-sm font-bold text-on-surface placeholder:text-on-surface-variant/40 outline-none border-b border-transparent focus:border-primary transition-colors"
+          readOnly={readOnly}
+          className={cn(
+            'w-full bg-transparent text-sm font-bold text-on-surface placeholder:text-on-surface-variant/40 outline-none border-b border-transparent transition-colors',
+            readOnly ? 'cursor-default' : 'focus:border-primary',
+          )}
         />
         <input
           value={artist}
           onChange={e => onArtistChange(e.target.value)}
           onKeyDown={e => { if (e.key === 'Escape') e.currentTarget.blur(); }}
           placeholder="Artist"
-          className="w-full bg-transparent text-xs text-on-surface-variant placeholder:text-on-surface-variant/40 outline-none border-b border-transparent focus:border-primary transition-colors"
+          readOnly={readOnly}
+          className={cn(
+            'w-full bg-transparent text-xs text-on-surface-variant placeholder:text-on-surface-variant/40 outline-none border-b border-transparent transition-colors',
+            readOnly ? 'cursor-default' : 'focus:border-primary',
+          )}
         />
         {compositionId != null && (
           <SongLearningPanel
             target={{kind: 'composition', compositionId, title: title || 'Untitled', artist: artist || undefined}}
           />
         )}
+        {/* The song's real tempo. This is written into the file — the practice
+            speed control in the toolbar is the one that is not. */}
         <div className="flex items-center gap-2">
           <label className="text-xs text-on-surface-variant">BPM:</label>
           <input
             type="number"
             value={tempoInput}
             onChange={e => setTempoInput(e.target.value)}
+            disabled={readOnly}
             onBlur={() => {
               const v = parseInt(tempoInput, 10);
               if (v > 0 && v <= MAX_TEMPO_BPM) onTempoChange(v);
@@ -246,20 +344,40 @@ export default function TabEditorSidebar({
             }}
             min={20}
             max={MAX_TEMPO_BPM}
-            className="w-16 bg-surface-container text-xs text-on-surface px-2 py-1 rounded outline-none focus:ring-1 focus:ring-primary"
+            className="w-16 bg-surface-container text-xs text-on-surface px-2 py-1 rounded outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
           />
+          <span className="text-[10px] text-on-surface-variant/50 leading-tight">
+            the song&apos;s tempo — saved
+          </span>
         </div>
+        <p className="text-[10px] text-on-surface-variant/50 leading-relaxed">
+          To practise slower use <span className="font-semibold">Speed</span> in the
+          toolbar. That only changes playback and is never saved.
+        </p>
       </div>
 
       {/* Stems */}
-      <div className="border-b border-outline-variant/20">
+      <SidebarSection
+        icon={AudioLines}
+        title="Stems"
+        open={openSections.stems}
+        onToggle={() => toggleSection('stems')}
+      >
         <StemMixerPanel {...stemPlayer} compact />
-      </div>
+      </SidebarSection>
 
       {/* Tracks */}
-      <div className="flex-1 overflow-auto">
-        <div className="px-4 py-2 flex items-center justify-between">
-          <span className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Tracks</span>
+      <SidebarSection
+        icon={ListMusic}
+        title="Tracks"
+        open={openSections.tracks}
+        onToggle={() => toggleSection('tracks')}
+        badge={
+          <span className="text-[10px] font-normal normal-case tracking-normal text-on-surface-variant/50 mr-1">
+            {tracks.length}
+          </span>
+        }
+        headerExtra={!readOnly && (
           <button
             onClick={() => setShowAddTrack(!showAddTrack)}
             className="p-1 rounded hover:bg-surface-container-high transition-colors text-on-surface-variant"
@@ -267,9 +385,10 @@ export default function TabEditorSidebar({
           >
             <Plus className="h-3.5 w-3.5" />
           </button>
-        </div>
-
-        {showAddTrack && (
+        )}
+      >
+        <div className="pb-2">
+        {showAddTrack && !readOnly && (
           <div className="mx-4 mb-2 p-2 bg-surface-container rounded-lg space-y-1">
             <button
               onClick={() => { onAddTrack('guitar', 6); setShowAddTrack(false); }}
@@ -341,7 +460,7 @@ export default function TabEditorSidebar({
                 >
                   {mutedTracks.has(i) ? <VolumeOff className="h-3 w-3" /> : <Volume2 className="h-3 w-3" />}
                 </button>
-                {tracks.length > 1 && (
+                {tracks.length > 1 && !readOnly && (
                   <button
                     onClick={e => {
                       e.stopPropagation();
@@ -357,27 +476,26 @@ export default function TabEditorSidebar({
             </div>
           ))}
         </div>
+        </div>
+      </SidebarSection>
 
-        {/* Key Assistant */}
-        <div className="border-t border-outline-variant/20">
-          <button
-            className="w-full flex items-center gap-2 px-4 py-2 font-bold text-on-surface-variant uppercase tracking-wider hover:bg-surface-container-high transition-colors"
-            onClick={() => setKeyOpen(v => !v)}
-          >
-            <Music2 className="h-3 w-3" />
-            <span className="flex-1 text-left text-xs">Key</span>
-            {selectedKey && (
-              <span className="text-[10px] font-normal text-primary normal-case tracking-normal mr-1">{selectedKey}</span>
-            )}
-            {keyOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
-          </button>
-          {keyOpen && (
+      {/* Key Assistant */}
+      <SidebarSection
+        icon={Music2}
+        title="Key"
+        open={openSections.key}
+        onToggle={() => toggleSection('key')}
+        badge={selectedKey ? (
+          <span className="text-[10px] font-normal text-primary normal-case tracking-normal mr-1">{selectedKey}</span>
+        ) : undefined}
+      >
             <div className="px-2 pb-2 space-y-2">
               <div className="flex items-center gap-1">
                 <select
                   value={selectedKey ?? ''}
                   onChange={e => onKeyChange(e.target.value || null)}
-                  className="flex-1 bg-surface-container text-xs text-on-surface px-2 py-1 rounded outline-none focus:ring-1 focus:ring-primary"
+                  disabled={readOnly}
+                  className="flex-1 bg-surface-container text-xs text-on-surface px-2 py-1 rounded outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
                 >
                   <option value="">— No key —</option>
                   {KEYS.map(k => (
@@ -414,22 +532,88 @@ export default function TabEditorSidebar({
                 );
               })()}
             </div>
-          )}
-        </div>
+      </SidebarSection>
 
-        {/* Sections & Patterns */}
-        <div className="border-t border-outline-variant/20">
-          {/* Sections sub-section */}
-          <div>
-            <button
-              className="w-full flex items-center gap-2 px-4 py-2 font-bold text-on-surface-variant uppercase tracking-wider hover:bg-surface-container-high transition-colors"
-              onClick={() => setSectionsOpen(v => !v)}
-            >
-              <BookOpen className="h-3 w-3" />
-              <span className="flex-1 text-left text-xs">Sections</span>
-              {sectionsOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
-            </button>
-            {sectionsOpen && (
+      {/* Reading aids: fingering + strumming pattern */}
+      <SidebarSection
+        icon={Hand}
+        title="Reading aids"
+        open={openSections.readingAids}
+        onToggle={() => toggleSection('readingAids')}
+      >
+            <div className="px-2 pb-3 space-y-1">
+              <button
+                onClick={onToggleFingering}
+                className={cn(
+                  'w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-colors',
+                  showFingering
+                    ? 'bg-primary/10 text-primary font-semibold'
+                    : 'text-on-surface-variant hover:bg-surface-container-high',
+                )}
+                title="Alt+F"
+              >
+                <Hand className="h-3 w-3" />
+                <span className="flex-1 text-left">{showFingering ? 'Fingering shown' : 'Fingering hidden'}</span>
+                <span className="text-[10px] text-on-surface-variant/50">Alt+F</span>
+              </button>
+              <button
+                onClick={onToggleStrumming}
+                className={cn(
+                  'w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-colors',
+                  showStrumming
+                    ? 'bg-primary/10 text-primary font-semibold'
+                    : 'text-on-surface-variant hover:bg-surface-container-high',
+                )}
+                title="Show the strumming pattern of each run of bars (Alt+S)"
+              >
+                <Guitar className="h-3 w-3" />
+                <span className="flex-1 text-left">
+                  {showStrumming ? 'Strumming shown' : 'Strumming hidden'}
+                </span>
+                <span className="text-[10px] text-on-surface-variant/50">Alt+S</span>
+              </button>
+              {!readOnly && (
+                <>
+                  <button
+                    onClick={() => onAutoRightHandFingering(hasBarSelection ? 'selection' : 'track')}
+                    className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs text-on-surface-variant hover:bg-surface-container-high transition-colors"
+                  >
+                    <Wand2 className="h-3 w-3" />
+                    <span className="flex-1 text-left">
+                      Add right-hand fingering{hasBarSelection ? ' (selection)' : ''}
+                    </span>
+                  </button>
+                  <button
+                    onClick={onClearTrackFingering}
+                    className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs text-on-surface-variant hover:bg-surface-container-high transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                    <span className="flex-1 text-left">
+                      Clear right-hand fingering{hasBarSelection ? ' (selection)' : ''}
+                    </span>
+                  </button>
+                </>
+              )}
+              <p className="px-2 text-[10px] text-on-surface-variant/50 leading-relaxed">
+                p i m a = thumb / index / middle / ring. The thumb takes the bass
+                strings, i m a the top three. Set a single note with Alt+P/I/M/A,
+                the left hand with Alt+1–4, clear with Alt+0.
+              </p>
+            </div>
+      </SidebarSection>
+
+      {/* Sections */}
+      <SidebarSection
+        icon={BookOpen}
+        title="Sections"
+        open={openSections.sections}
+        onToggle={() => toggleSection('sections')}
+        badge={sections.length > 0 ? (
+          <span className="text-[10px] font-normal normal-case tracking-normal text-on-surface-variant/50 mr-1">
+            {sections.length}
+          </span>
+        ) : undefined}
+      >
               <div className="px-2 pb-2 space-y-1">
                 {sections.length === 0 && !addSectionOpen && (
                   <p className="px-2 text-[10px] text-on-surface-variant/50 italic">No sections yet</p>
@@ -475,17 +659,19 @@ export default function TabEditorSidebar({
                     >
                       <Play className="h-3 w-3" />
                     </button>
-                    <button
-                      onClick={e => { e.stopPropagation(); onRemoveSection(sec.startBar); }}
-                      className="p-0.5 rounded hover:bg-error/20 text-on-surface-variant hover:text-error transition-colors shrink-0"
-                      title="Remove section"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
+                    {!readOnly && (
+                      <button
+                        onClick={e => { e.stopPropagation(); onRemoveSection(sec.startBar); }}
+                        className="p-0.5 rounded hover:bg-error/20 text-on-surface-variant hover:text-error transition-colors shrink-0"
+                        title="Remove section"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    )}
                   </div>
                   );
                 })}
-                {addSectionOpen ? (
+                {readOnly ? null : addSectionOpen ? (
                   <div className="px-1 space-y-1">
                     <div className="flex flex-wrap gap-1 pb-0.5">
                       {['Intro', 'Verse', 'Pre-Chorus', 'Chorus', 'Bridge', 'Solo', 'Outro'].map(preset => (
@@ -562,39 +748,34 @@ export default function TabEditorSidebar({
                   </button>
                 )}
               </div>
-            )}
-          </div>
+      </SidebarSection>
 
-          {/* Detected Patterns sub-section */}
-          <div>
-            <div
-              className="w-full flex items-center gap-2 px-4 py-2 font-bold text-on-surface-variant uppercase tracking-wider hover:bg-surface-container-high transition-colors"
-              onClick={() => setPatternsOpen(v => !v)}
-            >
-              <Layers className="h-3 w-3" />
-              <span className="flex-1 text-left text-xs">Patterns</span>
-              {detectedPatterns.filter(p => !p.unique).length > 0 && (
-                <span className="text-[10px] bg-surface-container-high px-1.5 py-0.5 rounded-full">
-                  {detectedPatterns.filter(p => !p.unique).length}
-                </span>
-              )}
-              {detectedPatterns.filter(p => !p.unique).length > 0 && (
-                <button
-                  onClick={e => { e.stopPropagation(); onTogglePatternColors(); }}
-                  className={cn(
-                    'p-0.5 rounded transition-colors',
-                    showPatternColors
-                      ? 'text-primary bg-primary/10'
-                      : 'text-on-surface-variant/50 hover:text-on-surface-variant hover:bg-surface-container-high',
-                  )}
-                  title={showPatternColors ? 'Hide pattern colors' : 'Show pattern colors'}
-                >
-                  <Palette className="h-3 w-3" />
-                </button>
-              )}
-              {patternsOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
-            </div>
-            {patternsOpen && (
+      {/* Detected Patterns */}
+      <SidebarSection
+        icon={Layers}
+        title="Patterns"
+        open={openSections.patterns}
+        onToggle={() => toggleSection('patterns')}
+        badge={detectedPatterns.filter(p => !p.unique).length > 0 ? (
+          <span className="text-[10px] bg-surface-container-high px-1.5 py-0.5 rounded-full normal-case tracking-normal font-normal mr-1">
+            {detectedPatterns.filter(p => !p.unique).length}
+          </span>
+        ) : undefined}
+        headerExtra={detectedPatterns.filter(p => !p.unique).length > 0 && (
+          <button
+            onClick={onTogglePatternColors}
+            className={cn(
+              'p-0.5 rounded transition-colors',
+              showPatternColors
+                ? 'text-primary bg-primary/10'
+                : 'text-on-surface-variant/50 hover:text-on-surface-variant hover:bg-surface-container-high',
+            )}
+            title={showPatternColors ? 'Hide pattern colors' : 'Show pattern colors'}
+          >
+            <Palette className="h-3 w-3" />
+          </button>
+        )}
+      >
               <div className="px-2 pb-2 space-y-1">
                 <div className="flex items-center gap-1">
                   <button
@@ -723,20 +904,22 @@ export default function TabEditorSidebar({
                             >
                               <Play className="h-3 w-3" />
                             </button>
-                            <button
-                              onClick={e => {
-                                e.stopPropagation();
-                                const name = pattern.unique ? `${pattern.label}` : `Pattern ${pattern.label}`;
-                                setNewSectionName(name);
-                                setNewSectionBar(barIdx);
-                                setAddSectionOpen(true);
-                                setSectionsOpen(true);
-                              }}
-                              className="p-0.5 rounded hover:bg-surface-container-highest transition-colors"
-                              title="Add as section"
-                            >
-                              <Plus className="h-3 w-3" />
-                            </button>
+                            {!readOnly && (
+                              <button
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  const name = pattern.unique ? `${pattern.label}` : `Pattern ${pattern.label}`;
+                                  setNewSectionName(name);
+                                  setNewSectionBar(barIdx);
+                                  setAddSectionOpen(true);
+                                  if (!openSections.sections) toggleSection('sections');
+                                }}
+                                className="p-0.5 rounded hover:bg-surface-container-highest transition-colors"
+                                title="Add as section"
+                              >
+                                <Plus className="h-3 w-3" />
+                              </button>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -745,31 +928,42 @@ export default function TabEditorSidebar({
                   );
                 })}
               </div>
-            )}
-          </div>
-        </div>
-      </div>
+      </SidebarSection>
 
       {/* Tuning config for active track */}
       {activeTrack && activeTrack.instrument !== 'drums' && (
-        <div className="p-4 border-t border-outline-variant/20">
-          <div className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">
-            Tuning
+        <SidebarSection
+          icon={Settings2}
+          title="Tuning"
+          open={openSections.tuning}
+          onToggle={() => toggleSection('tuning')}
+          badge={
+            <span className="text-[10px] font-normal normal-case tracking-normal text-on-surface-variant/50 mr-1 truncate max-w-[88px]">
+              {activeTrack.tuningName}
+            </span>
+          }
+        >
+          <div className="px-4 pb-3">
+            <select
+              value={activeTrack.tuningName}
+              disabled={readOnly}
+              onChange={e => {
+                const preset = tuningPresets.find(t => t.name === e.target.value);
+                if (preset) onTuningChange(activeTrackIndex, preset.values);
+              }}
+              className="w-full bg-surface-container text-xs text-on-surface px-2 py-1.5 rounded outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
+            >
+              {!tuningPresets.some(t => t.name === activeTrack.tuningName) && (
+                <option value={activeTrack.tuningName}>{activeTrack.tuningName}</option>
+              )}
+              {tuningPresets.map(t => (
+                <option key={t.name} value={t.name}>{t.name}</option>
+              ))}
+            </select>
           </div>
-          <select
-            value={activeTrack.tuningName}
-            onChange={e => {
-              const preset = tuningPresets.find(t => t.name === e.target.value);
-              if (preset) onTuningChange(activeTrackIndex, preset.values);
-            }}
-            className="w-full bg-surface-container text-xs text-on-surface px-2 py-1.5 rounded outline-none focus:ring-1 focus:ring-primary"
-          >
-            {tuningPresets.map(t => (
-              <option key={t.name} value={t.name}>{t.name}</option>
-            ))}
-          </select>
-        </div>
+        </SidebarSection>
       )}
+      </div>
     </div>
   );
 }

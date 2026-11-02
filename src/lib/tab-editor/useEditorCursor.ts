@@ -31,7 +31,8 @@ const DEFAULT_CURSOR: EditorCursor = {
 };
 
 function isCursorDebugEnabled() {
-  return typeof window !== 'undefined' && window.localStorage.getItem('tabEditorDebug') === '1';
+  // Node 26 exposes a global localStorage that is undefined without --localstorage-file.
+  return typeof window !== 'undefined' && window.localStorage?.getItem('tabEditorDebug') === '1';
 }
 
 function writeCursorDebug(event: string, payload: Record<string, unknown>) {

@@ -36,8 +36,104 @@ function makeOptions(overrides: Record<string, unknown> = {}) {
 }
 
 describe('useEditorKeyboard', () => {
+  describe('accents (A key)', () => {
+    it('cycles the whole beat through none → accent → heavy → none', async () => {
+      const {model} = await import('@coderline/alphatab');
+      const {setNote} = await import('../scoreOperations');
+      const opts = makeOptions({onToast: vi.fn(), onBeforeMutation: vi.fn()});
+      for (const stringNumber of [1, 2, 3]) {
+        setNote(opts.score, makeCursor({stringNumber}), 3);
+      }
+      renderHook(() => useEditorKeyboard(opts));
+
+      const notes = () => opts.score.tracks[0].staves[0].bars[0].voices[0].beats[0].notes;
+
+      act(() => { fireKey('a'); });
+      expect(notes().every(n => n.accentuated === model.AccentuationType.Normal)).toBe(true);
+      // The undo snapshot must be taken before the change.
+      expect(opts.onBeforeMutation).toHaveBeenCalledOnce();
+      expect(opts.onScoreChanged).toHaveBeenCalledOnce();
+
+      act(() => { fireKey('a'); });
+      expect(notes().every(n => n.accentuated === model.AccentuationType.Heavy)).toBe(true);
+
+      act(() => { fireKey('a'); });
+      expect(notes().every(n => n.accentuated === model.AccentuationType.None)).toBe(true);
+    });
+
+    it('warns instead of mutating when the beat is empty', () => {
+      const opts = makeOptions({onToast: vi.fn()});
+      renderHook(() => useEditorKeyboard(opts));
+
+      act(() => { fireKey('a'); });
+
+      expect(opts.onToast).toHaveBeenCalledWith('No notes on this beat to accent');
+      expect(opts.onScoreChanged).not.toHaveBeenCalled();
+    });
+
+    it('leaves Cmd+A for select-all', () => {
+      const opts = makeOptions({onSelectAllBars: vi.fn(), onToast: vi.fn()});
+      renderHook(() => useEditorKeyboard(opts));
+
+      act(() => { fireKey('a', {metaKey: true}); });
+
+      expect(opts.onSelectAllBars).toHaveBeenCalledOnce();
+      expect(opts.onToast).not.toHaveBeenCalled();
+    });
+  });
+
   afterEach(() => {
     vi.restoreAllMocks();
+  });
+
+  describe('fingering (Alt chords)', () => {
+    it('maps Alt+P/I/M/A to the right hand, by code not key', () => {
+      const opts = makeOptions({onRightHandFinger: vi.fn()});
+      renderHook(() => useEditorKeyboard(opts));
+      // macOS turns Alt+P into 'π' — the handler must read event.code instead
+      fireKey('π', {altKey: true, code: 'KeyP'});
+      fireKey('å', {altKey: true, code: 'KeyA'});
+      expect(opts.onRightHandFinger).toHaveBeenNthCalledWith(1, 'p');
+      expect(opts.onRightHandFinger).toHaveBeenNthCalledWith(2, 'a');
+    });
+
+    it('maps Alt+1..4 to the left hand and Alt+0 to clear', () => {
+      const opts = makeOptions({onLeftHandFinger: vi.fn(), onClearFingering: vi.fn()});
+      renderHook(() => useEditorKeyboard(opts));
+      fireKey('3', {altKey: true, code: 'Digit3'});
+      fireKey('0', {altKey: true, code: 'Digit0'});
+      expect(opts.onLeftHandFinger).toHaveBeenCalledWith('3');
+      expect(opts.onClearFingering).toHaveBeenCalledOnce();
+    });
+
+    it('Alt+F toggles the fingering display', () => {
+      const opts = makeOptions({onToggleFingering: vi.fn()});
+      renderHook(() => useEditorKeyboard(opts));
+      fireKey('ƒ', {altKey: true, code: 'KeyF'});
+      expect(opts.onToggleFingering).toHaveBeenCalledOnce();
+    });
+
+    it('Alt+S toggles the strumming pattern strip', () => {
+      const opts = makeOptions({onToggleStrumming: vi.fn()});
+      renderHook(() => useEditorKeyboard(opts));
+      fireKey('ß', {altKey: true, code: 'KeyS'});
+      expect(opts.onToggleStrumming).toHaveBeenCalledOnce();
+    });
+
+    it('plain digits still enter frets, not fingerings', () => {
+      const opts = makeOptions({onLeftHandFinger: vi.fn()});
+      renderHook(() => useEditorKeyboard(opts));
+      const event = fireKey('3', {code: 'Digit3'});
+      expect(opts.onLeftHandFinger).not.toHaveBeenCalled();
+      expect(event.defaultPrevented).toBe(true);
+    });
+
+    it('plain P still toggles hammer-on, not the thumb', () => {
+      const opts = makeOptions({onRightHandFinger: vi.fn()});
+      renderHook(() => useEditorKeyboard(opts));
+      fireKey('p', {code: 'KeyP'});
+      expect(opts.onRightHandFinger).not.toHaveBeenCalled();
+    });
   });
 
   describe('space bar', () => {
@@ -62,9 +158,61 @@ describe('useEditorKeyboard', () => {
       input.type = 'text';
       document.body.appendChild(input);
       input.focus();
-      input.dispatchEvent(new KeyboardEvent('keydown', {key: ' ', bubbles: true}));
+      const event = new KeyboardEvent('keydown', {key: ' ', bubbles: true, cancelable: true});
+      input.dispatchEvent(event);
       expect(opts.onPlayPause).not.toHaveBeenCalled();
+      expect(event.defaultPrevented).toBe(false);
       document.body.removeChild(input);
+    });
+
+    it.each(['textarea', 'select'])('leaves Space to a focused %s', tag => {
+      const opts = makeOptions();
+      renderHook(() => useEditorKeyboard(opts));
+      const field = document.createElement(tag);
+      document.body.appendChild(field);
+      field.focus();
+      const event = new KeyboardEvent('keydown', {key: ' ', bubbles: true, cancelable: true});
+      field.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(false);
+      expect(opts.onPlayPause).not.toHaveBeenCalled();
+      field.remove();
+    });
+
+    it('does not intercept events from children of a contenteditable field', () => {
+      const opts = makeOptions();
+      renderHook(() => useEditorKeyboard(opts));
+      const editable = document.createElement('div');
+      editable.setAttribute('contenteditable', 'true');
+      const text = editable.appendChild(document.createElement('span'));
+      document.body.appendChild(editable);
+      const event = new KeyboardEvent('keydown', {key: ' ', bubbles: true, cancelable: true});
+      text.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(false);
+      expect(opts.onPlayPause).not.toHaveBeenCalled();
+      editable.remove();
+    });
+
+    it('leaves modal buttons to handle Space without toggling playback', () => {
+      const opts = makeOptions();
+      renderHook(() => useEditorKeyboard(opts));
+      const dialog = document.createElement('div');
+      dialog.setAttribute('role', 'dialog');
+      const button = dialog.appendChild(document.createElement('button'));
+      document.body.appendChild(dialog);
+      const event = new KeyboardEvent('keydown', {key: ' ', bubbles: true, cancelable: true});
+      button.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(false);
+      expect(opts.onPlayPause).not.toHaveBeenCalled();
+      dialog.remove();
+    });
+
+    it('toggles only once when Space is held down', () => {
+      const opts = makeOptions();
+      renderHook(() => useEditorKeyboard(opts));
+      fireKey(' ');
+      const repeated = fireKey(' ', {repeat: true});
+      expect(opts.onPlayPause).toHaveBeenCalledOnce();
+      expect(repeated.defaultPrevented).toBe(true);
     });
   });
 
@@ -281,6 +429,174 @@ describe('useEditorKeyboard', () => {
       unmount();
       fireKey(' ');
       expect(opts.onPlayPause).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('practice shortcuts', () => {
+    function practiceOptions(overrides: Record<string, unknown> = {}) {
+      return makeOptions({
+        onToggleMode: vi.fn(),
+        onToggleLoop: vi.fn(),
+        onToggleSidebar: vi.fn(),
+        onAdjustSpeed: vi.fn(),
+        onResetSpeed: vi.fn(),
+        ...overrides,
+      });
+    }
+
+    it.each([
+      ['Alt+E', 'KeyE', 'onToggleMode'],
+      ['Alt+L', 'KeyL', 'onToggleLoop'],
+      ['Alt+B', 'KeyB', 'onToggleSidebar'],
+    ])('%s fires %s', (_label, code, handler) => {
+      const opts = practiceOptions();
+      renderHook(() => useEditorKeyboard(opts));
+      act(() => { fireKey('e', {altKey: true, code}); });
+      expect(opts[handler as keyof typeof opts]).toHaveBeenCalledOnce();
+    });
+
+    it('[ and ] step the playback speed, \\ resets it', () => {
+      const opts = practiceOptions();
+      renderHook(() => useEditorKeyboard(opts));
+      act(() => { fireKey(']'); });
+      act(() => { fireKey('['); });
+      act(() => { fireKey('\\'); });
+      expect(opts.onAdjustSpeed).toHaveBeenNthCalledWith(1, 5);
+      expect(opts.onAdjustSpeed).toHaveBeenNthCalledWith(2, -5);
+      expect(opts.onResetSpeed).toHaveBeenCalledOnce();
+    });
+
+    it('still works in view mode — speed and looping are not edits', () => {
+      const opts = practiceOptions({readOnly: true});
+      renderHook(() => useEditorKeyboard(opts));
+      act(() => { fireKey('l', {altKey: true, code: 'KeyL'}); });
+      act(() => { fireKey(']'); });
+      expect(opts.onToggleLoop).toHaveBeenCalledOnce();
+      expect(opts.onAdjustSpeed).toHaveBeenCalledOnce();
+    });
+  });
+
+  describe('view mode gating', () => {
+    function viewOptions(overrides: Record<string, unknown> = {}) {
+      return makeOptions({
+        readOnly: true,
+        onToast: vi.fn(),
+        onBeforeMutation: vi.fn(),
+        onUndo: vi.fn(),
+        onRedo: vi.fn(),
+        onClearSelectedBars: vi.fn(),
+        onAdvanceBeat: vi.fn(),
+        onDrumHit: vi.fn(),
+        onShowChordFinder: vi.fn(),
+        onRightHandFinger: vi.fn(),
+        onLeftHandFinger: vi.fn(),
+        onClearFingering: vi.fn(),
+        ...overrides,
+      });
+    }
+
+    const beats = (opts: ReturnType<typeof makeOptions>) =>
+      opts.score.tracks[0].staves[0].bars[0].voices[0].beats;
+
+    it('ignores fret entry', async () => {
+      const opts = viewOptions();
+      renderHook(() => useEditorKeyboard(opts));
+      act(() => { fireKey('3'); });
+      await new Promise(resolve => setTimeout(resolve, 600));
+      expect(opts.onScoreChanged).not.toHaveBeenCalled();
+      expect(beats(opts)[0].notes.length).toBe(0);
+    });
+
+    it.each([
+      ['effect key', 'h', {}],
+      ['rest', 'r', {}],
+      ['accent', 'a', {}],
+      ['dot', '.', {}],
+      ['add measure', '+', {}],
+      ['delete measure', '-', {}],
+      ['duration', '3', {ctrlKey: true}],
+      ['delete', 'Delete', {}],
+      ['backspace', 'Backspace', {}],
+      ['cut', 'x', {metaKey: true}],
+      ['paste', 'v', {metaKey: true}],
+    ])('ignores %s', (_label, key, modifiers) => {
+      const opts = viewOptions();
+      renderHook(() => useEditorKeyboard(opts));
+      act(() => { fireKey(key, modifiers); });
+      expect(opts.onScoreChanged).not.toHaveBeenCalled();
+      expect(opts.onBeforeMutation).not.toHaveBeenCalled();
+    });
+
+    it('ignores undo and redo', () => {
+      const opts = viewOptions();
+      renderHook(() => useEditorKeyboard(opts));
+      act(() => { fireKey('z', {metaKey: true}); });
+      act(() => { fireKey('z', {metaKey: true, shiftKey: true}); });
+      expect(opts.onUndo).not.toHaveBeenCalled();
+      expect(opts.onRedo).not.toHaveBeenCalled();
+    });
+
+    it('ignores the chord finder, drum pads and beat insertion', () => {
+      const opts = viewOptions({isDrumTrack: true});
+      renderHook(() => useEditorKeyboard(opts));
+      act(() => { fireKey('k', {metaKey: true}); });
+      act(() => { fireKey('l'); });
+      expect(opts.onShowChordFinder).not.toHaveBeenCalled();
+      expect(opts.onDrumHit).not.toHaveBeenCalled();
+      expect(opts.onAdvanceBeat).not.toHaveBeenCalled();
+    });
+
+    it('ignores fingering entry but keeps the fingering display toggle', () => {
+      const opts = viewOptions({onToggleFingering: vi.fn(), onToggleStrumming: vi.fn()});
+      renderHook(() => useEditorKeyboard(opts));
+      act(() => { fireKey('p', {altKey: true, code: 'KeyP'}); });
+      act(() => { fireKey('1', {altKey: true, code: 'Digit1'}); });
+      act(() => { fireKey('0', {altKey: true, code: 'Digit0'}); });
+      act(() => { fireKey('f', {altKey: true, code: 'KeyF'}); });
+      act(() => { fireKey('s', {altKey: true, code: 'KeyS'}); });
+      expect(opts.onRightHandFinger).not.toHaveBeenCalled();
+      expect(opts.onLeftHandFinger).not.toHaveBeenCalled();
+      expect(opts.onClearFingering).not.toHaveBeenCalled();
+      expect(opts.onToggleFingering).toHaveBeenCalledOnce();
+      expect(opts.onToggleStrumming).toHaveBeenCalledOnce();
+    });
+
+    it('keeps navigation, playback, scrolling, copy and help working', () => {
+      const opts = viewOptions({
+        onScrollUp: vi.fn(),
+        onScrollDown: vi.fn(),
+        onShowHelp: vi.fn(),
+        onSelectAllBars: vi.fn(),
+      });
+      renderHook(() => useEditorKeyboard(opts));
+      act(() => { fireKey(' '); });
+      act(() => { fireKey('ArrowLeft'); });
+      act(() => { fireKey('ArrowUp'); });
+      act(() => { fireKey('ArrowDown'); });
+      act(() => { fireKey('u'); });
+      act(() => { fireKey('d'); });
+      act(() => { fireKey('?'); });
+      act(() => { fireKey('a', {metaKey: true}); });
+      act(() => { fireKey('c', {metaKey: true}); });
+      expect(opts.onPlayPause).toHaveBeenCalledOnce();
+      expect(opts.moveLeft).toHaveBeenCalledOnce();
+      expect(opts.moveUp).toHaveBeenCalledOnce();
+      expect(opts.moveDown).toHaveBeenCalledOnce();
+      expect(opts.onScrollUp).toHaveBeenCalledOnce();
+      expect(opts.onScrollDown).toHaveBeenCalledOnce();
+      expect(opts.onShowHelp).toHaveBeenCalledOnce();
+      expect(opts.onSelectAllBars).toHaveBeenCalledOnce();
+      expect(opts.onScoreChanged).not.toHaveBeenCalled();
+    });
+
+    it('moves right without growing the bar', () => {
+      const opts = viewOptions();
+      const beatCount = beats(opts).length;
+      renderHook(() => useEditorKeyboard(opts));
+      act(() => { fireKey('ArrowRight'); });
+      expect(opts.moveRight).toHaveBeenCalledOnce();
+      expect(beats(opts).length).toBe(beatCount);
+      expect(opts.onScoreChanged).not.toHaveBeenCalled();
     });
   });
 });

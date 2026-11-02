@@ -11,6 +11,9 @@
  *   - Basic techniques: hammer-on (h), pull-off (p), slide (/ \),
  *     vibrato (~), bend (b) — applied as note effects
  *   - Multiple systems on one page
+ *   - Bar lines written as whitespace gaps ("--0---0-  --------0-")
+ *   - Tuning (from a `Tuning:` line or the string-name labels) and `Capo:`
+ *   - Letter frets (a=10 … f=15) when the text declares them ("a = 10")
  *
  * Timing: ASCII tabs rarely encode exact rhythm, so each beat
  * defaults to Duration.Quarter. The user can refine in the editor.
@@ -21,7 +24,7 @@ import {model, Settings} from '@coderline/alphatab';
 const {
   Score, Track, Staff, Bar, Voice, Beat, MasterBar, Note,
   PlaybackInformation, Automation, AutomationType, Duration,
-  Tuning, SlideOutType,
+  Tuning, SlideOutType, Section,
 } = model;
 
 type ScoreInstance = InstanceType<typeof Score>;
@@ -46,11 +49,86 @@ export interface AsciiImportOptions {
   thumbnailUrl?: string;
   /** Force 4/4 time even if the bar beat count suggests otherwise. */
   forceFourFour?: boolean;
+  /** MIDI tuning, top tab line (highest string) first. Ignored if the length ≠ string count. */
+  tuning?: number[];
+  capo?: number;
 }
+
+/**
+ * A `Tuning:` declaration, before octaves are assigned (that needs the string count).
+ * `pcs` are pitch classes top line first; `offset` is semitones from standard.
+ */
+type DeclaredTuning = {pcs: number[]} | {offset: number};
 
 interface TabBlockParsed {
   tabText: string;
   extractedOptions: AsciiImportOptions;
+  declaredTuning: DeclaredTuning | null;
+  /** The text declares "a = 10, b = 11, ..." — letters a–f are frets 10–15. */
+  letterFrets: boolean;
+}
+
+const PITCH_CLASS: Record<string, number> = {C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11};
+
+/** Pitch classes of a note-name run ("DADGAD", "D A D F# A D", "Db-Ab-Db-F-Bb-Eb", "EBEG#Be"). */
+function parseNoteNames(s: string): number[] | null {
+  const m = s.match(/^\s*((?:#?[A-Ga-g][#b]?[\s-]*){4,7})(?![A-Za-z#])/);
+  if (!m) return null;
+  const pcs: number[] = [];
+  for (const [, pre, letter, acc] of m[1].matchAll(/(#)?([A-Ga-g])([#b])?/g)) {
+    const pc = PITCH_CLASS[letter.toUpperCase()] + (pre || acc === '#' ? 1 : acc === 'b' ? -1 : 0);
+    pcs.push((pc + 12) % 12);
+  }
+  return pcs;
+}
+
+/** Parse the value of a `Tuning:` line. Note names are listed low → high. */
+function parseTuningDecl(value: string): DeclaredTuning | null {
+  const v = value.replace(/^(\s*tuning\s*:)+/i, '').trim();
+  // Text in parentheses or after a comma is commentary ("DGCFAD (whole step down)")
+  const pcs = parseNoteNames(v.split(/[(,;]|\band\b/)[0]);
+  if (pcs) return {pcs: pcs.reverse()};
+  const lower = v.toLowerCase();
+  if (/\bdown\b/.test(lower) && /half[\s-]*step/.test(lower)) return {offset: -1};
+  if (/\bdown\b/.test(lower) && /(whole|full|one)[\s-]*step/.test(lower)) return {offset: -2};
+  if (/^standard\b/.test(lower)) return {offset: 0};
+  return null;
+}
+
+/** Pick the octave of each pitch class nearest to the standard pitch at that position. */
+function pcsToMidi(pcs: number[], standard: number[]): number[] {
+  return pcs.map((pc, i) => {
+    const up = (((pc - standard[i]) % 12) + 12) % 12;
+    return standard[i] + (up < 6 ? up : up - 12);
+  });
+}
+
+function standardTuning(stringCount: number): number[] {
+  return stringCount === 4 ? TUNING_BASS_4 : stringCount === 7 ? TUNING_STANDARD_7 : TUNING_STANDARD_6;
+}
+
+/** Leading string name of a tab line ("e|", "C#|", "E-|"), or null. */
+function stringLabel(line: string): string | null {
+  return line.match(/^\s*([A-Ga-g][#b♭]?)\s*-?\s*[|:]/)?.[1] ?? null;
+}
+
+/** Options override > `Tuning:` line > string-name labels of the first system > standard. */
+function resolveTuning(
+  stringCount: number,
+  optionTuning: number[] | undefined,
+  declared: DeclaredTuning | null,
+  systems: System[],
+): number[] {
+  const standard = standardTuning(stringCount);
+  if (optionTuning?.length === stringCount) return optionTuning;
+  if (declared && 'offset' in declared) return standard.map(p => p + declared.offset);
+  if (declared?.pcs.length === stringCount) return pcsToMidi(declared.pcs, standard);
+  const labels = systems[0]?.lines.map(stringLabel);
+  if (labels?.length === stringCount && labels.every(l => l !== null)) {
+    const pcs = parseNoteNames(labels.join(' ').replace(/♭/g, 'b'));
+    if (pcs?.length === stringCount) return pcsToMidi(pcs, standard);
+  }
+  return standard;
 }
 
 /**
@@ -60,9 +138,21 @@ interface TabBlockParsed {
  * explicitly passed options win on conflict.
  */
 function parseTabBlock(input: string): TabBlockParsed {
-  const lines = input.split('\n');
+  const lines = input.replace(/\r\n?/g, '\n').split('\n');
   const extracted: AsciiImportOptions = {};
   let i = 0;
+
+  // Tuning / Capo / letter-fret declarations can appear anywhere in the text (often after a By: line)
+  let declaredTuning: DeclaredTuning | null = null;
+  for (const line of lines) {
+    const t = line.match(/^\s*tuning\b\s*:?(.*)$/i);
+    if (t && (declaredTuning = parseTuningDecl(t[1]))) break;
+  }
+  for (const line of lines) {
+    const c = line.match(/^\s*capo\b\s*:?\s*(?:capo\s*)?(\d+)/i);
+    if (c) { extracted.capo = parseInt(c[1], 10); break; }
+  }
+  const letterFrets = /\ba\s*=\s*10/i.test(input);
 
   // Skip leading blank lines before the header
   while (i < lines.length && lines[i].trim() === '') i++;
@@ -93,7 +183,7 @@ function parseTabBlock(input: string): TabBlockParsed {
     }
   }
 
-  return {tabText: lines.slice(i).join('\n'), extractedOptions: extracted};
+  return {tabText: lines.slice(i).join('\n'), extractedOptions: extracted, declaredTuning, letterFrets};
 }
 
 /** Extract metadata from an ASCII tab header without building the full score. */
@@ -106,28 +196,41 @@ export function importFromAsciiTabWithMeta(
   text: string,
   options: AsciiImportOptions = {},
 ): {score: ScoreInstance; meta: AsciiImportOptions} {
-  const {tabText, extractedOptions} = parseTabBlock(text);
-  const merged: AsciiImportOptions = {...extractedOptions, ...options};
-  const score = buildScoreFromParsed(tabText, merged);
+  const parsed = parseTabBlock(text);
+  const merged: AsciiImportOptions = {...parsed.extractedOptions, ...options};
+  const score = buildScoreFromParsed(parsed, merged);
   return {score, meta: merged};
 }
 
-function buildScoreFromParsed(tabText: string, merged: AsciiImportOptions): ScoreInstance {
+function buildScoreFromParsed(parsed: TabBlockParsed, merged: AsciiImportOptions): ScoreInstance {
   const {title = 'Imported Tab', artist = '', tempo = DEFAULT_TEMPO} = merged;
-  let text = tabText;
+  const {letterFrets} = parsed;
+  let text = parsed.tabText;
 
   text = text
     .replace(/\[tab\]([\s\S]*?)\[\/tab\]/gi, '$1')
     .replace(/\[ch\](.*?)\[\/ch\]/gi, '$1')
-    .replace(/\[[A-Za-z0-9 _/-]+\]/g, '');
+    .split('\n')
+    // A whole-line [Intro] / [Verse 2] is a section label (see sectionLabel); strip the rest
+    .map(l => (/^\s*\[[^\]]+\]\s*$/.test(l) ? l : l.replace(/\[[A-Za-z0-9 _/-]+\]/g, '')))
+    .join('\n');
 
-  const systems = detectSystems(text);
-  const allBars = systems.flatMap(s => parseSystem(s));
+  const systems = detectSystems(text, letterFrets);
+  // The section label goes on the first bar of its system (or the next system that has notes)
+  let pendingSection: string | undefined;
+  const allBars = systems.flatMap(s => {
+    const bars = parseSystem(s, letterFrets);
+    pendingSection = s.section ?? pendingSection;
+    if (bars.length > 0 && pendingSection) {
+      bars[0].section = pendingSection;
+      pendingSection = undefined;
+    }
+    return bars;
+  });
 
   const stringCount = systems[0]?.lines.length ?? 6;
   const isBass = stringCount === 4;
-  const is7String = stringCount === 7;
-  const tuningMidi = isBass ? TUNING_BASS_4 : is7String ? TUNING_STANDARD_7 : TUNING_STANDARD_6;
+  const tuningMidi = resolveTuning(stringCount, merged.tuning, parsed.declaredTuning, systems);
 
   const score = new Score();
   score.title = title;
@@ -152,6 +255,7 @@ function buildScoreFromParsed(tabText: string, merged: AsciiImportOptions): Scor
   // Avoid Tuning.findTuning — it requires an initialised AlphaTab context and
   // crashes with "candidates.find" when called outside one (e.g. in the browse flow).
   staff.stringTuning = new Tuning('Custom', tuningMidi, false);
+  staff.capo = merged.capo ?? 0;
   track.addStaff(staff);
   score.addTrack(track);
 
@@ -174,9 +278,9 @@ export function importFromAsciiTab(
   text: string,
   options: AsciiImportOptions = {},
 ): ScoreInstance {
-  const {tabText, extractedOptions} = parseTabBlock(text);
-  const merged: AsciiImportOptions = {...extractedOptions, ...options};
-  return buildScoreFromParsed(tabText, merged);
+  const parsed = parseTabBlock(text);
+  const merged: AsciiImportOptions = {...parsed.extractedOptions, ...options};
+  return buildScoreFromParsed(parsed, merged);
 }
 
 // ---------------------------------------------------------------------------
@@ -185,6 +289,8 @@ export function importFromAsciiTab(
 
 interface System {
   lines: string[];
+  /** Section label found above this system ("Intro", "Verse 2"). */
+  section?: string;
 }
 
 /** Heuristic: a line is a tab string line if it has lots of dashes + digits */
@@ -201,30 +307,88 @@ function isTabLine(line: string): boolean {
   return dashes / total >= 0.50 && /\d/.test(t);
 }
 
-function detectSystems(text: string): System[] {
+/**
+ * A string line with no digits: an empty string ("----------------"), or one holding only
+ * letter frets / mutes. Only accepted next to a tab line of similar length (see detectSystems),
+ * so prose rules ("-----", "_____X2") don't become strings.
+ */
+function isDigitlessTabLine(line: string, letterFrets: boolean): boolean {
+  const t = line.trim();
+  if (t.length < 6 || t.startsWith('|')) return false;
+  const allowed = letterFrets ? /^[-|\sa-fxX/\\~hpP()*.]+$/ : /^[-|\sxX/\\~()*.]+$/;
+  const dashes = (t.match(/-/g) ?? []).length;
+  return allowed.test(t) && dashes / t.replace(/\s/g, '').length >= 0.6;
+}
+
+function detectSystems(text: string, letterFrets = false): System[] {
   const lines = text.split('\n');
   const systems: System[] = [];
   let group: string[] = [];
+  // Last label seen since the previous system; survives blank lines and prose
+  let pendingSection: string | undefined;
+  const flush = () => {
+    if (group.length < 4) return;
+    // Split group into sub-groups of 4, 6, or 7 lines
+    for (const [gi, sub] of splitToStringGroups(group).entries()) {
+      systems.push(gi === 0 && pendingSection ? {lines: sub, section: pendingSection} : {lines: sub});
+      pendingSection = undefined;
+    }
+  };
 
-  for (const line of lines) {
-    if (isTabLine(line)) {
+  // Grow each run of tab lines into adjacent digitless string lines of similar length
+  const accepted = lines.map(isTabLine);
+  const len = (i: number) => lines[i].trimEnd().length;
+  for (let changed = true; changed;) {
+    changed = false;
+    for (let i = 0; i < lines.length; i++) {
+      if (accepted[i] || !isDigitlessTabLine(lines[i], letterFrets)) continue;
+      const near = [i - 1, i + 1].some(j => accepted[j] && Math.abs(len(j) - len(i)) <= 3);
+      if (near) accepted[i] = changed = true;
+    }
+  }
+
+  for (const [li, line] of lines.entries()) {
+    if (accepted[li]) {
       group.push(line);
     } else {
-      if (group.length >= 4) {
-        // Split group into sub-groups of 4, 6, or 7 lines
-        for (const sub of splitToStringGroups(group)) {
-          systems.push({lines: sub});
-        }
-      }
+      flush();
       group = [];
+      pendingSection = sectionLabel(line) ?? pendingSection;
     }
   }
-  if (group.length >= 4) {
-    for (const sub of splitToStringGroups(group)) {
-      systems.push({lines: sub});
-    }
-  }
+  flush();
   return systems;
+}
+
+const SECTION_KEYWORD =
+  /^(intro|verse|chorus|bridge|pre-?chorus|outro|solo|instrumental|interlude|riff|coda|ending|refrain|rubato)\b/i;
+const NOT_A_SECTION =
+  /^(title|artist|tuning|capo|by|album|notes?|notations?|tempo|key|difficulty|description|tabbed by|e-?mail)\b/i;
+const SENTENCE_WORD = /\b(then|this|is|on|with|play|played|goes|times|when|before|after|from|here's|twice)\b/i;
+
+/**
+ * Section name if the line is a section label, else null. Conservative so prose isn't taken:
+ * "[Verse 2]"; a short "INTRO :" / "Instrumental #1 :"; or a keyword followed only by a number,
+ * "#n", "(x2)" ("Chorus 2", "Solo (x2)"). Header keys and "Notations:" are never labels.
+ */
+function sectionLabel(line: string): string | null {
+  const t = line.trim();
+  let label: string | null = null;
+  const bracketed = t.match(/^\[([^\]]+)\]$/);
+  if (bracketed) label = bracketed[1];
+  else if (t.length <= 30 && t.endsWith(':') && t.split(/\s+/).length <= 4) {
+    // Reject the tail of a wrapped sentence ("goes:", "Then:", "End on:", "Main Riff is this:")
+    const head = t.slice(0, -1);
+    const startsLikeHeading = /^["\d\p{Lu}]/u.test(head) || SECTION_KEYWORD.test(head);
+    const balanced = (head.match(/\(/g) ?? []).length === (head.match(/\)/g) ?? []).length;
+    if (startsLikeHeading && balanced && !SENTENCE_WORD.test(head)) label = head;
+  }
+  else if (SECTION_KEYWORD.test(t) && /^[\s\d#:()xX.,&/-]*$/.test(t.replace(SECTION_KEYWORD, ''))) label = t;
+  if (!label || label.length > 30 || NOT_A_SECTION.test(label.trim())) return null;
+  label = label.replace(/[\s:]+$/, '').replace(/\s+/g, ' ').trim();
+  if (!/[A-Za-z]/.test(label)) return null;
+  // "INTRO" → "Intro"; mixed case is kept as written
+  return label === label.toUpperCase() ? label.charAt(0) + label.slice(1).toLowerCase() : label;
 }
 
 /** Split a block of N consecutive tab lines into groups of 4/6/7 */
@@ -264,26 +428,29 @@ interface ParsedBeat {
 
 interface ParsedBar {
   beats: ParsedBeat[];
+  section?: string;
 }
 
-function parseSystem(system: System): ParsedBar[] {
+function parseSystem(system: System, letterFrets = false): ParsedBar[] {
   const {lines} = system;
 
   // Strip string-name prefix from each line, then find content
-  const contents = lines.map(extractContent);
+  const contents = extractContents(lines);
   const maxLen = Math.max(...contents.map(c => c.length));
 
   // Pad shorter lines
   const padded = contents.map(c => c.padEnd(maxLen, '-'));
 
   // Per-string: parse raw events (2-digit flagged), then resolve ambiguous frets
-  const rawStringEvents = padded.map(parseStringLine);
+  const rawStringEvents = padded.map(l => parseStringLine(l, letterFrets));
 
   // Context: single-digit frets are unambiguous — use them to judge 2-digit candidates
   const contextFrets = rawStringEvents.flat().filter(e => !e.is2digit).map(e => e.fret);
 
   type StrEvent = {col: number; fret: number; technique?: ParsedNote['technique']};
-  const stringEvents: StrEvent[][] = rawStringEvents.map(evs => resolveStringEvents(evs, contextFrets));
+  const stringEvents: StrEvent[][] = rawStringEvents.map(
+    (evs, li) => resolveStringEvents(evs, contextFrets, padded, li),
+  );
 
   // Find bar-line positions in the content
   const barCols = new Set<number>();
@@ -298,13 +465,28 @@ function parseSystem(system: System): ParsedBar[] {
   stringEvents.forEach((evs, li) => evs.forEach(ev => allEvents.push({...ev, lineIdx: li})));
   allEvents.sort((a, b) => a.col - b.col);
 
-  // Group by proximity (notes within 2 cols of each other = same beat)
+  // Group by proximity (notes within `tolerance` cols of each other = same beat). Normally 2,
+  // so sloppy chords still line up; but the tolerance must stay below the system's typical
+  // spacing between successive note columns. Tight fingerpicking 2 apart ("-0---0-4-0-0-3-")
+  // only chords same-column or off-by-one notes; picking 1 apart only chords same-column notes.
+  const cols = [...new Set(allEvents.map(e => e.col))].sort((a, b) => a - b);
+  const gaps: number[] = [];
+  for (let i = 1; i < cols.length; i++) {
+    if (!isBarBetween(cols[i - 1], cols[i], barCols)) gaps.push(cols[i] - cols[i - 1]);
+  }
+  const medianGap = [...gaps].sort((a, b) => a - b)[Math.floor(gaps.length / 2)];
+  // Gaps of 1 are either picking 1 apart (long runs: 4+ columns in a row) or off-by-one
+  // chord notes (isolated pairs), which must still merge.
+  const pickingRun = gaps.some((g, i) => g === 1 && gaps[i + 1] === 1 && gaps[i + 2] === 1);
+  const tolerance = medianGap === undefined || medianGap >= 3 ? 2
+    : medianGap === 2 || !pickingRun ? 1 : 0;
+
   const beatGroups: {col: number; notes: (StrEvent & {lineIdx: number})[]}[] = [];
   for (const ev of allEvents) {
     // Only merge into an existing beat if no note already occupies the same string —
     // AlphaTab overwrites when two notes share the same string in a single beat.
     const g = beatGroups.find(
-      g => Math.abs(g.col - ev.col) <= 2
+      g => Math.abs(g.col - ev.col) <= tolerance
         && !isBarBetween(g.col, ev.col, barCols)
         && !g.notes.some(n => n.lineIdx === ev.lineIdx),
     );
@@ -338,7 +520,8 @@ function parseSystem(system: System): ParsedBar[] {
         })),
       }));
     if (beats.length > 0) bars.push({beats});
-    segStart = bc + 1;
+    // A note can sit on another string's bar column when measures don't line up — keep it
+    segStart = bc;
   }
 
   return bars;
@@ -354,13 +537,30 @@ function isBarBetween(colA: number, colB: number, barCols: Set<number>): boolean
   return false;
 }
 
-/** Strip the string-name prefix (e.g. "E|", "e|", "B |", "E-|") and return content. */
-function extractContent(line: string): string {
-  // Match optional string name (with optional dash separator, e.g. "E-|") + pipe
-  const m = line.match(/^[^\S\n]*[A-Ga-g#♭]?-?\s*\|?(.*)/);
-  const content = m ? m[1] : line;
-  // Remove trailing | and whitespace
-  return content.replace(/\|\s*$/, '').replace(/\s/g, '');
+/**
+ * Strip each line's string-name prefix (e.g. "E|", "e|", "B |", "E-|", "C#|") and return the
+ * system's content lines. Whitespace gaps count as bar lines ("--0---0-  --------0-"); when every
+ * string has the same number of measures, each measure is padded to its widest string so a stray
+ * extra dash or space on one string can't shift everything after it.
+ */
+function extractContents(lines: string[]): string[] {
+  const tokenized = lines.map(line => {
+    // String name + pipe. Without the pipe a leading letter may be a letter fret ("a---f---").
+    const m = line.match(/^\s*(?:[A-Ga-g][#b♭]?\s*-?\s*[|:])?(.*)/);
+    const tokens = (m ? m[1] : line).split(/\s+/).filter(Boolean);
+    // Drop annotations with no dashes around the tab: "(x2)", "x4", a pipe-less "e" label
+    while (tokens.length > 0 && !tokens[tokens.length - 1].includes('-')) tokens.pop();
+    while (tokens.length > 0 && !tokens[0].includes('-')) tokens.shift();
+    return tokens;
+  });
+  const measures = tokenized.map(tokens => tokens.flatMap(t => t.split('|')).filter(Boolean));
+  const count = measures[0].length;
+  if (count === 0 || measures.some(ms => ms.length !== count)) {
+    // Measures don't line up across strings — just drop whitespace, keep the pipes in place
+    return tokenized.map(tokens => tokens.join('').replace(/\|$/, ''));
+  }
+  const widths = measures[0].map((_, k) => Math.max(...measures.map(ms => ms[k].length)));
+  return measures.map(ms => ms.map((seg, k) => seg.padEnd(widths[k], '-')).join('|'));
 }
 
 type RawStrEvent = {
@@ -370,21 +570,28 @@ type RawStrEvent = {
   is2digit: boolean;
 };
 
-/** Parse a single string's content line into raw note events, flagging 2-digit reads. */
-function parseStringLine(line: string): RawStrEvent[] {
+const isDigit = (ch: string | undefined) => ch !== undefined && ch >= '0' && ch <= '9';
+
+/**
+ * Parse a single string's content line into raw note events, flagging 2-digit reads.
+ * With `letterFrets`, a–f are frets 10–15 and every digit is a single fret ("2320" = 2,3,2,0).
+ */
+function parseStringLine(line: string, letterFrets = false): RawStrEvent[] {
   const events: RawStrEvent[] = [];
   let x = 0;
   while (x < line.length) {
     const ch = line[x];
-    if (ch >= '0' && ch <= '9') {
+    const isLetterFret = letterFrets && ch >= 'a' && ch <= 'f';
+    if (isDigit(ch) || isLetterFret) {
       let fretStr = ch;
       let is2digit = false;
-      if (x + 1 < line.length && line[x + 1] >= '0' && line[x + 1] <= '9') {
+      // No fret is written with a leading zero, so "02" is always 0 then 2
+      if (!letterFrets && ch !== '0' && isDigit(line[x + 1])) {
         fretStr += line[x + 1];
         is2digit = true;
         x++;
       }
-      const fret = parseInt(fretStr, 10);
+      const fret = isLetterFret ? ch.charCodeAt(0) - 87 : parseInt(fretStr, 10);
       let technique: ParsedNote['technique'] | undefined;
       const ahead = line[x + 1];
       if (ahead === 'h') technique = 'h';
@@ -392,7 +599,7 @@ function parseStringLine(line: string): RawStrEvent[] {
       else if (ahead === '/') technique = '/';
       else if (ahead === '\\') technique = '\\';
       else if (ahead === '~') technique = '~';
-      else if (ahead === 'b') technique = 'b';
+      else if (ahead === 'b' && !letterFrets) technique = 'b';
       events.push({col: x - (fretStr.length - 1), fret, technique, is2digit});
     }
     x++;
@@ -405,15 +612,27 @@ function parseStringLine(line: string): RawStrEvent[] {
  * Uses the 90th-percentile of single-digit context frets as a baseline:
  * if the context is clearly low-position (p90 < 12) and the candidate sits
  * more than 10 frets above that baseline, splitting is safer than keeping.
+ * Never splits when the system leaves room for a 2-digit fret (see hasRoomFor2Digit).
  */
-function shouldSplitFret(fret: number, contextFrets: number[]): boolean {
+function shouldSplitFret(fret: number, contextFrets: number[], hasRoom: boolean): boolean {
   if (fret > MAX_FRET) return true;
+  if (hasRoom) return false;
   if (contextFrets.length < 3) return false;
   const sorted = [...contextFrets].sort((a, b) => a - b);
   const p90 = sorted[Math.floor(sorted.length * 0.9)];
   // p90 === 0 means all context is open strings — no position information,
   // so fret 14 is indistinguishable from notes 1+4. Prefer keeping it whole.
   return p90 > 0 && p90 < 12 && fret > p90 + 10;
+}
+
+/**
+ * True when the 2-digit read at `col` on line `li` is column-aligned like a real fret:
+ * the digit pair isn't part of a longer digit run on its own string ("2320"), and no other
+ * string has a single-digit note in its second column (which would make it a beat of its own).
+ */
+function hasRoomFor2Digit(lines: string[], li: number, col: number): boolean {
+  if (isDigit(lines[li][col - 1]) || isDigit(lines[li][col + 2])) return false;
+  return lines.every((l, j) => j === li || !isDigit(l[col + 1]) || isDigit(l[col]) || isDigit(l[col + 2]));
 }
 
 /**
@@ -424,10 +643,12 @@ function shouldSplitFret(fret: number, contextFrets: number[]): boolean {
 function resolveStringEvents(
   evs: RawStrEvent[],
   contextFrets: number[],
+  lines: string[],
+  li: number,
 ): {col: number; fret: number; technique?: ParsedNote['technique']}[] {
   const out: {col: number; fret: number; technique?: ParsedNote['technique']}[] = [];
   for (const ev of evs) {
-    if (ev.is2digit && shouldSplitFret(ev.fret, contextFrets)) {
+    if (ev.is2digit && shouldSplitFret(ev.fret, contextFrets, hasRoomFor2Digit(lines, li, ev.col))) {
       const hi = Math.floor(ev.fret / 10);
       const lo = ev.fret % 10;
       out.push({col: ev.col, fret: hi});
@@ -462,7 +683,8 @@ function splitToStandardBars(parsedBar: ParsedBar): ParsedBar[] {
   if (parsedBar.beats.length <= MAX_BEATS) return [parsedBar];
   const result: ParsedBar[] = [];
   for (let i = 0; i < parsedBar.beats.length; i += MAX_BEATS) {
-    result.push({beats: parsedBar.beats.slice(i, i + MAX_BEATS)});
+    const beats = parsedBar.beats.slice(i, i + MAX_BEATS);
+    result.push(i === 0 ? {beats, section: parsedBar.section} : {beats});
   }
   return result;
 }
@@ -512,6 +734,12 @@ function addParsedBar(
   const mb = new MasterBar();
   mb.timeSignatureNumerator = num;
   mb.timeSignatureDenominator = denom;
+
+  if (parsedBar.section) {
+    mb.section = new Section();
+    mb.section.marker = '';
+    mb.section.text = parsedBar.section;
+  }
 
   if (barIdx === 0) {
     const ta = new Automation();

@@ -129,3 +129,24 @@ describe('barIndexToTick', () => {
     expect(barIndexToTick(score, 4, 4, 15360)).toBe(15360);
   });
 });
+
+
+describe('MIDI lookup seek positions', () => {
+  it('uses the MIDI repeat map instead of a written-score beat offset', () => {
+    const beat = makeBeat(3840, 1);
+    const lookup = {getBeatStart: (candidate: typeof beat) => candidate === beat ? 11520 : 0};
+    expect(computeSeekTick(beat, 4, 23040, lookup)).toBe(11520);
+  });
+
+  it('uses a master bar lookup for mixed meters and repeated measures', () => {
+    const score = makeScore(4);
+    score.masterBars[2] = {index: 2};
+    const lookup = {getMasterBarStart: (_bar: unknown) => 13440};
+    expect(barIndexToTick(score, 2, 4, 24000, lookup)).toBe(13440);
+  });
+
+  it('keeps the range end at endTick even with a MIDI lookup', () => {
+    const lookup = {getMasterBarStart: (_bar: unknown) => 13440};
+    expect(barIndexToTick(makeScore(4), 4, 4, 24000, lookup)).toBe(24000);
+  });
+});

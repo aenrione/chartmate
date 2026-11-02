@@ -33,20 +33,20 @@ function getVoice(score: Score, cursor: EditorCursor) {
   return bar.voices[cursor.voiceIndex] ?? null;
 }
 
-function getBeat(score: Score, cursor: EditorCursor): BeatInstance | null {
+export function getBeat(score: Score, cursor: EditorCursor): BeatInstance | null {
   const voice = getVoice(score, cursor);
   if (!voice) return null;
   return voice.beats[cursor.beatIndex] ?? null;
 }
 
-function findNoteOnString(beat: BeatInstance, stringNumber: number): NoteInstance | null {
+export function findNoteOnString(beat: BeatInstance, stringNumber: number): NoteInstance | null {
   for (const note of beat.notes) {
     if (note.string === stringNumber) return note;
   }
   return null;
 }
 
-function finishScore(score: Score) {
+export function finishScore(score: Score) {
   score.finish(new Settings());
   // GP loader calls rebuildRepeatGroups() after finish(); we must too — new bars
   // get repeatGroup=undefined otherwise, crashing AlphaTab's MIDI generator.
@@ -332,6 +332,81 @@ export function toggleEffect(score: Score, cursor: EditorCursor, effect: NoteEff
       break;
   }
   finishScore(score);
+}
+
+// --- Accents ---------------------------------------------------------------
+
+/**
+ * How hard a beat is struck. Stored on every note of the beat as alphaTab's
+ * `accentuated`, which survives a Guitar Pro 7 round-trip (verified: `Normal`,
+ * `Heavy` and `Tenuto` all come back unchanged through the GP7 exporter and
+ * importer).
+ *
+ * `null` means no accent at all.
+ *
+ * A strum is a six-note beat, so accents are a *beat* property here: marking a
+ * single note of a chord would be meaningless to a guitarist. Per-note accents
+ * are still reachable through `toggleEffect(score, cursor, 'accent')`, which is
+ * what the drum editor uses.
+ *
+ * Note that alphaTab only draws the accent glyph on the **standard notation**
+ * staff — a tab-only view will not show it. The strumming pattern panel marks
+ * accented strokes instead, which is where a tab reader will see them.
+ */
+export type AccentLevel = 'normal' | 'heavy' | null;
+
+const ACCENT_TO_ALPHATAB: Record<'normal' | 'heavy', number> = {
+  normal: AccentuationType.Normal,
+  heavy: AccentuationType.Heavy,
+};
+
+function accentFromAlphaTab(value: number): AccentLevel {
+  if (value === AccentuationType.Normal) return 'normal';
+  if (value === AccentuationType.Heavy) return 'heavy';
+  return null;
+}
+
+/**
+ * The accent of the beat under the cursor: the level shared by all of its
+ * sounding notes, or `null` when they disagree or carry none.
+ */
+export function getBeatAccent(score: Score, cursor: EditorCursor): AccentLevel {
+  const beat = getBeat(score, cursor);
+  if (!beat || beat.isRest || beat.notes.length === 0) return null;
+  const first = accentFromAlphaTab(beat.notes[0].accentuated);
+  return beat.notes.every(n => accentFromAlphaTab(n.accentuated) === first) ? first : null;
+}
+
+/**
+ * Set (or clear, with `null`) the accent on every note of the beat under the
+ * cursor. Returns true when something changed.
+ */
+export function setBeatAccent(score: Score, cursor: EditorCursor, level: AccentLevel): boolean {
+  const beat = getBeat(score, cursor);
+  if (!beat || beat.isRest || beat.notes.length === 0) return false;
+  const next = level === null ? AccentuationType.None : ACCENT_TO_ALPHATAB[level];
+  let changed = false;
+  for (const note of beat.notes) {
+    if (note.accentuated === next) continue;
+    note.accentuated = next;
+    changed = true;
+  }
+  if (changed) finishScore(score);
+  return changed;
+}
+
+/**
+ * Step the beat under the cursor through none → accent → heavy accent → none.
+ * Returns the level it landed on, or `undefined` when there was no beat to
+ * change.
+ */
+export function cycleBeatAccent(score: Score, cursor: EditorCursor): AccentLevel | undefined {
+  const beat = getBeat(score, cursor);
+  if (!beat || beat.isRest || beat.notes.length === 0) return undefined;
+  const current = getBeatAccent(score, cursor);
+  const next: AccentLevel = current === null ? 'normal' : current === 'normal' ? 'heavy' : null;
+  setBeatAccent(score, cursor, next);
+  return next;
 }
 
 export function toggleSlide(score: Score, cursor: EditorCursor): void {
@@ -676,6 +751,39 @@ export function setTrackTuning(score: Score, trackIndex: number, tuning: number[
 
 export function getScoreTempo(score: Score): number {
   return (score.masterBars as any[])[0]?.tempoAutomations?.[0]?.value ?? 120;
+}
+
+// alphaTab's KeySignature is sharps (+) / flats (−); names match KEYS in keyData.ts (major keys,
+// so a minor signature reads as its relative major — same notes). 7 sharps/flats fold onto the
+// enharmonic key the editor lists.
+const KEY_BY_ACCIDENTALS: Record<number, string> = {
+  [-7]: 'B', [-6]: 'F#', [-5]: 'Db', [-4]: 'Ab', [-3]: 'Eb', [-2]: 'Bb', [-1]: 'F',
+  0: 'C', 1: 'G', 2: 'D', 3: 'A', 4: 'E', 5: 'B', 6: 'F#', 7: 'Db',
+};
+const ACCIDENTALS_BY_KEY: Record<string, number> = {
+  C: 0, G: 1, D: 2, A: 3, E: 4, B: 5, 'F#': 6, Db: -5, Ab: -4, Eb: -3, Bb: -2, F: -1,
+};
+
+/**
+ * Song key from the first bar's key signature. A signature of 0 is GP's default, which every
+ * file without a key has too, so it reads as "no key" rather than C major.
+ */
+export function getScoreKey(score: Score): string | null {
+  const sig = score.masterBars[0]?.keySignature as number | undefined;
+  return sig ? KEY_BY_ACCIDENTALS[sig] ?? null : null;
+}
+
+/** Set the song key. Only bars sharing the first bar's signature change, so modulations survive. */
+export function setScoreKey(score: Score, key: string | null): void {
+  if (score.masterBars.length === 0) return;
+  const from = score.masterBars[0].keySignature;
+  const to = (key ? ACCIDENTALS_BY_KEY[key] ?? 0 : 0) as typeof from;
+  for (const mb of score.masterBars) {
+    if (mb.keySignature !== from) continue;
+    mb.keySignature = to;
+    mb.keySignatureType = model.KeySignatureType.Major;
+  }
+  finishScore(score);
 }
 
 export function setTempo(score: Score, bpm: number): void {

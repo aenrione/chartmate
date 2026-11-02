@@ -115,7 +115,13 @@ const TabEditorCanvas = forwardRef<TabEditorCanvasHandle, TabEditorCanvasProps>(
     }
 
     return (
-      <div className="relative flex-1 overflow-auto bg-white dark:bg-zinc-900 rounded-lg z-0">
+      <div
+        role="region"
+        aria-label="Score editor"
+        tabIndex={0}
+        onMouseDown={event => event.currentTarget.focus({preventScroll: true})}
+        className="relative flex-1 overflow-auto bg-white dark:bg-zinc-900 rounded-lg z-0"
+      >
         {stringCursorStyle && (
           <div
             className="absolute pointer-events-none z-10 border-2 border-primary bg-primary/20 rounded-none"
@@ -158,6 +164,7 @@ const TabEditorCanvas = forwardRef<TabEditorCanvasHandle, TabEditorCanvasProps>(
           staveProfile={staveProfileFromMode(staveMode)}
           scale={1.0}
           enablePlayer={true}
+          enableUserInteraction={false}
           includeNoteBounds={true}
           hideBuiltInSectionLabels={true}
           useScriptProcessorOutput={true}

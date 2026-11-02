@@ -40,6 +40,39 @@ export default function EditorHelpDialog({open, onOpenChange}: EditorHelpDialogP
         </DialogHeader>
 
         <div className="mt-4 space-y-5 text-sm">
+          {/* Practice */}
+          <section>
+            <h3 className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Practice</h3>
+            <table className="w-full">
+              <tbody>
+                <ShortcutRow
+                  keys={<><Kbd>Alt</Kbd> + <Kbd>E</Kbd></>}
+                  description="Switch between View mode (nothing can change the tab) and Edit mode"
+                />
+                <ShortcutRow
+                  keys={<><Kbd>Alt</Kbd> + <Kbd>L</Kbd></>}
+                  description="Loop the selected bars, or the bar under the cursor. Press again to clear."
+                />
+                <ShortcutRow
+                  keys={<><Kbd>Alt</Kbd> + <Kbd>B</Kbd></>}
+                  description="Collapse / restore the sidebar for a full-width tab"
+                />
+                <ShortcutRow
+                  keys={<><Kbd>[</Kbd> <Kbd>]</Kbd></>}
+                  description="Practice playback speed down / up (25–200 %). Playback only — it never changes the song's BPM and is never saved."
+                />
+                <ShortcutRow keys={<Kbd>\</Kbd>} description="Back to 100 % playback speed" />
+                <ShortcutRow keys={<Kbd>U</Kbd>} description="Scroll the score up" />
+                <ShortcutRow keys={<Kbd>D</Kbd>} description="Scroll the score down" />
+              </tbody>
+            </table>
+            <p className="mt-2 text-[11px] text-on-surface-variant/70 leading-relaxed">
+              The sidebar&apos;s <strong>BPM</strong> field is the song&apos;s real tempo and is
+              written into the file when you save. The toolbar&apos;s <strong>Speed</strong>
+              control only slows playback down and is forgotten when you leave.
+            </p>
+          </section>
+
           {/* Note Entry */}
           <section>
             <h3 className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Note Entry</h3>
@@ -115,6 +148,34 @@ export default function EditorHelpDialog({open, onOpenChange}: EditorHelpDialogP
                 <ShortcutRow keys={<Kbd>V</Kbd>} description="Vibrato" />
                 <ShortcutRow keys={<Kbd>T</Kbd>} description="Tap" />
                 <ShortcutRow keys={<Kbd>G</Kbd>} description="Ghost Note" />
+                <ShortcutRow keys={<Kbd>A</Kbd>} description="Accent the whole beat — none → accent → heavy" />
+              </tbody>
+            </table>
+          </section>
+
+          {/* Strumming */}
+          <section>
+            <h3 className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Strumming</h3>
+            <table className="w-full">
+              <tbody>
+                <ShortcutRow keys={<><Kbd>Alt</Kbd> + <Kbd>S</Kbd></>} description="Show / hide the strumming pattern strip" />
+                <ShortcutRow keys={<Kbd>A</Kbd>} description="Accent this strum (shown highlighted in the strip)" />
+              </tbody>
+            </table>
+          </section>
+
+          {/* Fingering */}
+          <section>
+            <h3 className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Fingering (classical)</h3>
+            <table className="w-full">
+              <tbody>
+                <ShortcutRow keys={<><Kbd>Alt</Kbd> + <Kbd>F</Kbd></>} description="Show / hide fingering" />
+                <ShortcutRow keys={<><Kbd>Alt</Kbd> + <Kbd>P</Kbd></>} description="Right hand: thumb (p)" />
+                <ShortcutRow keys={<><Kbd>Alt</Kbd> + <Kbd>I</Kbd></>} description="Right hand: index (i)" />
+                <ShortcutRow keys={<><Kbd>Alt</Kbd> + <Kbd>M</Kbd></>} description="Right hand: middle (m)" />
+                <ShortcutRow keys={<><Kbd>Alt</Kbd> + <Kbd>A</Kbd></>} description="Right hand: ring (a)" />
+                <ShortcutRow keys={<><Kbd>Alt</Kbd> + <Kbd>1</Kbd>…<Kbd>4</Kbd></>} description="Left hand finger 1–4" />
+                <ShortcutRow keys={<><Kbd>Alt</Kbd> + <Kbd>0</Kbd></>} description="Clear fingering on this note" />
               </tbody>
             </table>
           </section>

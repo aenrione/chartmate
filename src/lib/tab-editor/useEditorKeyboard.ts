@@ -11,6 +11,7 @@ import {
   toggleEffect,
   toggleSlide,
   toggleBend,
+  cycleBeatAccent,
   insertMeasureAfter,
   deleteMeasure,
   addBeatAfter,
@@ -26,6 +27,11 @@ import {
   type NoteEffect,
   Duration,
 } from './scoreOperations';
+import {
+  LEFT_HAND_FINGERS,
+  type LeftHandFinger,
+  type RightHandFinger,
+} from './fingering';
 
 type Score = InstanceType<typeof model.Score>;
 
@@ -58,7 +64,45 @@ interface UseEditorKeyboardOptions {
   onSelectAllBars?: () => void;
   onClearSelectedBars?: () => void;
   onClearBarSelection?: () => void;
+  /** Alt+P / Alt+I / Alt+M / Alt+A — right-hand (plucking) finger. */
+  onRightHandFinger?: (finger: RightHandFinger) => void;
+  /** Alt+1 … Alt+4 — left-hand (fretting) finger. */
+  onLeftHandFinger?: (finger: LeftHandFinger) => void;
+  /** Alt+0 — remove both fingerings from the note under the cursor. */
+  onClearFingering?: () => void;
+  /** Alt+F — show/hide fingering in the score. */
+  onToggleFingering?: () => void;
+  /** Alt+S — show/hide the strumming pattern strip. */
+  onToggleStrumming?: () => void;
+  /**
+   * View mode. Every key that would change the score is inert; navigation,
+   * playback, looping, speed, scrolling and the display toggles still work.
+   */
+  readOnly?: boolean;
+  /** Alt+E — switch between View and Edit mode. */
+  onToggleMode?: () => void;
+  /** Alt+L — loop the selected bars, or the cursor's bar; again to clear. */
+  onToggleLoop?: () => void;
+  /** Alt+B — collapse / restore the sidebar. */
+  onToggleSidebar?: () => void;
+  /** `[` / `]` — practice playback speed, in percentage points. */
+  onAdjustSpeed?: (deltaPercent: number) => void;
+  /** `\` — back to 100 % playback speed. */
+  onResetSpeed?: () => void;
 }
+
+/**
+ * Alt-chords for fingering. Keyed by `event.code`, not `event.key`: on macOS
+ * Alt+letter produces an accented character (Alt+P → π, Alt+A → å), so `key`
+ * is useless here.
+ */
+const RIGHT_HAND_FINGER_CODES: Record<string, RightHandFinger> = {
+  KeyP: 'p',
+  KeyI: 'i',
+  KeyM: 'm',
+  KeyA: 'a',
+  KeyC: 'c',
+};
 
 const FRET_TIMEOUT = 500; // ms to wait for second digit
 
@@ -106,22 +150,89 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't capture if user is typing in an input, except Space (play/pause from any input).
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement ||
-        e.target instanceof HTMLSelectElement
-      ) {
-        if (e.key !== ' ') return;
-        // Space falls through to play/pause — preventDefault stops it typing a space.
-      }
+      // Text editing and modal controls own their keyboard events, including Space.
+      if (e.isComposing || (e.target instanceof Element && e.target.closest(
+        'input, textarea, select, [contenteditable]:not([contenteditable="false"]), [role="dialog"], [role="alertdialog"]',
+      ))) return;
 
       const s = optionsRef.current.score;
       const c = optionsRef.current.cursor;
+      // View mode: the score is read-only. Every branch below that would write
+      // to it returns here instead; navigation and playback fall through.
+      const readOnly = optionsRef.current.readOnly === true;
 
-      // Undo / Redo
+      // Practice chords — always available, in both modes.
+      if (e.altKey && !e.ctrlKey && !e.metaKey) {
+        if (e.code === 'KeyE') {
+          e.preventDefault();
+          optionsRef.current.onToggleMode?.();
+          return;
+        }
+        if (e.code === 'KeyL') {
+          e.preventDefault();
+          optionsRef.current.onToggleLoop?.();
+          return;
+        }
+        if (e.code === 'KeyB') {
+          e.preventDefault();
+          optionsRef.current.onToggleSidebar?.();
+          return;
+        }
+      }
+
+      // Playback speed — practice only, never written to the score.
+      if (!e.ctrlKey && !e.metaKey && !e.altKey) {
+        if (e.key === '[' || e.key === ']') {
+          e.preventDefault();
+          optionsRef.current.onAdjustSpeed?.(e.key === ']' ? 5 : -5);
+          return;
+        }
+        if (e.key === '\\') {
+          e.preventDefault();
+          optionsRef.current.onResetSpeed?.();
+          return;
+        }
+      }
+
+      // Fingering — Alt chords, so they don't collide with the single-letter
+      // effect keys (p is already hammer-on, m palm mute, a/i/c are free).
+      if (e.altKey && !e.ctrlKey && !e.metaKey) {
+        const rightFinger = RIGHT_HAND_FINGER_CODES[e.code];
+        if (rightFinger) {
+          e.preventDefault();
+          if (!readOnly) optionsRef.current.onRightHandFinger?.(rightFinger);
+          return;
+        }
+        const leftMatch = /^Digit([1-4])$/.exec(e.code) ?? /^Numpad([1-4])$/.exec(e.code);
+        if (leftMatch) {
+          e.preventDefault();
+          const finger = leftMatch[1] as LeftHandFinger;
+          if (!readOnly && LEFT_HAND_FINGERS.includes(finger)) {
+            optionsRef.current.onLeftHandFinger?.(finger);
+          }
+          return;
+        }
+        if (e.code === 'Digit0' || e.code === 'Numpad0') {
+          e.preventDefault();
+          if (!readOnly) optionsRef.current.onClearFingering?.();
+          return;
+        }
+        if (e.code === 'KeyF') {
+          e.preventDefault();
+          optionsRef.current.onToggleFingering?.();
+          return;
+        }
+        if (e.code === 'KeyS') {
+          e.preventDefault();
+          optionsRef.current.onToggleStrumming?.();
+          return;
+        }
+      }
+
+      // Undo / Redo — both rewrite the score.
       if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
         e.preventDefault();
+        if (readOnly) return;
         if (e.shiftKey) {
           optionsRef.current.onRedo?.();
         } else {
@@ -146,6 +257,7 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
       // Digit keys — fret number entry
       if (/^[0-9]$/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
+        if (readOnly) return;
         optionsRef.current.onClearBarSelection?.();
         if (fretTimerRef.current) {
           clearTimeout(fretTimerRef.current);
@@ -202,6 +314,9 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
           optionsRef.current.onClearBarSelection?.();
           if (e.ctrlKey || e.metaKey) {
             moveToNextMeasure();
+          } else if (readOnly) {
+            // View mode never grows the bar — just walk to the next beat.
+            moveRight();
           } else if (s) {
             // Try to move right; if at last beat and bar has room, insert an empty beat
             const track = s.tracks[c.trackIndex];
@@ -250,13 +365,14 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
           break;
         case ' ':
           e.preventDefault();
-          onPlayPause();
+          if (!e.repeat) onPlayPause();
           return;
       }
 
       // Delete/Backspace — clear selected bars, or remove note/empty beat
       if (e.key === 'Delete' || e.key === 'Backspace') {
         e.preventDefault();
+        if (readOnly) return;
         const barRange = optionsRef.current.selectedBarRange;
         if (barRange) {
           optionsRef.current.onClearSelectedBars?.();
@@ -288,6 +404,7 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
       // Duration shortcuts (Ctrl+1 through Ctrl+7)
       if ((e.ctrlKey || e.metaKey) && /^[1-7]$/.test(e.key)) {
         e.preventDefault();
+        if (readOnly) return;
         const durationMap: Record<string, number> = {
           '1': Duration.Whole,
           '2': Duration.Half,
@@ -306,17 +423,22 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
         return;
       }
 
-      // Chord finder (Cmd+K)
+      // Chord finder (Cmd+K) — it inserts a chord, so edit mode only.
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
+        if (readOnly) return;
         optionsRef.current.onShowChordFinder?.();
         return;
       }
 
-      // Clipboard operations
+      // Clipboard operations — copy is harmless, cut and paste are not.
       if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'x' || e.key === 'v')) {
         // Only handle if not in an input field (already checked above)
         if (!s) return;
+        if (readOnly && e.key !== 'c') {
+          e.preventDefault();
+          return;
+        }
         e.preventDefault();
         const toast = optionsRef.current.onToast;
 
@@ -396,7 +518,7 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
       }
 
       // Drum shortcuts — when on a drum track, single keys trigger drum hits
-      if (optionsRef.current.isDrumTrack && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      if (optionsRef.current.isDrumTrack && !readOnly && !e.ctrlKey && !e.metaKey && !e.altKey) {
         // Enter places/toggles the drum on the current cursor lane (no auto-advance)
         if (e.key === 'Enter') {
           const lane = getDrumLane(c.stringNumber);
@@ -417,7 +539,8 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
       // Beat navigation: L = advance beat (insert if needed), J = prev beat
       if ((e.key === 'l' || e.key === 'L') && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
-        optionsRef.current.onAdvanceBeat?.();
+        // Advancing inserts a rest when the bar has room, so it is an edit.
+        if (!readOnly) optionsRef.current.onAdvanceBeat?.();
         return;
       }
       if ((e.key === 'j' || e.key === 'J') && !e.ctrlKey && !e.metaKey && !e.altKey) {
@@ -429,10 +552,30 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
       // Rest insertion (R key)
       if (e.key === 'r' && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
-        if (s) {
+        if (s && !readOnly) {
           const nextCursor = insertRest(s, c, optionsRef.current.currentDuration);
           mutate();
           if (nextCursor) moveTo(nextCursor);
+        }
+        return;
+      }
+
+      // Accent (A key) — steps the whole beat through none → accent → heavy.
+      // Beat-level on purpose: a strum is one gesture, not six decisions.
+      if (e.key === 'a' && !e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey) {
+        e.preventDefault();
+        if (s && !readOnly) {
+          // Snapshot before the change so undo restores the un-accented beat.
+          optionsRef.current.onBeforeMutation?.();
+          const level = cycleBeatAccent(s, c);
+          if (level === undefined) {
+            optionsRef.current.onToast?.('No notes on this beat to accent');
+          } else {
+            optionsRef.current.onScoreChanged();
+            optionsRef.current.onToast?.(
+              level === null ? 'Accent removed' : level === 'heavy' ? 'Heavy accent' : 'Accent',
+            );
+          }
         }
         return;
       }
@@ -445,7 +588,7 @@ export function useEditorKeyboard(options: UseEditorKeyboardOptions) {
       }
 
       // Effect shortcuts
-      if (!e.ctrlKey && !e.metaKey && !e.altKey) {
+      if (!readOnly && !e.ctrlKey && !e.metaKey && !e.altKey) {
         const effectMap: Record<string, NoteEffect | 'slide' | 'bend' | 'dot' | 'addMeasure' | 'deleteMeasure' | 'addBeat'> = {
           h: 'hammerOn',
           p: 'hammerOn', // pull-off is same flag in alphaTab

@@ -24,7 +24,7 @@
 
 import {describe, it, expect} from 'vitest';
 import {model} from '@coderline/alphatab';
-import {importFromAsciiTab} from '../asciiTabImporter';
+import {importFromAsciiTab, extractAsciiTabMeta} from '../asciiTabImporter';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -1223,5 +1223,655 @@ describe('importFromAsciiTab – Clair Obscur / real UG tab', () => {
       .filter(n => n.string === 5);
     // 12, 5, 7, 5 — four distinct beats on the B string
     expect(b2Notes.length).toBe(4);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// [9] BlueGuitar.info – Sun Kil Moon, Australian Winter (full file, verbatim)
+//     Exercises: Tuning: CGCFGC header, declared letter frets (a=10 … f=15),
+//     measures separated by spaces instead of |, unlabelled empty string lines,
+//     "_____X2" / "hh" / "*" annotation lines, compact runs ("79a", "2320", "02").
+// ---------------------------------------------------------------------------
+
+const AUSTRALIAN_WINTER = `
+
+Australian Winter
+
+
+By:	Sun Kil Moon
+Album:	Admiral Fell Promises
+
+
+Tuning:	CGCFGC
+
+
+Notations: 
+
+a = 10, b = 11, c = 12...
+
+
+h = Hammer-on
+
+P = Pull-off
+
+
+MOST IMPORTANTLY: When two notes are placed under a * it means they must not be played as a cluster (as written)
+but one after the other in a fast picking motion, like a little "flourish". The reason it's written thus
+is because of the lack of space to actually write the notes as they're played
+(it's a triple-time rythm crammed within a binary piece of music if you will...)
+
+
+INTRO : 
+
+
+
+_______________________________X2
+   hh               hh
+--------7------- ---------------- 
+------a----a---- ---------------- 
+--79a-------9-7- --79a-9-7-5-2--- 
+0--------------- 0--------------- 
+---------------- ---------------- 
+---------------- ---------------- 
+
+                                     *
+---c-/e-f-e-c--- --888-7---0---0- ---3--2---------
+---------------- --------8---7--- ---0------3-----
+--a-a/c-e-c-a--- -7-------------- --2-2---------0-
+0--------------- 0-------7---5--- 0-------2-------
+---------------- ---------------- ------------0---
+---------------- ---------------- ----------------
+
+Verse : 
+
+
+______________X2
+---3--2---------
+---0------3-----
+----2---------0-
+--0-----2-------
+------------0---
+0---------------
+
+
+   *            *
+---0-------- ---0-------- 
+---0-------- ---0-------- 
+------------ ------------ 
+----0-----0- ----0-----0- 
+--3-----0--- --3-----0--- 
+3-----5----- 3-----2-----
+
+
+
+
+Instrumental #1 : 
+
+   *
+---c--a-------0- --------------0- ------------
+---0----c---0--- --888/a-7---0--- ------------
+----a----------- ---------------- --777-7-7-7\\
+--0-------a----- 7---------5----- ------------
+---------------- ---------------- 8-----------
+0--------------- ---------------- ------------
+
+
+
+
+Instrumental #2 : 
+
+   *
+---c-/e-f-e-c--- --888-7---0---0- ------------
+---0------------ --------8---7--- ------------
+----a/c-e-c-a--- -7-------------- --777\\5-3-2-
+--0------------- 0-------7---5--- ------------
+---------------- ---------------- 8-----------
+0--------------- ---------------- ------------
+
+
+---------------- 3-5-7-8---7/c--- --e-------------
+---------------- ---------------a ----c-----------
+-2---3-5-7------ 2-3-5-7--------- a---------------
+---------------- 0--------------- -------a----0---
+---------------- ---------------- ----------------
+3---5-7-8------- ---------------- ----------------
+
+
+_______________________________X2
+ hpp     hpp      hp
+---0---0---0---0 ---0---0---0---0 
+-0---0---0---0-- -0---0---0---0-- 
+2320------------ ---------------- 
+----3---2320---- ---------------- 
+------------3--- 020---------0--- 
+---------------- ----3---0------- 
+
+
+---7---7---7---7 ---7---7---7---7 
+-7---7---7---7-- -7---7---7---7--
+---------------- --------7---9--- 
+---------------- 7---8----------- 
+--------7---8--- ---------------- 
+7---8----------- ----------------
+
+
+---0---0---0---0 ---0---0---0 ---0---0---0 ---0---0---0
+-0---0---0---0-- -0---0---0-- -0---0---0-- -0---0---0--
+a-------f---e--- ----3---2--- ----f---e--- ----3---2---
+----0----------- 0----------- 0----------- 0----------- 
+---------------- ------------ ------------ ------------ 
+---------------- ------------ ------------ ------------
+
+
+---5---5---5 ---3---3---3 ---2---2---2 ---0---0---0 
+-1---1---1-- -1---1---1-- -1---1---1-- --1---1---1- 
+0---0---0--- 0---0---0--- 0---0---0--- 02--02--02-- 
+------------ ------------ ------------ ------------ 
+------------ ------------ ------------ ------------ 
+------------ ------------ ------------ ------------ 
+
+
+---0---0---0 ---0---0---0 ---0---f---e ---0---5---3
+-0---0---0-- -0---0---0-- -0---0---0-- -0---0---0-- 
+----f---e--- ----3---2--- ----e---c--- ----3---2---
+0----------- 0----------- 0----------- 0----------- 
+------------ ------------ ------------ ------------ 
+------------ ------------ ------------ ------------ 
+
+
+Rubato
+5----------- a--------------c-------- ----------------
+0----------- 0-------aaaa/c-0--cccc-a ----c\\----------
+3----------- 8--------------a-------- -9a------67--9--
+0----------- 0--------------0-------- ----------------
+x----------- x--------------x-------- ----------------
+5----------- a--------------c-------- 8-------5---7--- 
+
+
+            *
+------0- ---3--2---------
+--5----- ---0------3-----
+-3--6--- --2-2---------0-
+-------- 0-------2-------
+-------- ------------0---
+2---7--- ----------------
+
+
+And back to verse ! 
+
+
+Outro : 
+
+
+   *                                           Rubato
+---c--a-------0- --------------0- ------------ /c-----e-------------
+---0----c---0--- --888/a-7---0--- ------------ ----a----c-----------
+----a----------- ---------------- --777-7-7-7- -----a---------------
+--0-------a----- 7---------5----- ------------ ------------a--------
+---------------- ---------------- 8----------- ---------------------
+0--------------- ---------------- ------------ ---------------------
+
+
+
+ENJOY!`;
+
+function tuningOf(score: ReturnType<typeof importFromAsciiTab>): number[] {
+  return score.tracks[0].staves[0].stringTuning.tunings;
+}
+
+function barFrets(score: ReturnType<typeof importFromAsciiTab>, barIdx: number): number[] {
+  return score.tracks[0].staves[0].bars[barIdx].voices[0].beats.flatMap(b => b.notes.map(n => n.fret));
+}
+
+describe('importFromAsciiTab – Sun Kil Moon, Australian Winter (BlueGuitar.info)', () => {
+  it('imports every fret: 412 notes', () => {
+    expect(countNotes(importFromAsciiTab(AUSTRALIAN_WINTER))).toBe(412);
+  });
+
+  it('applies the CGCFGC tuning (high → low)', () => {
+    expect(tuningOf(importFromAsciiTab(AUSTRALIAN_WINTER))).toEqual([60, 55, 53, 48, 43, 36]);
+  });
+
+  it('reads declared letter frets a/c/e/f as 10/12/14/15', () => {
+    const frets = allFrets(importFromAsciiTab(AUSTRALIAN_WINTER));
+    for (const f of [10, 12, 14, 15]) expect(frets).toContain(f);
+    expect(Math.max(...frets)).toBe(15);
+  });
+
+  it('space-separated measures become separate bars', () => {
+    // Intro system: "--------7------- ----------------" etc. — a 9-note and an 8-note measure,
+    // not one 17-note bar
+    const score = importFromAsciiTab(AUSTRALIAN_WINTER);
+    expect(barFrets(score, 0).sort((a, b) => a - b)).toEqual([0, 7, 7, 7, 9, 9, 10, 10, 10]);
+    expect(barFrets(score, 1).sort((a, b) => a - b)).toEqual([0, 2, 5, 7, 7, 9, 9, 10]);
+  });
+
+  it('CRLF and bare-CR line endings import identically', () => {
+    expect(countNotes(importFromAsciiTab(AUSTRALIAN_WINTER.replace(/\n/g, '\r\n')))).toBe(412);
+    expect(countNotes(importFromAsciiTab(AUSTRALIAN_WINTER.replace(/\n/g, '\r')))).toBe(412);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Tuning and capo declarations (forms taken from the BlueGuitar.info corpus)
+// ---------------------------------------------------------------------------
+
+const SIMPLE_SYSTEM = [
+  'e|---0---|',
+  'B|---1---|',
+  'G|---0---|',
+  'D|---2---|',
+  'A|---3---|',
+  'E|-------|',
+].join('\n');
+
+const UNLABELLED_SYSTEM = SIMPLE_SYSTEM.replace(/^[eBGDAE]\|/gm, '');
+
+describe('importFromAsciiTab – tuning', () => {
+  const withTuning = (decl: string) =>
+    tuningOf(importFromAsciiTab(`Some Song\nBy:\tSomeone\nTuning:\t${decl}\n\n${UNLABELLED_SYSTEM}`));
+
+  it.each([
+    ['DADGAD', [62, 57, 55, 50, 45, 38]],
+    ['D A D F# A D', [62, 57, 54, 50, 45, 38]],
+    ['Db-Ab-Db-F-Bb-Eb ', [63, 58, 53, 49, 44, 37]],
+    ['EBEG#Be ', [64, 59, 56, 52, 47, 40]],
+    ['CGCFGC', [60, 55, 53, 48, 43, 36]],
+    ['C G C F G C', [60, 55, 53, 48, 43, 36]],
+    ['DGCFAD (whole step down)', [62, 57, 53, 48, 43, 38]],
+    ['Standard', [64, 59, 55, 50, 45, 40]],
+    ['Standard tuning down a whole step', [62, 57, 53, 48, 43, 38]],
+    ['Half Step Down', [63, 58, 54, 49, 44, 39]],
+  ])('Tuning: %s', (decl, expected) => {
+    expect(withTuning(decl)).toEqual(expected);
+  });
+
+  it('falls back to standard for an unparseable or wrong-length declaration', () => {
+    expect(withTuning('as above')).toEqual([64, 59, 55, 50, 45, 40]);
+    expect(withTuning('EADEGBe')).toEqual([64, 59, 55, 50, 45, 40]); // 7 names, 6-string tab
+  });
+
+  it('without a Tuning: line, reads the string-name labels (top line = highest string)', () => {
+    const tab = ['C|---0---|', 'G|---1---|', 'F|---0---|', 'C|---2---|', 'G|---3---|', 'C|-------|'].join('\n');
+    expect(tuningOf(importFromAsciiTab(tab))).toEqual([60, 55, 53, 48, 43, 36]);
+  });
+
+  it('drop-D labels (Bach BWV 1007) give drop-D tuning', () => {
+    expect(tuningOf(importFromAsciiTab(BACH_EXCERPT))).toEqual([64, 59, 55, 50, 45, 38]);
+  });
+
+  it('a Tuning: line below the title (Come As You Are) is honoured', () => {
+    expect(tuningOf(importFromAsciiTab(COME_AS_YOU_ARE))).toEqual([62, 57, 53, 48, 43, 38]);
+  });
+
+  it('Tuning: line wins over the string-name labels', () => {
+    expect(tuningOf(importFromAsciiTab(`Tuning: DADGAD\n\n${SIMPLE_SYSTEM}`))).toEqual([62, 57, 55, 50, 45, 38]);
+  });
+
+  it('tuning option overrides the declaration', () => {
+    const tuning = [62, 59, 55, 50, 45, 38];
+    expect(tuningOf(importFromAsciiTab(`Tuning: DADGAD\n\n${SIMPLE_SYSTEM}`, {tuning}))).toEqual(tuning);
+  });
+
+  it('Tuning: Standard on a 4-string tab keeps bass tuning', () => {
+    const bass = ['G|---0---|', 'D|---2---|', 'A|---3---|', 'E|-------|'].join('\n');
+    expect(tuningOf(importFromAsciiTab(`Tuning: Standard\n\n${bass}`))).toEqual([43, 38, 33, 28]);
+  });
+});
+
+describe('importFromAsciiTab – capo', () => {
+  const capoOf = (text: string, options = {}) => importFromAsciiTab(text, options).tracks[0].staves[0].capo;
+
+  it('parses "Capo:\\t3"', () => {
+    expect(capoOf(`Song\nCapo:\t3\n\n${SIMPLE_SYSTEM}`)).toBe(3);
+  });
+
+  it('parses "Capo \\t3rd" and "Capo:\\tCapo 1"', () => {
+    expect(capoOf(`Capo \t3rd\n\n${SIMPLE_SYSTEM}`)).toBe(3);
+    expect(capoOf(`Capo:\tCapo 1\n\n${SIMPLE_SYSTEM}`)).toBe(1);
+  });
+
+  it('no capo declaration → 0', () => {
+    expect(capoOf(SIMPLE_SYSTEM)).toBe(0);
+  });
+
+  it('capo option overrides the declaration and is exposed in meta', () => {
+    expect(capoOf(`Capo: 3\n\n${SIMPLE_SYSTEM}`, {capo: 5})).toBe(5);
+    expect(extractAsciiTabMeta(`Capo: 3\n\n${SIMPLE_SYSTEM}`).capo).toBe(3);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Whitespace-separated measures and trailing annotations
+// ---------------------------------------------------------------------------
+
+describe('importFromAsciiTab – whitespace bar lines', () => {
+  it('a gap between measures is a bar line', () => {
+    const tab = [
+      '--0---0-  --------0-',
+      '--------  ---1------',
+      '--------  ----------',
+      '--------  ----------',
+      '--------  ----------',
+      '--------  ----------',
+    ].join('\n');
+    const score = importFromAsciiTab(tab);
+    expect(barCount(score)).toBe(2);
+    expect(barFrets(score, 0)).toEqual([0, 0]);
+    expect(barFrets(score, 1)).toEqual([1, 0]);
+  });
+
+  it('extra dashes in one string\'s measure do not shift the next measure', () => {
+    // B's first measure is 5 chars longer; its 3 in measure 2 still lines up with e's 3
+    const tab = [
+      'e|--0--- --3---|',
+      'B|--1-------- --3---|',
+      'G|------ ------|',
+      'D|------ ------|',
+      'A|------ ------|',
+      'E|------ ------|',
+    ].join('\n');
+    const bar2 = importFromAsciiTab(tab).tracks[0].staves[0].bars[1];
+    expect(bar2.voices[0].beats).toHaveLength(1);
+    expect(bar2.voices[0].beats[0].notes).toHaveLength(2);
+  });
+
+  it('trailing "(x2)" annotations produce no notes', () => {
+    const tab = [
+      'e|---0---0---|  (x2)',
+      'B|---1-------|',
+      'G|-----------|',
+      'D|-----------|',
+      'A|-----------|',
+      'E|-----------|  x4',
+    ].join('\n');
+    const score = importFromAsciiTab(tab);
+    expect(countNotes(score)).toBe(3);
+    expect(allFrets(score)).not.toContain(2);
+    expect(allFrets(score)).not.toContain(4);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Systems containing string lines with no digits
+// ---------------------------------------------------------------------------
+
+describe('importFromAsciiTab – digitless string lines', () => {
+  it('an empty unlabelled string does not split the system (Australian Winter verse)', () => {
+    const tab = [
+      '---0-------- ---0-------- ',
+      '---0-------- ---0-------- ',
+      '------------ ------------ ',
+      '----0-----0- ----0-----0- ',
+      '--3-----0--- --3-----0--- ',
+      '3-----5----- 3-----2-----',
+    ].join('\n');
+    const score = importFromAsciiTab(tab);
+    expect(tuningOf(score)).toHaveLength(6);
+    expect(countNotes(score)).toBe(16);
+    const lowString = score.tracks[0].staves[0].bars
+      .flatMap(b => b.voices[0].beats.flatMap(bt => bt.notes))
+      .filter(n => n.string === 1)
+      .map(n => n.fret);
+    expect(lowString).toEqual([3, 5, 3, 2]);
+  });
+
+  it('a string holding only letter frets stays in the system when letters are declared', () => {
+    const tab = [
+      'a = 10, b = 11, c = 12...',
+      '',
+      '---0---0---',
+      '---a---c---',
+      '-----------',
+      '-----------',
+      '-----------',
+      '0----------',
+    ].join('\n');
+    const score = importFromAsciiTab(tab);
+    expect(countNotes(score)).toBe(5);
+    const bString = score.tracks[0].staves[0].bars
+      .flatMap(b => b.voices[0].beats.flatMap(bt => bt.notes))
+      .filter(n => n.string === 5)
+      .map(n => n.fret);
+    expect(bString).toEqual([10, 12]);
+  });
+
+  it('prose rules next to a system are not taken as strings', () => {
+    const tab = [
+      'INTRO :',
+      '_______________X2',
+      '-----',
+      ...UNLABELLED_SYSTEM.split('\n'),
+      '------------------------------------',
+      'And back to verse !',
+    ].join('\n');
+    const score = importFromAsciiTab(tab);
+    expect(tuningOf(score)).toHaveLength(6);
+    expect(countNotes(score)).toBe(5);
+  });
+
+  it('a dash-only rule on its own is not a system', () => {
+    expect(countNotes(importFromAsciiTab('Verse\n------------------------\nla la la'))).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 2-digit fret disambiguation
+// ---------------------------------------------------------------------------
+
+describe('importFromAsciiTab – 2-digit frets', () => {
+  it('keeps 14/15 whole in a low-position passage when the columns leave room', () => {
+    // Australian Winter instrumental with letters written as numbers; the first measure is
+    // all open/low frets, which used to make 14 and 15 split into 1+4 and 1+5.
+    const tab = [
+      'e|---3--2---------|---12-/14-15-14-12---|',
+      'B|---0------3-----|---------------------|',
+      'G|----2---------0-|--10-10/12-14-12-10--|',
+      'D|--0-----2-------|0--------------------|',
+      'A|------------0---|---------------------|',
+      'E|0---------------|---------------------|',
+    ].join('\n');
+    const frets = allFrets(importFromAsciiTab(tab));
+    expect(frets.filter(f => f === 14)).toHaveLength(3);
+    expect(frets.filter(f => f === 15)).toHaveLength(1);
+    expect(frets).not.toContain(1);
+  });
+
+  it('still splits compact digit runs ("2320") in a low-position passage', () => {
+    const tab = [
+      '---0---0---0---0',
+      '-0---0---0---0--',
+      '2320------------',
+      '----3---2320----',
+      '------------3---',
+      '----------------',
+    ].join('\n');
+    const score = importFromAsciiTab(tab);
+    expect(countNotes(score)).toBe(18);
+    expect(Math.max(...allFrets(score))).toBe(3);
+  });
+
+  it('a leading zero is never a 2-digit fret ("02" = 0 then 2)', () => {
+    const tab = ['--1---1-', '--------', '02--02--', '--------', '--------', '--------'].join('\n');
+    expect(allFrets(importFromAsciiTab(tab)).sort()).toEqual([0, 0, 1, 1, 2, 2]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Letter frets
+// ---------------------------------------------------------------------------
+
+describe('importFromAsciiTab – letter frets', () => {
+  const LETTERS = [
+    'e|---a---b---c---|',
+    'B|---------------f|',
+    'G|---------------|',
+    'D|---------------|',
+    'A|---------------|',
+    'E|-0---------e---|',
+  ].join('\n');
+
+  it('a–f are frets 10–15 when the text declares "a = 10"', () => {
+    const frets = allFrets(importFromAsciiTab(`As usual, a = 10, b = 11, c = 12 ...\n\n${LETTERS}`));
+    expect(frets.sort((x, y) => x - y)).toEqual([0, 10, 11, 12, 14, 15]);
+  });
+
+  it('without the declaration letters are not notes (b stays a bend marker)', () => {
+    const tab = ['e|---5b7---|', 'B|---a-----|', 'G|---------|', 'D|---------|', 'A|---------|', 'E|---------|'].join('\n');
+    expect(allFrets(importFromAsciiTab(tab))).toEqual([5, 7]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Section labels → Guitar Pro section markers
+// ---------------------------------------------------------------------------
+
+function sections(score: ReturnType<typeof importFromAsciiTab>): [number, string][] {
+  return score.masterBars.flatMap((mb, i): [number, string][] => (mb.section ? [[i, mb.section.text]] : []));
+}
+
+describe('importFromAsciiTab – section markers', () => {
+  it('Australian Winter: INTRO / Verse / Instrumental #1 / #2 / Outro land on their first bars', () => {
+    // Intro = 2 systems (2 + 3 bars), Verse = 2 systems (1 + 2), Instrumental #1 = 3 bars, ...
+    expect(sections(importFromAsciiTab(AUSTRALIAN_WINTER))).toEqual([
+      [0, 'Intro'],
+      [5, 'Verse'],
+      [8, 'Instrumental #1'],
+      [11, 'Instrumental #2'],
+      [33, 'Rubato'],
+      [38, 'Outro'],
+    ]);
+  });
+
+  it('"Notations:" and "And back to verse !" in Australian Winter are not sections', () => {
+    const texts = sections(importFromAsciiTab(AUSTRALIAN_WINTER)).map(([, t]) => t);
+    expect(texts).not.toContain('Notations');
+    expect(texts.some(t => /back to verse/i.test(t))).toBe(false);
+  });
+
+  it('UG [Intro] / [Verse] bracket labels become sections', () => {
+    const secs = sections(importFromAsciiTab(UG_WYWH));
+    expect(secs.map(([, t]) => t)).toEqual(['Intro', 'Verse']);
+    expect(secs[0][0]).toBe(0);
+  });
+
+  it('UG labels after a header (Blackbird) start with Intro on bar 1', () => {
+    expect(sections(importFromAsciiTab(BLACKBIRD_FULL))[0]).toEqual([0, 'Intro']);
+  });
+
+  it('the label survives blank lines and prose; the last label before a system wins', () => {
+    const text = `INTRO :\n\nVerse 2:\nPlay this part softly, let it ring.\n\n${SIMPLE_SYSTEM}\n\n${SIMPLE_SYSTEM}`;
+    expect(sections(importFromAsciiTab(text))).toEqual([[0, 'Verse 2']]);
+  });
+
+  it('keyword labels without a colon: "CHORUS", "Solo (x2)", "Bridge #2"', () => {
+    for (const [label, text] of [['CHORUS', 'Chorus'], ['Solo (x2)', 'Solo (x2)'], ['Bridge #2', 'Bridge #2']]) {
+      expect(sections(importFromAsciiTab(`${label}\n${SIMPLE_SYSTEM}`))).toEqual([[0, text]]);
+    }
+  });
+
+  it.each([
+    'And back to verse !',
+    'This is for the intro and the verses.',
+    'Notations:',
+    'Note:',
+    'Tuning: DADGAD',
+    'Capo:\t2',
+    'By:\tSun Kil Moon',
+    'Album:\tAdmiral Fell Promises',
+    'the way it goes:',
+    'Main Riff is this:',
+    'Then:',
+  ])('"%s" is not a section', line => {
+    expect(sections(importFromAsciiTab(`${line}\n\n${SIMPLE_SYSTEM}`))).toEqual([]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// [10] Ultimate Guitar – Tata Barahona, Luz de rabia (first two [tab] blocks, verbatim)
+//     Exercises: fingerpicked arpeggio with notes exactly 2 columns apart (must not be
+//     grouped into fake chords), trailing "x4" repeat marker, a lyric line glued to [tab].
+// ---------------------------------------------------------------------------
+
+const LUZ_DE_RABIA = `
+Intro:
+
+[tab]e|---0-----------------------0-------------------------|  x4
+B|-----0-----0-----0-----0-----0-----0-----0---0-------|
+G|---------0-----0-----0-----------0-----0-----0-------|
+D|-------4-----------------------4---------------------|
+A|-------------3-----------------------3---------------|
+E|-0-----------------5-----0-----------------5---------|[/tab]
+
+[tab]Una sombra de muerte que se cierne en sus tierras
+e|---0-----------------------0-------------------------|
+B|-----0-----0-----0-----0-----0-----0-----0---0-------|
+G|---------0-----0-----0-----------0-----0-----0-------|
+D|-------4-----------------------4---------------------|
+A|-------------3-----------------------3---------------|
+E|-0-----------------5-----0-----------------5---------|[/tab]
+`;
+
+function beatStrings(score: ReturnType<typeof importFromAsciiTab>): string[][] {
+  return score.tracks[0].staves[0].bars.flatMap(b => b.voices[0].beats
+    .filter(bt => bt.notes.length > 0)
+    .map(bt => bt.notes.map(n => `${n.string}:${n.fret}`)));
+}
+
+describe('importFromAsciiTab – beat grouping', () => {
+  it('Luz de rabia: notes 2 columns apart stay sequential (no fake chords)', () => {
+    const beats = beatStrings(importFromAsciiTab(LUZ_DE_RABIA));
+    // Each system: 24 notes in 23 beats — the only shared column is B0+G0 near the end
+    expect(beats).toHaveLength(46);
+    expect(beats.filter(b => b.length > 1)).toEqual([['5:0', '4:0'], ['5:0', '4:0']]);
+    // E0, e0, B0, D4, G0, B0, A3, G0, B0, E5 ...
+    expect(beats.slice(0, 10).map(b => b[0])).toEqual(
+      ['1:0', '6:0', '5:0', '3:4', '4:0', '5:0', '2:3', '4:0', '5:0', '1:5'],
+    );
+  });
+
+  it('Luz de rabia: bar 1 is 16 single notes (the 16-beat cap splits the 23-beat system)', () => {
+    const bars = importFromAsciiTab(LUZ_DE_RABIA).tracks[0].staves[0].bars;
+    expect(bars.map(b => b.voices[0].beats.length)).toEqual([16, 7, 16, 7]);
+    expect(bars[0].voices[0].beats.every(b => b.notes.length === 1)).toBe(true);
+  });
+
+  it('Luz de rabia: trailing "x4" adds no note; the [tab]-glued lyric is not a string or section', () => {
+    const score = importFromAsciiTab(LUZ_DE_RABIA);
+    expect(countNotes(score)).toBe(48);
+    expect(tuningOf(score)).toHaveLength(6);
+    expect(sections(score)).toEqual([[0, 'Intro']]);
+  });
+
+  it('picking one column apart (Carpet Crawlers) chords only same-column notes', () => {
+    const tab = [
+      'D|---0--0--0--0--0--0--0--0--0--0--0--0--0--0--0--0|',
+      'A|--0--0--0--0--0--0--0--0--0--0--0--0--0--0--0--0-|',
+      'G|-------------------------------------------------|',
+      'D|-------0--------0-----0--------5--------5-----5--|',
+      'A|----0--------0--------------5--------5-----------|',
+      'D|-0--------0--------0-----5--------5--------5-----|',
+    ].join('\n');
+    const beats = beatStrings(importFromAsciiTab(tab));
+    expect(countNotes(importFromAsciiTab(tab))).toBe(48);
+    expect(beats.every(b => b.length === 1)).toBe(true);
+  });
+
+  it('widely spaced chords written off by one column still form one beat', () => {
+    const tab = [
+      'e|---0-------3-------|',
+      'B|---1-------0-------|',
+      'G|----0-------0------|',
+      'D|---2-------0-------|',
+      'A|---3-------2-------|',
+      'E|-----------3-------|',
+    ].join('\n');
+    expect(beatStrings(importFromAsciiTab(tab)).map(b => b.length)).toEqual([5, 6]);
+  });
+
+  it('a note on another string\'s bar-line column is not dropped', () => {
+    // Measures don't line up, so B's 2 sits exactly under e's |
+    const tab = ['e|-0-|-1-|', 'B|-0-2----|', 'G|--------|', 'D|--------|', 'A|--------|', 'E|--------|'].join('\n');
+    expect(countNotes(importFromAsciiTab(tab))).toBe(4);
   });
 });

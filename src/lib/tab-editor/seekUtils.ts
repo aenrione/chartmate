@@ -26,7 +26,11 @@ export function computeSeekTick(
   beat: BeatLike,
   totalBars: number,
   endTick: number,
+  tickLookup?: {getBeatStart(beat: BeatLike): number} | null,
 ): number {
+  // The MIDI lookup includes repeats and alternate endings; the model's
+  // absolutePlaybackStart only describes the written score.
+  if (tickLookup) return tickLookup.getBeatStart(beat);
   if (beat.absolutePlaybackStart > 0) return beat.absolutePlaybackStart;
 
   const barIdx = beat.voice?.bar?.masterBar?.index ?? 0;
@@ -69,8 +73,11 @@ export function barIndexToTick(
   barIndex: number,
   totalBars: number,
   endTick: number,
+  tickLookup?: {getMasterBarStart(masterBar: unknown): number} | null,
 ): number {
   if (barIndex >= totalBars) return endTick;
+  const masterBar = score.masterBars[barIndex];
+  if (tickLookup && masterBar) return tickLookup.getMasterBarStart(masterBar);
   const firstBeat = score.tracks[0]?.staves[0]?.bars[barIndex]?.voices[0]?.beats[0];
   if (firstBeat && firstBeat.absolutePlaybackStart > 0) {
     return firstBeat.absolutePlaybackStart;

@@ -18,11 +18,17 @@ import {
   removeTrack,
   setTrackTuning,
   setTempo,
+  getScoreKey,
+  setScoreKey,
+  getBeatAccent,
+  setBeatAccent,
+  cycleBeatAccent,
 } from '../scoreOperations';
+import {exportToGp7} from '../exporters';
 import type {EditorCursor} from '../useEditorCursor';
 import {model} from '@coderline/alphatab';
 
-const {Duration, SlideOutType, BendType, HarmonicType, VibratoType} = model;
+const {Duration, SlideOutType, BendType, HarmonicType, VibratoType, AccentuationType} = model;
 
 function makeCursor(overrides?: Partial<EditorCursor>): EditorCursor {
   return {
@@ -246,6 +252,88 @@ describe('scoreOperations', () => {
       // alphaTab's finish() may reset it without one. Just verify no crash.
       toggleEffect(score, cursor, 'hammerOn');
       expect(getNoteOnString(score, cursor)).not.toBeNull();
+    });
+  });
+
+  describe('accents', () => {
+    /** A beat with three notes, as a small strum. */
+    function chordScore() {
+      const score = createBlankScore({measureCount: 2});
+      const cursor = makeCursor();
+      for (const stringNumber of [1, 2, 3]) {
+        setNote(score, {...cursor, stringNumber}, 3);
+      }
+      return {score, cursor};
+    }
+
+    it('reports no accent on a fresh beat', () => {
+      const {score, cursor} = chordScore();
+      expect(getBeatAccent(score, cursor)).toBeNull();
+    });
+
+    it('sets the accent on every note of the beat', () => {
+      const {score, cursor} = chordScore();
+
+      expect(setBeatAccent(score, cursor, 'normal')).toBe(true);
+
+      const beat = getBeat(score, cursor)!;
+      expect(beat.notes).toHaveLength(3);
+      expect(beat.notes.every(n => n.accentuated === AccentuationType.Normal)).toBe(true);
+      expect(getBeatAccent(score, cursor)).toBe('normal');
+    });
+
+    it('clears the accent with null', () => {
+      const {score, cursor} = chordScore();
+      setBeatAccent(score, cursor, 'heavy');
+      expect(getBeatAccent(score, cursor)).toBe('heavy');
+
+      expect(setBeatAccent(score, cursor, null)).toBe(true);
+      expect(getBeatAccent(score, cursor)).toBeNull();
+    });
+
+    it('reports no change when the accent is already set', () => {
+      const {score, cursor} = chordScore();
+      setBeatAccent(score, cursor, 'normal');
+      expect(setBeatAccent(score, cursor, 'normal')).toBe(false);
+    });
+
+    it('cycles none → normal → heavy → none', () => {
+      const {score, cursor} = chordScore();
+
+      expect(cycleBeatAccent(score, cursor)).toBe('normal');
+      expect(cycleBeatAccent(score, cursor)).toBe('heavy');
+      expect(cycleBeatAccent(score, cursor)).toBeNull();
+      expect(cycleBeatAccent(score, cursor)).toBe('normal');
+    });
+
+    it('reports null for a beat that mixes accents', () => {
+      const {score, cursor} = chordScore();
+      setBeatAccent(score, cursor, 'normal');
+      getBeat(score, cursor)!.notes[0].accentuated = AccentuationType.None;
+      expect(getBeatAccent(score, cursor)).toBeNull();
+    });
+
+    it('does nothing on an empty beat', () => {
+      const score = createBlankScore({measureCount: 2});
+      const cursor = makeCursor();
+      expect(setBeatAccent(score, cursor, 'normal')).toBe(false);
+      expect(cycleBeatAccent(score, cursor)).toBeUndefined();
+      expect(getBeatAccent(score, cursor)).toBeNull();
+    });
+
+    it('survives a Guitar Pro 7 round-trip', async () => {
+      const {importer, Settings} = await import('@coderline/alphatab');
+      const {score, cursor} = chordScore();
+      setBeatAccent(score, cursor, 'heavy');
+
+      const reloaded = importer.ScoreLoader.loadScoreFromBytes(
+        exportToGp7(score),
+        new Settings(),
+      );
+      const beat = reloaded.tracks[0].staves[0].bars[0].voices[0].beats[0];
+
+      expect(beat.notes).toHaveLength(3);
+      expect(beat.notes.every(n => n.accentuated === AccentuationType.Heavy)).toBe(true);
     });
   });
 
@@ -571,5 +659,46 @@ describe('scoreOperations', () => {
       // Should return next bar since current bar is full
       expect(result).toBeNull(); // bar full, no room
     });
+  });
+});
+
+describe('song key (key signature)', () => {
+  it('reads no key from a blank score (signature 0 is the GP default)', () => {
+    const score = createBlankScore({measureCount: 2});
+    expect(getScoreKey(score)).toBeNull();
+  });
+
+  it('round-trips sharp and flat keys through the key signature', () => {
+    const score = createBlankScore({measureCount: 3});
+    for (const key of ['G', 'D', 'E', 'F#', 'F', 'Bb', 'Eb', 'Db']) {
+      setScoreKey(score, key);
+      expect(getScoreKey(score)).toBe(key);
+    }
+    expect(score.masterBars.every(mb => mb.keySignature === score.masterBars[0].keySignature)).toBe(true);
+  });
+
+  it('clears the key back to signature 0', () => {
+    const score = createBlankScore({measureCount: 2});
+    setScoreKey(score, 'A');
+    setScoreKey(score, null);
+    expect(getScoreKey(score)).toBeNull();
+    expect(score.masterBars[0].keySignature).toBe(0);
+  });
+
+  it('leaves bars with a different signature (modulations) alone', () => {
+    const score = createBlankScore({measureCount: 3});
+    setScoreKey(score, 'G');
+    score.masterBars[2].keySignature = 2 as typeof score.masterBars[2]['keySignature'];
+    setScoreKey(score, 'C');
+    expect(score.masterBars[0].keySignature).toBe(0);
+    expect(score.masterBars[1].keySignature).toBe(0);
+    expect(score.masterBars[2].keySignature).toBe(2);
+  });
+
+  it('reads a minor signature as its relative major (same notes)', () => {
+    const score = createBlankScore({measureCount: 1});
+    score.masterBars[0].keySignature = 1 as typeof score.masterBars[0]['keySignature']; // E minor
+    score.masterBars[0].keySignatureType = model.KeySignatureType.Minor;
+    expect(getScoreKey(score)).toBe('G');
   });
 });

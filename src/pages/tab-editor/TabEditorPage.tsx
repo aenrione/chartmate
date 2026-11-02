@@ -15,7 +15,7 @@ import {UnsavedChangesDialog} from './UnsavedChangesDialog';
 import {useEditorCursor} from '@/lib/tab-editor/useEditorCursor';
 import {useEditorKeyboard} from '@/lib/tab-editor/useEditorKeyboard';
 import {createBlankScore, type InstrumentType} from '@/lib/tab-editor/newScore';
-import {getDefaultTuningPreset} from '@/lib/tab-editor/tunings';
+import {getDefaultTuningPreset, getTuningsForInstrument} from '@/lib/tab-editor/tunings';
 import {
   setNoteAndAdvance,
   setChord,
@@ -24,6 +24,7 @@ import {
   setBeatDuration,
   toggleDot,
   toggleEffect,
+  cycleBeatAccent,
   toggleSlide,
   toggleBend,
   insertMeasureAfter,
@@ -34,12 +35,47 @@ import {
   setTrackTuning,
   setTempo,
   getScoreTempo,
+  getScoreKey,
+  setScoreKey,
   setBeatChord,
   clearBeatChord,
   getBeatChordName,
   type NoteEffect,
   type TabSection,
 } from '@/lib/tab-editor/scoreOperations';
+import {
+  applyRightHandFingering,
+  clearRightHandFingering,
+  clearNoteFingering,
+  getNoteFingering,
+  setLeftHandFinger,
+  setRightHandFinger,
+  type LeftHandFinger,
+  type RightHandFinger,
+} from '@/lib/tab-editor/fingering';
+import {applyFingeringSettings} from '@/pages/guitar/AlphaTabWrapper';
+import {useLocalStorage} from '@/lib/useLocalStorage';
+import {
+  DEFAULT_PLAYBACK_SPEED,
+  EDITOR_MODE_KEY,
+  MAX_PLAYBACK_SPEED,
+  MIN_PLAYBACK_SPEED,
+  PLAYBACK_SPEED_STEP,
+  SIDEBAR_COLLAPSED_KEY,
+  adjustPlaybackSpeed,
+  clampPlaybackSpeed,
+  computeLoopRange,
+  formatLoopRange,
+  loopRangeToTicks,
+  normalizeLoopRange,
+  otherMode,
+  parseEditorMode,
+  playbackSpeedFactor,
+  type BarRange,
+  type EditorMode,
+} from '@/lib/tab-editor/practiceSettings';
+import {visibleToolbarActions} from '@/lib/tab-editor/toolbarLayout';
+import StrummingPatternPanel, {SHOW_STRUMMING_KEY} from '@/components/StrummingPatternPanel';
 import {voicingToNotes, type ChordVoicing} from '@/lib/tab-editor/chordDb';
 import {DRUM_LANE_COUNT, getDrumLane} from '@/lib/tab-editor/drumMap';
 import {detectPatterns} from '@/lib/tab-editor/patternDetector';
@@ -73,7 +109,14 @@ import {
   MoreVertical,
   Undo2,
   Redo2,
+  Hand,
   X,
+  Minus,
+  Gauge,
+  Repeat,
+  Pencil,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -112,6 +155,7 @@ const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 
 
 // ── Typed interfaces ──────────────────────────────────────────────────────────
 type LocationState = { from?: string; activeTab?: string };
+type AudioSource = 'tracks' | 'stems' | 'youtube';
 
 // Per-id caches — survive route changes without unmounting persistence
 type EditorUIState = {
@@ -151,16 +195,84 @@ export default function TabEditorPage() {
     () => new Set(_editorUICache.get(id ?? 'new')?.mutedTracks ?? []),
   );
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  // Fingering display is a practice preference, so it outlives the session.
+  const [showFingering, setShowFingering] = useLocalStorage('chartmate.showFingering.v1', false);
+  const [showStrumming, setShowStrumming] = useLocalStorage(SHOW_STRUMMING_KEY, true);
+  const showStrummingRef = useRef(showStrumming);
+  showStrummingRef.current = showStrumming;
+  const showFingeringRef = useRef(showFingering);
+  showFingeringRef.current = showFingering;
   const [showKeyChart, setShowKeyChart] = useState(false);
   const [showYoutubePanel, setShowYoutubePanel] = useState(false);
   const [youtubeFullscreen, setYoutubeFullscreen] = useState(false);
+  const [audioSource, setAudioSource] = useState<AudioSource>('tracks');
+  const audioSourceRef = useRef(audioSource);
+  audioSourceRef.current = audioSource;
+  const sourceSwitchVersionRef = useRef(0);
   const ytSyncSuppressRef = useRef(false);
+  const youtubeSuppressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [resetKey, setResetKey] = useState(0);
   const [showNewTabConfirm, setShowNewTabConfirm] = useState(false);
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const {isDirty, markDirty, markClean, blocker} = useUnsavedChanges();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedBarRange, setSelectedBarRange] = useState<{start: number; end: number} | null>(null);
+
+  // ── View / Edit mode ───────────────────────────────────────────────────────
+  // Practising is the common case, so the remembered default is View. A brand
+  // new, unsaved tab always opens in Edit: there is nothing to practise yet and
+  // a read-only blank editor would just look broken.
+  const [storedMode, setStoredMode] = useLocalStorage<EditorMode>(EDITOR_MODE_KEY, 'view');
+  const [editorMode, setEditorModeState] = useState<EditorMode>(
+    () => (id ? parseEditorMode(storedMode) : 'edit'),
+  );
+  const isEditMode = editorMode === 'edit';
+  const isEditModeRef = useRef(isEditMode);
+  isEditModeRef.current = isEditMode;
+
+  const setEditorMode = useCallback((next: EditorMode) => {
+    setEditorModeState(next);
+    setStoredMode(next);
+  }, [setStoredMode]);
+
+  const handleToggleMode = useCallback(() => {
+    const next = otherMode(isEditModeRef.current ? 'edit' : 'view');
+    setEditorMode(next);
+    toast(next === 'edit' ? 'Edit mode' : 'View mode — the score is locked', {
+      id: 'tab-editor-mode',
+    });
+  }, [setEditorMode]);
+
+  /**
+   * The gate every mutating handler calls first. View mode must leave the score
+   * byte-identical, so "hidden in the UI" is not enough — the handlers refuse.
+   */
+  const requireEditMode = useCallback((): boolean => {
+    if (isEditModeRef.current) return true;
+    toast('View mode — press Alt+E to edit', {id: 'tab-editor-view-mode'});
+    return false;
+  }, []);
+
+  // ── Sidebar collapse (desktop) ─────────────────────────────────────────────
+  const [sidebarCollapsed, setSidebarCollapsed] = useLocalStorage(SIDEBAR_COLLAPSED_KEY, false);
+  const handleToggleSidebar = useCallback(() => {
+    setSidebarCollapsed(v => !v);
+  }, [setSidebarCollapsed]);
+
+  // AlphaTab lays out to its container's width and relays out on resize, so the
+  // collapse has to announce itself — once now, once after the CSS transition.
+  useEffect(() => {
+    window.dispatchEvent(new Event('resize'));
+    const timer = window.setTimeout(() => window.dispatchEvent(new Event('resize')), 350);
+    return () => window.clearTimeout(timer);
+  }, [sidebarCollapsed]);
+
+  // ── Practice playback speed ────────────────────────────────────────────────
+  // Deliberately *not* persisted: it resets to 100 % for every composition. A
+  // sticky 60 % silently applied to the next song is the same class of surprise
+  // as editing the BPM to practise, which is the bug this control exists to fix.
+  const [playbackSpeed, setPlaybackSpeedState] = useState(DEFAULT_PLAYBACK_SPEED);
+  useEffect(() => { setPlaybackSpeedState(DEFAULT_PLAYBACK_SPEED); }, [id]);
   const proceedAfterSaveRef = useRef<(() => void) | null>(null);
   const [isResolvingBlockedNavigation, setIsResolvingBlockedNavigation] = useState(false);
   const isDirtyRef = useRef(isDirty);
@@ -213,7 +325,7 @@ export default function TabEditorPage() {
     handleReady: handleYoutubeReady,
     migrateKey: migrateYoutubeKey,
     seedFromDb: seedYoutubeFromDb,
-  } = useYoutubeSync({songKey, clockRef, tempo: 1.0});
+  } = useYoutubeSync({songKey, clockRef, tempo: 1.0, enabled: audioSource === 'youtube'});
 
   const getApi = useCallback((): AlphaTabApi | null => {
     return canvasRef.current?.alphaTab?.getApi() ?? apiRef.current;
@@ -221,9 +333,18 @@ export default function TabEditorPage() {
 
   // ── YouTube suppress helper ────────────────────────────────────────────────
   const suppressYoutubeSync = useCallback((durationMs = 800) => {
+    if (youtubeSuppressTimerRef.current !== null) clearTimeout(youtubeSuppressTimerRef.current);
     ytSyncSuppressRef.current = true;
-    setTimeout(() => { ytSyncSuppressRef.current = false; }, durationMs);
+    youtubeSuppressTimerRef.current = setTimeout(() => {
+      ytSyncSuppressRef.current = false;
+      youtubeSuppressTimerRef.current = null;
+    }, durationMs);
   }, [ytSyncSuppressRef]);
+
+  useEffect(() => () => {
+    ++sourceSwitchVersionRef.current;
+    if (youtubeSuppressTimerRef.current !== null) clearTimeout(youtubeSuppressTimerRef.current);
+  }, []);
 
   // ── Playback Engine ────────────────────────────────────────────────────────
   // commitMutation is defined below but usePlaybackEngine needs onRenderNeeded.
@@ -231,7 +352,9 @@ export default function TabEditorPage() {
   const commitMutationRef = useRef<() => void>(() => { /* stub, replaced below */ });
   // Forward refs for functions defined after playbackEngine
   const setPracticeRangeRef = useRef<((r: {startBar: number; endBar: number} | null) => void)>(() => { /* stub */ });
-  const practiceRangeRef = useRef<{startBar: number; endBar: number} | null>(null);
+  // Stop and re-render both clear AlphaTab's playback range; this puts the
+  // user's loop back afterwards.
+  const reapplyLoopRef = useRef<() => void>(() => { /* stub */ });
   const initScoreRef = useRef<() => Promise<void>>(async () => { /* stub */ });
   const updateCursorBoundsRef = useRef<() => void>(() => { /* stub */ });
   const computeSectionLabelsRef = useRef<() => void>(() => { /* stub */ });
@@ -240,25 +363,30 @@ export default function TabEditorPage() {
   const playbackEngine = usePlaybackEngine({
     apiRef,
     scoreRef,
-    stemPlayer,
+    stemPlayer: {...stemPlayer, stemsReady: audioSource === 'stems' && stemPlayer.stemsReady},
     canvasScrollRef,
     canvasRef: canvasRef as React.MutableRefObject<{alphaTab: {stop: () => void; clearPlaybackRange: () => void} | null} | null>,
     onRenderNeeded: () => { commitMutationRef.current(); },
     getApi,
-    onPlaybackStarted: () => {
-      suppressYoutubeSync();
-      youtubeSyncRef.current?.onResume();
-    },
+    ytSyncSuppressRef,
     onPlaybackPaused: () => {
       suppressYoutubeSync();
       youtubeSyncRef.current?.onPause();
     },
-    onStop: () => { setPracticeRangeRef.current(null); },
+    onPlaybackSeek: seconds => {
+      if (audioSource === 'youtube') youtubeSyncRef.current?.onSeekTo(seconds);
+    },
+    onStop: () => {
+      setPracticeRangeRef.current(null);
+      // Stop cleared the playback range; the loop itself is still set.
+      reapplyLoopRef.current();
+    },
     onRenderFinished: () => {
       void initScoreRef.current();
       updateCursorBoundsRef.current();
       computeSectionLabelsRef.current();
       computePatternOverlaysRef.current();
+      reapplyLoopRef.current();
     },
   });
 
@@ -295,10 +423,9 @@ export default function TabEditorPage() {
     handlePositionChanged,
     handleBeatClickWithSeek: _engineHandleBeatClickWithSeek,
     handleActiveBeatsChanged,
-    handleYoutubeStateChange,
+    handleYoutubeStateChange: engineHandleYoutubeStateChange,
     handleRenderFinished,
     startSeekTo,
-    markPlaying,
     unmount,
   } = playbackEngine;
 
@@ -310,12 +437,139 @@ export default function TabEditorPage() {
   // ── Stop (no-arg wrapper so button onClick does not receive a MouseEvent) ──
   const handleStop = useCallback(() => { _engineHandleStop(); }, [_engineHandleStop]);
 
+  // ── Practice speed → AlphaTab ──────────────────────────────────────────────
+  // `api.playbackSpeed` time-stretches the synth, which only the Tracks source
+  // goes through. Stems and the YouTube player keep their own clocks, so the
+  // control is inert (and shown disabled) for them rather than silently
+  // desynchronising the score from the audio.
+  const speedAppliesToAudio = audioSource === 'tracks';
+  const effectivePlaybackSpeed = speedAppliesToAudio ? playbackSpeed : DEFAULT_PLAYBACK_SPEED;
+
   useEffect(() => {
-    if (stemPlayer.stemsReady) {
-      isPlaying ? void stemPlayer.play() : void stemPlayer.pause();
+    canvasRef.current?.alphaTab?.setPlaybackSpeed(playbackSpeedFactor(effectivePlaybackSpeed));
+  }, [effectivePlaybackSpeed, isPlayerReady, isReady]);
+
+  const handleSpeedChange = useCallback((percent: number) => {
+    setPlaybackSpeedState(clampPlaybackSpeed(percent));
+  }, []);
+
+  const handleAdjustSpeed = useCallback((deltaPercent: number) => {
+    setPlaybackSpeedState(prev => adjustPlaybackSpeed(prev, deltaPercent));
+  }, []);
+
+  const handleResetSpeed = useCallback(() => {
+    setPlaybackSpeedState(DEFAULT_PLAYBACK_SPEED);
+  }, []);
+
+  // ── Loop ───────────────────────────────────────────────────────────────────
+  const [loopRange, setLoopRange] = useState<BarRange | null>(null);
+  const loopRangeRef = useRef(loopRange);
+  loopRangeRef.current = loopRange;
+
+  /**
+   * Push a bar range onto the player. Bars become MIDI ticks through
+   * `api.tickCache`, and `setPlaybackRange` also flips `api.isLooping` on.
+   */
+  const applyLoopToPlayer = useCallback((range: BarRange | null) => {
+    const alphaTab = canvasRef.current?.alphaTab;
+    if (!alphaTab) return;
+    const score = scoreRef.current;
+    if (!range || !score) {
+      alphaTab.clearPlaybackRange();
+      return;
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPlaying, stemPlayer.stemsReady]);
+    const ticks = loopRangeToTicks(
+      score,
+      range,
+      score.masterBars.length,
+      tickMappingRef.current.endTick,
+      getApi()?.tickCache,
+    );
+    if (!ticks) {
+      alphaTab.clearPlaybackRange();
+      return;
+    }
+    alphaTab.setPlaybackRange(ticks.startTick, ticks.endTick);
+  }, [getApi, tickMappingRef]);
+
+  // Setting a playback range seeks to its start, so only re-apply while the
+  // player is idle — otherwise a re-render would yank the playhead backwards.
+  const reapplyLoop = useCallback(() => {
+    if (isPlayingRef.current) return;
+    if (!loopRangeRef.current) return;
+    applyLoopToPlayer(loopRangeRef.current);
+  }, [applyLoopToPlayer, isPlayingRef]);
+  reapplyLoopRef.current = reapplyLoop;
+
+  const handleClearLoop = useCallback(() => {
+    setLoopRange(null);
+    applyLoopToPlayer(null);
+  }, [applyLoopToPlayer]);
+
+  const selectAudioSource = useCallback((source: AudioSource) => {
+    const version = ++sourceSwitchVersionRef.current;
+    // Silence the outgoing source synchronously before enabling its replacement.
+    suppressYoutubeSync();
+    const api = getApi();
+    if (api) api.masterVolume = 0;
+    youtubePlayerRef.current?.setMuted?.(true);
+    youtubePlayerRef.current?.pause();
+    void stemPlayer.pause().then(() => {
+      if (version !== sourceSwitchVersionRef.current) return;
+      setAudioSource(source);
+      if (source === 'youtube') setShowYoutubePanel(true);
+      if (source === audioSourceRef.current) {
+        if (api) api.masterVolume = source === 'tracks' ? 1 : 0;
+        youtubePlayerRef.current?.setMuted?.(source !== 'youtube');
+        if (isPlayingRef.current && source === 'stems') {
+          void stemPlayer.seek(positionRef.current.currentTimeMs / 1000);
+        }
+        if (isPlayingRef.current && source === 'youtube') {
+          youtubeSyncRef.current?.onPlayFrom(positionRef.current.currentTimeMs / 1000);
+        }
+      }
+    });
+  }, [getApi, stemPlayer.pause, stemPlayer.seek, suppressYoutubeSync, youtubePlayerRef,
+    youtubeSyncRef, isPlayingRef, positionRef]);
+
+  useEffect(() => {
+    if ((audioSource === 'stems' && !stemPlayer.stemsReady) ||
+        (audioSource === 'youtube' && !youtubeVideoId)) {
+      selectAudioSource('tracks');
+    }
+  }, [audioSource, stemPlayer.stemsReady, youtubeVideoId, selectAudioSource]);
+
+  useEffect(() => {
+    const api = getApi();
+    if (api) api.masterVolume = audioSource === 'tracks' ? 1 : 0;
+    if (audioSource === 'stems' && stemPlayer.stemsReady && isPlaying) {
+      void stemPlayer.seek(positionRef.current.currentTimeMs / 1000);
+    } else {
+      void stemPlayer.pause();
+    }
+    if (audioSource === 'youtube' && isPlaying) {
+      suppressYoutubeSync();
+      youtubeSyncRef.current?.onPlayFrom(positionRef.current.currentTimeMs / 1000);
+    } else {
+      youtubePlayerRef.current?.pause();
+    }
+  }, [audioSource, isPlaying, stemPlayer.stemsReady, stemPlayer.seek, stemPlayer.pause,
+    getApi, positionRef, youtubePlayerRef, youtubeSyncRef, suppressYoutubeSync]);
+
+  const handleYoutubeStateChange = useCallback((state: number) => {
+    if (audioSource !== 'youtube') {
+      if (state === 1) youtubePlayerRef.current?.pause();
+      return;
+    }
+    engineHandleYoutubeStateChange(state);
+  }, [audioSource, engineHandleYoutubeStateChange, youtubePlayerRef]);
+
+  const handleSelectedYoutubeReady = useCallback(() => {
+    handleYoutubeReady();
+    if (audioSource === 'youtube' && isPlayingRef.current) {
+      youtubeSyncRef.current?.onPlayFrom(positionRef.current.currentTimeMs / 1000);
+    }
+  }, [handleYoutubeReady, audioSource, isPlayingRef, positionRef, youtubeSyncRef]);
 
   // ── Editor Cursor ──────────────────────────────────────────────────────────
   const {
@@ -376,28 +630,9 @@ export default function TabEditorPage() {
   }, [_engineHandlePlayerStateChanged, writePlaybackDiag]);
 
   const handlePlayPause = useCallback(() => {
-    const api = getApi();
-    const wasPlaying = isPlayingRef.current;
-    if (!wasPlaying && !renderFinishedRef.current && api) {
-      writePlaybackDiag('renderFinished:transport');
-      handleRenderFinished();
-    }
     writePlaybackDiag('transport:playPause');
     _engineHandlePlayPause();
-    if (!wasPlaying && api?.isReadyForPlayback) {
-      markPlaying();
-      window.setTimeout(() => {
-        if (getApi()?.isReadyForPlayback) {
-          markPlaying();
-        }
-      }, 150);
-      window.setTimeout(() => {
-        if (getApi()?.isReadyForPlayback) {
-          markPlaying();
-        }
-      }, 1000);
-    }
-  }, [_engineHandlePlayPause, getApi, handleRenderFinished, isPlayingRef, markPlaying, renderFinishedRef, writePlaybackDiag]);
+  }, [_engineHandlePlayPause, writePlaybackDiag]);
 
   // ── commitMutation — core mutation trigger ──────────────────────────────────────
   const commitMutation = useCallback(() => {
@@ -437,7 +672,9 @@ export default function TabEditorPage() {
       isAlphaTabStartupGuardActive()
     ) {
       pendingScoreRenderRef.current = true;
-      prepareForScoreRender();
+      if (alphaTabPlayerStateRef.current === 1 || api.playerState === 1) {
+        prepareForScoreRender();
+      }
       writePlaybackDiag('commitMutation:queued');
       clearScoreRenderTimer();
       scoreRenderTimerRef.current = window.setTimeout(() => {
@@ -495,6 +732,7 @@ export default function TabEditorPage() {
       setScore(score);
       setActiveTrackIndex(0);
       setTrackVersion(v => v + 1);
+      setSelectedKey(getScoreKey(score));
       // Percussion staves don't carry tablature; force StaveProfile.Score so the
       // first render produces a visible stave (StaveProfile.Tab on drums => empty
       // layout => `group.staves` undefined crash).
@@ -504,6 +742,8 @@ export default function TabEditorPage() {
         : staveMode === 'tab' ? StaveProfile.Tab
         : staveMode === 'notation' ? StaveProfile.Score
         : StaveProfile.Default;
+      // Fingering placement depends on the stave profile, so re-derive it here.
+      applyFingeringSettings(api, showFingeringRef.current);
       api.updateSettings();
       prepareForScoreRender();
       markRenderPending();
@@ -540,9 +780,8 @@ export default function TabEditorPage() {
     compositionId, setCompositionId,
     showSaveDialog, setShowSaveDialog,
     pendingPreviewImage, setPendingPreviewImage,
-    showExportMenu, setShowExportMenu,
-    showDemoMenu, setShowDemoMenu,
-    showImportMenu, setShowImportMenu,
+    // The export / import / demo popovers were the desktop-only toolbar
+    // cluster; those actions are items in the ⋮ menu now.
     showAsciiImport, setShowAsciiImport,
     asciiImportText, setAsciiImportText,
     asciiImportTitle, setAsciiImportTitle,
@@ -585,7 +824,14 @@ export default function TabEditorPage() {
       const isPercussion = staff?.isPercussion ?? false;
       const instrument: InstrumentType = isPercussion ? 'drums' : t.name.toLowerCase().includes('bass') ? 'bass' : 'guitar';
       const stringCount = staff?.stringTuning?.tunings?.length ?? (instrument === 'bass' ? 4 : 6);
-      const tuningName = staff?.stringTuning?.name ?? 'Custom';
+      // Match presets by pitches, not name: alphaTab names tunings its own way ("Custom",
+      // "Standard Tuning"), which never equals a preset name. Presets list low → high.
+      const values = [...(staff?.stringTuning?.tunings ?? [])].reverse();
+      const preset = instrument === 'drums'
+        ? undefined
+        : getTuningsForInstrument(instrument, stringCount).find(p => p.values.join() === values.join());
+      const tuningName = preset?.name
+        ?? (values.length ? `Custom (${values.map(v => NOTE_NAMES[v % 12]).join(' ')})` : 'Custom');
       return {name: t.name, instrument, stringCount, tuningName};
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -607,18 +853,25 @@ export default function TabEditorPage() {
     apiRef,
     canvasScrollRef,
     totalBars: totalBarsMemo,
-    onStartPlaybackAtBar: useCallback((startBar: number) => {
+    // "Practice this section" is a loop: it sets the same loop the toolbar
+    // shows and clears, then starts playback at its first bar.
+    onStartPlaybackAtBar: useCallback((startBar: number, endBar: number) => {
       const score = scoreRef.current;
-      if (!score) return;
-      const {endTick} = tickMappingRef.current;
-      const startTick = barIndexToTick(score, startBar, totalBarsMemo, endTick);
-      const rangeEndTick = barIndexToTick(score, practiceRangeRef.current?.endBar ?? (score.masterBars.length - 1) + 1, totalBarsMemo, endTick);
-      canvasRef.current?.alphaTab?.setPlaybackRange(startTick, rangeEndTick);
+      const api = getApi();
+      if (!score || !api) return;
+      const range = normalizeLoopRange({startBar, endBar}, score.masterBars.length);
+      const ticks = range && loopRangeToTicks(
+        score, range, score.masterBars.length, tickMappingRef.current.endTick, api.tickCache,
+      );
+      setLoopRange(range);
+      if (ticks) canvasRef.current?.alphaTab?.setPlaybackRange(ticks.startTick, ticks.endTick);
+      const startTick = ticks?.startTick
+        ?? barIndexToTick(score, startBar, totalBarsMemo, tickMappingRef.current.endTick, api.tickCache);
       if (!requestAlphaTabPlay(startTick)) {
         loadMidiForCurrentScore();
         pollPlaybackReady();
       }
-    }, [loadMidiForCurrentScore, pollPlaybackReady, requestAlphaTabPlay, tickMappingRef, totalBarsMemo]),
+    }, [getApi, loadMidiForCurrentScore, pollPlaybackReady, requestAlphaTabPlay, tickMappingRef, totalBarsMemo]),
     onJumpToBar: useCallback((barIndex: number) => {
       moveTo({...cursor, barIndex, beatIndex: 0});
     }, [cursor, moveTo]),
@@ -650,15 +903,18 @@ export default function TabEditorPage() {
   setDetectedPatternsRef.current = setDetectedPatterns;
   // Wire forward refs declared before playbackEngine
   setPracticeRangeRef.current = setPracticeRange;
-  practiceRangeRef.current = practiceRange;
   updateCursorBoundsRef.current = updateCursorBounds;
   computeSectionLabelsRef.current = computeSectionLabels;
   computePatternOverlaysRef.current = computePatternOverlays;
 
-  // ── Bar selection overlays ────────────────────────────────────────────────
+  // ── Bar selection / loop overlays ─────────────────────────────────────────
+  // Selection is blue (what an edit would hit), the loop is amber (what the
+  // player repeats). They can be on at once and read differently.
+  const LOOP_OVERLAY_COLOR = '#f59e0b';
+  const SELECTION_OVERLAY_COLOR = '#3b82f6';
   const [selectedBarOverlays, setSelectedBarOverlays] = useState<PatternOverlay[]>([]);
   useEffect(() => {
-    if (!selectedBarRange) {
+    if (!selectedBarRange && !loopRange) {
       setSelectedBarOverlays([]);
       return;
     }
@@ -668,15 +924,22 @@ export default function TabEditorPage() {
     for (const system of api.boundsLookup.staffSystems) {
       for (const barBounds of system.bars) {
         const idx = barBounds.index;
-        if (idx >= selectedBarRange.start && idx <= selectedBarRange.end) {
-          const {x, y, w, h} = barBounds.visualBounds;
-          overlays.push({x, y, w, h, color: '#3b82f6', label: ''});
+        const {x, y, w, h} = barBounds.visualBounds;
+        if (loopRange && idx >= loopRange.startBar && idx <= loopRange.endBar) {
+          overlays.push({
+            x, y, w, h,
+            color: LOOP_OVERLAY_COLOR,
+            label: idx === loopRange.startBar ? `Loop ${formatLoopRange(loopRange)}` : '',
+          });
+        }
+        if (selectedBarRange && idx >= selectedBarRange.start && idx <= selectedBarRange.end) {
+          overlays.push({x, y, w, h, color: SELECTION_OVERLAY_COLOR, label: ''});
         }
       }
     }
     setSelectedBarOverlays(overlays);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedBarRange, scoreMutationVersion]);
+  }, [selectedBarRange, loopRange, scoreMutationVersion, sectionLabels]);
 
   const mergedPatternOverlays = useMemo(
     () => [...selectedBarOverlays, ...patternOverlays],
@@ -693,6 +956,7 @@ export default function TabEditorPage() {
     setArtist(score.artist);
     const scoreTempo = getScoreTempo(score);
     if (scoreTempo > 0) setTempoState(scoreTempo);
+    setSelectedKey(getScoreKey(score));
     prepareForScoreRender();
     markRenderPending();
     api.renderScore(score, [activeTrackIndex]);
@@ -719,6 +983,7 @@ export default function TabEditorPage() {
   const handleUndo = useCallback(() => {
     const score = scoreRef.current;
     if (!score) return;
+    if (!requireEditMode()) return;
     const restored = undoManagerRef.current.undo(score);
     if (restored) applyUndoRedo(restored);
     else toast('Nothing to undo');
@@ -727,6 +992,7 @@ export default function TabEditorPage() {
   const handleRedo = useCallback(() => {
     const score = scoreRef.current;
     if (!score) return;
+    if (!requireEditMode()) return;
     const restored = undoManagerRef.current.redo(score);
     if (restored) applyUndoRedo(restored);
     else toast('Nothing to redo');
@@ -738,9 +1004,34 @@ export default function TabEditorPage() {
     if (total > 0) setSelectedBarRange({start: 0, end: total - 1});
   }, []);
 
+  /**
+   * Alt+L / the toolbar button: loop the selected bars, or the bar the cursor
+   * is in. Pressing it again clears the loop.
+   */
+  const handleToggleLoop = useCallback(() => {
+    if (loopRangeRef.current) {
+      handleClearLoop();
+      toast('Loop cleared', {id: 'tab-editor-loop'});
+      return;
+    }
+    const range = computeLoopRange({
+      selectedBarRange,
+      cursorBarIndex: cursor.barIndex,
+      totalBars: scoreRef.current?.masterBars.length ?? 0,
+    });
+    if (!range) {
+      toast('Nothing to loop yet', {id: 'tab-editor-loop'});
+      return;
+    }
+    setLoopRange(range);
+    applyLoopToPlayer(range);
+    toast(`Looping ${formatLoopRange(range).toLowerCase()}`, {id: 'tab-editor-loop'});
+  }, [applyLoopToPlayer, cursor.barIndex, handleClearLoop, selectedBarRange]);
+
   const handleClearSelectedBars = useCallback(() => {
     const score = scoreRef.current;
     if (!score || !selectedBarRange) return;
+    if (!requireEditMode()) return;
     handleBeforeMutation();
     for (let i = selectedBarRange.start; i <= selectedBarRange.end; i++) {
       clearBar(score, activeTrackIndex, cursor.voiceIndex, i);
@@ -853,9 +1144,11 @@ export default function TabEditorPage() {
 
   // ── Auto-extend score bars for stem duration ───────────────────────────────
   useEffect(() => {
-    if (!stemPlayer.stemsReady || stemPlayer.duration <= 0) return;
+    if (audioSource !== 'stems' || !stemPlayer.stemsReady || stemPlayer.duration <= 0) return;
     const score = scoreRef.current;
     if (!score) return;
+    // Adding bars is an edit: in view mode loading stems must not touch the file.
+    if (!isEditModeRef.current) return;
     const masterBars = score.masterBars;
     const currentBars = masterBars.length;
     const refBar = masterBars[0];
@@ -868,9 +1161,11 @@ export default function TabEditorPage() {
     for (let i = 0; i < toAdd; i++) {
       insertMeasureAfter(score, score.masterBars.length - 1);
     }
+    const resume = isPlayingRef.current;
     commitMutation();
+    if (resume) requestAlphaTabPlay();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stemPlayer.stemsReady, stemPlayer.duration]);
+  }, [audioSource, stemPlayer.stemsReady, stemPlayer.duration]);
 
   // ── Track management callbacks ─────────────────────────────────────────────
   const applyTrackRender = useCallback((trackIndex: number, isPercussion: boolean, overrideStaveMode?: 'tab' | 'notation' | 'both') => {
@@ -883,6 +1178,8 @@ export default function TabEditorPage() {
       : effectiveMode === 'notation' ? StaveProfile.Score
       : StaveProfile.Default;
     api.settings.display.staveProfile = profile;
+    // Fingering placement depends on the stave profile, so re-derive it here.
+    applyFingeringSettings(api, showFingeringRef.current);
     api.updateSettings();
     prepareForScoreRender();
     markRenderPending();
@@ -915,6 +1212,7 @@ export default function TabEditorPage() {
   }, [cursor, moveTo, applyTrackRender, setSectionLabels]);
 
   const handleAddTrack = useCallback((instrument: InstrumentType, stringCount: number) => {
+    if (!requireEditMode()) return;
     const score = scoreRef.current;
     if (!score) return;
     const tuningPreset = instrument !== 'drums' ? getDefaultTuningPreset(instrument, stringCount) : null;
@@ -933,6 +1231,7 @@ export default function TabEditorPage() {
   }, [cursor, moveTo, applyTrackRender, setSectionLabels]);
 
   const handleRemoveTrack = useCallback((index: number) => {
+    if (!requireEditMode()) return;
     const score = scoreRef.current;
     if (!score) return;
     removeTrack(score, index);
@@ -959,13 +1258,24 @@ export default function TabEditorPage() {
   }, [getApi]);
 
   const handleTuningChange = useCallback((trackIndex: number, tuning: number[]) => {
+    if (!requireEditMode()) return;
     const score = scoreRef.current;
     if (!score) return;
     setTrackTuning(score, trackIndex, tuning);
     commitMutation();
   }, [commitMutation]);
 
+  const handleKeyChange = useCallback((key: string | null) => {
+    if (!requireEditMode()) return;
+    setSelectedKey(key);
+    const score = scoreRef.current;
+    if (!score) return;
+    setScoreKey(score, key);
+    commitMutation();
+  }, [commitMutation]);
+
   const handleTempoChange = useCallback((bpm: number) => {
+    if (!requireEditMode()) return;
     setTempoState(bpm);
     const score = scoreRef.current;
     if (!score) return;
@@ -979,6 +1289,7 @@ export default function TabEditorPage() {
   const handleDrumHit = useCallback((midiNote: number) => {
     const score = scoreRef.current;
     if (!score) return;
+    if (!requireEditMode()) return;
     handleBeforeMutation();
     toggleDrumNote(score, cursor, midiNote);
     const beat = score.tracks[cursor.trackIndex]?.staves[0]?.bars[cursor.barIndex]?.voices[cursor.voiceIndex]?.beats[cursor.beatIndex];
@@ -989,6 +1300,7 @@ export default function TabEditorPage() {
   const handleDrumAdvance = useCallback(() => {
     const score = scoreRef.current;
     if (!score) return;
+    if (!requireEditMode()) return;
     handleBeforeMutation();
     const next = insertRest(score, cursor, currentDuration);
     commitMutation();
@@ -1001,6 +1313,7 @@ export default function TabEditorPage() {
   const handleFretClick = useCallback((stringNumber: number, fret: number) => {
     const score = scoreRef.current;
     if (!score) return;
+    if (!requireEditMode()) return;
     handleBeforeMutation();
     const targetCursor = {...cursor, stringNumber};
     const nextCursor = setNoteAndAdvance(score, targetCursor, fret, currentDuration);
@@ -1012,6 +1325,7 @@ export default function TabEditorPage() {
   const handleChordSelect = useCallback((voicing: ChordVoicing, chordName: string) => {
     const score = scoreRef.current;
     if (!score) return;
+    if (!requireEditMode()) return;
     handleBeforeMutation();
     const notes = voicingToNotes(voicing);
     setChord(score, cursor, notes, currentDuration);
@@ -1024,6 +1338,7 @@ export default function TabEditorPage() {
   const handleChordNameCommit = useCallback((name: string) => {
     const score = scoreRef.current;
     if (!score) return;
+    if (!requireEditMode()) return;
     handleBeforeMutation();
     setBeatChord(score, cursor, name);
     commitMutation();
@@ -1032,12 +1347,14 @@ export default function TabEditorPage() {
   const handleChordClear = useCallback(() => {
     const score = scoreRef.current;
     if (!score) return;
+    if (!requireEditMode()) return;
     handleBeforeMutation();
     clearBeatChord(score, cursor);
     commitMutation();
   }, [cursor, commitMutation, handleBeforeMutation]);
 
   const handleDurationChange = useCallback((duration: number) => {
+    if (!requireEditMode()) return;
     setCurrentDuration(duration);
     const score = scoreRef.current;
     if (score) {
@@ -1049,20 +1366,130 @@ export default function TabEditorPage() {
   const handleEffectToggle = useCallback((effect: NoteEffect | 'slide' | 'bend') => {
     const score = scoreRef.current;
     if (!score) return;
+    if (!requireEditMode()) return;
+    handleBeforeMutation();
     if (effect === 'slide') toggleSlide(score, cursor);
     else if (effect === 'bend') toggleBend(score, cursor);
-    else toggleEffect(score, cursor, effect);
+    else if (
+      effect === 'accent' &&
+      !(score.tracks[activeTrackIndex]?.staves[0]?.isPercussion ?? false)
+    ) {
+      // On a pitched track a strum is one gesture, so the accent covers the
+      // whole beat. Drums keep the per-note accent on the cursor's lane.
+      if (cycleBeatAccent(score, cursor) === undefined) {
+        toast('No notes on this beat to accent');
+        return;
+      }
+    } else toggleEffect(score, cursor, effect);
     commitMutation();
-  }, [cursor, commitMutation]);
+  }, [cursor, commitMutation, handleBeforeMutation, activeTrackIndex]);
 
   const handleDotToggle = useCallback(() => {
+    if (!requireEditMode()) return;
     const score = scoreRef.current;
     if (!score) return;
     toggleDot(score, cursor);
     commitMutation();
   }, [cursor, commitMutation]);
 
+  // ── Fingering ─────────────────────────────────────────────────────────────
+  const handleToggleFingering = useCallback(() => {
+    const next = !showFingeringRef.current;
+    showFingeringRef.current = next;
+    setShowFingering(next);
+    const isPerc = scoreRef.current?.tracks[activeTrackIndex]?.staves[0]?.isPercussion ?? false;
+    applyTrackRender(activeTrackIndex, isPerc);
+  }, [activeTrackIndex, applyTrackRender, setShowFingering]);
+
+  const handleToggleStrumming = useCallback(() => {
+    setShowStrumming(v => !v);
+  }, [setShowStrumming]);
+
+  const handleRightHandFinger = useCallback((finger: RightHandFinger | null) => {
+    const score = scoreRef.current;
+    if (!score) return;
+    if (!requireEditMode()) return;
+    handleBeforeMutation();
+    if (!setRightHandFinger(score, cursor, finger)) {
+      toast('No note under the cursor');
+      return;
+    }
+    commitMutation();
+  }, [cursor, handleBeforeMutation, commitMutation]);
+
+  const handleLeftHandFinger = useCallback((finger: LeftHandFinger | null) => {
+    const score = scoreRef.current;
+    if (!score) return;
+    if (!requireEditMode()) return;
+    handleBeforeMutation();
+    if (!setLeftHandFinger(score, cursor, finger)) {
+      toast('No note under the cursor');
+      return;
+    }
+    commitMutation();
+  }, [cursor, handleBeforeMutation, commitMutation]);
+
+  const handleClearNoteFingering = useCallback(() => {
+    const score = scoreRef.current;
+    if (!score) return;
+    if (!requireEditMode()) return;
+    handleBeforeMutation();
+    if (!clearNoteFingering(score, cursor)) return;
+    commitMutation();
+  }, [cursor, handleBeforeMutation, commitMutation]);
+
+  /** Auto-fingering for the current bar selection, or the whole track. */
+  const handleAutoRightHandFingering = useCallback((scope: 'selection' | 'track') => {
+    if (!requireEditMode()) return;
+    const score = scoreRef.current;
+    if (!score) return;
+    const range = scope === 'selection' ? selectedBarRange : null;
+    if (scope === 'selection' && !range) {
+      toast('Select bars first (Cmd+A selects all)');
+      return;
+    }
+    handleBeforeMutation();
+    const changed = applyRightHandFingering(score, {
+      trackIndex: activeTrackIndex,
+      voiceIndex: cursor.voiceIndex,
+      startBar: range?.start,
+      endBar: range?.end,
+    });
+    if (changed === 0) {
+      toast('Nothing to finger here');
+      return;
+    }
+    if (!showFingeringRef.current) {
+      showFingeringRef.current = true;
+      setShowFingering(true);
+    }
+    commitMutation();
+    const isPerc = score.tracks[activeTrackIndex]?.staves[0]?.isPercussion ?? false;
+    applyTrackRender(activeTrackIndex, isPerc);
+    toast(`Added right-hand fingering to ${changed} note${changed === 1 ? '' : 's'}`);
+  }, [activeTrackIndex, cursor.voiceIndex, selectedBarRange, handleBeforeMutation, commitMutation, applyTrackRender, setShowFingering]);
+
+  const handleClearTrackFingering = useCallback(() => {
+    const score = scoreRef.current;
+    if (!score) return;
+    if (!requireEditMode()) return;
+    handleBeforeMutation();
+    const cleared = clearRightHandFingering(score, {
+      trackIndex: activeTrackIndex,
+      voiceIndex: cursor.voiceIndex,
+      startBar: selectedBarRange?.start,
+      endBar: selectedBarRange?.end,
+    });
+    if (cleared === 0) {
+      toast('No right-hand fingering to clear');
+      return;
+    }
+    commitMutation();
+    toast(`Cleared fingering from ${cleared} note${cleared === 1 ? '' : 's'}`);
+  }, [activeTrackIndex, cursor.voiceIndex, selectedBarRange, handleBeforeMutation, commitMutation]);
+
   const handleRestInsert = useCallback(() => {
+    if (!requireEditMode()) return;
     const score = scoreRef.current;
     if (!score) return;
     const next = insertRest(score, cursor, currentDuration);
@@ -1071,6 +1498,7 @@ export default function TabEditorPage() {
   }, [cursor, currentDuration, commitMutation, moveTo]);
 
   const handleAddMeasure = useCallback(() => {
+    if (!requireEditMode()) return;
     const score = scoreRef.current;
     if (!score) return;
     insertMeasureAfter(score, cursor.barIndex);
@@ -1078,11 +1506,36 @@ export default function TabEditorPage() {
   }, [cursor.barIndex, commitMutation]);
 
   const handleDeleteMeasure = useCallback(() => {
+    if (!requireEditMode()) return;
     const score = scoreRef.current;
     if (!score) return;
     deleteMeasure(score, cursor.barIndex);
     commitMutation();
   }, [cursor.barIndex, commitMutation]);
+
+  // ── View-mode wrappers for the sidebar's writing controls ─────────────────
+  // The sidebar already hides or disables these; the wrappers make sure a
+  // stray event cannot reach the score anyway. Title and artist stay silent —
+  // a toast per keystroke would be worse than the thing it warns about.
+  const handleTitleChangeGuarded = useCallback((value: string) => {
+    if (!isEditModeRef.current) return;
+    handleTitleChange(value);
+  }, [handleTitleChange]);
+
+  const handleArtistChangeGuarded = useCallback((value: string) => {
+    if (!isEditModeRef.current) return;
+    handleArtistChange(value);
+  }, [handleArtistChange]);
+
+  const handleAddSectionGuarded = useCallback((startBar: number, name: string) => {
+    if (!requireEditMode()) return;
+    handleAddSection(startBar, name);
+  }, [handleAddSection, requireEditMode]);
+
+  const handleRemoveSectionGuarded = useCallback((startBar: number) => {
+    if (!requireEditMode()) return;
+    handleRemoveSection(startBar);
+  }, [handleRemoveSection, requireEditMode]);
 
   // ── Keyboard shortcuts ────────────────────────────────────────────────────
   useEditorKeyboard({
@@ -1114,6 +1567,17 @@ export default function TabEditorPage() {
     onSelectAllBars: handleSelectAllBars,
     onClearSelectedBars: handleClearSelectedBars,
     onClearBarSelection: () => setSelectedBarRange(null),
+    onRightHandFinger: handleRightHandFinger,
+    onLeftHandFinger: handleLeftHandFinger,
+    onClearFingering: handleClearNoteFingering,
+    onToggleFingering: handleToggleFingering,
+    onToggleStrumming: handleToggleStrumming,
+    readOnly: !isEditMode,
+    onToggleMode: handleToggleMode,
+    onToggleLoop: handleToggleLoop,
+    onToggleSidebar: handleToggleSidebar,
+    onAdjustSpeed: handleAdjustSpeed,
+    onResetSpeed: handleResetSpeed,
   });
 
   // ── Save ──────────────────────────────────────────────────────────────────
@@ -1230,6 +1694,12 @@ export default function TabEditorPage() {
   const handlePrint = useAlphaTabPrint(getApi);
 
   // ── Derived values ────────────────────────────────────────────────────────
+  const currentFingering = useMemo(
+    () => (scoreRef.current ? getNoteFingering(scoreRef.current, cursor) : null),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cursor, scoreMutationVersion],
+  );
+
   const currentChordName = useMemo(
     () => (scoreRef.current ? getBeatChordName(scoreRef.current, cursor) : null),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1245,6 +1715,13 @@ export default function TabEditorPage() {
   }, [isReady, activeTrackIndex]);
 
   const activeTrackIsDrums = tracks[activeTrackIndex]?.instrument === 'drums';
+
+  // Which controls the toolbar row may show. Single source of truth so the
+  // priority is testable rather than spread across JSX conditions.
+  const toolbarActions = useMemo(
+    () => visibleToolbarActions({mode: editorMode, isDrumTrack: activeTrackIsDrums}),
+    [editorMode, activeTrackIsDrums],
+  );
 
   const sections = useMemo<TabSection[]>(() => {
     return getSectionsFromScore();
@@ -1267,25 +1744,35 @@ export default function TabEditorPage() {
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div className="flex flex-col h-full">
-      {/* Toolbar */}
-      <div className="flex items-center gap-3 px-4 py-2 bg-surface-container border-b border-outline-variant/20"
+      {/* Toolbar — one non-wrapping row. Every child is `shrink-0` and every
+          label is `whitespace-nowrap`, so the row can never solve a width
+          shortage by breaking text inside a control; the only elastic element
+          is the spacer. Identity, labels and the speed slider drop out below
+          `xl` so the whole row still fits a 768 px toolbar (a 1024 px window
+          with the app nav expanded) — see toolbarLayout.ts.
+          `overflow-x-auto` is the escape hatch for phone widths, where the row
+          genuinely cannot fit: it keeps the ⋮ menu reachable instead of
+          clipping it. It does not engage at or above the 768 px target. */}
+      <div className="flex items-center gap-2 px-4 py-2 bg-surface-container border-b border-outline-variant/20 overflow-x-auto overscroll-x-contain"
         style={{paddingTop: 'max(var(--sat), 0.5rem)'}}
       >
         <button
           onClick={() => navigate((location.state as LocationState | null)?.from ?? '/guitar', {state: {activeTab: (location.state as LocationState | null)?.activeTab}})}
-          className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
+          className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant shrink-0"
+          title="Back"
+          aria-label="Back"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
-        <div className="flex items-center gap-2">
+        <div className="hidden xl:flex items-center gap-2 shrink-0">
           <Music className="h-4 w-4 text-primary" />
-          <h1 className="text-sm font-bold text-on-surface hidden lg:block">Tab Editor</h1>
+          <h1 className="text-sm font-bold text-on-surface whitespace-nowrap">Tab Editor</h1>
         </div>
 
-        <div className="w-px h-6 bg-outline-variant/30" />
+        <div className="hidden xl:block w-px h-6 bg-outline-variant/30 shrink-0" />
 
         {/* Transport */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={handlePlayPause}
             className={cn(
@@ -1306,124 +1793,203 @@ export default function TabEditorPage() {
           </button>
         </div>
 
-        <div className="hidden lg:block w-px h-6 bg-outline-variant/30" />
-        <div className="hidden lg:block text-xs text-on-surface-variant font-mono">
-          Bar {cursor.barIndex + 1} | Beat {cursor.beatIndex + 1} | {stringLabel}
+        {/* Practice speed — playback only. The song's BPM lives in the sidebar
+            and is saved with the file; this is not. */}
+        <div
+          className={cn(
+            'flex items-center gap-1 rounded-lg px-1.5 py-1 border transition-colors shrink-0',
+            playbackSpeed !== DEFAULT_PLAYBACK_SPEED && speedAppliesToAudio
+              ? 'border-tertiary/50 bg-tertiary/10 text-tertiary'
+              : 'border-outline-variant/30 text-on-surface-variant',
+            !speedAppliesToAudio && 'opacity-50',
+          )}
+          title={speedAppliesToAudio
+            ? 'Practice speed — playback only, never saved. The song’s tempo is the BPM field in the sidebar. ([ slower, ] faster, \\ reset)'
+            : 'Practice speed only applies to the Tracks audio source'}
+        >
+          <Gauge className="h-3.5 w-3.5 shrink-0" />
+          <button
+            onClick={() => handleAdjustSpeed(-PLAYBACK_SPEED_STEP)}
+            disabled={!speedAppliesToAudio}
+            className="p-0.5 rounded hover:bg-surface-container-high disabled:cursor-not-allowed"
+            title="Slower ([)"
+            aria-label="Slower"
+          >
+            <Minus className="h-3 w-3" />
+          </button>
+          <input
+            type="range"
+            aria-label="Practice playback speed"
+            min={MIN_PLAYBACK_SPEED}
+            max={MAX_PLAYBACK_SPEED}
+            step={PLAYBACK_SPEED_STEP}
+            value={effectivePlaybackSpeed}
+            disabled={!speedAppliesToAudio}
+            onChange={e => handleSpeedChange(Number(e.target.value))}
+            className="hidden xl:block w-20"
+          />
+          <button
+            onClick={() => handleAdjustSpeed(PLAYBACK_SPEED_STEP)}
+            disabled={!speedAppliesToAudio}
+            className="p-0.5 rounded hover:bg-surface-container-high disabled:cursor-not-allowed"
+            title="Faster (])"
+            aria-label="Faster"
+          >
+            <Plus className="h-3 w-3" />
+          </button>
+          <button
+            onClick={handleResetSpeed}
+            disabled={!speedAppliesToAudio}
+            className="text-[11px] font-mono font-semibold tabular-nums w-10 shrink-0 text-center whitespace-nowrap hover:underline disabled:cursor-not-allowed"
+            title="Back to 100 % (\)"
+          >
+            {effectivePlaybackSpeed}%
+          </button>
         </div>
 
-        <div className="flex-1" />
+        {/* Loop */}
+        <div className="flex items-center shrink-0">
+          <button
+            onClick={handleToggleLoop}
+            className={cn(
+              'flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-semibold whitespace-nowrap transition-colors',
+              loopRange
+                ? 'bg-amber-500/15 text-amber-500'
+                : 'text-on-surface-variant hover:bg-surface-container-high',
+            )}
+            title={loopRange
+              ? `Looping ${formatLoopRange(loopRange)} — click to clear (Alt+L)`
+              : 'Loop the selected bars, or the current bar (Alt+L)'}
+          >
+            <Repeat className="h-3.5 w-3.5 shrink-0" />
+            {loopRange && <span className="hidden xl:inline">{formatLoopRange(loopRange)}</span>}
+          </button>
+          {loopRange && (
+            <button
+              onClick={handleClearLoop}
+              className="p-1 rounded text-amber-500 hover:bg-surface-container-high transition-colors shrink-0"
+              title="Clear loop"
+              aria-label="Clear loop"
+            >
+              <X className="h-3 w-3" />
+            </button>
+          )}
+        </div>
+
+        <select
+          aria-label="Audio source"
+          value={audioSource}
+          onChange={event => selectAudioSource(event.target.value as AudioSource)}
+          className="w-24 shrink-0 bg-surface-container text-xs text-on-surface rounded px-2 py-1.5 border border-outline-variant/30"
+        >
+          <option value="tracks">Tracks</option>
+          <option value="stems" disabled={!stemPlayer.stemsReady}>Stems</option>
+          <option value="youtube" disabled={!youtubeVideoId}>YouTube</option>
+        </select>
+
+        {/* The cursor read-out used to sit here. It is a continuous read-out,
+            not an action, and squeezed between two toolbar controls it was the
+            thing that wrapped to four lines — it now lives in the status bar
+            next to mode, BPM, speed and loop. */}
+        <div className="flex-1 min-w-0" />
+
+        {/* View / Edit — the switch that decides whether keys can change the file */}
+        <div
+          className="flex items-center rounded-lg border border-outline-variant/30 overflow-hidden shrink-0"
+          role="group"
+          aria-label="Editor mode"
+        >
+          <button
+            onClick={() => setEditorMode('view')}
+            aria-pressed={!isEditMode}
+            className={cn(
+              'flex items-center gap-1 px-2 py-1.5 text-[11px] font-semibold whitespace-nowrap transition-colors',
+              !isEditMode ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:bg-surface-container-high',
+            )}
+            title="View mode — practise without changing the tab (Alt+E)"
+            aria-label="View mode"
+          >
+            <Eye className="h-3.5 w-3.5 shrink-0" />
+            <span className="hidden xl:inline">View</span>
+          </button>
+          <button
+            onClick={() => setEditorMode('edit')}
+            aria-pressed={isEditMode}
+            className={cn(
+              'flex items-center gap-1 px-2 py-1.5 text-[11px] font-semibold whitespace-nowrap transition-colors',
+              isEditMode ? 'bg-tertiary text-on-tertiary' : 'text-on-surface-variant hover:bg-surface-container-high',
+            )}
+            title="Edit mode — note entry and effects are live (Alt+E)"
+            aria-label="Edit mode"
+          >
+            <Pencil className="h-3.5 w-3.5 shrink-0" />
+            <span className="hidden xl:inline">Edit</span>
+          </button>
+        </div>
+
+        <button
+          onClick={handleToggleSidebar}
+          className="hidden lg:inline-flex shrink-0 p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
+          title={sidebarCollapsed ? 'Show sidebar (Alt+B)' : 'Hide sidebar for a full-width tab (Alt+B)'}
+          aria-label={sidebarCollapsed ? 'Show sidebar' : 'Hide sidebar'}
+        >
+          {sidebarCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
+        </button>
+
+        {/* Note-entry surfaces — inline in Edit mode only, which is what makes
+            the View-mode row visibly leaner. Everything else occasional lives
+            in the ⋮ menu. */}
+        {toolbarActions.includes('chordFinder') && (
+          <button
+            onClick={() => setShowChordFinder(true)}
+            className="hidden lg:inline-flex shrink-0 p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
+            title="Chord Finder (Cmd+K)"
+            aria-label="Chord Finder"
+          >
+            <Search className="h-4 w-4" />
+          </button>
+        )}
+        {toolbarActions.includes('fretboard') && (
+          <button
+            onClick={() => setShowFretboard(!showFretboard)}
+            className={cn('hidden lg:inline-flex shrink-0 p-2 rounded-lg transition-colors', showFretboard ? 'bg-primary/10 text-primary' : 'text-on-surface-variant hover:bg-surface-container-high')}
+            title={activeTrackIsDrums ? 'Toggle Drum Pad' : 'Toggle Fretboard'}
+            aria-label={activeTrackIsDrums ? 'Toggle Drum Pad' : 'Toggle Fretboard'}
+          >
+            <Piano className="h-4 w-4" />
+          </button>
+        )}
 
         {/* Save */}
         <button
           onClick={handleSave}
           className={cn(
-            'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors',
+            'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap shrink-0 transition-colors',
             isDirty ? 'bg-primary text-on-primary hover:bg-primary/90' : 'text-on-surface-variant hover:bg-surface-container-high',
           )}
           title={compositionId && isDirty ? 'Save (⌘S)' : 'Save to library (⌘S)'}
+          aria-label="Save"
         >
-          <Save className="h-3.5 w-3.5" />
-          <span className="hidden lg:inline">{isDirty ? 'Save*' : 'Saved'}</span>
-          {isDirty && <span className="lg:hidden">*</span>}
+          <Save className="h-3.5 w-3.5 shrink-0" />
+          <span className="hidden xl:inline">{isDirty ? 'Save*' : 'Saved'}</span>
+          {isDirty && <span className="xl:hidden">*</span>}
         </button>
 
-        {/* Desktop-only secondary buttons */}
-        <div className="hidden lg:flex items-center gap-1">
-          <button onClick={handleNewTab} className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant" title="New tab">
-            <Plus className="h-4 w-4" />
-          </button>
-          <button
-            onClick={handleStaveModeToggle}
-            disabled={activeTrackIsDrums}
-            className={cn('px-2 py-1 rounded text-[10px] font-medium transition-colors', activeTrackIsDrums ? 'text-on-surface-variant/30 cursor-not-allowed' : 'text-on-surface-variant hover:bg-surface-container-high')}
-            title={activeTrackIsDrums ? 'Percussion tracks use score notation only' : 'Toggle view: Tab / Notation / Both'}
-          >
-            <Eye className="h-3.5 w-3.5 inline mr-1" />
-            {activeTrackIsDrums ? 'Score' : staveMode === 'tab' ? 'Tab' : staveMode === 'notation' ? 'Score' : 'Both'}
-          </button>
-          {!activeTrackIsDrums && (
-            <button onClick={() => setShowChordFinder(true)} className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant" title="Chord Finder (Cmd+K)">
-              <Search className="h-4 w-4" />
-            </button>
-          )}
-          <button
-            onClick={() => setShowFretboard(!showFretboard)}
-            className={cn('p-2 rounded-lg transition-colors', showFretboard ? 'bg-primary/10 text-primary' : 'text-on-surface-variant hover:bg-surface-container-high')}
-            title={activeTrackIsDrums ? 'Toggle Drum Pad' : 'Toggle Fretboard'}
-          >
-            <Piano className="h-4 w-4" />
-          </button>
-          {!compositionId && !isDirty && (
-            <div className="relative">
-              <button onClick={() => { setShowDemoMenu(!showDemoMenu); setShowExportMenu(false); }} className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Load demo tabs">
-                <BookOpen className="h-3.5 w-3.5" />Demos<ChevronDown className="h-3 w-3" />
-              </button>
-              {showDemoMenu && (
-                <>
-                  <div className="fixed inset-0 z-30" onClick={() => setShowDemoMenu(false)} />
-                  <div className="absolute right-0 top-full mt-1 z-40 bg-surface-container-high border border-outline-variant/30 rounded-lg shadow-lg py-1 min-w-[140px]">
-                    <button onClick={() => { handleLoadGuitarDemo(); setShowDemoMenu(false); }} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">Guitar Demo</button>
-                    <button onClick={() => { handleLoadBassDemo(); setShowDemoMenu(false); }} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">Bass Demo</button>
-                    <button onClick={() => { handleLoadDrumsDemo(); setShowDemoMenu(false); }} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">Drums Demo</button>
-                  </div>
-                </>
-              )}
-            </div>
-          )}
-          <input ref={fileInputRef} type="file" accept=".gp,.gp3,.gp4,.gp5,.gpx,.gp7,.alphatex,.tex" className="hidden" onChange={handleImportFile} />
-          <input ref={psarcFileInputRef} type="file" accept=".psarc" className="hidden" onChange={handleImportPsarc} />
-          <div className="relative">
-            <button onClick={() => { setShowImportMenu(!showImportMenu); setShowExportMenu(false); setShowDemoMenu(false); }} className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant" title="Import">
-              <Upload className="h-4 w-4" />
-            </button>
-            {showImportMenu && (
-              <>
-                <div className="fixed inset-0 z-30" onClick={() => setShowImportMenu(false)} />
-                <div className="absolute right-0 top-full mt-1 z-40 bg-surface-container-high border border-outline-variant/30 rounded-lg shadow-lg py-1 min-w-[180px]">
-                  <button onClick={() => { fileInputRef.current?.click(); setShowImportMenu(false); }} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">GP / AlphaTex file...</button>
-                  <button onClick={() => { setShowAsciiImport(true); setShowImportMenu(false); }} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">ASCII Tab text...</button>
-                  <button onClick={() => { psarcFileInputRef.current?.click(); setShowImportMenu(false); }} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">PSARC file...</button>
-                </div>
-              </>
-            )}
-          </div>
-          <div className="relative">
-            <button onClick={() => { setShowExportMenu(!showExportMenu); setShowDemoMenu(false); }} className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant" title="Export">
-              <Download className="h-4 w-4" />
-            </button>
-            {showExportMenu && (
-              <>
-                <div className="fixed inset-0 z-30" onClick={() => setShowExportMenu(false)} />
-                <div className="absolute right-0 top-full mt-1 z-40 bg-surface-container-high border border-outline-variant/30 rounded-lg shadow-lg py-1 min-w-[160px]">
-                  <button onClick={() => void handleExport('gp7')} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">Guitar Pro (.gp)</button>
-                  <button onClick={() => void handleExport('alphatex')} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">AlphaTex (.alphatex)</button>
-                  <button onClick={() => void handleExport('ascii')} className="w-full text-left px-3 py-1.5 text-xs text-on-surface hover:bg-surface-container transition-colors">ASCII Tab (.txt)</button>
-                </div>
-              </>
-            )}
-          </div>
-          <button onClick={handlePrint} disabled={!isReady} className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant disabled:opacity-40 disabled:cursor-not-allowed" title="Print / Save as PDF" data-print-hide>
-            <Printer className="h-4 w-4" />
-          </button>
-          <button onClick={() => setShowHelp(true)} className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant" title="Help (?)">
-            <HelpCircle className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => setShowYoutubePanel(v => !v)}
-            className={cn('p-2 rounded-lg transition-colors', (showYoutubePanel || youtubeVideoId) ? 'bg-primary/10 text-primary' : 'text-on-surface-variant hover:bg-surface-container-high')}
-            title="YouTube sync"
-          >
-            <Youtube className="h-4 w-4" />
-          </button>
-        </div>
-
-        {/* Mobile overflow menu */}
-        <div className="lg:hidden flex items-center gap-1">
+        {/* Overflow menu — one pattern at every width. It used to be mobile
+            only, with a second, desktop-only row of buttons beside it; that row
+            is what overflowed, and it also declared a duplicate pair of hidden
+            file inputs that stole `fileInputRef` from this one. */}
+        <div className="flex items-center gap-1 shrink-0">
           <input ref={fileInputRef} type="file" accept=".gp,.gp3,.gp4,.gp5,.gpx,.gp7,.alphatex,.tex" className="hidden" onChange={handleImportFile} />
           <input ref={psarcFileInputRef} type="file" accept=".psarc" className="hidden" onChange={handleImportPsarc} />
           <DropdownMenu open={moreMenuOpen} onOpenChange={setMoreMenuOpen}>
             <DropdownMenuTrigger asChild>
-              <button className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant">
+              <button
+                className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
+                title="More actions"
+                aria-label="More actions"
+                data-print-hide
+              >
                 <MoreVertical className="h-4 w-4" />
               </button>
             </DropdownMenuTrigger>
@@ -1433,12 +1999,29 @@ export default function TabEditorPage() {
               <DropdownMenuItem onClick={handleStaveModeToggle} disabled={activeTrackIsDrums}>
                 <Eye className="h-4 w-4 mr-2" />View: {activeTrackIsDrums ? 'Score' : staveMode === 'tab' ? 'Tab' : staveMode === 'notation' ? 'Score' : 'Both'}
               </DropdownMenuItem>
-              {!activeTrackIsDrums && (
+              <DropdownMenuItem onClick={handleToggleFingering} disabled={activeTrackIsDrums}>
+                <Hand className="h-4 w-4 mr-2" />Fingering: {showFingering ? 'On' : 'Off'}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleToggleMode}>
+                {isEditMode ? <Eye className="h-4 w-4 mr-2" /> : <Pencil className="h-4 w-4 mr-2" />}
+                Switch to {isEditMode ? 'View' : 'Edit'} mode
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleToggleLoop}>
+                <Repeat className="h-4 w-4 mr-2" />{loopRange ? `Clear loop (${formatLoopRange(loopRange)})` : 'Loop current bar'}
+              </DropdownMenuItem>
+              {isEditMode && (
+                <DropdownMenuItem onClick={() => handleAutoRightHandFingering('track')} disabled={activeTrackIsDrums}>
+                  <Hand className="h-4 w-4 mr-2" />Add right-hand fingering
+                </DropdownMenuItem>
+              )}
+              {!activeTrackIsDrums && isEditMode && (
                 <DropdownMenuItem onClick={() => setShowChordFinder(true)}><Search className="h-4 w-4 mr-2" />Chord Finder</DropdownMenuItem>
               )}
-              <DropdownMenuItem onClick={() => setShowFretboard(!showFretboard)}>
-                <Piano className="h-4 w-4 mr-2" />{showFretboard ? 'Hide' : 'Show'} {activeTrackIsDrums ? 'Drum Pad' : 'Fretboard'}
-              </DropdownMenuItem>
+              {isEditMode && (
+                <DropdownMenuItem onClick={() => setShowFretboard(!showFretboard)}>
+                  <Piano className="h-4 w-4 mr-2" />{showFretboard ? 'Hide' : 'Show'} {activeTrackIsDrums ? 'Drum Pad' : 'Fretboard'}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuSeparator />
               {!compositionId && !isDirty && (
                 <>
@@ -1455,6 +2038,7 @@ export default function TabEditorPage() {
               <DropdownMenuItem onClick={() => void handleExport('gp7')}><Download className="h-4 w-4 mr-2" />Export Guitar Pro</DropdownMenuItem>
               <DropdownMenuItem onClick={() => void handleExport('alphatex')}><Download className="h-4 w-4 mr-2" />Export AlphaTex</DropdownMenuItem>
               <DropdownMenuItem onClick={() => void handleExport('ascii')}><Download className="h-4 w-4 mr-2" />Export ASCII Tab</DropdownMenuItem>
+              <DropdownMenuItem onClick={handlePrint} disabled={!isReady}><Printer className="h-4 w-4 mr-2" />Print / Save as PDF</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setShowYoutubePanel(v => !v)}>
                 <Youtube className="h-4 w-4 mr-2" />YouTube sync
@@ -1464,7 +2048,9 @@ export default function TabEditorPage() {
           </DropdownMenu>
           <button
             onClick={() => setIsSidebarOpen(v => !v)}
-            className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
+            className="lg:hidden p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant"
+            title={isSidebarOpen ? 'Close panel' : 'Open panel'}
+            aria-label={isSidebarOpen ? 'Close panel' : 'Open panel'}
           >
             {isSidebarOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
@@ -1496,12 +2082,27 @@ export default function TabEditorPage() {
           </button>
         </div>
         <div className="flex items-center gap-0.5">
-          <button onClick={handleUndo} className="p-2 rounded-lg hover:bg-surface-container-high active:bg-surface-container-highest transition-colors text-on-surface-variant" title="Undo">
-            <Undo2 className="h-4 w-4" />
-          </button>
-          <button onClick={handleRedo} className="p-2 rounded-lg hover:bg-surface-container-high active:bg-surface-container-highest transition-colors text-on-surface-variant" title="Redo">
-            <Redo2 className="h-4 w-4" />
-          </button>
+          {isEditMode ? (
+            <>
+              <button onClick={handleUndo} className="p-2 rounded-lg hover:bg-surface-container-high active:bg-surface-container-highest transition-colors text-on-surface-variant" title="Undo">
+                <Undo2 className="h-4 w-4" />
+              </button>
+              <button onClick={handleRedo} className="p-2 rounded-lg hover:bg-surface-container-high active:bg-surface-container-highest transition-colors text-on-surface-variant" title="Redo">
+                <Redo2 className="h-4 w-4" />
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={handleToggleLoop}
+              className={cn(
+                'p-2 rounded-lg transition-colors',
+                loopRange ? 'text-amber-500 bg-amber-500/15' : 'text-on-surface-variant hover:bg-surface-container-high',
+              )}
+              title={loopRange ? 'Clear loop' : 'Loop current bar'}
+            >
+              <Repeat className="h-4 w-4" />
+            </button>
+          )}
         </div>
       </div>
 
@@ -1522,7 +2123,8 @@ export default function TabEditorPage() {
                 <YouTubePlayer
                   ref={youtubePlayerRef}
                   videoId={youtubeVideoId}
-                  onReady={handleYoutubeReady}
+                  muted={audioSource !== 'youtube'}
+                  onReady={handleSelectedYoutubeReady}
                   onStateChange={handleYoutubeStateChange}
                   className="w-full h-full"
                 />
@@ -1602,10 +2204,13 @@ export default function TabEditorPage() {
           <div className="fixed inset-0 bg-black/50 z-30 lg:hidden" onClick={() => setIsSidebarOpen(false)} />
         )}
 
+        {/* On desktop the sidebar can be collapsed away entirely so the tab gets
+            the full width; on mobile it stays the slide-over drawer. */}
         <div className={cn(
           'shrink-0 z-40 transition-transform duration-300 ease-in-out',
           'fixed inset-y-0 left-0 lg:static lg:translate-x-0',
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
+          sidebarCollapsed && 'lg:hidden',
         )}
           style={{
             paddingTop: 'var(--sat)',
@@ -1625,28 +2230,47 @@ export default function TabEditorPage() {
             tempo={tempo}
             onTempoChange={handleTempoChange}
             title={title}
-            onTitleChange={handleTitleChange}
+            onTitleChange={handleTitleChangeGuarded}
             artist={artist}
-            onArtistChange={handleArtistChange}
+            onArtistChange={handleArtistChangeGuarded}
             stemPlayer={stemPlayer}
             sections={sections}
             detectedPatterns={detectedPatterns}
             totalBars={totalBarsMemo}
             practiceRange={practiceRange}
             onDetectPatterns={handleDetectPatterns}
-            onAddSection={handleAddSection}
-            onRemoveSection={handleRemoveSection}
+            onAddSection={handleAddSectionGuarded}
+            onRemoveSection={handleRemoveSectionGuarded}
             onPracticeRange={handlePracticeRange}
             onJumpToBar={handleJumpToBar}
             showPatternColors={showPatternColors}
             onTogglePatternColors={handleTogglePatternColors}
             selectedKey={selectedKey}
-            onKeyChange={setSelectedKey}
+            onKeyChange={handleKeyChange}
             onOpenKeyChart={() => setShowKeyChart(true)}
+            showFingering={showFingering}
+            onToggleFingering={handleToggleFingering}
+            onAutoRightHandFingering={handleAutoRightHandFingering}
+            onClearTrackFingering={handleClearTrackFingering}
+            hasBarSelection={selectedBarRange != null}
+            showStrumming={showStrumming}
+            onToggleStrumming={handleToggleStrumming}
+            readOnly={!isEditMode}
           />
         </div>
 
         <div className="flex-1 min-h-0 min-w-0 flex flex-col">
+          {/* Strumming pattern strip — renders nothing for a fingerpicked score */}
+          {showStrumming && scoreRef.current && (
+            <StrummingPatternPanel
+              score={scoreRef.current}
+              trackIndex={activeTrackIndex}
+              version={scoreMutationVersion}
+              currentBarIndex={cursor.barIndex}
+              orientation="horizontal"
+              className="px-4 py-2 border-b border-outline-variant/20 bg-surface-container-lowest shrink-0"
+            />
+          )}
           <div
             ref={canvasScrollRef}
             className="flex-1 min-h-0 overflow-y-auto p-4"
@@ -1663,6 +2287,10 @@ export default function TabEditorPage() {
               sectionLabels={sectionLabels}
               patternOverlays={mergedPatternOverlays}
               onScoreLoaded={handleScoreLoaded}
+              onApiReady={api => {
+                apiRef.current = api;
+                api.masterVolume = audioSource === 'tracks' ? 1 : 0;
+              }}
               onRenderFinished={handleRenderFinished}
               onPostRenderFinished={handlePostRenderFinished}
               onBeatMouseDown={handleBeatClickWithSeek}
@@ -1677,7 +2305,7 @@ export default function TabEditorPage() {
             />
           </div>
 
-          {showFretboard && (
+          {showFretboard && isEditMode && (
             <div className="shrink-0 shadow-lg shadow-black/30">
               {activeTrackIsDrums ? (
                 <DrumPadGrid
@@ -1701,6 +2329,8 @@ export default function TabEditorPage() {
         </div>
       </div>
 
+      {/* Note entry chrome — edit mode only, so practising gets the height. */}
+      {isEditMode && (
       <NoteInputPanel
         currentDuration={currentDuration}
         onDurationChange={handleDurationChange}
@@ -1714,13 +2344,34 @@ export default function TabEditorPage() {
         onChordClear={handleChordClear}
         onOpenChordFinder={() => setShowChordFinder(true)}
         isDrumTrack={activeTrackIsDrums}
+        fingering={currentFingering}
+        onRightHandFinger={handleRightHandFinger}
+        onLeftHandFinger={handleLeftHandFinger}
+        onClearFingering={handleClearNoteFingering}
       />
+      )}
 
-      {/* Status bar — desktop only */}
+      {/* Status bar — desktop only. Read-outs live here, never in the toolbar:
+          the track, the mode, the saved BPM, the practice speed, the loop and
+          the cursor. Only the track label may shrink; everything else is
+          `whitespace-nowrap` so nothing can wrap mid-value. */}
       <div className="hidden lg:flex items-center gap-4 px-4 py-1.5 bg-surface-container-low border-t border-outline-variant/20 text-xs text-on-surface-variant">
-        <span>{tracks[activeTrackIndex]?.name ?? 'Guitar'} — {tracks[activeTrackIndex]?.tuningName ?? 'Standard'}</span>
-        <div className="flex-1" />
-        <button onClick={() => setShowHelp(true)} className="hover:text-on-surface transition-colors">
+        <span className="truncate min-w-0">{tracks[activeTrackIndex]?.name ?? 'Guitar'} — {tracks[activeTrackIndex]?.tuningName ?? 'Standard'}</span>
+        <span className={cn('whitespace-nowrap shrink-0', isEditMode ? 'text-tertiary font-semibold' : 'text-primary font-semibold')}>
+          {isEditMode ? 'Edit mode' : 'View mode — score locked'}
+        </span>
+        <span className="whitespace-nowrap shrink-0">{tempo} BPM (saved)</span>
+        <span className="font-mono whitespace-nowrap shrink-0 tabular-nums">
+          Bar {cursor.barIndex + 1} · Beat {cursor.beatIndex + 1} · {stringLabel}
+        </span>
+        {effectivePlaybackSpeed !== DEFAULT_PLAYBACK_SPEED && (
+          <span className="text-tertiary whitespace-nowrap shrink-0 hidden xl:inline">
+            Practice speed {effectivePlaybackSpeed}% — playback only, not saved
+          </span>
+        )}
+        {loopRange && <span className="text-amber-500 whitespace-nowrap shrink-0">Loop {formatLoopRange(loopRange)}</span>}
+        <div className="flex-1 min-w-0" />
+        <button onClick={() => setShowHelp(true)} className="hidden xl:inline whitespace-nowrap shrink-0 hover:text-on-surface transition-colors">
           Press ? for keyboard shortcuts
         </button>
       </div>
@@ -1728,7 +2379,7 @@ export default function TabEditorPage() {
       <KeyChartDialog
         open={showKeyChart}
         selectedKey={selectedKey}
-        onSelectKey={setSelectedKey}
+        onSelectKey={handleKeyChange}
         onClose={() => setShowKeyChart(false)}
       />
       <EditorHelpDialog open={showHelp} onOpenChange={setShowHelp} />

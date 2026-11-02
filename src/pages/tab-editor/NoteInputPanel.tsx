@@ -2,6 +2,11 @@ import {useState, useEffect} from 'react';
 import {model} from '@coderline/alphatab';
 import {cn} from '@/lib/utils';
 import type {NoteEffect} from '@/lib/tab-editor/scoreOperations';
+import type {
+  LeftHandFinger,
+  NoteFingering,
+  RightHandFinger,
+} from '@/lib/tab-editor/fingering';
 import {X} from 'lucide-react';
 
 const {Duration} = model;
@@ -19,7 +24,26 @@ interface NoteInputPanelProps {
   onChordClear: () => void;
   onOpenChordFinder: () => void;
   isDrumTrack?: boolean;
+  /** Fingering of the note under the cursor, or null when there is no note. */
+  fingering?: NoteFingering | null;
+  onRightHandFinger?: (finger: RightHandFinger) => void;
+  onLeftHandFinger?: (finger: LeftHandFinger) => void;
+  onClearFingering?: () => void;
 }
+
+const RIGHT_HAND_BUTTONS: {finger: RightHandFinger; title: string}[] = [
+  {finger: 'p', title: 'Thumb — pulgar (Alt+P)'},
+  {finger: 'i', title: 'Index — índice (Alt+I)'},
+  {finger: 'm', title: 'Middle — medio (Alt+M)'},
+  {finger: 'a', title: 'Ring — anular (Alt+A)'},
+];
+
+const LEFT_HAND_BUTTONS: {finger: LeftHandFinger; title: string}[] = [
+  {finger: '1', title: 'Left index (Alt+1)'},
+  {finger: '2', title: 'Left middle (Alt+2)'},
+  {finger: '3', title: 'Left ring (Alt+3)'},
+  {finger: '4', title: 'Left little (Alt+4)'},
+];
 
 const DURATIONS = [
   {value: Duration.Whole, label: 'W', subtitle: '1', title: 'Whole note (Ctrl+1)'},
@@ -40,6 +64,7 @@ const GUITAR_EFFECTS: {key: NoteEffect | 'slide' | 'bend'; label: string; title:
   {key: 'tap', label: 'Tap', title: 'Tap (T)'},
   {key: 'harmonic', label: 'Harm', title: 'Natural Harmonic'},
   {key: 'ghostNote', label: 'Ghost', title: 'Ghost Note (G)'},
+  {key: 'accent', label: 'Accent', title: 'Accent — none → accent → heavy (A)'},
 ];
 
 const DRUM_EFFECTS: {key: NoteEffect | 'slide' | 'bend'; label: string; title: string}[] = [
@@ -60,6 +85,10 @@ export default function NoteInputPanel({
   onChordClear,
   onOpenChordFinder,
   isDrumTrack = false,
+  fingering,
+  onRightHandFinger,
+  onLeftHandFinger,
+  onClearFingering,
 }: NoteInputPanelProps) {
   const [chordInput, setChordInput] = useState('');
 
@@ -129,6 +158,55 @@ export default function NoteInputPanel({
           </button>
         ))}
       </div>
+
+      {!isDrumTrack && onRightHandFinger && (
+        <>
+          <div className="w-px h-5 bg-outline-variant/20 shrink-0" />
+
+          {/* Fingering — right hand p/i/m/a, left hand 1-4 */}
+          <div className="flex items-center gap-0.5 shrink-0">
+            <span className="text-[10px] text-on-surface-variant/60 font-medium mr-1.5 uppercase tracking-wider">RH</span>
+            {RIGHT_HAND_BUTTONS.map(b => (
+              <button
+                key={b.finger}
+                onClick={() => onRightHandFinger(b.finger)}
+                title={b.title}
+                className={cn(
+                  'min-w-[24px] h-7 px-1 flex items-center justify-center rounded text-[12px] font-serif italic transition-colors',
+                  fingering?.right === b.finger
+                    ? 'bg-primary text-on-primary shadow-sm'
+                    : 'text-on-surface-variant hover:bg-surface-container-high',
+                )}
+              >
+                {b.finger}
+              </button>
+            ))}
+            <span className="text-[10px] text-on-surface-variant/60 font-medium mx-1.5 uppercase tracking-wider">LH</span>
+            {LEFT_HAND_BUTTONS.map(b => (
+              <button
+                key={b.finger}
+                onClick={() => onLeftHandFinger?.(b.finger)}
+                title={b.title}
+                className={cn(
+                  'min-w-[24px] h-7 px-1 flex items-center justify-center rounded text-[11px] font-semibold transition-colors',
+                  fingering?.left === b.finger
+                    ? 'bg-primary text-on-primary shadow-sm'
+                    : 'text-on-surface-variant hover:bg-surface-container-high',
+                )}
+              >
+                {b.finger}
+              </button>
+            ))}
+            <button
+              onClick={() => onClearFingering?.()}
+              title="Clear fingering on this note (Alt+0)"
+              className="min-w-[24px] h-7 px-1 flex items-center justify-center rounded text-on-surface-variant hover:bg-surface-container-high transition-colors"
+            >
+              <X className="h-3 w-3" />
+            </button>
+          </div>
+        </>
+      )}
 
       {!isDrumTrack && (
         <>
