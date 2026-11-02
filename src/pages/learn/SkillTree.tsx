@@ -4,12 +4,15 @@ import {
   Guitar, Drum, Music, BookOpen, Timer, Key,
   TrendingUp, Ruler, Layers, Sparkles, Network,
   Palette, Lock, Crown, ChevronDown, ChevronUp,
-  CheckCircle2, Circle, X, Play,
+  CheckCircle2, Circle, X, Play, LockOpen,
 } from 'lucide-react';
 import {cn} from '@/lib/utils';
 import type {Instrument, LoadedUnit} from '@/lib/curriculum/types';
 import {loadAllUnits} from '@/lib/curriculum/loader';
 import {getCompletedLessons, getUnitMinStars} from '@/lib/local-db/learn';
+import {
+  isUnitUnlocked, unlockUnit, relockUnit, useUnlockedUnits,
+} from '@/lib/learn/unlocked-units';
 
 // ── Icon map ─────────────────────────────────────────────────────────────────
 
@@ -41,13 +44,18 @@ function UnitIcon({icon, className}: {icon?: string; className?: string}) {
 
 type UnitStatus = 'locked' | 'available' | 'in_progress' | 'completed';
 
+function prereqsMet(unit: LoadedUnit, completedUnitIds: Set<string>): boolean {
+  return unit.prerequisites.every(p => completedUnitIds.has(p));
+}
+
 function getUnitStatus(
   unit: LoadedUnit,
   completedLessonIds: Set<string>,
   completedUnitIds: Set<string>,
 ): UnitStatus {
-  const prereqsMet = unit.prerequisites.every(p => completedUnitIds.has(p));
-  if (!prereqsMet) return 'locked';
+  // A manual override opens this unit only. It never counts as a completed prerequisite
+  // for anything downstream — that still requires finishing the lessons.
+  if (!prereqsMet(unit, completedUnitIds) && !isUnitUnlocked(unit.id)) return 'locked';
   const done = unit.lessons.filter(l => completedLessonIds.has(`${unit.id}/${l}`));
   if (done.length === 0) return 'available';
   if (done.length === unit.lessons.length) return 'completed';
@@ -493,6 +501,7 @@ interface PreviewSheetProps {
   unit: LoadedUnit;
   status: UnitStatus;
   completedLessonIds: Set<string>;
+  completedUnitIds: Set<string>;
   instrument: Instrument;
   onClose: () => void;
   onStart: (lessonId: string) => void;
@@ -502,6 +511,7 @@ function UnitPreviewSheet({
   unit,
   status,
   completedLessonIds,
+  completedUnitIds,
   instrument,
   onClose,
   onStart,
@@ -510,6 +520,8 @@ function UnitPreviewSheet({
     l => !completedLessonIds.has(`${unit.id}/${l.id}`),
   );
   const startLesson = firstIncomplete ?? unit.loadedLessons[0];
+  // Open only because the learner asked for it — worth saying so, and worth offering the way back.
+  const skippedAhead = status !== 'locked' && !prereqsMet(unit, completedUnitIds);
 
   return (
     <>
@@ -569,6 +581,29 @@ function UnitPreviewSheet({
                 {unit.prerequisites.join(', ').replace(/-/g, ' ')}
               </strong> first to unlock this unit.
             </p>
+            <button
+              onClick={() => unlockUnit(unit.id)}
+              className="mt-2.5 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-on-surface bg-surface-container-high hover:bg-surface-container-highest active:scale-[0.98] transition-all"
+            >
+              <LockOpen className="h-3.5 w-3.5" />
+              Open anyway
+            </button>
+          </div>
+        )}
+
+        {/* Opened out of order */}
+        {skippedAhead && (
+          <div className="mx-5 mb-3 px-4 py-2.5 rounded-xl bg-surface-container border border-outline-variant/20 flex items-center gap-3">
+            <LockOpen className="h-4 w-4 text-on-surface-variant shrink-0" />
+            <p className="flex-1 text-xs text-on-surface-variant leading-relaxed">
+              Opened ahead of its prerequisites.
+            </p>
+            <button
+              onClick={() => relockUnit(unit.id)}
+              className="shrink-0 px-2.5 py-1 rounded-lg text-xs font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors"
+            >
+              Re-lock
+            </button>
           </div>
         )}
 
@@ -739,6 +774,20 @@ function ListView({
             {/* Expanded lesson list */}
             {isExpanded && !isLocked && (
               <div className="mt-1 ml-4 space-y-0.5">
+                {!prereqsMet(unit, completedUnitIds) && (
+                  <div className="flex items-center gap-2.5 px-3.5 py-2 mb-1 rounded-lg bg-surface-container/60">
+                    <LockOpen className="h-3.5 w-3.5 text-on-surface-variant shrink-0" />
+                    <span className="flex-1 text-xs text-on-surface-variant">
+                      Opened ahead of its prerequisites.
+                    </span>
+                    <button
+                      onClick={() => relockUnit(unit.id)}
+                      className="shrink-0 px-2.5 py-1 rounded-lg text-xs font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors"
+                    >
+                      Re-lock
+                    </button>
+                  </div>
+                )}
                 {unit.loadedLessons.map((lesson, i) => {
                   const done = completedLessonIds.has(`${unit.id}/${lesson.id}`);
                   return (
@@ -794,6 +843,9 @@ export default function SkillTree({instrument, view}: SkillTreeProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [previewUnit, setPreviewUnit] = useState<LoadedUnit | null>(null);
+  // Subscribe so that unlocking or re-locking a unit re-renders the whole tree, not just the
+  // sheet that holds the button. getUnitStatus reads the same store synchronously.
+  useUnlockedUnits();
 
   useEffect(() => {
     setLoading(true);
@@ -921,6 +973,7 @@ export default function SkillTree({instrument, view}: SkillTreeProps) {
           unit={previewUnit}
           status={getUnitStatus(previewUnit, completedLessonIds, completedUnitIds)}
           completedLessonIds={completedLessonIds}
+          completedUnitIds={completedUnitIds}
           instrument={instrument}
           onClose={() => setPreviewUnit(null)}
           onStart={lessonId => handleStartLesson(previewUnit, lessonId)}
