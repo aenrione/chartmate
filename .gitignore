@@ -30,7 +30,27 @@ docs/superpowers
 ignore/ExternalSetlistCreator
 .playwright-mcp
 .worktrees/
-src-tauri/gen/apple/
-.claude/worktrees
 playwright/.cache
 test-results
+
+# Tauri mobile.
+#
+# The native projects under src-tauri/gen/ ARE tracked — both carry hand edits
+# (MainActivity enables edge-to-edge; project.yml sets orientations and the
+# Rust build phase) that `tauri android/ios init` would not reproduce.
+#
+# What is not tracked is anything regenerated on build. gen/apple/.gitignore
+# and gen/android/.gitignore already cover build output, .gradle, local.properties
+# and key.properties; the rules below add the Xcode project itself, which
+# XcodeGen rebuilds from gen/apple/project.yml and which embeds a personal
+# DEVELOPMENT_TEAM id. Regenerate it with `pnpm tauri ios init`.
+src-tauri/gen/apple/chartmate.xcodeproj/
+src-tauri/gen/apple/build/
+src-tauri/gen/apple/Externals/
+src-tauri/gen/apple/Pods/
+**/xcuserdata/
+*.xcuserstate
+
+# Claude Code: skills under .claude/skills are tracked, local machine state is not.
+.claude/worktrees
+.claude/settings.local.json
