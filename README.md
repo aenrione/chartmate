@@ -233,4 +233,8 @@ Chartmate is glue around other people's excellent work:
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE).
+Chartmate's own code is [MIT](LICENSE) — © 2026 aenrione.
+
+Bundled dependencies keep their own licenses, two of which are worth naming: **AlphaTab** is [MPL-2.0](https://github.com/CoderLine/alphaTab/blob/main/LICENSE) and **pdf.js** is Apache-2.0. Both are used unmodified, so neither imposes anything on your use of Chartmate — but if you redistribute a build, keep their notices intact and ship their source as MPL-2.0 requires.
+
+Charts, tabs and sheet music fetched through Chartmate are **not** covered by this license. They belong to whoever wrote and charted them.
