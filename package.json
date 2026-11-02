@@ -16,7 +16,8 @@
     "test:ct:debug": "playwright test -c playwright-ct.config.ts --project=chromium --debug --workers=1",
     "ios:build": "tauri ios build --export-method debugging",
     "ios:install": "bash scripts/install-ios.sh",
-    "android:build": "tauri android build --apk --debug"
+    "android:build": "tauri android build --apk --debug",
+    "export:charts": "node --import ./scripts/chart-export/loader.mjs scripts/chart-export/export-charts.ts"
   },
   "dependencies": {
     "@coderline/alphatab": "^1.8.1",
@@ -54,6 +55,7 @@
     "debounce": "^3.0.0",
     "downshift": "^9.3.2",
     "fast-fuzzy": "^1.12.0",
+    "fflate": "^0.8.3",
     "filenamify": "^7.0.1",
     "idb-keyval": "^6.2.2",
     "ini": "^6.0.0",
@@ -88,6 +90,7 @@
     "@playwright/experimental-ct-react": "^1.59.1",
     "@tailwindcss/postcss": "^4.2.1",
     "@tauri-apps/cli": "^2",
+    "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/lodash": "^4.17.24",
