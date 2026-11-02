@@ -33,6 +33,26 @@ Chartmate is a Tauri v2 desktop app for Clone Hero / YARG players. The frontend 
 | Icon set | Lucide React |
 | Toast notifications | Sonner |
 
+## Tab editor audio and functional tests
+
+The editor uses AlphaTab as its playback clock. The **Audio source** selector
+chooses one audible output: Tracks (SoundFont), Stems, or YouTube. Changing the
+source silences the outgoing output before enabling the replacement; Pause and
+Stop also cancel pending playback requests. Beat clicks use AlphaTab's MIDI
+lookup and acknowledged playback time to seek external media.
+
+Run the editor's browser functional tests with Node.js 22.13+:
+
+```bash
+pnpm exec playwright install chromium webkit
+pnpm test:e2e:editor
+```
+
+These tests mount the real editor in Chromium and WebKit, measure Web Audio
+output, and run database migrations against an isolated in-memory SQLite
+database. Native IPC and the external YouTube provider are test adapters; actual
+YouTube streaming and macOS WebView behavior still need a native app check.
+
 ## Frontend Structure
 
 ```

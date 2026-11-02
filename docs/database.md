@@ -294,6 +294,15 @@ User-created or imported guitar tab compositions (stored as AlphaTab GP7 binary)
 | `created_at` | TEXT | |
 | `updated_at` | TEXT | |
 
+### `composition_tags`
+Free-form tags on compositions (migration `045_composition_tags`). Model: `tab-compositions.ts` (`setCompositionTags`, `getCompositionTags`, `addTagToCompositions`, `removeTagFromCompositions`).
+
+| Column | Type | Notes |
+|---|---|---|
+| `composition_id` | INTEGER → `tab_compositions.id` | ON DELETE CASCADE (delete functions also remove tags explicitly) |
+| `tag` | TEXT COLLATE NOCASE | Trimmed, case kept as typed |
+| PK: `(composition_id, tag)` | | Case-insensitive unique per composition; index `idx_composition_tags_tag` on `tag` |
+
 ---
 
 ### Training Tables

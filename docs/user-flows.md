@@ -182,6 +182,23 @@ Sidebar navigation + main content area. Sidebar state managed by `SidebarContext
 - Undo/redo via `undoManager`
 - ASCII tab import via `asciiTabImporter`
 - Save dialog (`SaveCompositionDialog`) writes to `tab_compositions` table
+- **Audio source** selects Tracks, Stems, or YouTube; only the selected source is audible. Space and the transport buttons control playback, while spaces in text fields remain normal typing.
+
+**Practice vs. editing** (`practiceSettings.ts` holds the pure logic):
+
+- **View / Edit mode** (`Alt+E`, remembered in `chartmate.tabEditor.mode.v1`). View is the
+  default for a saved composition; a new unsaved tab always opens in Edit. In View mode
+  every mutating path is gated by `requireEditMode()` in the page and `readOnly` in
+  `useEditorKeyboard` / `TabEditorSidebar`, and the note-input chrome is hidden.
+- **Practice speed** (toolbar, `[` `]` `\`): `api.playbackSpeed` only. It never touches the
+  score, never marks the file dirty, and resets to 100 % per composition. The sidebar's
+  **BPM** field is the opposite — it rewrites `score.tempo` and is saved.
+- **Loop** (`Alt+L`, or the Play button on a section/pattern): bar range → MIDI ticks via
+  `api.tickCache`, pushed to `api.playbackRange` with `api.isLooping`. Looped bars are
+  highlighted amber; Stop and re-render re-apply it.
+- **Sidebar** collapses entirely on desktop (`Alt+B`) and is one scroll area of collapsible
+  sections (Stems, Tracks, Key, Reading aids, Sections, Patterns, Tuning), remembered in
+  `chartmate.tabEditor.sidebarSections.v1`.
 
 ---
 

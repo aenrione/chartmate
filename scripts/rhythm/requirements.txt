@@ -1,0 +1,13 @@
+# Python deps for scripts/rhythm (installed by setup.sh, Python 3.12).
+# Versions are the ones that worked on Australian Winter (2026-10-26).
+basic-pitch==0.3.0
+demucs==4.1.0
+librosa==0.11.0
+numpy==1.26.4
+onnxruntime==1.31.0
+scipy==1.17.1
+soundfile==0.14.0
+torch==2.14.1
+torchaudio==2.11.0
+# basic-pitch imports pkg_resources, which setuptools 80 removed.
+setuptools<80
