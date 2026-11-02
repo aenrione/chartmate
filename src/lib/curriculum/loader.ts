@@ -47,13 +47,46 @@ export function resolveUnitId(dirName: string): string {
   return dirName;
 }
 
+/**
+ * User units override bundled ones by id; unseen ids are appended.
+ * Pure so it stays testable without a filesystem.
+ */
+export function mergeUnits(bundled: UnitMeta[], user: UnitMeta[] | null): UnitMeta[] {
+  if (!user?.length) return bundled;
+  const overrides = new Map(user.map(u => [u.id, u]));
+  const bundledIds = new Set(bundled.map(u => u.id));
+  return bundled
+    .map(u => overrides.get(u.id) ?? u)
+    .concat(user.filter(u => !bundledIds.has(u.id)));
+}
+
+/**
+ * The user layer lives behind a dynamic import on purpose: it pulls in Tauri
+ * FS APIs, and the bundled curriculum must still load in plain-browser and
+ * test contexts where those are absent.
+ */
+async function userLayer() {
+  return import('./user-layer');
+}
+
 // ── Loaders ──────────────────────────────────────────────────────────────────
 
 export async function loadSkillTree(instrument: Instrument): Promise<SkillTree> {
   const key = `/src/curriculum/${instrument}/skill-tree.json`;
   const mod = skillTreeModules[key];
   if (!mod) throw new Error(`No skill tree found for instrument: ${instrument}`);
-  return parseSkillTree(mod.default);
+  const bundled = parseSkillTree(mod.default);
+
+  let userUnits: UnitMeta[] | null = null;
+  try {
+    userUnits = await (await userLayer()).readUserUnits(instrument);
+  } catch (err) {
+    // Expected outside Tauri (tests, plain browser). Anywhere else this means
+    // custom units silently vanished, so say so rather than fail invisibly.
+    console.warn(`[curriculum] user layer unavailable for ${instrument}:`, err);
+  }
+
+  return {...bundled, units: mergeUnits(bundled.units, userUnits)};
 }
 
 export async function loadLesson(
@@ -61,6 +94,13 @@ export async function loadLesson(
   unitId: string,
   lessonId: string,
 ): Promise<Lesson> {
+  try {
+    const override = await (await userLayer()).readUserLesson(instrument, unitId, lessonId);
+    if (override) return override;
+  } catch (err) {
+    console.warn(`[curriculum] user override unreadable for ${unitId}/${lessonId}:`, err);
+  }
+
   const key = `/src/curriculum/${instrument}/units/${unitId}/lessons/${lessonId}.json`;
   const mod = lessonModules[key];
   if (!mod) throw new Error(`Lesson not found: ${instrument}/${unitId}/${lessonId}`);
