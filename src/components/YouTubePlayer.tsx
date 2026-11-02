@@ -1,6 +1,5 @@
 import {
   forwardRef,
-  useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
@@ -24,6 +23,7 @@ export interface YouTubePlayerHandle {
   isPlaying(): boolean;
   requestFullscreen(): void;
   destroy(): void;
+  setMuted?(muted: boolean): void;
 }
 
 interface YouTubePlayerProps {
@@ -31,6 +31,7 @@ interface YouTubePlayerProps {
   onReady?: () => void;
   onStateChange?: (state: number) => void;
   className?: string;
+  muted?: boolean;
 }
 
 let apiLoadPromise: Promise<void> | null = null;
@@ -40,13 +41,17 @@ function loadYouTubeAPI(): Promise<void> {
 
   if (apiLoadPromise) return apiLoadPromise;
 
-  apiLoadPromise = new Promise<void>(resolve => {
+  apiLoadPromise = new Promise<void>((resolve, reject) => {
     const existing = document.querySelector(
       'script[src*="youtube.com/iframe_api"]',
     );
     if (existing) {
       // Script tag exists but API not ready yet
       window.onYouTubeIframeAPIReady = () => resolve();
+      existing.addEventListener('error', () => {
+        apiLoadPromise = null;
+        reject(new Error('Failed to load YouTube API'));
+      }, {once: true});
       return;
     }
 
@@ -54,6 +59,11 @@ function loadYouTubeAPI(): Promise<void> {
 
     const script = document.createElement('script');
     script.src = 'https://www.youtube.com/iframe_api';
+    script.onerror = () => {
+      apiLoadPromise = null;
+      script.remove();
+      reject(new Error('Failed to load YouTube API'));
+    };
     document.head.appendChild(script);
   });
 
@@ -61,99 +71,100 @@ function loadYouTubeAPI(): Promise<void> {
 }
 
 const YouTubePlayer = forwardRef<YouTubePlayerHandle, YouTubePlayerProps>(
-  ({videoId, onReady, onStateChange, className}, ref) => {
+  ({videoId, onReady, onStateChange, className, muted = false}, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const playerRef = useRef<YT.Player | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const createPlayer = useCallback(async () => {
-      if (!containerRef.current) return;
-
-      try {
-        await loadYouTubeAPI();
-
-        // Clean up existing player
-        if (playerRef.current) {
-          playerRef.current.destroy();
-          playerRef.current = null;
-        }
-
-        // Create a div for the player inside our container
-        const playerDiv = document.createElement('div');
-        containerRef.current.innerHTML = '';
-        containerRef.current.appendChild(playerDiv);
-
-        // YouTube rejects non-HTTP origins (e.g. tauri://localhost) with Error 153.
-        // Only pass origin when it's a real HTTP URL; omit otherwise so YouTube auto-detects.
-        const origin = window.location.origin.startsWith('http') ? window.location.origin : undefined;
-
-        playerRef.current = new window.YT.Player(playerDiv, {
-          videoId,
-          // youtube-nocookie.com reduces embedding restrictions in sandboxed WebViews
-          host: 'https://www.youtube-nocookie.com',
-          playerVars: {
-            autoplay: 0,
-            controls: 1,
-            rel: 0,
-            enablejsapi: 1,
-            fs: 1,
-            ...(origin && {origin}),
-          },
-          events: {
-            onReady: () => {
-              setIsLoading(false);
-              onReady?.();
-            },
-            onStateChange: (event: YT.OnStateChangeEvent) => {
-              onStateChange?.(event.data);
-            },
-            onError: (event: YT.OnErrorEvent) => {
-              setIsLoading(false);
-              setError(`YouTube player error ${event.data}`);
-            },
-          },
-        });
-      } catch (err) {
-        setIsLoading(false);
-        setError(err instanceof Error ? err.message : 'Failed to load YouTube player');
-      }
-    }, [videoId, onReady, onStateChange]);
+    const callbacksRef = useRef({onReady, onStateChange});
+    callbacksRef.current = {onReady, onStateChange};
+    const mutedRef = useRef(muted);
+    mutedRef.current = muted;
 
     useEffect(() => {
-      createPlayer();
+      let cancelled = false;
+      let instance: YT.Player | null = null;
+      setIsLoading(true);
+      setError(null);
 
-      return () => {
-        if (playerRef.current) {
-          try {
-            playerRef.current.destroy();
-          } catch {
-            // Player may already be destroyed
-          }
-          playerRef.current = null;
+      async function createPlayer() {
+        try {
+          await loadYouTubeAPI();
+          if (cancelled || !containerRef.current) return;
+          const playerDiv = document.createElement('div');
+          containerRef.current.replaceChildren(playerDiv);
+          const origin = window.location.origin.startsWith('http') ? window.location.origin : undefined;
+
+          instance = new window.YT.Player(playerDiv, {
+            videoId,
+            host: 'https://www.youtube-nocookie.com',
+            playerVars: {
+              autoplay: 0, controls: 1, rel: 0, enablejsapi: 1, fs: 1,
+              ...(origin && {origin}),
+            },
+            events: {
+              onReady: (event: YT.PlayerEvent) => {
+                if (cancelled) return;
+                mutedRef.current ? event.target.mute() : event.target.unMute();
+                setIsLoading(false);
+                callbacksRef.current.onReady?.();
+              },
+              onStateChange: (event: YT.OnStateChangeEvent) => {
+                if (!cancelled) callbacksRef.current.onStateChange?.(event.data);
+              },
+              onError: (event: YT.OnErrorEvent) => {
+                if (cancelled) return;
+                setIsLoading(false);
+                setError(`YouTube player error ${event.data}`);
+              },
+            },
+          });
+          playerRef.current = instance;
+        } catch (err) {
+          if (cancelled) return;
+          setIsLoading(false);
+          setError(err instanceof Error ? err.message : 'Failed to load YouTube player');
         }
+      }
+      void createPlayer();
+      return () => {
+        cancelled = true;
+        if (playerRef.current === instance) playerRef.current = null;
+        try { instance?.destroy(); } catch { /* iframe may already be detached */ }
       };
-    }, [createPlayer]);
+    }, [videoId]);
+
+    useEffect(() => {
+      const player = playerRef.current;
+      if (!player) return;
+      if (muted) player.mute?.(); else player.unMute?.();
+    }, [muted]);
 
     useImperativeHandle(ref, () => ({
+      setMuted(value: boolean) {
+        mutedRef.current = value;
+        const player = playerRef.current;
+        if (value) player?.mute?.(); else player?.unMute?.();
+      },
       play() {
-        playerRef.current?.playVideo();
+        playerRef.current?.playVideo?.();
       },
       pause() {
-        playerRef.current?.pauseVideo();
+        playerRef.current?.pauseVideo?.();
       },
       seekTo(seconds: number) {
-        playerRef.current?.seekTo(seconds, true);
+        playerRef.current?.seekTo?.(seconds, true);
       },
       setPlaybackRate(rate: number) {
         const snapped = snapToYouTubeRate(rate);
-        playerRef.current?.setPlaybackRate(snapped);
+        playerRef.current?.setPlaybackRate?.(snapped);
       },
       getCurrentTime(): number {
-        return playerRef.current?.getCurrentTime() ?? 0;
+        return playerRef.current?.getCurrentTime?.() ?? 0;
       },
       isPlaying(): boolean {
-        return playerRef.current?.getPlayerState() === 1;
+        return playerRef.current?.getPlayerState?.() === 1;
       },
       requestFullscreen() {
         // getIframe() is not in the @types/youtube types but exists at runtime

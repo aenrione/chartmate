@@ -12,6 +12,7 @@ import {
   PlayerMode,
   PlayerOutputMode,
   NotationElement,
+  FingeringMode,
   model,
 } from '@coderline/alphatab';
 import {loadActiveSoundfont, soundfontToUrl} from '@/lib/soundfont-store';
@@ -34,6 +35,8 @@ export interface AlphaTabHandle {
   renderScore: (score: Score, trackIndexes?: number[]) => void;
   renderTracks: (tracks: Track[]) => void;
   setScale: (scale: number) => void;
+  /** Show/hide fingering. Pass rerender=false when the caller re-renders itself. */
+  setShowFingering: (show: boolean, rerender?: boolean) => void;
   print: () => void;
 }
 
@@ -50,6 +53,8 @@ export interface AlphaTabWrapperProps {
   scale?: number;
   /** Enable playback */
   enablePlayer?: boolean;
+  /** Let a parent editor own seeking and range selection. Mouse events still fire. */
+  enableUserInteraction?: boolean;
   /** Enable note-level bounds for click detection */
   includeNoteBounds?: boolean;
   /** Called when a score has been loaded */
@@ -99,6 +104,32 @@ export interface AlphaTabWrapperProps {
    * racing against re-render/stop state.
    */
   enablePlaybackCursor?: boolean;
+  /**
+   * Show classical fingering (right hand p/i/m/a, left hand T/1-4) stored on the
+   * notes. Leave undefined to keep alphaTab's own default; pass a boolean to let
+   * the user toggle it. See `applyFingeringSettings` for how it maps onto
+   * alphaTab's settings.
+   */
+  showFingering?: boolean;
+}
+
+/**
+ * alphaTab has no "fingering off" mode, so hiding it takes two settings at once:
+ *
+ * - `FingeringMode.ScoreDefault` draws both hands next to the note heads, but
+ *   only in the standard-notation staff — useless when the user reads tab only.
+ * - `FingeringMode.SingleNoteEffectBand` draws a single finger in an effect band
+ *   above the tab, but only for beats that have exactly one note. That is the
+ *   right choice for a tab-only view (and arpeggio studies are single notes).
+ * - Switching to the effect band *and* disabling `NotationElement.EffectFingering`
+ *   suppresses both renderers, which is the only way to turn fingering off.
+ */
+export function applyFingeringSettings(api: AlphaTabApi, show: boolean): void {
+  const tabOnly = api.settings.display.staveProfile === StaveProfile.Tab;
+  api.settings.notation.fingeringMode = show && !tabOnly
+    ? FingeringMode.ScoreDefault
+    : FingeringMode.SingleNoteEffectBand;
+  api.settings.notation.elements.set(NotationElement.EffectFingering, show);
 }
 
 // Theme constants and applyThemeColors live in @/lib/alphaTabTheme so TabSnippet can reuse them.
@@ -113,6 +144,7 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       staveProfile = StaveProfile.Default,
       scale = 1.0,
       enablePlayer = true,
+      enableUserInteraction = true,
       includeNoteBounds = false,
       onScoreLoaded,
       onPositionChanged,
@@ -132,6 +164,7 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       hideBuiltInSectionLabels = false,
       useScriptProcessorOutput = false,
       enablePlaybackCursor = true,
+      showFingering,
     },
     ref,
   ) => {
@@ -141,8 +174,10 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
     // before the async init completes (race condition).
     const fileDataRef = useRef(fileData);
     const trackIndexesRef = useRef(trackIndexes);
+    const showFingeringRef = useRef(showFingering);
     fileDataRef.current = fileData;
     trackIndexesRef.current = trackIndexes;
+    showFingeringRef.current = showFingering;
     const callbacksRef = useRef({
       onScoreLoaded,
       onPositionChanged,
@@ -221,7 +256,7 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
             enablePlayer,
             enableCursor: enablePlayer && enablePlaybackCursor,
             enableAnimatedBeatCursor: enablePlayer && enablePlaybackCursor,
-            enableUserInteraction: true,
+            enableUserInteraction,
             scrollElement: disableAutoResize ? null : el,
             scrollMode: disableAutoResize ? 0 : 2,
             scrollOffsetY: -50,
@@ -239,6 +274,10 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
         // can replace them without the band-sharing overlap bug.
         if (hideBuiltInSectionLabels) {
           api.settings.notation.elements.set(NotationElement.EffectMarker, false);
+        }
+
+        if (showFingeringRef.current !== undefined) {
+          applyFingeringSettings(api, showFingeringRef.current);
         }
 
         // Apply theme colors on init (without re-render since first render hasn't happened).
@@ -406,6 +445,20 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       apiRef.current?.renderTracks(tracks);
     }, []);
 
+    const setShowFingeringFn = useCallback((show: boolean, rerender = true) => {
+      const api = apiRef.current;
+      if (!api) return;
+      applyFingeringSettings(api, show);
+      api.updateSettings();
+      if (rerender) api.render();
+    }, []);
+
+    // Prop-driven toggle, for views that don't drive rendering themselves.
+    useEffect(() => {
+      if (showFingering === undefined) return;
+      setShowFingeringFn(showFingering);
+    }, [showFingering, setShowFingeringFn]);
+
     const setScaleFn = useCallback((s: number) => {
       const api = apiRef.current;
       if (!api) return;
@@ -425,6 +478,7 @@ const AlphaTabWrapper = forwardRef<AlphaTabHandle, AlphaTabWrapperProps>(
       renderScore: renderScoreFn,
       renderTracks: renderTracksFn,
       setScale: setScaleFn,
+      setShowFingering: setShowFingeringFn,
       print: () => apiRef.current?.print(),
     }));
 

@@ -18,9 +18,10 @@ interface UseYoutubeSyncOptions {
   clockRef: React.RefObject<PlaybackClock | null>;
   /** Current playback speed (1.0 = normal) */
   tempo: number;
+  enabled?: boolean;
 }
 
-export function useYoutubeSync({songKey, clockRef, tempo}: UseYoutubeSyncOptions) {
+export function useYoutubeSync({songKey, clockRef, tempo, enabled = true}: UseYoutubeSyncOptions) {
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [youtubeVideoId, setYoutubeVideoId] = useState<string | null>(null);
   const [youtubeOffsetMs, setYoutubeOffsetMs] = useState(0);
@@ -28,15 +29,21 @@ export function useYoutubeSync({songKey, clockRef, tempo}: UseYoutubeSyncOptions
   const playerRef = useRef<YouTubePlayerHandle | null>(null);
   const syncRef = useRef<YouTubeSync>(new YouTubeSync());
 
+  const enabledRef = useRef(enabled);
+  enabledRef.current = enabled;
+
   // Load YouTube association from DB
   useEffect(() => {
+    let cancelled = false;
+    syncRef.current.disable();
+    syncRef.current.setYouTubePlayer(null);
     setYoutubeUrl('');
     setYoutubeUrlInput('');
     setYoutubeVideoId(null);
     setYoutubeOffsetMs(0);
 
     getYoutubeAssociation(songKey).then(assoc => {
-      if (assoc) {
+      if (!cancelled && assoc) {
         setYoutubeUrl(assoc.youtube_url);
         setYoutubeUrlInput(assoc.youtube_url);
         setYoutubeOffsetMs(assoc.offset_ms);
@@ -46,6 +53,7 @@ export function useYoutubeSync({songKey, clockRef, tempo}: UseYoutubeSyncOptions
         }
       }
     });
+    return () => { cancelled = true; };
   }, [songKey]);
 
   // Update sync engine offset
@@ -111,9 +119,35 @@ export function useYoutubeSync({songKey, clockRef, tempo}: UseYoutubeSyncOptions
     if (clockRef.current) {
       syncRef.current.setClock(clockRef.current);
     }
-    syncRef.current.enable();
+    if (enabledRef.current) {
+      syncRef.current.enable();
+      if (clockRef.current?.isPlaying) syncRef.current.onPlayFrom(clockRef.current.currentTime);
+      else syncRef.current.onPause();
+    } else {
+      syncRef.current.disable();
+      playerRef.current?.pause();
+    }
     playerRef.current?.setPlaybackRate(tempo);
   }, [youtubeOffsetMs, tempo, clockRef]);
+
+  useEffect(() => {
+    const sync = syncRef.current;
+    if (!enabled) {
+      sync.disable();
+      playerRef.current?.pause();
+      return;
+    }
+    sync.setClock(clockRef.current);
+    sync.enable();
+    if (clockRef.current?.isPlaying) sync.onPlayFrom(clockRef.current.currentTime);
+    else sync.onPause();
+  }, [enabled, clockRef]);
+
+  useEffect(() => {
+    if (enabled) playerRef.current?.setPlaybackRate(tempo);
+  }, [enabled, tempo]);
+
+  useEffect(() => () => { debouncedSaveOffset.clear(); }, [debouncedSaveOffset]);
 
   /**
    * Call when the user scrubs the playback position. Seeks YouTube without

@@ -38,6 +38,7 @@ import {convertToAlphaTab} from '@/lib/rocksmith/convertToAlphaTab';
 import {cn} from '@/lib/utils';
 import {useHideHeaderOnMobile} from '@/contexts/LayoutContext';
 import {useLocalStorage} from '@/lib/useLocalStorage';
+import StrummingPatternPanel, {SHOW_STRUMMING_KEY} from '@/components/StrummingPatternPanel';
 import YouTubePlayer from '@/components/YouTubePlayer';
 import {useYoutubeSync} from '@/hooks/useYoutubeSync';
 import {snapToYouTubeRate} from '@/lib/youtube-utils';
@@ -68,6 +69,9 @@ interface GuitarSettings {
   scale: number;
   playbackSpeed: number;
 }
+
+/** Shared with the tab editor and the playbook composition viewer. */
+const SHOW_FINGERING_KEY = 'chartmate.showFingering.v1';
 
 const DEFAULT_SETTINGS: GuitarSettings = {
   layoutMode: LayoutMode.Page,
@@ -108,6 +112,9 @@ export default function GuitarSongView() {
     'guitar.songView.settings.v1',
     DEFAULT_SETTINGS,
   );
+
+  const [showFingering, setShowFingering] = useLocalStorage(SHOW_FINGERING_KEY, false);
+  const [showStrumming, setShowStrumming] = useLocalStorage(SHOW_STRUMMING_KEY, true);
 
   // UI state
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -719,6 +726,38 @@ export default function GuitarSongView() {
                   </SelectContent>
                 </Select>
               </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-xs">Fingering</span>
+                <button
+                  onClick={() => setShowFingering(!showFingering)}
+                  title="Show the p i m a / 1-4 fingering stored on the notes"
+                  className={cn(
+                    'h-7 px-2 rounded text-xs border transition-colors',
+                    showFingering
+                      ? 'border-primary bg-primary/10 text-primary font-semibold'
+                      : 'border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-high',
+                  )}
+                >
+                  {showFingering ? 'p i m a' : 'Off'}
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-xs">Strumming</span>
+                <button
+                  onClick={() => setShowStrumming(!showStrumming)}
+                  title="Summarise the strumming pattern above the chart"
+                  className={cn(
+                    'h-7 px-2 rounded text-xs border transition-colors',
+                    showStrumming
+                      ? 'border-primary bg-primary/10 text-primary font-semibold'
+                      : 'border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-high',
+                  )}
+                >
+                  {showStrumming ? 'D U d U' : 'Off'}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1001,6 +1040,15 @@ export default function GuitarSongView() {
           </div>
         )}
 
+        {/* Strumming pattern summary — hides itself when nothing is strummed */}
+        {showStrumming && score && (
+          <StrummingPatternPanel
+            score={score}
+            trackIndex={trackIndexes[0] ?? 0}
+            className="px-3 py-2 border-b border-outline-variant/20 bg-surface-container-lowest"
+          />
+        )}
+
         {/* AlphaTab renderer */}
         <AlphaTabWrapper
           ref={alphaTabRef}
@@ -1009,6 +1057,7 @@ export default function GuitarSongView() {
           layoutMode={settings.layoutMode}
           staveProfile={settings.staveProfile}
           scale={settings.scale}
+          showFingering={showFingering}
           enablePlayer={true}
           onScoreLoaded={onScoreLoaded}
           onPositionChanged={onPositionChanged}

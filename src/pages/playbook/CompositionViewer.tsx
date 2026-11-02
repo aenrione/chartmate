@@ -16,6 +16,8 @@ import AlphaTabWrapper from '@/pages/guitar/AlphaTabWrapper';
 import type {AlphaTabHandle} from '@/pages/guitar/AlphaTabWrapper';
 import GuitarPracticeControls from '@/pages/guitar/GuitarPracticeControls';
 import {useLocalStorage} from '@/lib/useLocalStorage';
+import StrummingPatternPanel, {SHOW_STRUMMING_KEY} from '@/components/StrummingPatternPanel';
+import {cn} from '@/lib/utils';
 import {usePlaybook} from './PlaybookProvider';
 
 type Score = InstanceType<typeof model.Score>;
@@ -32,6 +34,9 @@ const DEFAULT_SETTINGS: Settings = {
   staveProfile: StaveProfile.Default,
   scale: 1.0,
 };
+
+/** Shared with the tab editor and the guitar song view. */
+const SHOW_FINGERING_KEY = 'chartmate.showFingering.v1';
 
 function formatTime(ms: number): string {
   const totalSecs = Math.floor(ms / 1000);
@@ -61,6 +66,8 @@ export default function CompositionViewer({scoreData}: {scoreData: ArrayBuffer})
     'guitar.songView.settings.v1',
     DEFAULT_SETTINGS,
   );
+  const [showFingering, setShowFingering] = useLocalStorage(SHOW_FINGERING_KEY, false);
+  const [showStrumming, setShowStrumming] = useLocalStorage(SHOW_STRUMMING_KEY, true);
   const [mobilePanelOpen, setMobilePanelOpen] = useState(false);
 
   // Sync playbook speed → AlphaTab (speed is 25–200, AlphaTab wants 0.25–2.0)
@@ -243,6 +250,8 @@ export default function CompositionViewer({scoreData}: {scoreData: ArrayBuffer})
                   const next = Number(v) as StaveProfile;
                   setSettings(prev => ({...prev, staveProfile: next}));
                   applyDisplaySetting(display => { display.staveProfile = next; });
+                  // Fingering placement depends on the stave profile.
+                  alphaTabRef.current?.setShowFingering(showFingering);
                 }}
               >
                 <SelectTrigger className="h-6 w-28 text-xs">
@@ -255,6 +264,38 @@ export default function CompositionViewer({scoreData}: {scoreData: ArrayBuffer})
                   <SelectItem value={String(StaveProfile.Tab)}>Tab Only</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-on-surface-variant">Fingering</span>
+              <button
+                onClick={() => setShowFingering(!showFingering)}
+                title="Show the p i m a / 1-4 fingering stored on the notes"
+                className={cn(
+                  'h-6 px-2 rounded text-xs border transition-colors',
+                  showFingering
+                    ? 'border-primary bg-primary/10 text-primary font-semibold'
+                    : 'border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-high',
+                )}
+              >
+                {showFingering ? 'p i m a' : 'Off'}
+              </button>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-on-surface-variant">Strumming</span>
+              <button
+                onClick={() => setShowStrumming(!showStrumming)}
+                title="Summarise the strumming pattern above the chart"
+                className={cn(
+                  'h-6 px-2 rounded text-xs border transition-colors',
+                  showStrumming
+                    ? 'border-primary bg-primary/10 text-primary font-semibold'
+                    : 'border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-high',
+                )}
+              >
+                {showStrumming ? 'D U d U' : 'Off'}
+              </button>
             </div>
           </div>
 
@@ -385,6 +426,15 @@ export default function CompositionViewer({scoreData}: {scoreData: ArrayBuffer})
           </Button>
         </div>
 
+        {/* Strumming pattern summary — hides itself when nothing is strummed */}
+        {showStrumming && score && (
+          <StrummingPatternPanel
+            score={score}
+            trackIndex={selectedTrackIndex}
+            className="px-3 py-2 border-b border-outline-variant/20 bg-surface-container-lowest"
+          />
+        )}
+
         {/* Tab renderer */}
         <AlphaTabWrapper
           ref={alphaTabRef}
@@ -393,6 +443,7 @@ export default function CompositionViewer({scoreData}: {scoreData: ArrayBuffer})
           layoutMode={settings.layoutMode}
           staveProfile={settings.staveProfile}
           scale={settings.scale}
+          showFingering={showFingering}
           enablePlayer
           onScoreLoaded={s => { setScore(s); setSelectedTrackIndex(0); }}
           onPositionChanged={(ct, et, ctk, etk) => {

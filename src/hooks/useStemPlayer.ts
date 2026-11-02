@@ -86,6 +86,9 @@ export function useStemPlayer(songKey: string) {
 
   // --- Refs ---
   const audioManagerRef = useRef<AudioManager | null>(null);
+  const loadVersionRef = useRef(0);
+  const transportVersionRef = useRef(0);
+  const pendingCommandRef = useRef<number | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const volumesRef = useRef<Volumes>(volumes);
   useEffect(() => {
@@ -110,10 +113,14 @@ export function useStemPlayer(songKey: string) {
 
   // --- Destroy manager ---
   const destroyManager = useCallback(() => {
+    ++loadVersionRef.current;
+    ++transportVersionRef.current;
+    pendingCommandRef.current = null;
     stopInterval();
     audioManagerRef.current?.destroy();
     audioManagerRef.current = null;
     setStemsReady(false);
+    setIsLoading(false);
     setIsPlaying(false);
     setCurrentTime(0);
     setDuration(0);
@@ -123,6 +130,8 @@ export function useStemPlayer(songKey: string) {
   // Cleanup on unmount
   useEffect(() => {
     return () => {
+      ++loadVersionRef.current;
+      ++transportVersionRef.current;
       stopInterval();
       audioManagerRef.current?.destroy();
       audioManagerRef.current = null;
@@ -133,6 +142,8 @@ export function useStemPlayer(songKey: string) {
   // --- loadStems: read files from a folder path and initialise AudioManager ---
   const loadStems = useCallback(
     async (folderPath: string) => {
+      const version = ++loadVersionRef.current;
+      let manager: AudioManager | null = null;
       setIsLoading(true);
       try {
         const entries = await readDir(folderPath);
@@ -147,15 +158,21 @@ export function useStemPlayer(songKey: string) {
           }),
         );
 
+        if (version !== loadVersionRef.current) return false;
         const foundStems = stemEntries.map(e => e.stem);
 
-        const manager = new AudioManager(files, () => {
+        manager = new AudioManager(files, () => {
+          if (audioManagerRef.current !== manager) return;
           setIsPlaying(false);
           stopInterval();
           setCurrentTime(0);
         });
 
         await manager.ready;
+        if (version !== loadVersionRef.current) {
+          manager.destroy();
+          return false;
+        }
 
         // Apply current volumes
         for (const stem of foundStems) {
@@ -170,8 +187,13 @@ export function useStemPlayer(songKey: string) {
         setLoadedStems(foundStems);
         setDuration(manager.duration);
         setStemsReady(true);
+        return true;
+      } catch (err) {
+        manager?.destroy();
+        if (version === loadVersionRef.current) throw err;
+        return false;
       } finally {
-        setIsLoading(false);
+        if (version === loadVersionRef.current) setIsLoading(false);
       }
     },
     [stopInterval],
@@ -180,11 +202,15 @@ export function useStemPlayer(songKey: string) {
   // --- On mount: load existing association ---
   useEffect(() => {
     let cancelled = false;
+    destroyManager();
+    setIsLinked(false);
+    setLinkError(null);
+    const version = loadVersionRef.current;
 
     async function init() {
       try {
         const assoc = await getStemAssociation(songKey);
-        if (cancelled) return;
+        if (cancelled || version !== loadVersionRef.current) return;
         if (assoc) {
           setIsLinked(true);
           await loadStems(assoc.stem_folder_path);
@@ -200,6 +226,11 @@ export function useStemPlayer(songKey: string) {
 
     return () => {
       cancelled = true;
+      ++loadVersionRef.current;
+      ++transportVersionRef.current;
+      stopInterval();
+      audioManagerRef.current?.destroy();
+      audioManagerRef.current = null;
     };
     // loadStems is stable (useCallback), songKey is the only real dep
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -211,17 +242,18 @@ export function useStemPlayer(songKey: string) {
       setIsLoading(true);
       setLinkError(null);
       destroyManager();
+      const version = loadVersionRef.current + 1;
 
       try {
         // Persist the selected folder directly. Copying multi-stem audio into
         // app data makes linking feel blocked for large Demucs outputs.
-        await loadStems(sourceFolderPath);
+        if (!await loadStems(sourceFolderPath)) return;
         await saveStemAssociation(songKey, sourceFolderPath);
-        setIsLinked(true);
+        if (version === loadVersionRef.current) setIsLinked(true);
       } catch (err) {
-        setLinkError(err instanceof Error ? err.message : String(err));
+        if (version === loadVersionRef.current) setLinkError(err instanceof Error ? err.message : String(err));
       } finally {
-        setIsLoading(false);
+        if (version === loadVersionRef.current) setIsLoading(false);
       }
     },
     [destroyManager, loadStems, songKey],
@@ -265,61 +297,66 @@ export function useStemPlayer(songKey: string) {
     }
   }, []);
 
-  // --- stopAndReset: stop audio and reset position to 0 (for stop-button / song-end) ---
+  // Commands invalidate pending continuations immediately, including play waiting
+  // for an AudioContext resume. A stale completion must not restart UI timers.
   const stopAndReset = useCallback(async () => {
-    const mgr = audioManagerRef.current;
-    if (!mgr) return;
+    const version = ++transportVersionRef.current;
+    pendingCommandRef.current = version;
     stopInterval();
-    await mgr.stop(); // sets isInitialized = false; position resets on next play()
     setIsPlaying(false);
     setCurrentTime(0);
+    const mgr = audioManagerRef.current;
+    try { await mgr?.stop(); }
+    finally { if (version === transportVersionRef.current) pendingCommandRef.current = null; }
   }, [stopInterval]);
 
-  // --- play / pause (imperative, for external sync) ---
   const play = useCallback(async () => {
     const mgr = audioManagerRef.current;
-    if (!mgr || mgr.isPlaying) return;
-    if (mgr.isInitialized) {
-      await mgr.resume();
-    } else {
-      await mgr.play({percent: 0});
+    if (!mgr || (mgr.isPlaying && pendingCommandRef.current === null)) return;
+    const version = ++transportVersionRef.current;
+    pendingCommandRef.current = version;
+    try {
+      if (mgr.isInitialized) await mgr.resume();
+      else await mgr.play({percent: 0});
+      if (version !== transportVersionRef.current || mgr !== audioManagerRef.current) return;
+      setIsPlaying(true);
+      startInterval();
+    } finally {
+      if (version === transportVersionRef.current) pendingCommandRef.current = null;
     }
-    setIsPlaying(true);
-    startInterval();
   }, [startInterval]);
 
   const pause = useCallback(async () => {
-    const mgr = audioManagerRef.current;
-    if (!mgr || !mgr.isPlaying) return;
-    await mgr.pause();
+    const version = ++transportVersionRef.current;
+    pendingCommandRef.current = version;
     stopInterval();
     setIsPlaying(false);
+    // Also suspend when resume is still pending and isPlaying has not flipped.
+    try { await audioManagerRef.current?.pause(); }
+    finally { if (version === transportVersionRef.current) pendingCommandRef.current = null; }
   }, [stopInterval]);
 
-  // --- togglePlayPause ---
   const togglePlayPause = useCallback(async () => {
-    const mgr = audioManagerRef.current;
-    if (!mgr) return;
-    if (mgr.isPlaying) {
-      await pause();
-    } else {
-      await play();
-    }
+    if (audioManagerRef.current?.isPlaying) await pause();
+    else await play();
   }, [play, pause]);
 
-  // --- seek ---
-  const seek = useCallback(
-    async (timeSeconds: number) => {
-      const mgr = audioManagerRef.current;
-      if (!mgr) return;
-      stopInterval();
-      await mgr.play({time: timeSeconds}); // play() stops existing sources internally
+  const seek = useCallback(async (timeSeconds: number) => {
+    const mgr = audioManagerRef.current;
+    if (!mgr) return;
+    const version = ++transportVersionRef.current;
+    pendingCommandRef.current = version;
+    stopInterval();
+    try {
+      await mgr.play({time: timeSeconds});
+      if (version !== transportVersionRef.current || mgr !== audioManagerRef.current) return;
       setIsPlaying(true);
       setCurrentTime(timeSeconds);
       startInterval();
-    },
-    [startInterval, stopInterval],
-  );
+    } finally {
+      if (version === transportVersionRef.current) pendingCommandRef.current = null;
+    }
+  }, [startInterval, stopInterval]);
 
   return {
     // State

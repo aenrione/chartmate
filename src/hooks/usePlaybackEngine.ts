@@ -1,18 +1,17 @@
 import {useState, useCallback, useRef} from 'react';
 import type React from 'react';
 import {AlphaTabApi, model} from '@coderline/alphatab';
-import {computeSeekTick, tickToSeconds} from '@/lib/tab-editor/seekUtils';
+import {computeSeekTick} from '@/lib/tab-editor/seekUtils';
 import type {useStemPlayer} from '@/hooks/useStemPlayer';
 
 type Score = InstanceType<typeof model.Score>;
 
-// ── Constants ────────────────────────────────────────────────────────────────
+// Rendering during AlphaTab's initial player startup can invalidate its buffers.
+// This guard applies to score mutations, never to a user's Pause or Stop command.
 const ALPHATAB_PLAY_STARTUP_GUARD_MS = 650;
 const ALPHATAB_MUTATION_SETTLE_MS = 25;
-const ALPHATAB_TRANSIENT_STOP_SUPPRESS_MS = 1_200;
 const PLAYBACK_SCROLL_THRESHOLD_PX = 20;
 
-// ── Discriminated union for seek intent ──────────────────────────────────────
 type PlaybackIntent = {type: 'idle'} | {type: 'seeking'; tick: number; secs: number};
 
 export interface UsePlaybackEngineParams {
@@ -23,42 +22,30 @@ export interface UsePlaybackEngineParams {
   canvasRef: React.RefObject<{alphaTab: {stop: () => void; clearPlaybackRange: () => void} | null} | null>;
   ytSyncSuppressRef?: React.MutableRefObject<boolean>;
   youtubeSyncRef?: React.RefObject<{onPause: () => void; onResume: () => void} | null>;
-  /** Called when a render should be triggered (e.g. after stop during pending render) */
   onRenderNeeded: () => void;
-  /** getApi helper — allows canvas handle override */
   getApi: () => AlphaTabApi | null;
-  /** Called when playback starts */
   onPlaybackStarted?: () => void;
-  /** Called when playback pauses or stops */
   onPlaybackPaused?: () => void;
-  /** Called when the engine stops (e.g. user pressed stop) */
+  /** The player has acknowledged a seek, including the score's tempo/repeat map. */
+  onPlaybackSeek?: (seconds: number) => void;
   onStop?: () => void;
-  /** Called when a score render finishes (after engine concerns are handled) */
   onRenderFinished?: () => void;
 }
 
 export function usePlaybackEngine(params: UsePlaybackEngineParams) {
-  const {
-    apiRef: _apiRef,
-    scoreRef,
-    stemPlayer,
-    canvasScrollRef,
-    canvasRef,
-    ytSyncSuppressRef,
-    youtubeSyncRef,
-    onRenderNeeded,
-    getApi,
-  } = params;
+  const {scoreRef, canvasScrollRef, canvasRef, getApi} = params;
+  const paramsRef = useRef(params);
+  paramsRef.current = params;
 
-  // ── State ─────────────────────────────────────────────────────────────────
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPlayerReady, setIsPlayerReady] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
-  // ── Refs ──────────────────────────────────────────────────────────────────
   const midiReloadNeeded = useRef(false);
+  const midiLoadingRef = useRef(false);
   const seekStateRef = useRef<PlaybackIntent>({type: 'idle'});
   const lastPlaybackYRef = useRef(0);
+  const desiredPlayingRef = useRef(false);
   const pendingPlayRef = useRef(false);
   const pendingPlayTickRef = useRef<number | null>(null);
   const playbackReadyPollRef = useRef<number | null>(null);
@@ -66,29 +53,22 @@ export function usePlaybackEngine(params: UsePlaybackEngineParams) {
   const scoreRenderTimerRef = useRef<number | null>(null);
   const playStartupGuardUntilRef = useRef(0);
   const playStartupTimerRef = useRef<number | null>(null);
-  const suppressTransientStopUntilRef = useRef(0);
   const alphaTabPlayerStateRef = useRef(0);
   const isPlayingRef = useRef(false);
   const isPlayerReadyRef = useRef(false);
   const renderFinishedRef = useRef(false);
-  // Position / tick mapping refs (consumed externally via return)
   const positionRef = useRef({currentTimeMs: 0});
   const tickMappingRef = useRef({endTick: 1, endTimeMs: 0});
+  const deferredTimersRef = useRef(new Set<number>());
 
-  // ── Startup guard ─────────────────────────────────────────────────────────
-  const isAlphaTabStartupGuardActive = useCallback(() => {
-    return Date.now() < playStartupGuardUntilRef.current;
-  }, []);
-
-  const getAlphaTabStartupGuardDelay = useCallback(() => {
-    return Math.max(0, playStartupGuardUntilRef.current - Date.now() + ALPHATAB_MUTATION_SETTLE_MS);
-  }, []);
+  const isAlphaTabStartupGuardActive = useCallback(() => Date.now() < playStartupGuardUntilRef.current, []);
+  const getAlphaTabStartupGuardDelay = useCallback(() => (
+    Math.max(0, playStartupGuardUntilRef.current - Date.now() + ALPHATAB_MUTATION_SETTLE_MS)
+  ), []);
 
   const armAlphaTabStartupGuard = useCallback(() => {
     playStartupGuardUntilRef.current = Date.now() + ALPHATAB_PLAY_STARTUP_GUARD_MS;
-    if (playStartupTimerRef.current !== null) {
-      window.clearTimeout(playStartupTimerRef.current);
-    }
+    if (playStartupTimerRef.current !== null) window.clearTimeout(playStartupTimerRef.current);
     playStartupTimerRef.current = window.setTimeout(() => {
       playStartupGuardUntilRef.current = 0;
       playStartupTimerRef.current = null;
@@ -100,393 +80,293 @@ export function usePlaybackEngine(params: UsePlaybackEngineParams) {
       fn();
       return;
     }
-    window.setTimeout(fn, getAlphaTabStartupGuardDelay());
+    const timer = window.setTimeout(() => {
+      deferredTimersRef.current.delete(timer);
+      fn();
+    }, getAlphaTabStartupGuardDelay());
+    deferredTimersRef.current.add(timer);
   }, [getAlphaTabStartupGuardDelay, isAlphaTabStartupGuardActive]);
 
-  // ── Polling / timer helpers ───────────────────────────────────────────────
   const clearPlaybackReadyPoll = useCallback(() => {
-    if (playbackReadyPollRef.current === null) return;
-    window.clearInterval(playbackReadyPollRef.current);
+    if (playbackReadyPollRef.current !== null) window.clearInterval(playbackReadyPollRef.current);
     playbackReadyPollRef.current = null;
   }, []);
-
   const clearScoreRenderTimer = useCallback(() => {
-    if (scoreRenderTimerRef.current === null) return;
-    window.clearTimeout(scoreRenderTimerRef.current);
+    if (scoreRenderTimerRef.current !== null) window.clearTimeout(scoreRenderTimerRef.current);
     scoreRenderTimerRef.current = null;
   }, []);
+  const markRenderPending = useCallback(() => { renderFinishedRef.current = false; }, []);
 
-  const markRenderPending = useCallback(() => {
-    renderFinishedRef.current = false;
-  }, []);
-
-  const markPlaying = useCallback(() => {
-    alphaTabPlayerStateRef.current = 1;
-    isPlayingRef.current = true;
-    setIsPlaying(true);
-  }, []);
-
-  // ── Core playback primitives ───────────────────────────────────────────────
-  const playAlphaTab = useCallback((tick?: number) => {
-    const api = getApi();
-    if (typeof tick === 'number') {
-      pendingPlayTickRef.current = tick;
+  const publishPlaying = useCallback((playing: boolean) => {
+    const changed = isPlayingRef.current !== playing;
+    alphaTabPlayerStateRef.current = playing ? 1 : 0;
+    isPlayingRef.current = playing;
+    setIsPlaying(playing);
+    if (changed) {
+      if (playing) paramsRef.current.onPlaybackStarted?.();
+      else paramsRef.current.onPlaybackPaused?.();
     }
-    if (!api || !api.isReadyForPlayback || !renderFinishedRef.current || api.playerState === 1) return false;
+  }, []);
+
+  // Keep this public helper safe for callers: readiness is not proof of playback.
+  const markPlaying = useCallback(() => {
+    if (getApi()?.playerState === 1) publishPlaying(true);
+  }, [getApi, publishPlaying]);
+
+  const seekToTick = useCallback((tick: number) => {
+    const api = getApi();
+    if (!api) return;
+    if (pendingScoreRenderRef.current || midiLoadingRef.current || pendingPlayRef.current || !api.isReadyForPlayback) {
+      // A MIDI reload resets the old player's position. Apply this selection
+      // only after the replacement MIDI is ready, even across Pause/Resume.
+      pendingPlayTickRef.current = tick;
+      return;
+    }
+    // A newer ready-player selection supersedes the position retained by Pause.
+    pendingPlayTickRef.current = null;
+    seekStateRef.current = {type: 'seeking', tick, secs: 0};
+    // AlphaTab supports seeking a running player. Stopping first resets its cursor
+    // and introduces a race between the new seek and a delayed startup callback.
+    api.tickPosition = tick;
+  }, [getApi]);
+
+  const playAlphaTab = useCallback(() => {
+    const api = getApi();
+    if (!desiredPlayingRef.current || pendingScoreRenderRef.current || midiLoadingRef.current || !api?.isReadyForPlayback || !renderFinishedRef.current) return false;
+    const tick = pendingPlayTickRef.current;
+    pendingPlayTickRef.current = null;
     pendingPlayRef.current = false;
     clearPlaybackReadyPoll();
-    const startTick = pendingPlayTickRef.current;
-    pendingPlayTickRef.current = null;
-    if (typeof startTick === 'number') {
-      api.tickPosition = startTick;
-    } else if (api.tickPosition <= 1) {
-      api.tickPosition = 0;
+    if (tick !== null) seekToTick(tick);
+    if (api.playerState === 1) {
+      publishPlaying(true);
+      return true;
     }
     armAlphaTabStartupGuard();
-    suppressTransientStopUntilRef.current = Date.now() + ALPHATAB_TRANSIENT_STOP_SUPPRESS_MS;
-    api.play();
+    // Invoke directly from the user gesture when ready. Do not retry with
+    // playPause(): a delayed toggle can undo Play or revive a cancelled request.
+    const accepted = api.play();
+    if (accepted === false) {
+      desiredPlayingRef.current = false;
+      publishPlaying(false);
+      return false;
+    }
     markPlaying();
-    window.setTimeout(() => {
-      const latestApi = getApi();
-      if (
-        latestApi &&
-        latestApi.playerState !== 1 &&
-        pendingPlayRef.current === false
-      ) {
-        latestApi.playPause();
-      }
-    }, 100);
     return true;
-  }, [armAlphaTabStartupGuard, clearPlaybackReadyPoll, getApi, markPlaying]);
+  }, [armAlphaTabStartupGuard, clearPlaybackReadyPoll, getApi, markPlaying, publishPlaying, seekToTick]);
 
   const startPlaybackWhenReady = useCallback(() => {
-    if (!pendingPlayRef.current) return;
-    window.setTimeout(() => { playAlphaTab(); }, 0);
+    if (pendingPlayRef.current) playAlphaTab();
   }, [playAlphaTab]);
-
   const pollPlaybackReady = useCallback(() => {
-    if (playbackReadyPollRef.current !== null) return;
-    playbackReadyPollRef.current = window.setInterval(startPlaybackWhenReady, 50);
-  }, [startPlaybackWhenReady]);
-
-  const requestAlphaTabPlay = useCallback((tick?: number) => {
-    pendingPlayRef.current = true;
-    if (typeof tick === 'number') {
-      pendingPlayTickRef.current = tick;
+    if (playbackReadyPollRef.current === null) {
+      playbackReadyPollRef.current = window.setInterval(startPlaybackWhenReady, 50);
     }
-    const api = getApi();
-    if (!api?.isReadyForPlayback || !renderFinishedRef.current) {
+  }, [startPlaybackWhenReady]);
+  const requestAlphaTabPlay = useCallback((tick?: number) => {
+    desiredPlayingRef.current = true;
+    pendingPlayRef.current = true;
+    if (typeof tick === 'number') pendingPlayTickRef.current = tick;
+    if (pendingScoreRenderRef.current || midiLoadingRef.current || !getApi()?.isReadyForPlayback || !renderFinishedRef.current) {
       pollPlaybackReady();
       return false;
     }
     return playAlphaTab();
   }, [getApi, playAlphaTab, pollPlaybackReady]);
 
-  const pauseAlphaTab = useCallback(() => {
+  const cancelPendingPlay = useCallback(() => {
+    desiredPlayingRef.current = false;
     pendingPlayRef.current = false;
     pendingPlayTickRef.current = null;
-    suppressTransientStopUntilRef.current = 0;
+    seekStateRef.current = {type: 'idle'};
     clearPlaybackReadyPoll();
-    deferUntilAlphaTabStartupSettles(() => {
-      const api = getApi();
-      if (api?.playerState === 1) {
-        api.playPause();
-      }
-    });
-    alphaTabPlayerStateRef.current = 0;
-  }, [clearPlaybackReadyPoll, deferUntilAlphaTabStartupSettles, getApi]);
+  }, [clearPlaybackReadyPoll]);
+
+  const pauseAlphaTab = useCallback(() => {
+    const resumeTick = pendingPlayTickRef.current ?? getApi()?.tickPosition ?? null;
+    cancelPendingPlay();
+    pendingPlayTickRef.current = resumeTick;
+    // Publish before the API command so a synchronous pause event cannot
+    // notify external media twice. The pause command itself is idempotent.
+    const wasPlaying = isPlayingRef.current;
+    publishPlaying(false);
+    getApi()?.pause();
+    // Silence external media even when AlphaTab never reached Playing.
+    void paramsRef.current.stemPlayer.pause();
+    paramsRef.current.youtubeSyncRef?.current?.onPause();
+    if (!wasPlaying) paramsRef.current.onPlaybackPaused?.();
+  }, [cancelPendingPlay, getApi, publishPlaying]);
 
   const stopAlphaTab = useCallback(() => {
-    pendingPlayRef.current = false;
-    pendingPlayTickRef.current = null;
-    suppressTransientStopUntilRef.current = 0;
-    clearPlaybackReadyPoll();
-    deferUntilAlphaTabStartupSettles(() => {
-      canvasRef.current?.alphaTab?.stop();
-    });
-    alphaTabPlayerStateRef.current = 0;
-  }, [clearPlaybackReadyPoll, canvasRef, deferUntilAlphaTabStartupSettles]);
+    cancelPendingPlay();
+    getApi()?.stop();
+    publishPlaying(false);
+  }, [cancelPendingPlay, getApi, publishPlaying]);
 
   const prepareForScoreRender = useCallback(() => {
-    const currentApi = getApi();
-    if (alphaTabPlayerStateRef.current !== 1 && currentApi?.playerState !== 1) return false;
-    pendingPlayRef.current = false;
-    pendingPlayTickRef.current = null;
-    clearPlaybackReadyPoll();
-    const stopForRender = () => {
-      const api = getApi();
-      if (api?.playerState === 1) {
-        api.stop();
-      }
-    };
-    deferUntilAlphaTabStartupSettles(stopForRender);
-    alphaTabPlayerStateRef.current = 0;
-    setIsPlaying(false);
-    void stemPlayer.pause();
-    params.onPlaybackPaused?.();
+    const api = getApi();
+    const wasActive = desiredPlayingRef.current || isPlayingRef.current || api?.playerState === 1;
+    if (!wasActive) return false;
+    pauseAlphaTab();
     return true;
-  }, [
-    clearPlaybackReadyPoll,
-    deferUntilAlphaTabStartupSettles,
-    getApi,
-    stemPlayer,
-    params,
-  ]);
+  }, [getApi, pauseAlphaTab]);
 
   const loadMidiForCurrentScore = useCallback(() => {
     const api = getApi();
     if (!api || !scoreRef.current) return;
-    if (
-      alphaTabPlayerStateRef.current === 1 ||
-      isAlphaTabStartupGuardActive() ||
-      !isPlayerReadyRef.current ||
-      !renderFinishedRef.current
-    ) {
+    if (pendingScoreRenderRef.current || midiLoadingRef.current || api.playerState === 1 || isAlphaTabStartupGuardActive() || !isPlayerReadyRef.current || !renderFinishedRef.current) {
       midiReloadNeeded.current = true;
       return;
     }
     try {
-      api.loadMidiForScore();
+      // Reset before loading: readyForPlayback may be raised synchronously.
       midiReloadNeeded.current = false;
-      if (pendingPlayRef.current) {
-        pollPlaybackReady();
-      }
+      // Worker-backed players may still report the OLD MIDI as ready until
+      // the load command is processed. Wait for its readiness acknowledgement.
+      midiLoadingRef.current = true;
+      api.loadMidiForScore();
     } catch {
+      midiLoadingRef.current = false;
       midiReloadNeeded.current = true;
     }
-  }, [getApi, isAlphaTabStartupGuardActive, pollPlaybackReady, scoreRef]);
-
+  }, [getApi, isAlphaTabStartupGuardActive, scoreRef]);
   const flushMidiReloadIfNeeded = useCallback(() => {
-    if (midiReloadNeeded.current) {
-      loadMidiForCurrentScore();
-    }
+    if (midiReloadNeeded.current) loadMidiForCurrentScore();
   }, [loadMidiForCurrentScore]);
 
-  // ── seek intent ───────────────────────────────────────────────────────────
-  const startSeekTo = useCallback((tick: number, secs: number) => {
-    seekStateRef.current = {type: 'seeking', tick, secs};
-  }, []);
+  const startSeekTo = useCallback((tick: number, _secs: number) => { seekToTick(tick); }, [seekToTick]);
 
-  // ── Public event handlers ─────────────────────────────────────────────────
-  const handlePositionChanged = useCallback((currentTime: number, endTime: number, _currentTick: number, endTick: number) => {
+  const handlePositionChanged = useCallback((currentTime: number, endTime: number, currentTick: number, endTick: number) => {
     positionRef.current.currentTimeMs = currentTime;
     if (endTick > 0) tickMappingRef.current = {endTick, endTimeMs: endTime};
+    const intent = seekStateRef.current;
+    if (intent.type === 'seeking' && Math.abs(currentTick - intent.tick) < 1) {
+      seekStateRef.current = {type: 'idle'};
+      const seconds = currentTime / 1000;
+      // Use the player's acknowledged time, not a whole-song proportional
+      // estimate, which is wrong for tempo changes and repeated measures.
+      const current = paramsRef.current;
+      if (isPlayingRef.current && current.stemPlayer.stemsReady) void current.stemPlayer.seek(seconds);
+      current.onPlaybackSeek?.(seconds);
+    }
   }, []);
 
   const handlePlayPause = useCallback(() => {
-    const api = getApi();
-    if (isPlayingRef.current) {
-      if (ytSyncSuppressRef) {
-        ytSyncSuppressRef.current = true;
-        window.setTimeout(() => { ytSyncSuppressRef.current = false; }, 800);
-      }
+    if (desiredPlayingRef.current || isPlayingRef.current || getApi()?.playerState === 1) {
       pauseAlphaTab();
-      youtubeSyncRef?.current?.onPause();
-      params.onPlaybackPaused?.();
       return;
-    }
-
-    if (ytSyncSuppressRef) {
-      ytSyncSuppressRef.current = true;
-      window.setTimeout(() => { ytSyncSuppressRef.current = false; }, 800);
     }
     requestAlphaTabPlay();
-    if (!api?.isReadyForPlayback) {
-      loadMidiForCurrentScore();
-      pollPlaybackReady();
-    }
-    youtubeSyncRef?.current?.onResume();
-    params.onPlaybackStarted?.();
-  }, [
-    getApi,
-    loadMidiForCurrentScore,
-    pauseAlphaTab,
-    pollPlaybackReady,
-    requestAlphaTabPlay,
-    ytSyncSuppressRef,
-    youtubeSyncRef,
-    params,
-  ]);
+    if (!getApi()?.isReadyForPlayback) loadMidiForCurrentScore();
+  }, [getApi, loadMidiForCurrentScore, pauseAlphaTab, requestAlphaTabPlay]);
 
   const handleYoutubeStateChange = useCallback((state: number) => {
-    if (ytSyncSuppressRef?.current) return;
-    if (state === 1 && !isPlayingRef.current) {
-      if (!requestAlphaTabPlay()) {
-        loadMidiForCurrentScore();
-        pollPlaybackReady();
-      }
-    } else if (state === 2 && isPlayingRef.current) {
+    if (paramsRef.current.ytSyncSuppressRef?.current) return;
+    if (state === 1 && !desiredPlayingRef.current) {
+      requestAlphaTabPlay();
+      if (!getApi()?.isReadyForPlayback) loadMidiForCurrentScore();
+    } else if ((state === 2 || state === 0) && (desiredPlayingRef.current || isPlayingRef.current)) {
       pauseAlphaTab();
     }
-  }, [
-    loadMidiForCurrentScore,
-    pauseAlphaTab,
-    pollPlaybackReady,
-    requestAlphaTabPlay,
-    ytSyncSuppressRef,
-  ]);
+  }, [getApi, loadMidiForCurrentScore, pauseAlphaTab, requestAlphaTabPlay]);
 
   const handlePlayerStateChanged = useCallback((state: number) => {
-    if (state === 0 && Date.now() < suppressTransientStopUntilRef.current) {
+    if (state === 1 && (!desiredPlayingRef.current || pendingScoreRenderRef.current || midiLoadingRef.current)) {
+      // A late acknowledgement must not resurrect playback after Pause/Stop
+      // or start external audio while a newer score render is queued.
+      getApi()?.pause();
+      publishPlaying(false);
       return;
     }
-    suppressTransientStopUntilRef.current = 0;
-    alphaTabPlayerStateRef.current = state;
-    if (state === 0 && seekStateRef.current.type === 'seeking') {
-      const {tick, secs} = seekStateRef.current;
-      seekStateRef.current = {type: 'idle'};
-      const api = getApi();
-      setTimeout(() => {
-        if (api && !requestAlphaTabPlay(tick)) {
-          pollPlaybackReady();
-        }
-        if (stemPlayer.stemsReady) void stemPlayer.seek(secs);
-      }, 0);
-      return;
+    publishPlaying(state === 1);
+    if (state === 0) {
+      // A stopped event from the outgoing MIDI/render must not cancel a
+      // newer Play request waiting for its replacement to become ready.
+      if (!pendingPlayRef.current) desiredPlayingRef.current = false;
+      if (pendingScoreRenderRef.current) paramsRef.current.onRenderNeeded();
     }
-    if (state === 0 && pendingScoreRenderRef.current) {
-      window.setTimeout(() => {
-        if (pendingScoreRenderRef.current) onRenderNeeded();
-      }, 0);
-    }
-    const playing = state === 1;
-    isPlayingRef.current = playing;
-    setIsPlaying(playing);
-  }, [getApi, pollPlaybackReady, onRenderNeeded, requestAlphaTabPlay, stemPlayer]);
+  }, [getApi, publishPlaying]);
 
   const handlePlayerReady = useCallback(() => {
+    midiLoadingRef.current = false;
     setIsPlayerReady(true);
     isPlayerReadyRef.current = true;
-    loadMidiForCurrentScore();
+    flushMidiReloadIfNeeded();
     startPlaybackWhenReady();
-  }, [loadMidiForCurrentScore, startPlaybackWhenReady]);
+  }, [flushMidiReloadIfNeeded, startPlaybackWhenReady]);
 
   const handlePlayerFinished = useCallback(() => {
-    void stemPlayer.stopAndReset();
+    cancelPendingPlay();
+    publishPlaying(false);
+    void paramsRef.current.stemPlayer.stopAndReset();
+    paramsRef.current.youtubeSyncRef?.current?.onPause();
     flushMidiReloadIfNeeded();
-  }, [stemPlayer, flushMidiReloadIfNeeded]);
+  }, [cancelPendingPlay, flushMidiReloadIfNeeded, publishPlaying]);
 
   const handleStop = useCallback((setPracticeRange?: (range: {startBar: number; endBar: number} | null) => void) => {
+    const wasPlaying = isPlayingRef.current;
     stopAlphaTab();
-    setIsPlaying(false);
-    isPlayingRef.current = false;
-    youtubeSyncRef?.current?.onPause();
-    params.onPlaybackPaused?.();
-    void stemPlayer.stopAndReset();
+    paramsRef.current.youtubeSyncRef?.current?.onPause();
+    if (!wasPlaying) paramsRef.current.onPlaybackPaused?.();
+    void paramsRef.current.stemPlayer.stopAndReset();
+    positionRef.current.currentTimeMs = 0;
     canvasRef.current?.alphaTab?.clearPlaybackRange();
     setPracticeRange?.(null);
-    params.onStop?.();
+    paramsRef.current.onStop?.();
     flushMidiReloadIfNeeded();
-  }, [params, stemPlayer, canvasRef, flushMidiReloadIfNeeded, stopAlphaTab, youtubeSyncRef]);
+  }, [canvasRef, flushMidiReloadIfNeeded, stopAlphaTab]);
 
-  const handleBeatClickWithSeek = useCallback((
-    beat: InstanceType<typeof model.Beat>,
-    handleBeatClick: (beat: InstanceType<typeof model.Beat>) => void,
-  ) => {
+  const handleBeatClickWithSeek = useCallback((beat: InstanceType<typeof model.Beat>, handleBeatClick: (beat: InstanceType<typeof model.Beat>) => void) => {
     handleBeatClick(beat);
-    if (!isPlayingRef.current) return;
-
     const api = getApi();
-    const {endTick, endTimeMs} = tickMappingRef.current;
-    if (!api || endTick <= 0 || endTimeMs <= 0) return;
+    if (!api) return;
+    const tick = api.tickCache?.getBeatStart(beat)
+      ?? computeSeekTick(beat, scoreRef.current?.masterBars.length ?? 1, tickMappingRef.current.endTick);
+    seekToTick(tick);
+  }, [getApi, scoreRef, seekToTick]);
 
-    const totalBars = scoreRef.current?.masterBars.length ?? 1;
-    const beatTick = computeSeekTick(beat, totalBars, endTick);
-    const targetSecs = tickToSeconds(beatTick, endTick, endTimeMs);
-
-    const stopForSeek = () => {
-      seekStateRef.current = {type: 'seeking', tick: beatTick, secs: targetSecs};
-      api.stop();
-    };
-    deferUntilAlphaTabStartupSettles(stopForSeek);
-  }, [deferUntilAlphaTabStartupSettles, getApi, scoreRef]);
-
-  const handleActiveBeatsChanged = useCallback((
-    beats: InstanceType<typeof model.Beat>[],
-  ) => {
-    if (!isPlayingRef.current) return;
-    const beat = beats[0];
-    if (!beat) return;
-    const api = getApi();
-    const beatBounds = api?.boundsLookup?.findBeat(beat);
-    if (!beatBounds) return;
-    const y = beatBounds.visualBounds.y;
-    if (Math.abs(y - lastPlaybackYRef.current) < PLAYBACK_SCROLL_THRESHOLD_PX) return;
+  const handleActiveBeatsChanged = useCallback((beats: InstanceType<typeof model.Beat>[]) => {
+    if (!isPlayingRef.current || !beats[0]) return;
+    const bounds = getApi()?.boundsLookup?.findBeat(beats[0]);
+    if (!bounds || Math.abs(bounds.visualBounds.y - lastPlaybackYRef.current) < PLAYBACK_SCROLL_THRESHOLD_PX) return;
+    const y = bounds.visualBounds.y;
     lastPlaybackYRef.current = y;
     const container = canvasScrollRef.current;
-    if (!container) return;
-    container.scrollTo({top: Math.max(0, y - container.clientHeight / 3), behavior: 'smooth'});
+    container?.scrollTo({top: Math.max(0, y - container.clientHeight / 3), behavior: 'smooth'});
   }, [getApi, canvasScrollRef]);
 
-  const handleRenderFinished = useCallback((
-    initScore?: () => void,
-    updateCursorBounds?: () => void,
-  ) => {
-    if (!scoreRef.current) {
-      initScore?.();
-    }
+  const handleRenderFinished = useCallback((initScore?: () => void, updateCursorBounds?: () => void) => {
+    if (!scoreRef.current) initScore?.();
     renderFinishedRef.current = true;
     updateCursorBounds?.();
     flushMidiReloadIfNeeded();
     startPlaybackWhenReady();
-    params.onRenderFinished?.();
-  }, [scoreRef, flushMidiReloadIfNeeded, startPlaybackWhenReady, params]);
+    paramsRef.current.onRenderFinished?.();
+  }, [scoreRef, flushMidiReloadIfNeeded, startPlaybackWhenReady]);
 
-  // ── Unmount cleanup ───────────────────────────────────────────────────────
   const unmount = useCallback(() => {
-    clearPlaybackReadyPoll();
+    cancelPendingPlay();
     clearScoreRenderTimer();
-    if (playStartupTimerRef.current !== null) {
-      window.clearTimeout(playStartupTimerRef.current);
-      playStartupTimerRef.current = null;
-    }
-  }, [clearPlaybackReadyPoll, clearScoreRenderTimer]);
+    if (playStartupTimerRef.current !== null) window.clearTimeout(playStartupTimerRef.current);
+    playStartupTimerRef.current = null;
+    playStartupGuardUntilRef.current = 0;
+    for (const timer of deferredTimersRef.current) window.clearTimeout(timer);
+    deferredTimersRef.current.clear();
+    getApi()?.pause();
+    void paramsRef.current.stemPlayer.pause();
+    paramsRef.current.youtubeSyncRef?.current?.onPause();
+  }, [cancelPendingPlay, clearScoreRenderTimer, getApi]);
 
   return {
-    // State
-    isPlaying,
-    isPlayerReady,
-    isReady, setIsReady,
-    isPlayingRef,
-    isPlayerReadyRef,
-    renderFinishedRef,
-    midiReloadNeeded,
-    seekStateRef,
-    pendingScoreRenderRef,
-    alphaTabPlayerStateRef,
-    clearPlaybackReadyPoll,
-    clearScoreRenderTimer,
-    isAlphaTabStartupGuardActive,
-    getAlphaTabStartupGuardDelay,
-    playStartupTimerRef,
-    scoreRenderTimerRef,
-    // Exposed refs needed by external consumers
-    tickMappingRef,
-    positionRef,
-    // Engine primitives (public API)
-    prepareForScoreRender,
-    markRenderPending,
-    loadMidiForCurrentScore,
-    flushMidiReloadIfNeeded,
-    pollPlaybackReady,
-    requestAlphaTabPlay,
-    pauseAlphaTab,
-    stopAlphaTab,
-    deferUntilAlphaTabStartupSettles,
-    startSeekTo,
-    markPlaying,
-    // Public callbacks / event handlers
-    handlePlayPause,
-    handleStop,
-    handlePlayerStateChanged,
-    handlePlayerReady,
-    handlePlayerFinished,
-    handlePositionChanged,
-    handleBeatClickWithSeek,
-    handleActiveBeatsChanged,
-    handleYoutubeStateChange,
-    handleRenderFinished,
-    // Lifecycle
-    unmount,
+    isPlaying, isPlayerReady, isReady, setIsReady,
+    isPlayingRef, isPlayerReadyRef, renderFinishedRef, midiReloadNeeded, midiLoadingRef, seekStateRef,
+    pendingScoreRenderRef, alphaTabPlayerStateRef, clearPlaybackReadyPoll, clearScoreRenderTimer,
+    isAlphaTabStartupGuardActive, getAlphaTabStartupGuardDelay, playStartupTimerRef, scoreRenderTimerRef,
+    tickMappingRef, positionRef, prepareForScoreRender, markRenderPending,
+    loadMidiForCurrentScore, flushMidiReloadIfNeeded, pollPlaybackReady, requestAlphaTabPlay,
+    pauseAlphaTab, stopAlphaTab, deferUntilAlphaTabStartupSettles, startSeekTo, markPlaying,
+    handlePlayPause, handleStop, handlePlayerStateChanged, handlePlayerReady, handlePlayerFinished,
+    handlePositionChanged, handleBeatClickWithSeek, handleActiveBeatsChanged,
+    handleYoutubeStateChange, handleRenderFinished, unmount,
   };
 }

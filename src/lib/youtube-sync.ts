@@ -45,6 +45,7 @@ export class YouTubeSync {
   disable() {
     this.#enabled = false;
     this.#stopSyncLoop();
+    this.#youtubePlayer?.pause();
   }
 
   /** Seek YouTube to the position for `timeSeconds` without changing play state. */
@@ -77,7 +78,11 @@ export class YouTubeSync {
   onResume() {
     if (!this.#youtubePlayer || !this.#enabled) return;
     this.#markCooldown();
-    this.#youtubePlayer.play();
+    if (this.#clock) {
+      this.onPlayFrom(this.#clock.currentTime);
+    } else {
+      this.#youtubePlayer.play();
+    }
   }
 
   onTempoChange(tempo: number) {
@@ -86,7 +91,8 @@ export class YouTubeSync {
   }
 
   destroy() {
-    this.#stopSyncLoop();
+    this.disable();
+    this.#lastSyncTime = 0;
     this.#clock = null;
     this.#youtubePlayer = null;
   }

@@ -44,6 +44,9 @@ export class AudioManager {
   #duration: number = 0;
   #tracks: {[trackName: string]: AudioTrack} = {};
   #isInitialized: boolean = false;
+  #destroyed = false;
+  #tracksReady = false;
+  #transportVersion = 0;
   #onSongEnded: (() => void) | null;
   #practiceModeConfig: PracticeModeConfig | null = null;
 
@@ -71,8 +74,9 @@ export class AudioManager {
     this.#context.suspend();
 
     this.ready = this.#createTracks(audioFiles).then(() => {
+      this.#tracksReady = true;
       this.#duration = Math.max(
-        ...Object.values(this.#tracks).map(track => track.duration),
+        0, ...Object.values(this.#tracks).map(track => track.duration),
       );
     });
   }
@@ -127,6 +131,7 @@ export class AudioManager {
           Boolean,
         ) as AudioBuffer[];
 
+        if (this.#destroyed) return;
         this.#tracks[trackName] = new AudioTrack(
           this.#context,
           filteredAudioBuffers,
@@ -212,44 +217,34 @@ export class AudioManager {
   }
 
   async pause() {
-    if (this.#context.state === 'running') {
-      await this.#context.suspend();
-    }
+    ++this.#transportVersion;
+    if (!this.#destroyed) await this.#context.suspend();
   }
 
   async resume() {
-    if (this.#context.state === 'suspended') {
-      await this.#context.resume();
-    }
+    if (this.#destroyed || !this.#isInitialized) return;
+    ++this.#transportVersion;
+    await this.#context.resume();
   }
 
   async play({percent, time}: {percent?: number; time?: number}) {
-    if (percent == null && time == null) {
-      throw new Error('Must provide percent or time');
-    }
-    if (this.#isInitialized) {
-      await this.stop();
-    }
-
+    if (percent == null && time == null) throw new Error('Must provide percent or time');
+    if (this.#destroyed) return;
+    const version = ++this.#transportVersion;
+    if (!this.#tracksReady) await this.ready;
+    if (this.#destroyed || version !== this.#transportVersion) return;
+    // A seek replaces sources directly; suspending between them adds an audible gap.
+    this.#stopTracks();
     const currentTime = this.#context.currentTime;
-    const songLength = this.#duration;
-    const offset: number = time ?? songLength * percent!;
+    const offset = Math.max(0, Math.min(time ?? this.#duration * percent!, this.#duration));
     this.#trackOffset = offset;
     this.#startedAt = currentTime;
-
-    // Initialize tempo tracking variables
     this.#effectivePlayTime = offset;
     this.#lastTempoChangeRealTime = currentTime;
     this.#lastTempoChangeEffectiveTime = offset;
-
-    Object.values(this.#tracks).forEach(track => {
-      track.start(currentTime, offset);
-    });
+    Object.values(this.#tracks).forEach(track => track.start(currentTime, offset));
     this.#isInitialized = true;
-
-    if (this.#context.state === 'suspended') {
-      await this.#context.resume();
-    }
+    await this.#context.resume();
   }
 
   setVolume(trackName: string, volume: number) {
@@ -268,7 +263,7 @@ export class AudioManager {
   }
 
   get isPlaying() {
-    return this.#context.state === 'running';
+    return this.#isInitialized && this.#context.state === 'running';
   }
 
   get currentTime() {
@@ -293,26 +288,29 @@ export class AudioManager {
     return this.#isInitialized;
   }
 
-  async stop() {
-    Object.values(this.#tracks).forEach(track => {
-      track.stop();
-    });
-
+  #stopTracks() {
+    Object.values(this.#tracks).forEach(track => track.stop());
     this.#isInitialized = false;
-    // Clear tempo tracking variables when stopping
+    this.#startedAt = -1;
     this.#effectivePlayTime = 0;
     this.#lastTempoChangeRealTime = 0;
     this.#lastTempoChangeEffectiveTime = 0;
   }
 
-  destroy() {
-    Object.values(this.#tracks).forEach(track => {
-      track.destroy();
-    });
-    this.#tracks = {};
+  async stop() {
+    ++this.#transportVersion;
+    this.#stopTracks();
+    if (!this.#destroyed) await this.#context.suspend();
+  }
 
+  destroy() {
+    this.#destroyed = true;
+    ++this.#transportVersion;
+    Object.values(this.#tracks).forEach(track => track.destroy());
+    this.#tracks = {};
+    this.#isInitialized = false;
     this.#onSongEnded = null;
-    this.#context.close();
+    void this.#context.close();
   }
 
   setPracticeMode(practiceMode: PracticeModeConfig | null) {

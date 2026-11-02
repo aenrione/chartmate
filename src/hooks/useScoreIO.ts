@@ -194,14 +194,20 @@ export function useScoreIO(params: UseScoreIOParams) {
   const handleTitleChange = useCallback((newTitle: string) => {
     setTitle(newTitle);
     const score = scoreRef.current;
-    if (score) score.title = newTitle;
-  }, [scoreRef]);
+    if (score && score.title !== newTitle) {
+      score.title = newTitle;
+      onDirty();
+    }
+  }, [scoreRef, onDirty]);
 
   const handleArtistChange = useCallback((newArtist: string) => {
     setArtist(newArtist);
     const score = scoreRef.current;
-    if (score) score.artist = newArtist;
-  }, [scoreRef]);
+    if (score && score.artist !== newArtist) {
+      score.artist = newArtist;
+      onDirty();
+    }
+  }, [scoreRef, onDirty]);
 
   const handleSaveComposition = useCallback(async (
     meta: CompositionMeta,
@@ -209,9 +215,10 @@ export function useScoreIO(params: UseScoreIOParams) {
   ) => {
     const score = scoreRef.current;
     if (!score) return;
-    const scoreData = exportToGp7(score).buffer as ArrayBuffer;
     score.title = meta.title;
     score.artist = meta.artist;
+    score.album = meta.album;
+    const scoreData = exportToGp7(score).buffer as ArrayBuffer;
     const isNew = !compositionId;
     const newId = await saveComposition(scoreData, {
       id: compositionId,

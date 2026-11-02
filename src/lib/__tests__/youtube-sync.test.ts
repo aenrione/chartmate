@@ -234,3 +234,29 @@ describe('YouTubeSync', () => {
     });
   });
 });
+
+describe('YouTubeSync source handoff', () => {
+  it('pauses immediately when audio ownership is disabled', () => {
+    const player = makePlayer();
+    const sync = new YouTubeSync();
+    sync.setYouTubePlayer(player);
+    sync.enable();
+    sync.disable();
+    expect(player.pause).toHaveBeenCalledOnce();
+    sync.onResume();
+    expect(player.play).not.toHaveBeenCalled();
+  });
+
+  it('resumes from the clock position with offset rather than its stale video position', () => {
+    const player = makePlayer();
+    const sync = new YouTubeSync();
+    sync.setYouTubePlayer(player);
+    sync.setClock(makeClock({currentTime: 20, isPlaying: true}));
+    sync.setOffset(2000);
+    sync.enable();
+    sync.onResume();
+    expect(player.seekTo).toHaveBeenCalledWith(18);
+    expect(player.play).toHaveBeenCalledOnce();
+    sync.destroy();
+  });
+});

@@ -295,3 +295,56 @@ describe('useStemPlayer — unlink()', () => {
     expect(fs.remove).toHaveBeenCalledWith('/data/stems/test-song', {recursive: true});
   });
 });
+
+describe('useStemPlayer command cancellation', () => {
+  beforeEach(async () => {
+    const {getStemAssociation} = await import('@/lib/local-db/stems');
+    vi.mocked(getStemAssociation).mockResolvedValue(mocks.stemAssoc);
+    mocks.audioMgr._isPlaying = false;
+    mocks.audioMgr.isInitialized = false;
+    mocks.audioMgr.play.mockClear().mockResolvedValue(undefined);
+    mocks.audioMgr.pause.mockClear().mockResolvedValue(undefined);
+  });
+
+  it('a late seek completion cannot mark stems playing again after pause', async () => {
+    const result = await mountLinked();
+    let finish!: () => void;
+    mocks.audioMgr.play.mockImplementationOnce(() => new Promise<void>(resolve => { finish = resolve; }));
+    let seeking!: Promise<void>;
+    act(() => { seeking = result.current.seek(45); });
+    await act(async () => { await result.current.pause(); });
+    await act(async () => { finish(); await seeking; });
+    expect(mocks.audioMgr.pause).toHaveBeenCalledOnce();
+    expect(result.current.isPlaying).toBe(false);
+    expect(result.current.currentTime).toBe(0);
+  });
+
+  it('pauses a pending AudioContext resume even while the manager still reports paused', async () => {
+    const result = await mountLinked();
+    mocks.audioMgr.isInitialized = true;
+    let finish!: () => void;
+    mocks.audioMgr.resume.mockImplementationOnce(() => new Promise<void>(resolve => { finish = resolve; }));
+    let playing!: Promise<void>;
+    act(() => { playing = result.current.play(); });
+    await act(async () => { await result.current.pause(); });
+    await act(async () => { finish(); await playing; });
+    expect(mocks.audioMgr.pause).toHaveBeenCalledOnce();
+    expect(result.current.isPlaying).toBe(false);
+  });
+
+  it('discards old stem files that finish loading after changing songs', async () => {
+    const fs = await import('@tauri-apps/plugin-fs');
+    const {getStemAssociation} = await import('@/lib/local-db/stems');
+    let finish!: (value: Uint8Array) => void;
+    const pending = new Promise<Uint8Array>(resolve => { finish = resolve; });
+    vi.mocked(fs.readFile).mockReturnValueOnce(pending);
+    const view = renderHook(({songKey}) => useStemPlayer(songKey), {initialProps: {songKey: 'old'}});
+    await waitFor(() => expect(view.result.current.isLoading).toBe(true));
+    vi.mocked(getStemAssociation).mockResolvedValueOnce(null);
+    view.rerender({songKey: 'new'});
+    await act(async () => { finish(new Uint8Array(8)); });
+    expect(view.result.current.stemsReady).toBe(false);
+    expect(view.result.current.loadedStems).toEqual([]);
+    expect(view.result.current.isLoading).toBe(false);
+  });
+});
