@@ -10,6 +10,9 @@ import LearnStats from './LearnStats';
 import MissionBoard from './MissionBoard';
 import TodayCard from './TodayCard';
 import UpcomingSessionsWidget from '@/components/programs/UpcomingSessionsWidget';
+import ExportChartsButton from '@/components/chart-export/ExportChartsButton';
+import {loadAllUnits} from '@/lib/curriculum/loader';
+import {buildLessonFolders, lessonsOfUnits} from '@/lib/chart-export/presets';
 
 const INSTRUMENTS: {label: string; value: Instrument; Icon: React.ElementType}[] = [
   {label: 'Guitar', value: 'guitar', Icon: Guitar},
@@ -34,6 +37,17 @@ export default function LearnPage() {
           <h1 className="text-xl font-bold font-headline hidden lg:block">Learn</h1>
 
           <div className="flex items-center gap-2">
+            {instrument === 'drums' && (
+              <ExportChartsButton
+                label="Export lessons"
+                defaultFileName="drum-lessons.zip"
+                build={async () => {
+                  const units = await loadAllUnits('drums');
+                  return buildLessonFolders(lessonsOfUnits(units)).folders;
+                }}
+              />
+            )}
+
             <button
               onClick={() => setMissionBoardOpen(true)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-on-surface text-sm font-medium transition-colors"

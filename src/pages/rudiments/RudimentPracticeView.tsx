@@ -29,6 +29,8 @@ import {
   type Subdivision,
 } from './generateRudimentChart';
 import {recordEventSafely} from '@/lib/progression';
+import ExportChartsButton from '@/components/chart-export/ExportChartsButton';
+import {buildRudimentFolders} from '@/lib/chart-export/presets';
 
 type ParsedChart = ReturnType<typeof parseChartFile>;
 
@@ -337,6 +339,12 @@ export default function RudimentPracticeView({
             {rudiment.category.charAt(0).toUpperCase() + rudiment.category.slice(1)} · #{rudiment.id} of 40
           </p>
         </div>
+        <ExportChartsButton
+          className="ml-auto"
+          build={() => buildRudimentFolders([rudiment], {bpm, subdivision})}
+          label="Export"
+          defaultFileName={`${rudiment.name}.zip`}
+        />
       </div>
 
       <div className="flex gap-6 flex-1 min-h-0">

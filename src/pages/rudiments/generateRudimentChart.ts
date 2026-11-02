@@ -1,3 +1,5 @@
+import {SUBDIVISION_TICKS, type Subdivision} from '@/lib/chart-export/fromRudiment';
+
 /**
  * Dynamically generates .chart file text for a rudiment at a given subdivision.
  * This allows changing the notation (e.g., from 16th notes to quarter notes)
@@ -12,16 +14,9 @@ const TEMPO_MILLIBEATS = TEMPO_BPM * 1000; // 120000
 // Note type 1 = Red = Snare in drum chart format
 const SNARE = 1;
 
-export type Subdivision = '32nd' | '16th' | 'triplet' | '8th' | 'quarter';
-
-// Tick interval between notes for each subdivision at 192 PPQ
-const SUBDIVISION_TICKS: Record<Subdivision, number> = {
-  '32nd': 24,      // 192 / 8
-  '16th': 48,      // 192 / 4
-  'triplet': 64,   // 192 / 3 (triplet 8th notes)
-  '8th': 96,       // 192 / 2
-  'quarter': 192,  // 192
-};
+// The subdivision vocabulary lives with the chart exporter, so the practice
+// view and the Clone Hero export cannot drift apart.
+export type {Subdivision};
 
 /**
  * Generate a .chart file string for a rudiment with a specific note count

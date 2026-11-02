@@ -7,6 +7,8 @@ import {
   categoryLabels,
   type Rudiment,
 } from './rudimentData';
+import ExportChartsButton from '@/components/chart-export/ExportChartsButton';
+import {buildRudimentFolders} from '@/lib/chart-export/presets';
 
 const filterPills: { value: Rudiment['category'] | 'all'; label: string }[] = [
   { value: 'all', label: 'All' },
@@ -46,17 +48,30 @@ export default function RudimentsPage() {
   return (
     <div className="flex-1 overflow-y-auto bg-surface p-6 md:p-12">
       {/* Header */}
-      <div className="mb-10">
-        <span className="font-mono text-xs uppercase tracking-widest text-tertiary mb-2 block">
-          Drums
-        </span>
-        <h1 className="font-headline text-4xl md:text-5xl font-bold text-on-surface mb-3">
-          Rudiments Library
-        </h1>
-        <p className="text-on-surface-variant text-lg max-w-xl">
-          The 40 PAS International Drum Rudiments — master the fundamental
-          building blocks of percussion technique.
-        </p>
+      <div className="mb-10 flex items-start justify-between gap-6">
+        <div>
+          <span className="font-mono text-xs uppercase tracking-widest text-tertiary mb-2 block">
+            Drums
+          </span>
+          <h1 className="font-headline text-4xl md:text-5xl font-bold text-on-surface mb-3">
+            Rudiments Library
+          </h1>
+          <p className="text-on-surface-variant text-lg max-w-xl">
+            The 40 PAS International Drum Rudiments — master the fundamental
+            building blocks of percussion technique.
+          </p>
+        </div>
+        <ExportChartsButton
+          build={() => buildRudimentFolders(filtered)}
+          label={
+            filtered.length === rudiments.length
+              ? 'Export all 40'
+              : `Export ${filtered.length}`
+          }
+          defaultFileName="rudiments.zip"
+          disabled={filtered.length === 0}
+          className="shrink-0"
+        />
       </div>
 
       {/* Search */}
