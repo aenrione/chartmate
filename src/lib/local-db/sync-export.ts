@@ -16,7 +16,7 @@ export type DbExport = {
   tables: Record<string, unknown[]>;
 };
 
-// Tier 1: always-sync user data (22 tables, sync_meta excluded — managed separately)
+// Tier 1: always-sync user data (23 tables, sync_meta excluded — managed separately)
 const TIER1_TABLES = [
   'saved_charts',
   'setlists',
@@ -26,6 +26,7 @@ const TIER1_TABLES = [
   'section_progress',
   'song_annotations',
   'tab_compositions',
+  'composition_tags',
   'youtube_associations',
   'fretboard_sessions',
   'fretboard_attempts',
@@ -66,6 +67,7 @@ const IMPORT_ORDER: string[] = [
   'spotify_history_imports',
   // children:
   'setlist_items',
+  'composition_tags',
   'practice_sessions',
   'song_annotations',
   'section_progress',

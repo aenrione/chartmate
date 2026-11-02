@@ -40,4 +40,6 @@ export const STORE_KEYS = {
   WEBDAV_USERNAME: 'webdav_username',
   WEBDAV_PASSWORD: 'webdav_password',
   SPOTIFY_USER_PROFILE: 'spotify_user_profile',
+  /** Library page view prefs: {view, groupBy, tagFilter} */
+  LIBRARY_VIEW_PREFS: 'library_view_prefs',
 } as const;

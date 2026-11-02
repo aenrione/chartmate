@@ -7,6 +7,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import {Search, Loader2, X} from 'lucide-react';
+import {normalizeTags, tagKey} from '@/lib/composition-tags';
 import {useSpotifyAuth} from '@/contexts/SpotifyAuthContext';
 import {getSpotifySdk} from '@/lib/spotify-sdk/ClientInstance';
 
@@ -18,6 +19,8 @@ export type CompositionMeta = {
   instrument: string;
   previewImage?: string | null;
   youtubeUrl?: string | null;
+  /** When present, the dialog shows a tag editor and returns the edited set. */
+  tags?: string[];
 };
 
 interface SaveCompositionDialogProps {
@@ -25,6 +28,8 @@ interface SaveCompositionDialogProps {
   onOpenChange: (open: boolean) => void;
   initialMeta: CompositionMeta;
   onSave: (meta: CompositionMeta) => Promise<void>;
+  /** Existing tags offered as autocomplete in the tag editor. */
+  tagSuggestions?: string[];
 }
 
 const INSTRUMENTS = [
@@ -63,6 +68,7 @@ export default function SaveCompositionDialog({
   onOpenChange,
   initialMeta,
   onSave,
+  tagSuggestions = [],
 }: SaveCompositionDialogProps) {
   const [meta, setMeta] = useState<CompositionMeta>(initialMeta);
   const [saving, setSaving] = useState(false);
@@ -70,6 +76,7 @@ export default function SaveCompositionDialog({
   const [spotifyResults, setSpotifyResults] = useState<SpotifyTrackResult[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [tagDraft, setTagDraft] = useState('');
   const resultsRef = useRef<HTMLDivElement>(null);
   const {isConnected} = useSpotifyAuth();
 
@@ -79,6 +86,7 @@ export default function SaveCompositionDialog({
       setSpotifyResults([]);
       setShowResults(false);
       setImageError(false);
+      setTagDraft('');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
@@ -129,12 +137,36 @@ export default function SaveCompositionDialog({
     if (!meta.title.trim()) return;
     setSaving(true);
     try {
-      await onSave(meta);
+      // A tag still in the input when saving counts as added.
+      await onSave(meta.tags === undefined ? meta : {...meta, tags: normalizeTags([...meta.tags, tagDraft])});
       onOpenChange(false);
     } finally {
       setSaving(false);
     }
   };
+
+  const addTag = (raw: string) => {
+    setMeta(m => ({...m, tags: normalizeTags([...(m.tags ?? []), raw])}));
+    setTagDraft('');
+  };
+
+  const removeTag = (tag: string) => {
+    setMeta(m => ({...m, tags: (m.tags ?? []).filter(t => t !== tag)}));
+  };
+
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if ((e.key === 'Enter' || e.key === ',') && tagDraft.trim()) {
+      e.preventDefault();
+      addTag(tagDraft);
+    } else if (e.key === ',') {
+      e.preventDefault();
+    } else if (e.key === 'Backspace' && !tagDraft && meta.tags?.length) {
+      removeTag(meta.tags[meta.tags.length - 1]);
+    }
+  };
+
+  const currentTagKeys = new Set((meta.tags ?? []).map(tagKey));
+  const availableSuggestions = tagSuggestions.filter(t => !currentTagKeys.has(tagKey(t)));
 
   const field = 'w-full rounded-lg bg-surface-container-high px-3 py-2 text-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/40';
 
@@ -310,6 +342,43 @@ export default function SaveCompositionDialog({
               placeholder="https://youtube.com/watch?v=... (optional)"
             />
           </div>
+
+          {meta.tags !== undefined && (
+            <div className="space-y-1.5">
+              <label htmlFor="composition-tag-input" className="text-xs font-medium text-on-surface-variant uppercase tracking-wide">Tags</label>
+              <div className="flex flex-wrap items-center gap-1.5 rounded-lg bg-surface-container-high px-2 py-1.5 focus-within:ring-2 focus-within:ring-primary/40">
+                {meta.tags.map(tag => (
+                  <span
+                    key={tag}
+                    className="inline-flex items-center gap-1 rounded-full bg-secondary/10 px-2 py-0.5 text-xs font-medium text-secondary"
+                  >
+                    {tag}
+                    <button
+                      type="button"
+                      onClick={() => removeTag(tag)}
+                      className="rounded-full hover:text-error transition-colors"
+                      title={`Remove tag "${tag}"`}
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                ))}
+                <input
+                  id="composition-tag-input"
+                  className="min-w-24 flex-1 bg-transparent py-0.5 text-sm text-on-surface placeholder:text-outline focus:outline-none"
+                  value={tagDraft}
+                  onChange={e => setTagDraft(e.target.value)}
+                  onKeyDown={handleTagKeyDown}
+                  placeholder={meta.tags.length ? 'Add tag…' : 'e.g. fingerstyle, to learn'}
+                  list="composition-tag-suggestions"
+                />
+                <datalist id="composition-tag-suggestions">
+                  {availableSuggestions.map(tag => <option key={tag} value={tag} />)}
+                </datalist>
+              </div>
+              <p className="text-[11px] text-outline">Press Enter or comma to add.</p>
+            </div>
+          )}
 
           <div className="flex justify-end gap-2 pt-2">
             <button

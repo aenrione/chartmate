@@ -227,6 +227,15 @@ export interface TabCompositions {
   updated_at: string;
   score_data: ArrayBuffer;
   youtube_url: string | null;
+  /** ISO timestamp it was archived at; NULL means active (visible in the library) */
+  archived_at: string | null;
+}
+
+export interface CompositionTags {
+  /** FK: references tab_compositions.id (ON DELETE CASCADE) */
+  composition_id: number;
+  /** COLLATE NOCASE; PK is (composition_id, tag) */
+  tag: string;
 }
 
 export interface FretboardSessions {
@@ -566,6 +575,7 @@ export interface DB {
   section_progress: SectionProgress;
   song_annotations: SongAnnotations;
   tab_compositions: TabCompositions;
+  composition_tags: CompositionTags;
   fretboard_sessions: FretboardSessions;
   fretboard_attempts: FretboardAttempts;
   fretboard_cards: FretboardCards;

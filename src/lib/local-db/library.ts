@@ -1,5 +1,5 @@
 import {getLocalDb} from './client';
-import {rowToComposition, COMPOSITION_SORT_MAP, type TabComposition, type CompositionSortOrder} from './tab-compositions';
+import {rowToComposition, attachTags, COMPOSITION_COLUMNS, COMPOSITION_SORT_MAP, type TabComposition, type CompositionSortOrder, type ArchiveScope} from './tab-compositions';
 import type {SavedChartEntry} from './saved-charts';
 
 export type LibraryItem =
@@ -9,6 +9,7 @@ export type LibraryItem =
 export async function getDrumsLibraryItems(
   search?: string,
   sort: CompositionSortOrder = 'saved_at_desc',
+  scope: ArchiveScope = 'active',
 ): Promise<LibraryItem[]> {
   const db = await getLocalDb();
 
@@ -16,10 +17,14 @@ export async function getDrumsLibraryItems(
 
   let compQuery = db
     .selectFrom('tab_compositions')
-    .select(['id', 'title', 'artist', 'album', 'tempo', 'instrument', 'preview_image', 'youtube_url', 'is_saved', 'saved_at', 'created_at', 'updated_at'])
+    .select(COMPOSITION_COLUMNS)
     .where('is_saved', '=', 1)
     .where('instrument', '=', 'drums')
     .orderBy(col, dir);
+
+  if (scope !== 'all') {
+    compQuery = compQuery.where('archived_at', scope === 'archived' ? 'is not' : 'is', null);
+  }
 
   let chartQuery = db
     .selectFrom('saved_charts')
@@ -37,11 +42,16 @@ export async function getDrumsLibraryItems(
     );
   }
 
-  const [compRows, chartRows] = await Promise.all([compQuery.execute(), chartQuery.execute()]);
+  // Clone Hero charts can't be archived, so the archived view lists tabs only.
+  type ChartRows = Awaited<ReturnType<typeof chartQuery.execute>>;
+  const [compRows, chartRows] = await Promise.all([
+    compQuery.execute(),
+    scope === 'archived' ? Promise.resolve([] as ChartRows) : chartQuery.execute(),
+  ]);
 
-  const compositions: LibraryItem[] = compRows.map(r => ({
+  const compositions: LibraryItem[] = (await attachTags(compRows.map(rowToComposition))).map(data => ({
     sourceType: 'composition' as const,
-    data: rowToComposition(r),
+    data,
   }));
 
   const choruses: LibraryItem[] = chartRows.map(row => ({

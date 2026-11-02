@@ -43,6 +43,8 @@ import {migration_041_active_time_tracking} from './041_active_time_tracking';
 import {migration_042_theory_srs} from './042_theory_srs';
 import {migration_043_fretboard_anki_cards} from './043_fretboard_anki_cards';
 import {migration_044_purge_theory_items} from './044_purge_theory_items';
+import {migration_045_composition_tags} from './045_composition_tags';
+import {migration_046_composition_archived} from './046_composition_archived';
 
 export const migrations: Record<string, Migration> = {
   '001_initial': InitialMigration,
@@ -89,4 +91,6 @@ export const migrations: Record<string, Migration> = {
   '042_theory_srs': migration_042_theory_srs,
   '043_fretboard_anki_cards': migration_043_fretboard_anki_cards,
   '044_purge_theory_items': migration_044_purge_theory_items,
+  '045_composition_tags': migration_045_composition_tags,
+  '046_composition_archived': migration_046_composition_archived,
 };
