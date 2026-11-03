@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {Download, Loader2} from 'lucide-react';
 import {toast} from 'sonner';
 import {Button} from '@/components/ui/button';
+import {cn} from '@/lib/utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,7 +21,10 @@ export interface ExportChartsButtonProps {
    * button.
    */
   build: () => ChartFolder[] | Promise<ChartFolder[]>;
+  /** Pass an empty string for an icon-only button. */
   label?: string;
+  /** Tooltip for the icon-only form. */
+  title?: string;
   defaultFileName?: string;
   variant?: 'default' | 'outline' | 'ghost' | 'secondary';
   size?: 'default' | 'sm' | 'lg' | 'icon';
@@ -36,6 +40,7 @@ export default function ExportChartsButton({
   size = 'sm',
   className,
   disabled,
+  title,
 }: ExportChartsButtonProps) {
   const [busy, setBusy] = useState(false);
 
@@ -86,10 +91,16 @@ export default function ExportChartsButton({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={variant} size={size} className={className} disabled={disabled || busy}>
+        <Button
+          variant={variant}
+          size={size}
+          className={className}
+          disabled={disabled || busy}
+          title={title}
+        >
           {busy
-            ? <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-            : <Download className="h-4 w-4 mr-2" />}
+            ? <Loader2 className={cn('h-4 w-4 animate-spin', label && 'mr-2')} />
+            : <Download className={cn('h-4 w-4', label && 'mr-2')} />}
           {label}
         </Button>
       </DropdownMenuTrigger>

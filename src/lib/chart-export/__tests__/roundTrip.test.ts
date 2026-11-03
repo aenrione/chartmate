@@ -13,8 +13,10 @@ import {parseChartFile} from '@eliwhite/scan-chart';
 import {model} from '@coderline/alphatab';
 import convertToAlphaTabDrums from '@/pages/sheet-music/convertToAlphaTabDrums';
 import {createDrumsDemo} from '@/lib/tab-editor/examples/drums-demo';
+import {createGuitarDemo} from '@/lib/tab-editor/examples/guitar-demo';
 import {pieceFromGm, type DrumPiece} from '@/lib/drums/pieces';
-import {scoreToChartDocument} from '../fromScore';
+import {hasPercussionTrack, scoreToChartDocument} from '../fromScore';
+import {buildScoreFolder} from '../presets';
 import {writeChart} from '../writeChart';
 import {ALPHATAB_RESOLUTION, CHART_RESOLUTION} from '../types';
 
@@ -159,5 +161,38 @@ describe('collapses that are intentional, not bugs', () => {
 
     const {dropped} = scoreToChartDocument(score);
     expect(dropped).toEqual({60: 1});
+  });
+});
+
+describe('a tab from the library as a chart folder', () => {
+  it('only offers itself on a score that has percussion', () => {
+    expect(hasPercussionTrack(createDrumsDemo())).toBe(true);
+    expect(hasPercussionTrack(createGuitarDemo())).toBe(false);
+  });
+
+  it('builds a folder Clone Hero can load', () => {
+    const {folder} = buildScoreFolder(createDrumsDemo());
+    expect(folder.files.map(f => f.name).sort()).toEqual([
+      'album.png', 'notes.chart', 'song.ini', 'song.wav',
+    ]);
+    expect(folder.issues.filter(i => i.severity === 'error')).toEqual([]);
+    expect(folder.notes).toEqual([]);
+  });
+
+  it('names the folder after the tab, not after a placeholder', () => {
+    const {folder} = buildScoreFolder(createDrumsDemo());
+    expect(folder.name).toBe('Chartmate Demo - Basic Rock Beat');
+  });
+
+  it('says so when percussion had to be dropped', () => {
+    const score = createDrumsDemo();
+    const beat = score.tracks[0].staves[0].bars[0].voices[0].beats[0];
+    const note = new model.Note();
+    note.percussionArticulation = 60; // high bongo — no lane
+    beat.addNote(note);
+
+    const {folder, dropped} = buildScoreFolder(score);
+    expect(dropped).toEqual({60: 1});
+    expect(folder.notes.join(' ')).toMatch(/1 percussion hit had no lane/);
   });
 });

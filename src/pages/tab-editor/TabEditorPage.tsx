@@ -131,12 +131,15 @@ import {useYoutubeSync} from '@/hooks/useYoutubeSync';
 import type {PlaybackClock} from '@/lib/youtube-sync';
 import YouTubePlayer from '@/components/YouTubePlayer';
 import {exportToGp7} from '@/lib/tab-editor/exporters';
+import {hasPercussionTrack} from '@/lib/chart-export/fromScore';
+import {buildScoreFolder} from '@/lib/chart-export/presets';
+import {deliverChartFolders, type DeliveryMode} from '@/lib/chart-export/deliver';
 import {barIndexToTick} from '@/lib/tab-editor/seekUtils';
 import {getKeyInfo} from '@/lib/tab-editor/keyData';
 import KeyChartDialog from './KeyChartDialog';
 import {UndoManager} from '@/lib/tab-editor/undoManager';
 import {loadComposition} from '@/lib/local-db/tab-compositions';
-import {cn} from '@/lib/utils';
+import {cn, sanitizeFilename} from '@/lib/utils';
 import {toast} from 'sonner';
 import {useStemPlayer} from '@/hooks/useStemPlayer';
 import {usePlaybackEngine} from '@/hooks/usePlaybackEngine';
@@ -1706,6 +1709,34 @@ export default function TabEditorPage() {
     }
   }, [exportingPdf]);
 
+  const [exportingChart, setExportingChart] = useState(false);
+  const handleExportChart = useCallback(async (mode: DeliveryMode) => {
+    const score = scoreRef.current;
+    if (!score || exportingChart) return;
+    setExportingChart(true);
+    try {
+      const {folder} = buildScoreFolder(score);
+      const result = await deliverChartFolders(
+        [folder],
+        mode,
+        sanitizeFilename(score.title || 'chart', 'zip'),
+      );
+      if (!result) return;
+
+      const notes = [result.path, 'Stem is silent — play along to your own kit.', ...folder.notes];
+      for (const issue of folder.issues) {
+        if (issue.severity === 'error') {
+          notes.push(issue.message);
+        }
+      }
+      toast.success('Exported for Clone Hero', {description: notes.join(' · ')});
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Chart export failed');
+    } finally {
+      setExportingChart(false);
+    }
+  }, [exportingChart]);
+
   // ── Derived values ────────────────────────────────────────────────────────
   const currentFingering = useMemo(
     () => (scoreRef.current ? getNoteFingering(scoreRef.current, cursor) : null),
@@ -1728,6 +1759,15 @@ export default function TabEditorPage() {
   }, [isReady, activeTrackIndex]);
 
   const activeTrackIsDrums = tracks[activeTrackIndex]?.instrument === 'drums';
+
+  // Only a score with a percussion track has a drum chart in it, so the
+  // Clone Hero items stay hidden on a plain guitar tab rather than being
+  // offered and then refused.
+  const scoreHasDrums = useMemo(
+    () => (scoreRef.current ? hasPercussionTrack(scoreRef.current) : false),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isReady, trackVersion],
+  );
 
   // Which controls the toolbar row may show. Single source of truth so the
   // priority is testable rather than spread across JSX conditions.
@@ -2052,6 +2092,12 @@ export default function TabEditorPage() {
               <DropdownMenuItem onClick={() => void handleExport('alphatex')}><Download className="h-4 w-4 mr-2" />Export AlphaTex</DropdownMenuItem>
               <DropdownMenuItem onClick={() => void handleExport('ascii')}><Download className="h-4 w-4 mr-2" />Export ASCII Tab</DropdownMenuItem>
               <DropdownMenuItem onClick={() => void handleExportPdf()} disabled={!isReady || exportingPdf}><Printer className="h-4 w-4 mr-2" />Export PDF</DropdownMenuItem>
+              {scoreHasDrums && (
+                <>
+                  <DropdownMenuItem onClick={() => void handleExportChart('folders')} disabled={!isReady || exportingChart}><Download className="h-4 w-4 mr-2" />Export Clone Hero chart…</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => void handleExportChart('zip')} disabled={!isReady || exportingChart}><Download className="h-4 w-4 mr-2" />Export Clone Hero chart (.zip)…</DropdownMenuItem>
+                </>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setShowYoutubePanel(v => !v)}>
                 <Youtube className="h-4 w-4 mr-2" />YouTube sync

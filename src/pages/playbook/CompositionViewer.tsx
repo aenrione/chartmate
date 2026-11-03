@@ -1,6 +1,9 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Play, Pause, Square, Minus, Plus, Repeat, Printer, Loader2, SlidersHorizontal, X} from 'lucide-react';
 import {saveScorePdfToLibrary} from '@/lib/pdf/save-score-pdf';
+import ExportChartsButton from '@/components/chart-export/ExportChartsButton';
+import {hasPercussionTrack} from '@/lib/chart-export/fromScore';
+import {buildScoreFolder} from '@/lib/chart-export/presets';
 import {toast} from 'sonner';
 import {LayoutMode, StaveProfile, model} from '@coderline/alphatab';
 import {Button} from '@/components/ui/button';
@@ -437,6 +440,17 @@ export default function CompositionViewer({scoreData}: {scoreData: ArrayBuffer})
           >
             {exportingPdf ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Printer className="h-3.5 w-3.5" />}
           </Button>
+          {score && hasPercussionTrack(score) && (
+            <ExportChartsButton
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 hidden lg:flex"
+              label=""
+              title="Export drum chart for Clone Hero"
+              build={() => [buildScoreFolder(score).folder]}
+              defaultFileName={`${score.title || 'chart'}.zip`}
+            />
+          )}
         </div>
 
         {/* Strumming pattern summary — hides itself when nothing is strummed */}

@@ -63,7 +63,14 @@ class DrumEventCollector implements midi.IMidiFileHandler {
   readonly timeSignatures: ChartTimeSignature[] = [];
   tickShift = 0;
 
-  constructor(private readonly trackIndex: number) {}
+  // A plain field, not a parameter property: Node runs this file through
+  // type stripping for the CLI, and that cannot rewrite `private x` in a
+  // constructor signature.
+  private readonly trackIndex: number;
+
+  constructor(trackIndex: number) {
+    this.trackIndex = trackIndex;
+  }
 
   addTickShift(tickShift: number): void {
     this.tickShift = tickShift;
@@ -102,12 +109,24 @@ class DrumEventCollector implements midi.IMidiFileHandler {
   finishTrack(): void {}
 }
 
-function findPercussionTrackIndex(score: Score): number {
-  const track = score.tracks.find(
-    t =>
-      t.staves.some(s => s.isPercussion) ||
-      t.playbackInfo.primaryChannel === PERCUSSION_CHANNEL,
+/** The score's first percussion track, or null if it has none. */
+export function findPercussionTrack(score: Score) {
+  return (
+    score.tracks.find(
+      t =>
+        t.staves.some(s => s.isPercussion) ||
+        t.playbackInfo.primaryChannel === PERCUSSION_CHANNEL,
+    ) ?? null
   );
+}
+
+/** Whether this score has anything a drum chart could be made of. */
+export function hasPercussionTrack(score: Score): boolean {
+  return findPercussionTrack(score) !== null;
+}
+
+function findPercussionTrackIndex(score: Score): number {
+  const track = findPercussionTrack(score);
   if (!track) throw new Error('Score has no percussion track to export');
   return track.index;
 }

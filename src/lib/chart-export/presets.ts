@@ -1,16 +1,21 @@
 /**
- * The two things the app exports: rudiments and curriculum lessons.
+ * The three things the app exports: a tab's drum track, the rudiments, and
+ * the curriculum lessons.
  *
  * Thin wrappers so the pages call one function instead of repeating the
  * document → folder dance, and so the CLI and the UI produce byte-identical
  * folders from the same inputs.
  */
 
+import type {model} from '@coderline/alphatab';
 import type {Lesson, LoadedUnit} from '@/lib/curriculum/types';
 import type {Rudiment} from '@/pages/rudiments/rudimentData';
 import {buildChartFolder, type ChartFolder} from './chartFolder';
 import {isExportable, lessonToChartDocument} from './fromLesson';
 import {rudimentToChartDocument, type Subdivision} from './fromRudiment';
+import {scoreToChartDocument} from './fromScore';
+
+type Score = InstanceType<typeof model.Score>;
 
 export interface RudimentExportOptions {
   bpm?: number;
@@ -37,6 +42,41 @@ export function buildRudimentFolders(
         : [],
     });
   });
+}
+
+export interface ScoreExportResult {
+  folder: ChartFolder;
+  /** GM notes with no lane, counted — e.g. a cowbell-free congas part. */
+  dropped: Record<number, number>;
+}
+
+/**
+ * A tab's drum track as one chart folder.
+ *
+ * Throws when the score has no percussion track; callers should check with
+ * `hasPercussionTrack` first so the menu item can be hidden rather than
+ * offered and then refused.
+ */
+export function buildScoreFolder(
+  score: Score,
+  options: {charter?: string} = {},
+): ScoreExportResult {
+  const {doc, lengthMs, dropped, tickShift} = scoreToChartDocument(score, {
+    charter: options.charter,
+  });
+
+  const notes: string[] = [];
+  const droppedCount = Object.values(dropped).reduce((a, b) => a + b, 0);
+  if (droppedCount > 0) {
+    notes.push(
+      `${droppedCount} percussion hit${droppedCount === 1 ? '' : 's'} had no lane and were dropped (MIDI ${Object.keys(dropped).join(', ')})`,
+    );
+  }
+  if (tickShift > 0) {
+    notes.push(`Grace beats shifted the chart by ${tickShift} ticks; bar 1 does not start at 0`);
+  }
+
+  return {folder: buildChartFolder(doc, {lengthMs, notes}), dropped};
 }
 
 export interface LessonExportResult {
