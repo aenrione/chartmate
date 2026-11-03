@@ -29,7 +29,7 @@ export type HarnessReport = {
 function createChartScore(): {score: InstanceType<typeof model.Score>; staveProfile: StaveProfile} {
   const notes = [0, 96, 192, 288, 384, 480, 576, 672]
     .map(tick => `  ${tick} = N 1 0`).join('\n');
-  const chartText = `[Song]
+  const inlineChart = `[Song]
 {
   Resolution = 192
 }
@@ -50,7 +50,7 @@ function createChartScore(): {score: InstanceType<typeof model.Score>; staveProf
 ${notes}
 }
 `;
-  const chart = parseChartFile(new TextEncoder().encode(chartText), 'chart', {});
+  const chart = parseChartFile(new TextEncoder().encode(inlineChart), 'chart', {});
   const track = chart.trackData.find(t => t.instrument === 'drums');
   if (!track) throw new Error('fixture chart has no drum track');
   const score = buildChartScore(chart as never, track as never, {

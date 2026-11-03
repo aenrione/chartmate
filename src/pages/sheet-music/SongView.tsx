@@ -95,6 +95,8 @@ import {
   chartSectionNotesFor,
   chartPatternNotesFor,
 } from '@/lib/local-db/repertoire';
+import ExportChartsButton from '@/components/chart-export/ExportChartsButton';
+import {buildSavedChartFolder} from '@/lib/chart-export/savedChart';
 
 function getDrumDifficulties(chart: ParsedChart): Difficulty[] {
   return chart.trackData
@@ -1119,14 +1121,38 @@ export default function Renderer({
         title: metadata.name,
         artist: metadata.artist,
       });
-      const saved = await saveScorePdfToLibrary(score, {staveProfile: StaveProfile.Score});
+      const saved = await saveScorePdfToLibrary(score, {
+        staveProfile: StaveProfile.Score,
+        chartMd5: metadata.md5,
+      });
       toast.success(`${saved.filename} — ${saved.pageCount} page${saved.pageCount === 1 ? '' : 's'}`);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : 'PDF export failed');
     } finally {
       setExportingPdf(false);
     }
-  }, [chart, track, showLyrics, metadata.name, metadata.artist, exportingPdf]);
+  }, [chart, track, showLyrics, metadata.name, metadata.artist, metadata.md5, exportingPdf]);
+
+  const copyToSongsButton = isSaved ? (
+    <Tip label="Copy to your Clone Hero Songs folder">
+      <span>
+        <ExportChartsButton
+          variant="ghost"
+          size="icon"
+          className="rounded-full"
+          label=""
+          build={async () => [
+            await buildSavedChartFolder({
+              md5: metadata.md5,
+              name: metadata.name,
+              artist: metadata.artist,
+            }),
+          ]}
+          defaultFileName={`${metadata.artist} - ${metadata.name}.zip`}
+        />
+      </span>
+    </Tip>
+  ) : null;
 
   const exportPdfButton = (
     <Tip label="Export PDF">
@@ -1241,6 +1267,7 @@ export default function Renderer({
             {playPauseButton}
             {maximizeButton}
             {saveButton}
+            {copyToSongsButton}
             {exportPdfButton}
           </div>
 
@@ -1717,6 +1744,7 @@ export default function Renderer({
             {backButton}
             {playPauseButton}
             {saveButton}
+            {copyToSongsButton}
             {exportPdfButton}
             <div className="flex-1 min-w-0 px-1">
               <div className="text-sm font-semibold truncate leading-tight">
