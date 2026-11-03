@@ -1,10 +1,11 @@
 # README media — what to capture and how
 
-The README currently carries three images:
+The README currently carries four images:
 
 | File | Kind | Status |
 |---|---|---|
-| `docs/demo.jpeg` | hero screenshot | real, but pre-dates most of the app |
+| `docs/media/hero.png` | hero — the Practice hub | current |
+| `docs/demo.jpeg` | secondary — drum notation + note highway | older, but still shows the thing well |
 | `docs/media/feature-map.svg` | hand-authored diagram | current |
 | `docs/media/architecture.svg` | hand-authored diagram | current |
 
@@ -16,7 +17,7 @@ so they read on both GitHub light and dark themes. Preview a change with:
 qlmanage -t -s 1200 -o /tmp docs/media/architecture.svg && open /tmp/architecture.svg.png
 ```
 
-## Still missing: real screenshots
+## Capturing screenshots
 
 Screenshots have to come from the native app. `pnpm dev` in a plain browser
 throws on the first `invoke()` call (no Tauri runtime, no SQLite), so Playwright
@@ -28,14 +29,19 @@ cannot drive the UI — the only way is to run `pnpm tauri dev` or the bundled
 screencapture -iWo -t png docs/media/<name>.png
 ```
 
-Shoot at a uniform window size, light theme, and **scrub personal data** —
+`hero.png` was shot this way at 3220x2094 and downscaled with
+`sips -Z 2200`, which keeps it over 2x for the width it renders at while
+halving the bytes. Keep the alpha — the transparent margin around the window
+shadow is what makes it sit well on both GitHub themes.
+
+Shoot at a uniform window size and **scrub personal data** —
 Spotify account name, real library contents, file paths — before committing.
 
 ### Shot list
 
 | File | Route | What should be on screen |
 |---|---|---|
-| `hero.png` | `/playbook/:id` or `/guitar/song` | Replaces `demo.jpeg`. Notation + tab with the cursor mid-bar, sections sidebar, a section looped (amber), speed at something ≠ 100 % |
+| `playbook.png` | `/playbook/:id` | Would replace `demo.jpeg`: notation + tab with the cursor mid-bar, sections sidebar, a section looped (amber), speed ≠ 100 % |
 | `tab-editor.png` | `/tab-editor/:id` | Edit mode, note-input panel open, a strumming pattern visible, sidebar sections expanded |
 | `learn.png` | `/learn` | Skill tree with a mix of locked/unlocked units, XP bar, daily missions |
 | `fretboard-iq.png` | `/guitar/fretboard` | The hub with the daily-review count, plus a drill mid-question |

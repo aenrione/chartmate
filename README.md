@@ -14,7 +14,7 @@ Find the music, read it, slow it down, loop the hard bar, and keep a record of w
 [![MCP](https://img.shields.io/badge/MCP-server-2edcd7)](#also-an-mcp-server)
 [![Built with AI](https://img.shields.io/badge/built%20with-AI%20coding%20agents-8f7fff)](#ai-disclosure)
 
-<img src="./docs/demo.jpeg" alt="Chartmate rendering a chart as drum sheet music next to a Clone Hero note highway, with difficulty, speed and section controls in the sidebar" />
+<img src="./docs/media/hero.png" alt="Chartmate's Practice hub — Drums, Guitar and Programs cards spanning the window, with shortcuts to Tab Editor, Learn, Library, Browse and Calendar below" />
 
 </div>
 
@@ -73,6 +73,12 @@ For people who practice from tabs and are tired of juggling a browser tab, a PDF
 | | macOS desktop | ✅ |
 | | Windows / Linux desktop | 🚧 |
 | | Android / iOS | 🚧 |
+
+<div align="center">
+  <img src="./docs/demo.jpeg" alt="A chart rendered as drum sheet music beside a Clone Hero note highway, with difficulty, speed and section controls in the sidebar" width="900" />
+  <br/>
+  <sub>The same chart as drum notation and as a note highway, with the sections list to loop from.</sub>
+</div>
 
 ---
 
