@@ -60,3 +60,6 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
+
+# This is a pnpm project. An npm lockfile here drifts out of sync silently.
+package-lock.json
